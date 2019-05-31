@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 *.lnk
+* alias
 *.qgs
 *.qgs~
 data
