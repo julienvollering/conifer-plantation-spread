@@ -1,0 +1,19 @@
+---
+title: "From Olsen et al 2016 report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+tab3 <- data.frame(
+  areal=c(5.5,9.1,3.6,10.9,13.1,4.4,1.2,29.3,0.3,39,12.45,25.2), 
+  alder=c(58,37,29,42,45,45,56,49,45,59,52,52),
+  antall=c(4163,112,102,275,18,9,543,156,26,9,354,106))
+
+plot(tab3$areal, tab3$antall)
+
+plot(tab3$alder, tab3$antall)
+```

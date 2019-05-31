@@ -1,0 +1,20 @@
+---
+title: "eKlima stations"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+active <- read_delim("data/eKlima/windstationsEklima.txt", delim = ";")
+metastations <- read_delim("data/eKlima/metastations_troms.txt", delim = ";") %>% 
+  select(Stnr:Name, Utm_e:Utm_zone)
+windstations <- active %>%
+  left_join(metastations, by="Stnr")
+```
+
