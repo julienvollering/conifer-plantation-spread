@@ -20,9 +20,9 @@ knitr::opts_chunk$set(echo = TRUE)
 Patterns of observed spread from plantations vary --- both in the number of established individuals and the distance of these individuals from the plantation. Some of this variation may be tied to characteristics of the plantation itself (invasiveness sensu lato), some of it may have to do with the surroundings of the plantation (invasibility sensu lato), and some of it may may have to do with neither (stochastic/unexplained variability). Logically, management decisions for new and existing plantations are also based on plantation characteristics (e.g. species, seed production, height), as well as plantation surroundings (e.g. dispersal vectors, presence of vulnerable habitats). Stochastic variation in spread is by definition unpredictable, and therefore uninteresting for managers.
 
 S in SUCCES: Should we black-list species or red-list what they threaten? Should invasion outcomes be attributed to the species identity or site characteristics? 
-E in SUCCES: To manage an invading conifer, should we assess its invasiveness or where the invasibility of the land?
+E in SUCCES: To manage an invading conifer, should we assess its invasiveness or the invasibility of the land?
 
-Here, we examine how the surroundings of a forestry plantation affects spread of individuals by quantifying the relative probability of establishment in different nature types. Probability of establishment is by definition normalized with respect to the number of arriving propagules, and is therefore independent of the seed production and seed dispersal of the plantation. It is a quantity that results from physiological processes of seed survival, germination and growth, and therefore is expected to vary between species. 
+Here, we examine how the surroundings of a forestry plantation affects spread of individuals by quantifying the relative probability of establishment in different nature types. Probability of establishment is by definition normalized with respect to the number of arriving propagules, and is therefore independent of the seed production and seed dispersal of the plantation. It is a quantity that results from physiological processes of seed survival, germination and growth, so we expect it to vary between nature types, and probably also between conifer species. 
 
 The probability of spread to a particular location is a function of the propagule pressure on that location, and the rate of establishment. Propagule pressure from a local source population to a particular location can be decomposed into propagule production at the source, followed by dispersal to the location. Propagule production varies continuously (with age), and dispersal varies continuously with the effective distance to the plantation (horizontal, vertical, orientation). Rate of establishment varies with characteristics of the surroundings (vegetation, abiotic factors, etc). If the characteristics of the surroundings can be categorized into units within which establishment rate is constant, then establishment rate varies categorically with these units. *Nature types as management units in Norways and their (limited) correspondence with true ecological variation.*
 
@@ -51,27 +51,30 @@ Arguments underlying purpose and claims underlying arguments:
 
 2. Which nature types are most susceptible to invasion by non-native plantation trees? For all species?
 
-- We hypothesize that nature types characterized by irregular disturbance events will show the highest susceptibility, that nature types without canopy cover will show high susceptibility, that nature types with canopy cover will show low susceptibility, and that nature types with regular human intervention will show lowest susceptibility. We also hypothesis that these differences will be greatest for species which are fast-growing and shade-intolerant.
+- We hypothesize that nature types characterized by irregular disturbance events (*how often? be specific*) will show the highest susceptibility, that nature types without canopy cover will show high susceptibility, that nature types with canopy cover will show low susceptibility, and that nature types with annual human intervention will show lowest susceptibility. We also hypothesis that these differences will be greatest for species which are fast-growing and shade-intolerant.
 
-3. How important is distance from a plantation compared to invasibility in determining the colonization rate of a particular area? I.e. how far does a highly susceptible nature type have to be from a plantation to have the same rate of spread as an insusceptible nature type? NOTE: We are assessing the affect of distance mechanistically, not observationally. I.e. we are not learning about the effect of distance in our model --- we have assumed it acts only through propagule presure, and do not treat it as a variable in the model.
+3. Are characteristics of the plantation or characteristics of the surroundings the more important determinants of spread? Is variation in abundance of wildlings greater between sites (primarily plantation differences) or within sites (primarily nature type differences)? 
 
-- We hypothesize that the differences in invasibility of nature types are outweighed by proximity to seed sources on a sub-hectometer (100 m) scale.
+- We hypothesize that abundance of wildlings varies more between sites than between nature types, and that this variation primarily reflects species differences and differences in the seed production of the plantation (unmeasured).
 
-4. Are characteristics of the plantation or characteristics of the surroundings the more important determinants of spread? Is variation in abundance of wildlings greater between sites (primarily plantation differences) or within sites (primarily nature type differences)? 
+4. How much variation in wildling abundance is explained by location, age, and surroundings? 
 
-- We hypothesize that abundance of wildlings varies more between sites than between nature types, and that this variation reflects primarily the seed production of the plantation (unmeasured).
+- We hypothesize that most variation remains unexplained by these factors alone. The implication is that other factors that are difficult for managers to predict, like age-independent seed production or more fine-scale differences in surroundings, strongly influence rate of spread.
 
 # Introduction
 
-Plantations are abundant and extensive source populations, and their surroundings are vulnerable to spread.
-Managers are interested in limiting or eliminating spread from plantations.
+In Norway, forestry plantations are abundant and extensive source populations of exotic conifers, and their surroundings are vulnerable to spread.
+
+
+Managers are interested in limiting or eliminating spread from plantations, especially into areas with high ecological value (protected areas?).
 Therefore, the key process that we examine is naturalized spread, which can be broken down into the processes of seed arrival and then germination, growth, and survival (assuming that the seed is viable when it arrives).
 Seed arrival depends on disperal from source populations, and is a fundamentally spatial process. 
 Meanwhile, germination, growth, and survival (hereafter: "establishment") depend on the conditions at the arrival location.
 To better understand which factors govern naturalized spread, we need to know how seeds are dispersed from plantations, and which landing site conditions promote or inhibit establishment. 
 
 Therefore, the number of wildlings in the surroundings of a plantation is a function of the seed shadow from the plantation and the environmental characteristics of the proximal area.
-However, some underlying environmental characteristics may also affect the seed shadow; for example, lower elevations may trap more seeds.
+Note that the seed shadow is not purely a function of plantation characteristics; plantation surroundings also affect the seed shadow.  
+For example, lower elevations may trap more seeds.
 
 The degree of naturalized spread observed surrounding plantations is highly variable.
 Specifically, the number of naturalized individuals, their location with respect to the plantation, and their rate of growth varies. 

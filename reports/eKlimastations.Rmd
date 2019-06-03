@@ -8,13 +8,20 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(here)
 ```
 
 ```{r}
-active <- read_delim("data/eKlima/windstationsEklima.txt", delim = ";")
-metastations <- read_delim("data/eKlima/metastations_troms.txt", delim = ";") %>% 
-  select(Stnr:Name, Utm_e:Utm_zone)
-windstations <- active %>%
-  left_join(metastations, by="Stnr")
+active <- read_delim(here("data", "raw", "eKlima", "windstationsEklima.txt"), delim = ";", 
+                     na=c("-9999"))
+files <- list.files(here("data", "raw", "eKlima"), 
+                         pattern = "metastations", full.names = TRUE)
+read_delim(coordfiles, delim = ";")
+metastations <- lapply(files, read_delim, delim = ";") %>% 
+  bind_rows() %>% 
+  select(Stnr:Name, Utm_e:Utm_zone) %>% 
+  distinct(Stnr, .keep_all = TRUE)
+  
+metastations
 ```
 
