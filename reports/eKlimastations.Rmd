@@ -12,7 +12,7 @@ library(here)
 library(sf)
 ```
 
-```{r}
+```{r, windstation coords}
 windstations <- read_delim(here("data", "raw", "eKlima", "windstationsEklima.txt"), 
                      delim = ";", na=c("-9999"))
 files <- list.files(here("data", "raw", "eKlima"), 
@@ -26,26 +26,51 @@ windstations <- left_join(windstations, stationsmeta, by = "Stnr") %>%
   drop_na()
 ```
 
-```{r}
+```{r windstation map}
 wrld <- st_read(here("data", "raw", "TM_WORLD_BORDERS-0.3"), layer = "TM_WORLD_BORDERS-0.3")
 nor <- wrld[wrld$ISO3=="NOR", ] %>% 
-  st_transform(crs = 32633) # WGS 84 / UTM zone 33N
-windstations <- st_as_sf(windstations, crs = 32633, coords = c("Utm_e","Utm_n"))
+  st_transform(crs = 25833) # ETRS89 / UTM zone 33N
+windstations <- st_as_sf(windstations, crs = 25833, coords = c("Utm_e","Utm_n"))
 
 ggplot() +
   geom_sf(data = nor) + 
   geom_sf(data = windstations, colour = "red")
 ```
 
-```{r}
-g = st_sfc(st_point(1:2))
-st_sf(a=3,g)
+```{r POI with windstations}
+plantations <- read_csv(here("data", "localities.csv")) %>% 
+  select(2:4, 9:10) %>% 
+  st_as_sf(coords=c("UTM33easting", "UTM33northing"))
+plantations
 
-broervika <- st_point(c(-34167, 6839532)) 
-st_sf(broervika)
+geometry <- st_sfc(st_point(c(-34167, 6839532)))
+broervika <- st_sf(Locality = "Broervika", Municipality = "Askvoll", 
+                   County = "Sogn og Fjordane", 
+                   geometry = st_sfc(st_point(c(-34167, 6839532))))
+poi <- rbind(broervika, plantations) %>% 
   st_set_crs(25833) # ETRS89 / UTM zone 33N
-st_crs(broervika) <- 25833
 
-?st_nearest_feature
+nearest <- st_nearest_feature(poi, windstations)
+poi$windst.nr <- windstations$Stnr[nearest]
+poi$windst.name <- windstations$Name.x[nearest]
+poi$windst.dist <- st_distance(poi, windstations[nearest, ], by_element = TRUE) %>% 
+  as.numeric
+
+write_csv(poi, here("data", "raw", "eKlima", "POI-windst.csv"))
+
+ggplot(poi, aes(windst.dist/1000))  +
+  geom_histogram(aes(fill=County), binwidth = 1) + 
+  labs(title="Distance to nearest windstation by county",
+       x="distance to nearest windstation (km)")
+
+ggplot() +
+  geom_sf(data = nor) + 
+  geom_sf(data = poi, color = "black") +
+  geom_sf(data = windstations[nearest, ], color="red") + 
+  labs(title="POIs and nearest wind stations", 
+       subtitle="POIs = black, windstations = red")
 ```
 
+```{r sessionInfo}
+sessionInfo()
+```

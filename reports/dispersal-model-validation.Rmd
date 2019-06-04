@@ -1,0 +1,28 @@
+---
+title: "Dispersal model validation"
+output: html_document 
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+windobs <- read_delim(here("data","raw","eKlima","obswind-stnr57710FLORO-20190604.txt"), 
+                      delim = ";", na = "-9999", skip = 24) %>% 
+  drop_na()
+count(windobs, fDD)
+count(windobs, fFF)
+windobs <- filter(windobs, fDD == "OK" & fFF == "OK") %>% 
+  select(-c("St.no", "fDD", "fFF"))
+
+windobs %>% 
+  group_by(Mnth) %>% 
+  summarize(mean=mean(FF), sd=sd(FF))
+```
+
+```{r sessionInfo}
+sessionInfo()
+```

@@ -63,7 +63,13 @@ Arguments underlying purpose and claims underlying arguments:
 
 # Introduction
 
-In Norway, forestry plantations are abundant and extensive source populations of exotic conifers, and their surroundings are vulnerable to spread.
+Plantations of non-native conifers cover large areas in Norway, as they do in many countries, and their surroundings are vulnerable to the spread of these non-native species [richardson ref?].
+Fertile plantations produce highest propagule pressure on their immediate surroundings, because their seeds are (primarily?) wind-dispersed.
+Extensive
+LDD less important
+
+Norway has only two native conifer species that form forests (Scots pine, *Pinus sylvestris* and Norway spruce, *Picea abies*), so historical efforts to increase forest cover have relied heavily on exotic species [@oyen2017]. 
+
 
 
 Managers are interested in limiting or eliminating spread from plantations, especially into areas with high ecological value (protected areas?).
