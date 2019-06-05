@@ -56,7 +56,8 @@ poi$windst.name <- windstations$Name.x[nearest]
 poi$windst.dist <- st_distance(poi, windstations[nearest, ], by_element = TRUE) %>% 
   as.numeric
 
-write_csv(poi, here("data", "raw", "eKlima", "POI-windst.csv"))
+st_write(poi, here("data", "raw", "eKlima", "POI-windst.csv"), 
+         layer_options = "GEOMETRY=AS_XY")
 
 ggplot(poi, aes(windst.dist/1000))  +
   geom_histogram(aes(fill=County), binwidth = 1) + 
@@ -70,6 +71,27 @@ ggplot() +
   labs(title="POIs and nearest wind stations", 
        subtitle="POIs = black, windstations = red")
 ```
+
+```{r latlong to Met}
+loc <- read_csv(here("data", "raw", "eKlima", "POI-windst.csv")) %>% 
+  distinct(Locality, .keep_all = TRUE) %>% 
+  st_as_sf(coords = c("X", "Y")) %>% 
+  select() %>% 
+  st_set_crs(25833) %>%  # ETRS89 / UTM zone 33N
+  st_transform(4326)  # WGS 84
+  
+library(rnaturalearth)
+nor <- rnaturalearth::ne_countries(scale = "large", country = "Norway", 
+                                   returnclass = "sf") %>% 
+  st_crop(xmin = 4, xmax = 32, ymin = 58, ymax = 72)
+
+ggplot() +
+  geom_sf(data = nor) + 
+  geom_sf(data = loc, color = "black")
+
+write_csv(here("data", "raw", "eKlima", "POI-latlon.csv"))
+```
+
 
 ```{r sessionInfo}
 sessionInfo()
