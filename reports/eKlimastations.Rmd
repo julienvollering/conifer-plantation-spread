@@ -14,10 +14,10 @@ library(sf)
 
 ```{r, windstation coords}
 windstations <- read_delim(here("data", "raw", "eKlima", "windstationsEklima.txt"), 
-                     delim = ";", na=c("-9999"))
+                     delim = ";", na=c("-9999"), col_types = cols())
 files <- list.files(here("data", "raw", "eKlima"), 
                     pattern = "metastations", full.names = TRUE)
-stationsmeta <- lapply(files, read_delim, delim = ";") %>% 
+stationsmeta <- lapply(files, read_delim, delim = ";", col_types = cols()) %>% 
   bind_rows() %>% 
   select(Stnr:Name, Utm_e:Utm_zone) %>% 
   distinct(Stnr, .keep_all = TRUE)
@@ -26,10 +26,13 @@ windstations <- left_join(windstations, stationsmeta, by = "Stnr") %>%
   drop_na()
 ```
 
-```{r windstation map}
-wrld <- st_read(here("data", "raw", "TM_WORLD_BORDERS-0.3"), layer = "TM_WORLD_BORDERS-0.3")
-nor <- wrld[wrld$ISO3=="NOR", ] %>% 
+```{r windstation map, warning=FALSE}
+library(rnaturalearth)
+nor <- rnaturalearth::ne_countries(scale = "large", country = "Norway", 
+                                   returnclass = "sf") %>% 
+  st_crop(xmin = 4, xmax = 32, ymin = 58, ymax = 72) %>% 
   st_transform(crs = 25833) # ETRS89 / UTM zone 33N
+
 windstations <- st_as_sf(windstations, crs = 25833, coords = c("Utm_e","Utm_n"))
 
 ggplot() +
@@ -38,15 +41,15 @@ ggplot() +
 ```
 
 ```{r POI with windstations}
-plantations <- read_csv(here("data", "localities.csv")) %>% 
+plantations <- read_csv(here("data", "localities.csv"), col_types = cols()) %>% 
   select(2:4, 9:10) %>% 
   st_as_sf(coords=c("UTM33easting", "UTM33northing"))
-plantations
 
-geometry <- st_sfc(st_point(c(-34167, 6839532)))
-broervika <- st_sf(Locality = "Broervika", Municipality = "Askvoll", 
+broervika <- tibble(Locality = "Broervika", Municipality = "Askvoll", 
                    County = "Sogn og Fjordane", 
-                   geometry = st_sfc(st_point(c(-34167, 6839532))))
+                   geometry = st_sfc(st_point(c(-34167, 6839532)))) %>% 
+  st_as_sf()
+
 poi <- rbind(broervika, plantations) %>% 
   st_set_crs(25833) # ETRS89 / UTM zone 33N
 
@@ -55,12 +58,19 @@ poi$windst.nr <- windstations$Stnr[nearest]
 poi$windst.name <- windstations$Name.x[nearest]
 poi$windst.dist <- st_distance(poi, windstations[nearest, ], by_element = TRUE) %>% 
   as.numeric
+poi$windst.dist <- round(poi$windst.dist/1000)
+```
 
-st_write(poi, here("data", "raw", "eKlima", "POI-windst.csv"), 
-         layer_options = "GEOMETRY=AS_XY")
+```{r, results='asis'}
+as_tibble(poi) %>% 
+  arrange(Locality) %>% 
+  distinct(Locality, .keep_all = TRUE) %>% 
+  knitr::kable()
+```
 
-ggplot(poi, aes(windst.dist/1000))  +
-  geom_histogram(aes(fill=County), binwidth = 1) + 
+```{r windstation distances}
+ggplot(poi, aes(windst.dist))  +
+  geom_histogram(aes(fill=County), binwidth = 2) + 
   labs(title="Distance to nearest windstation by county",
        x="distance to nearest windstation (km)")
 
@@ -72,26 +82,18 @@ ggplot() +
        subtitle="POIs = black, windstations = red")
 ```
 
-```{r latlong to Met}
-loc <- read_csv(here("data", "raw", "eKlima", "POI-windst.csv")) %>% 
-  distinct(Locality, .keep_all = TRUE) %>% 
-  st_as_sf(coords = c("X", "Y")) %>% 
-  select() %>% 
-  st_set_crs(25833) %>%  # ETRS89 / UTM zone 33N
-  st_transform(4326)  # WGS 84
-  
-library(rnaturalearth)
-nor <- rnaturalearth::ne_countries(scale = "large", country = "Norway", 
-                                   returnclass = "sf") %>% 
-  st_crop(xmin = 4, xmax = 32, ymin = 58, ymax = 72)
+```{r lonlat to Met}
+lonlat <- st_transform(poi, 4326) %>% # WGS 84
+  st_coordinates() %>% 
+  as_tibble()
+lonlat <- lonlat[!duplicated(poi$Locality), ]
 
 ggplot() +
-  geom_sf(data = nor) + 
-  geom_sf(data = loc, color = "black")
+  geom_sf(data = st_transform(nor, 4326)) + # WGS 84
+  geom_sf(data = st_as_sf(lonlat, coords=1:2, crs=4326)) # WGS 84
 
-write_csv(here("data", "raw", "eKlima", "POI-latlon.csv"))
+write_csv(lonlat, here("data", "raw", "eKlima", "poi-lonlat.csv"))
 ```
-
 
 ```{r sessionInfo}
 sessionInfo()
