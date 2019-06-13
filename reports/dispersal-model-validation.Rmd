@@ -34,19 +34,45 @@ plot(sources["cones"], key.pos = 4)
 hist(sources$cones)
 ```
 
-```{r make grid landscape}
+```{r make grid geometry}
 gridres <- 2
-grd <- st_make_grid(sources, cellsize = gridres)
-pts <- st_make_grid(sources, cellsize = gridres, what = "centers")
+grd <- st_sf(st_make_grid(sources, cellsize = gridres))
+pts <- st_sf(st_make_grid(sources, cellsize = gridres, what = "centers"))
 bb <- st_bbox(grd)
 nx <- unname(ceiling((bb$xmax - bb$xmin)/gridres))
 ny <- unname(ceiling((bb$ymax - bb$ymin)/gridres))
 paste(nx, "x", ny)
-plot(grd[c(1,120:121)]) #features ordered SW to NE, by row
+plot(grd[c(1,120:121),]) #features ordered SW to NE, by row
 ```
 
-```{r}
-src <- st_intersects(sources, grd)
+```{r add data to grid}
+g <- st_join(grd, sources)
+
+vegheight <- raster::raster(here("data","raw","seedtraps","lidar","vegheight.tif"))
+vegheight <- st_sf(vegheight = raster::extract(vegheight, pts), geometry = st_geometry(pts))
+g <- st_join(g, vegheight)
+p <- st_join(pts, g)
+```
+
+```{r wind sectors}
+sector.breaks <- seq(0,360,by=20)
+i <- 50
+src <- subset(p, !is.na(p$cones))[i,]
+dX <- st_coordinates(src)[,1] - st_coordinates(p)[,1]
+dY <- st_coordinates(src)[,2] - st_coordinates(p)[,2]
+source(here("R","functions.R"))
+landscape <- p %>% 
+  mutate(angle = angle(dX, dY)) %>% # compass bearing FROM landscape TO source (matches wind directions)
+  mutate(sector = cut(angle, sector.breaks, include.lowest = TRUE))
+
+j <- levels(landscape$sector)[1]
+sector <- filter(landscape, sector == j)
+set.seed(42)
+wind <- windobs %>% 
+  mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
+  filter(sector == j) %>%
+  sample_n(100, weight = FF) %>% 
+  pull(FF)
 ```
 
 

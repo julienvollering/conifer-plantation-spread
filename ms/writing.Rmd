@@ -57,20 +57,26 @@ Arguments underlying purpose and claims underlying arguments:
 
 - We hypothesize that abundance of wildlings varies more between sites than between nature types, and that this variation primarily reflects species differences and differences in the seed production of the plantation (unmeasured).
 
-4. How much variation in wildling abundance is explained by location, age, and surroundings? 
+4. How much of the total variation in wildling abundance can be explained by a combination of location, age, and surroundings? 
 
 - We hypothesize that most variation remains unexplained by these factors alone. The implication is that other factors that are difficult for managers to predict, like age-independent seed production or more fine-scale differences in surroundings, strongly influence rate of spread.
 
 # Introduction
 
-Plantations of non-native conifers cover large areas in Norway, as they do in many countries, and their surroundings are vulnerable to the spread of these non-native species [richardson ref?].
+Plantations of non-native conifers are widespread in Norway, as they are in many countries, and offspring from these plantations frequently establish in surrounding areas [@richardson2004].
+In some cases these naturalized offspring --- or wildlings --- are observed to be abundant and distant from the nearest plantation, but not always. 
+Depending on how rapidly and how far wildlings spread, their expansion may be considered invasive. 
+Implications for integrity of the ecosystem, especially important for areas of high value, and potentially affecting ecosystem services.
+For example, biodiversity, coastal heathland, landscape changes.
+As a result, managers are interested in limiting spread from plantations of exotic species (compared to natural regeneration of mixed stand forestry)
+
+'Invasive' normally applied to species, but differences among plantations of the same species are also observed.
+
 Fertile plantations produce highest propagule pressure on their immediate surroundings, because their seeds are (primarily?) wind-dispersed.
 Extensive
 LDD less important
 
-Norway has only two native conifer species that form forests (Scots pine, *Pinus sylvestris* and Norway spruce, *Picea abies*), so historical efforts to increase forest cover have relied heavily on exotic species [@oyen2017]. 
-
-
+Norway has only two native conifer species that form forests (Scots pine, *Pinus sylvestris* and Norway spruce, *Picea abies*), so efforts in the 20th century to increase forest cover relied heavily on exotic species [@oyen2017]. 
 
 Managers are interested in limiting or eliminating spread from plantations, especially into areas with high ecological value (protected areas?).
 Therefore, the key process that we examine is naturalized spread, which can be broken down into the processes of seed arrival and then germination, growth, and survival (assuming that the seed is viable when it arrives).

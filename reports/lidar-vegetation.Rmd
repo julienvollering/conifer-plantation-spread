@@ -47,7 +47,7 @@ hist(values(vegheight))
 sum(values(vegheight) < 0, na.rm=TRUE) 
 vegheight[values(vegheight) < 0] <- 0
 
-writeRaster(vegheight, here("data","raw","seedtraps","lidar","vegheight.asc"))
+writeRaster(vegheight, here("data","raw","seedtraps","lidar","vegheight.tif"))
 ```
 
 ```{r sessionInfo}
