@@ -7,9 +7,12 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(sf)
 ```
 
-```{r}
+```{r wind Floro station}
 windobs <- read_delim(here("data","raw","eKlima","obswind-stnr57710FLORO-20190604.txt"), 
                       delim = ";", na = "-9999", skip = 24) %>% 
   drop_na()
@@ -22,6 +25,30 @@ windobs %>%
   group_by(Mnth) %>% 
   summarize(mean=mean(FF), sd=sd(FF))
 ```
+
+```{r read seed sources}
+sources <- read_csv(here("data","raw","seedtraps","seedsources.csv")) %>% 
+  st_as_sf(coords = c(1:2), crs = 25832) # ETRS89 / UTM zone 32N
+plot(sources["height"], key.pos = 4)
+plot(sources["cones"], key.pos = 4)
+hist(sources$cones)
+```
+
+```{r make grid landscape}
+gridres <- 2
+grd <- st_make_grid(sources, cellsize = gridres)
+pts <- st_make_grid(sources, cellsize = gridres, what = "centers")
+bb <- st_bbox(grd)
+nx <- unname(ceiling((bb$xmax - bb$xmin)/gridres))
+ny <- unname(ceiling((bb$ymax - bb$ymin)/gridres))
+paste(nx, "x", ny)
+plot(grd[c(1,120:121)]) #features ordered SW to NE, by row
+```
+
+```{r}
+src <- st_intersects(sources, grd)
+```
+
 
 ```{r sessionInfo}
 sessionInfo()
