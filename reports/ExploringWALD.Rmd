@@ -63,7 +63,8 @@ getWALDpar <- function(Fval,H,U10,sigma=NULL,z0,d, K=0.4)
 {
   ustar <- K*U10/log((10-d)/z0)
   U <- (ustar/H)*integrate(logprofile,lower=z0+d,upper=H,K=0.4,z0=z0,d=d,zm=10)$value  # compute average wind speed between H and z0+d
-  if(is.null(sigma)) sigma <- sqrt( (4*((1.3)^4)*(10-d)/3.125) * ustar/U ) #JV: missing K compared to eq. A4?
+  if(is.null(sigma)) sigma <- sqrt( (4*((1.3)^4)*(H-d)/3.125) * ustar/U ) #JV: missing K compared to eq. A4?
+#JV: changed 10 to H, to follow A4 (z = H)
   nu <- H*U/Fval
   lambda <- (H/sigma)^2
   pars <- c(Fval,H,U10,sigma,z0,d,ustar,nu,lambda)
@@ -96,7 +97,7 @@ z0hat <- 0.1*hhat
 mod1 <- function(x, H, Fm, Um, z, h, d, z0) {
   ustarhat <- ustar(Um=Umhat, z=zhat, d=dhat, z0=z0hat)
   Uhat <- U(H=Hhat, ustar=ustarhat, d=dhat, z0=z0hat)
-  sigmahat <- sigma(z=zhat, d=dhat, ustar=ustarhat, U=Uhat)
+  sigmahat <- sigma(z=Hhat, d=dhat, ustar=ustarhat, U=Uhat)
   nuhat <- nu(H=Hhat, U=Uhat, Fm=Fmhat)
   lambdahat <- lambda(H=Hhat, sigma=sigmahat)
   statmod::dinvgauss(x, mean=nuhat, shape=lambdahat)
@@ -128,7 +129,7 @@ sigma.modified <- function(Aw=1.3, K=0.4, z, d, ustar, C0=3.125, U) {
 mod3 <- function(x, H, Fm, Um, z, h, d, z0) {
   ustarhat <- ustar(Um=Umhat, z=zhat, d=dhat, z0=z0hat)
   Uhat <- U(H=Hhat, ustar=ustarhat, d=dhat, z0=z0hat)
-  sigmahat <- sigma.modified(z=zhat, d=dhat, ustar=ustarhat, U=Uhat)
+  sigmahat <- sigma.modified(z=Hhat, d=dhat, ustar=ustarhat, U=Uhat)
   nuhat <- nu(H=Hhat, U=Uhat, Fm=Fmhat)
   lambdahat <- lambda(H=Hhat, sigma=sigmahat)
   statmod::dinvgauss(x, mean=nuhat, shape=lambdahat)
