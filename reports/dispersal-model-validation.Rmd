@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(sf)
+library(stars)
 ```
 
 ```{r wind Floro station}
@@ -36,75 +37,84 @@ hist(sources$cones)
 
 ```{r make grid geometry}
 gridres <- 2
-grd <- st_sf(st_make_grid(sources, cellsize = gridres))
-pts <- st_sf(st_make_grid(sources, cellsize = gridres, what = "centers"))
+grd <- st_sf(st_make_grid(sources, cellsize = gridres, 
+                          offset = floor(st_bbox(sources)[c("xmin", "ymin")])))
+pts <- st_sf(st_make_grid(sources, cellsize = gridres,
+                          offset = floor(st_bbox(sources)[c("xmin", "ymin")]),
+                          what = "centers"))
 bb <- st_bbox(grd)
-nx <- unname(ceiling((bb$xmax - bb$xmin)/gridres))
-ny <- unname(ceiling((bb$ymax - bb$ymin)/gridres))
+nx <- unname((bb$xmax - bb$xmin)/gridres)
+ny <- unname((bb$ymax - bb$ymin)/gridres)
 paste(nx, "x", ny)
-plot(grd[c(1,120:121),]) #features ordered SW to NE, by row
+plot(grd[c(1,121:122),]) #features ordered SW to NE, by row
 ```
 
-```{r add data to grid}
+```{r add data to grids}
 g <- st_join(grd, sources) # Note: grid cells with multiple seed sources are duplicated
+src <- st_join(pts, g) %>% 
+  filter(cones > 0)
+plot(src)
 
 vegheight <- raster::raster(here("data","raw","seedtraps","lidar","vegheight.tif"))
 vegheight <- st_sf(vegheight = raster::extract(vegheight, pts), geometry = st_geometry(pts))
-g <- st_join(g, vegheight)
-p <- st_join(pts, g)
+g <- st_join(grd, vegheight)
+landscape <- st_join(pts, g)
+plot(landscape)
 ```
 
 ```{r seed density}
 sector.breaks <- seq(0, 360, by=20)
-i <- 50
-seedsrc <- subset(p, !is.na(p$cones))[i,]
-dX <- st_coordinates(seedsrc)[,1] - st_coordinates(p)[,1]
-dY <- st_coordinates(seedsrc)[,2] - st_coordinates(p)[,2]
-source(here("R","functions.R"))
-landscape <- p %>% 
-  mutate(angle = angle(dX, dY)) %>% # compass bearing FROM landscape TO source (matches wind directions)
-  mutate(sector = cut(angle, sector.breaks, include.lowest = TRUE)) %>% 
-  mutate(dist.to.seedsrc = as.numeric(st_distance(p, seedsrc)))
-
-j <- 1
-sect <- levels(landscape$sector)[j]
-vegh <- landscape %>% 
-  filter(sector == sect) %>% 
-  pull(vegheight) %>% 
-  mean()
 dispersal.season <- c(9:12,1:2) # after Harris, A. S. 1990.
-wind <- windobs %>% 
-  filter(Mnth %in% dispersal.season) %>%
-  mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
-  filter(sector == sect) %>%
-  sample_n(100, weight = FF) %>% # assume probability of abscission is directly related to wind speed
-  pull(FF)
-
-k <- 1
+terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
+source(here("R","functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
-mod <- function(x, H = seedsrc$height, 
-                Fm = 0.94, # m/s, after Sandvik, H. 2012. 
-                Um = wind[k], zm = 10, # measured 10 m above ground at station 
-                h = vegh) {
-  d <- calc_d(h)
-  z0 <- calc_z0(h)
-  ustar <- calc_ustar(Um, zm, d, z0)
-  U <- calc_U(H, ustar, d, z0)
-  sigma <- calc_sigma(z = H, d, ustar, U)
-  nu <- calc_nu(H, U, Fm)
-  lambda <- calc_lambda(H, sigma)
-  statmod::dinvgauss(x, mean=nu, shape=lambda)
-}
-mod()
 
-group_by(landscape, sector) %>% 
-  summarize(mean(vegheight, na.rm = TRUE))
+src.arr <- array(data = NA, dim = c(nx, ny, nrow(src)), 
+                 dimnames = list(x=seq(nx), y=seq(ny), src=seq(nrow(src))))
+dim(src.arr)
 
-tab <- as_tibble(landscape) %>% 
-  mutate(sector = as.character(sector)) %>% 
-  filter(sector == sect)
+for (i in seq_along(src$geometry)) { # i <- 50
+  dX <- st_coordinates(src)[i,1] - st_coordinates(landscape)[,1]
+  dY <- st_coordinates(src)[i,2] - st_coordinates(landscape)[,2]
+  landscape <- mutate(landscape, angle = angle(dX, dY)) %>% # compass bearing FROM landscape TO source (matches wind directions)
+    mutate(sector = cut(angle, sector.breaks, include.lowest = TRUE)) %>% 
+    mutate(dist.to.src = as.numeric(st_distance(landscape, src[i,])))
 
-m <- matrix(data = NA, nrow = nrow(tab), ncol = length(wind))
+  for (j in seq_along(levels(landscape$sector))) { # j <- 1
+    vegheight <- landscape %>% 
+      filter(sector == levels(landscape$sector)[j]) %>% 
+      pull(vegheight) %>% 
+      mean()
+    wind <- windobs %>% 
+      filter(Mnth %in% dispersal.season) %>%
+      mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
+      filter(sector == levels(landscape$sector)[j]) %>%
+      sample_n(100, weight = FF) %>% # assume probability of abscission is directly related to wind speed
+      pull(FF)
+
+    wind.arr <- array(data = NA, dim = c(nx, ny, length(wind)), 
+                 dimnames = list(x=seq(nx), y=seq(ny), src=seq(length(wind))))
+    
+    for (k in seq_along(wind)) { # k <- 1
+      WALD <- function(x, 
+                      H = pull(src[i,], "height"), 
+                      Fm = terminal.velocity,
+                      Um = wind[k], zm = 10, # measured 10 m above ground at station 
+                      h = vegheight) {
+        d <- calc_d(h)
+        z0 <- calc_z0(h)
+        ustar <- calc_ustar(Um, zm, d, z0)
+        U <- calc_U(H, ustar, d, z0)
+        sigma <- calc_sigma(z = H, d, ustar, U)
+        nu <- calc_nu(H, U, Fm)
+        lambda <- calc_lambda(H, sigma)
+        statmod::dinvgauss(x, mean=nu, shape=lambda)
+      }
+      landscape %>% 
+        filter(sector == levels(landscape$sector)[j]) %>% 
+        pull(dist.to.src)
+      
+      which(as_tibble(landscape)[,"sector"] == levels(landscape$sector)[j])
 
 
 ```
