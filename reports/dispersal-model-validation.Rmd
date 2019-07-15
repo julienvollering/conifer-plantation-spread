@@ -56,12 +56,13 @@ sum(duplicated(src$geometry))
 
 landscape <- raster::raster(here("data","raw","seedtraps","lidar","vegheight.tif")) %>% 
   raster::extract(as(pts, "Spatial")) %>% 
-  st_sf(geometry = st_geometry(pts))
+  st_sf(geometry = st_geometry(pts)) 
 colnames(landscape)[1] <- "vegheight"
+landscape$vegheight[(is.na(landscape$vegheight))] <- 0 
 plot(landscape)
 ```
 
-```{r seed density, eval=FALSE}
+```{r seed density}
 sector.breaks <- seq(0, 360, by=20)
 dispersal.season <- c(9:12,1:2) # after Harris, A. S. 1990.
 terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
@@ -70,29 +71,35 @@ source(here("R","SkarpaasShea_2007.R"))
 
 src.arr <- array(data = NA, dim = c(nx, ny, nrow(src)), 
                  dimnames = list(x=seq(nx), y=seq(ny), src=seq(nrow(src))))
-dim(src.arr)
 
-for (i in seq_along(src$geometry)) { # i <- 50
+for (i in 50) { #seq_along(src$geometry)) { # i <- 50
   dX <- st_coordinates(src)[i,1] - st_coordinates(landscape)[,1]
   dY <- st_coordinates(src)[i,2] - st_coordinates(landscape)[,2]
-  landscape <- mutate(landscape, angle = angle(dX, dY)) %>% # compass bearing FROM landscape TO source (matches wind directions)
+  landscape <- mutate(landscape, angle = angle(dX, dY)) %>% # compass bearing FROM landscape TO source (matches wind direction DD)
     mutate(sector = cut(angle, sector.breaks, include.lowest = TRUE)) %>% 
     mutate(dist.to.src = as.numeric(st_distance(landscape, src[i,])))
 
+  sec.arr <- array(data = NA, dim = c(nx, ny, length(levels(landscape$sector))), 
+                 dimnames = list(x=seq(nx), y=seq(ny), sec=levels(landscape$sector)))
+  
   for (j in seq_along(levels(landscape$sector))) { # j <- 1
     vegheight <- landscape %>% 
       filter(sector == levels(landscape$sector)[j]) %>% 
       pull(vegheight) %>% 
       mean()
+    set.seed(42)
     wind <- windobs %>% 
       filter(Mnth %in% dispersal.season) %>%
       mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
       filter(sector == levels(landscape$sector)[j]) %>%
-      sample_n(100, weight = FF) %>% # assume probability of abscission is directly related to wind speed
+      sample_n(100, replace = TRUE, weight = FF) %>% # assume probability of abscission is directly related to wind speed
       pull(FF)
-
+    
+    distances <- landscape$dist.to.src
+    distances[landscape$sector != levels(landscape$sector)[j]] <- NA
+    
     wind.arr <- array(data = NA, dim = c(nx, ny, length(wind)), 
-                 dimnames = list(x=seq(nx), y=seq(ny), src=seq(length(wind))))
+                 dimnames = list(x=seq(nx), y=seq(ny), windspeed=wind))
     
     for (k in seq_along(wind)) { # k <- 1
       WALD <- function(x, 
@@ -109,13 +116,31 @@ for (i in seq_along(src$geometry)) { # i <- 50
         lambda <- calc_lambda(H, sigma)
         statmod::dinvgauss(x, mean=nu, shape=lambda)
       }
-      landscape %>% 
-        filter(sector == levels(landscape$sector)[j]) %>% 
-        pull(dist.to.src)
       
-      which(as_tibble(landscape)[,"sector"] == levels(landscape$sector)[j])
+      # Divisor below accounts for the fact that the WALD formulation was "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). 
+      # Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
+      wind.arr[, , k] <- WALD(distances) / (2*pi*distances)/(length(levels(landscape$sector)))
+      
+    }
+    
+    sec.arr[, , j] <- rowSums(wind.arr, dims = 2)
+  }
 
+  set.seed(42)
+  secweight <- windobs %>% 
+    filter(Mnth %in% dispersal.season) %>%
+    mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
+    sample_n(1000, weight = FF) %>% 
+    count(sector) %>% 
+    mutate(normalized = n/sum(n))
+  for (z in seq_along(levels(landscape$sector))) {
+    sec.arr[, , z] <- sec.arr[, , z] * secweight$normalized[z]
+  }
 
+  src.arr[, , i] <- rowSums(sec.arr, na.rm = TRUE, dims = 2) # JV: dont forget cone weighting!
+}      
+      
+fields::image.plot(src.arr[,,50])
 ```
 
 
