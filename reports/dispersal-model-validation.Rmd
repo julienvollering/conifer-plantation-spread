@@ -10,10 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(sf)
-library(stars)
 ```
 
-```{r wind Floro station}
+```{r wind Floro station, warning=FALSE}
 windobs <- read_delim(here("data","raw","eKlima","obswind-stnr57710FLORO-20190604.txt"), 
                       delim = ";", na = "-9999", skip = 24) %>% 
   drop_na()
@@ -49,20 +48,20 @@ paste(nx, "x", ny)
 plot(grd[c(1,121:122),]) #features ordered SW to NE, by row
 ```
 
-```{r add data to grids}
-g <- st_join(grd, sources) # Note: grid cells with multiple seed sources are duplicated
-src <- st_join(pts, g) %>% 
+```{r add data to geometry}
+# Note: grid cells with multiple seed sources are duplicated by joining sources to grid, and we assume dispersal from cell center by joining grd to pts.
+src <- st_join(pts, st_join(grd, sources)) %>% 
   filter(cones > 0)
-plot(src)
+sum(duplicated(src$geometry))
 
-vegheight <- raster::raster(here("data","raw","seedtraps","lidar","vegheight.tif"))
-vegheight <- st_sf(vegheight = raster::extract(vegheight, pts), geometry = st_geometry(pts))
-g <- st_join(grd, vegheight)
-landscape <- st_join(pts, g)
+landscape <- raster::raster(here("data","raw","seedtraps","lidar","vegheight.tif")) %>% 
+  raster::extract(as(pts, "Spatial")) %>% 
+  st_sf(geometry = st_geometry(pts))
+colnames(landscape)[1] <- "vegheight"
 plot(landscape)
 ```
 
-```{r seed density}
+```{r seed density, eval=FALSE}
 sector.breaks <- seq(0, 360, by=20)
 dispersal.season <- c(9:12,1:2) # after Harris, A. S. 1990.
 terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
