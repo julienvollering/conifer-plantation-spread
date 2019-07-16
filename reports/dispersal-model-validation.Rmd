@@ -26,20 +26,26 @@ windobs %>%
   summarize(mean=mean(FF), sd=sd(FF))
 ```
 
-```{r read seed sources}
+```{r read seed sources and traps}
 sources <- read_csv(here("data","raw","seedtraps","seedsources.csv")) %>% 
   st_as_sf(coords = c(1:2), crs = 25832) # ETRS89 / UTM zone 32N
 plot(sources["height"], key.pos = 4)
 plot(sources["cones"], key.pos = 4)
 hist(sources$cones)
+
+traps <- read_csv(here("data","raw","seedtraps","seedtraps.csv")) %>% 
+  st_as_sf(coords = c(1:2), crs = 25832) # ETRS89 / UTM zone 32N
+plot(traps["seeds"], key.pos = 4)
+hist(traps$seeds)
 ```
 
 ```{r make grid geometry}
 gridres <- 2
-grd <- st_sf(st_make_grid(sources, cellsize = gridres, 
-                          offset = floor(st_bbox(sources)[c("xmin", "ymin")])))
-pts <- st_sf(st_make_grid(sources, cellsize = gridres,
-                          offset = floor(st_bbox(sources)[c("xmin", "ymin")]),
+datageom <- c(st_geometry(sources), st_geometry(traps))
+grd <- st_sf(st_make_grid(datageom, cellsize = gridres, 
+                          offset = floor(st_bbox(datageom)[c("xmin", "ymin")])))
+pts <- st_sf(st_make_grid(datageom, cellsize = gridres,
+                          offset = floor(st_bbox(datageom)[c("xmin", "ymin")]),
                           what = "centers"))
 bb <- st_bbox(grd)
 nx <- unname((bb$xmax - bb$xmin)/gridres)
@@ -63,16 +69,26 @@ plot(landscape)
 ```
 
 ```{r seed density}
-sector.breaks <- seq(0, 360, by=20)
+sector.breaks <- seq(0, 360, by=10)
 dispersal.season <- c(9:12,1:2) # after Harris, A. S. 1990.
 terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
 source(here("R","functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
 
+set.seed(42)
+secweight <- windobs %>% 
+  filter(Mnth %in% dispersal.season) %>%
+  mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
+  sample_n(10000, weight = FF, replace = TRUE) %>% 
+  count(sector, .drop = FALSE) %>% 
+  mutate(normalized = n/sum(n))
+
 src.arr <- array(data = NA, dim = c(nx, ny, nrow(src)), 
                  dimnames = list(x=seq(nx), y=seq(ny), src=seq(nrow(src))))
 
-for (i in 50) { #seq_along(src$geometry)) { # i <- 50
+pb <- txtProgressBar(min(seq_along(src$geometry)), max(seq_along(src$geometry)), 
+                     style = 3)
+for (i in seq_along(src$geometry)) { # i <- 50
   dX <- st_coordinates(src)[i,1] - st_coordinates(landscape)[,1]
   dY <- st_coordinates(src)[i,2] - st_coordinates(landscape)[,2]
   landscape <- mutate(landscape, angle = angle(dX, dY)) %>% # compass bearing FROM landscape TO source (matches wind direction DD)
@@ -87,6 +103,7 @@ for (i in 50) { #seq_along(src$geometry)) { # i <- 50
       filter(sector == levels(landscape$sector)[j]) %>% 
       pull(vegheight) %>% 
       mean()
+    if (is.nan(vegheight)) {vegheight <- 0.1}
     set.seed(42)
     wind <- windobs %>% 
       filter(Mnth %in% dispersal.season) %>%
@@ -126,23 +143,53 @@ for (i in 50) { #seq_along(src$geometry)) { # i <- 50
     sec.arr[, , j] <- rowSums(wind.arr, dims = 2)
   }
 
-  set.seed(42)
-  secweight <- windobs %>% 
-    filter(Mnth %in% dispersal.season) %>%
-    mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
-    sample_n(1000, weight = FF) %>% 
-    count(sector) %>% 
-    mutate(normalized = n/sum(n))
   for (z in seq_along(levels(landscape$sector))) {
     sec.arr[, , z] <- sec.arr[, , z] * secweight$normalized[z]
   }
 
-  src.arr[, , i] <- rowSums(sec.arr, na.rm = TRUE, dims = 2) # JV: dont forget cone weighting!
+  src.arr[, , i] <- rowSums(sec.arr, na.rm = TRUE, dims = 2)
+  setTxtProgressBar(pb, i)
 }      
-      
-fields::image.plot(src.arr[,,50])
+close(pb)
+
+saveRDS(src.arr, here("output","broervika","WALD_src-arr.rds"))      
+#src.arr <- readRDS(here("output","broervika","WALD_src-arr.rds"))
+
+for (z in seq_along(src$geometry)) {
+  src.arr[, , z] <- src.arr[, , z] * src$cones[z]
+}
+src.mat <- rowSums(src.arr, dims = 2)
+
+WALD.grd <- grd
+WALD.grd[, "density"] <- src.mat[1:length(src.mat)]
+plot(WALD.grd)
+plot(st_geometry(src), pch=3, col="white", add=TRUE) # not working
+
+WALD.ras <- raster::raster(nrows=ny, ncols=nx, 
+                           xmn=st_bbox(grd)[1], xmx=st_bbox(grd)[3], 
+                           ymn=st_bbox(grd)[2], ymx=st_bbox(grd)[4],
+                           crs=st_crs(grd)$proj4string)
+WALD.ras <- raster::rasterize(as(WALD.grd, "Spatial"), WALD.ras, field="density")
+raster::plot(WALD.ras)
+raster::writeRaster(WALD.ras, here("output","broervika","WALD_src-ras.tif"))
+points(as(src, "Spatial"))
+points(as(traps, "Spatial"), pch=20, col="red")
 ```
 
+```{r validation}
+trapdata <- read_csv(here("data","raw","seedtraps","seedtraps.csv")) %>% 
+  mutate(WALDdensity = raster::extract(WALD.ras, as(traps, "Spatial"))) %>% 
+  mutate(WALDseeds = WALDdensity*sum(seeds)/sum(WALDdensity))
+plot(trapdata$seeds, trapdata$WALDseeds) 
+arrange(trapdata, desc(seeds))
+
+trapdata$nearestsrc <- sapply(st_geometry(traps), function(x) {
+  ind <- st_nearest_feature(x, src)
+  st_distance(x, st_geometry(src)[[ind]])
+})
+plot(trapdata$nearestsrc, (trapdata$seeds-trapdata$WALDseeds)^2, 
+     xlab = "Nearest source (m)", ylab = "Squared error")
+```
 
 ```{r sessionInfo}
 sessionInfo()

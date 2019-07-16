@@ -8,11 +8,3 @@ angle <- function(dx,dy)
   a[dx<0 & dy==0] <- 270
   return(a)
 }
-
-matimage <- function(matrix) {
-  require(tidyverse)
-  matrix %>%
-    apply(2, rev) %>% 
-    t() %>% 
-    image()
-}

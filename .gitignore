@@ -7,4 +7,5 @@
 *.qgs
 *.qgs~
 data
+output
 notes
