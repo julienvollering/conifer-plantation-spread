@@ -12,20 +12,6 @@ library(here)
 library(sf)
 ```
 
-```{r wind Floro station, warning=FALSE}
-windobs <- read_delim(here("data","raw","eKlima","obswind-stnr57710FLORO-20190604.txt"), 
-                      delim = ";", na = "-9999", skip = 24) %>% 
-  drop_na()
-count(windobs, fDD)
-count(windobs, fFF)
-windobs <- filter(windobs, fDD == "OK" & fFF == "OK") %>% 
-  select(-c("St.no", "fDD", "fFF"))
-
-windobs %>% 
-  group_by(Mnth) %>% 
-  summarize(mean=mean(FF), sd=sd(FF))
-```
-
 ```{r read seed sources and traps}
 sources <- read_csv(here("data","raw","seedtraps","seedsources.csv")) %>% 
   st_as_sf(coords = c(1:2), crs = 25832) # ETRS89 / UTM zone 32N
@@ -55,11 +41,6 @@ plot(grd[c(1,121:122),]) #features ordered SW to NE, by row
 ```
 
 ```{r add data to geometry}
-# Note: grid cells with multiple seed sources are duplicated by joining sources to grid, and we assume dispersal from cell center by joining grd to pts.
-src <- st_join(pts, st_join(grd, sources)) %>% 
-  filter(cones > 0)
-sum(duplicated(src$geometry))
-
 landscape <- raster::raster(here("data","raw","seedtraps","lidar","vegheight.tif")) %>% 
   raster::extract(as(pts, "Spatial")) %>% 
   st_sf(geometry = st_geometry(pts)) 
@@ -68,97 +49,88 @@ landscape$vegheight[(is.na(landscape$vegheight))] <- 0
 plot(landscape)
 ```
 
-```{r seed density}
-sector.breaks <- seq(0, 360, by=10)
-dispersal.season <- c(9:12,1:2) # after Harris, A. S. 1990.
-terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
+```{r wind Floro station, warning=FALSE}
+windobs <- read_delim(here("data","raw","eKlima","obswind-stnr57710FLORO-20190604.txt"), 
+                      delim = ";", na = "-9999", skip = 24) %>% 
+  drop_na()
+count(windobs, fDD)
+count(windobs, fFF)
+windobs <- filter(windobs, fDD == "OK" & fFF == "OK") %>% 
+  select(-c("St.no", "fDD", "fFF"))
+
+windobs %>% 
+  group_by(Mnth) %>% 
+  summarize(mean=mean(FF), sd=sd(FF))
+```
+
+```{r abscission-dependent WALD model}
+freeze <- ls()
 source(here("R","functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
 
+terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
+sector.breaks <- seq(0, 360, by=10)
+dispersal.season <- c(9:12,1:2) # after Harris, A. S. 1990.
+windobs <- windobs %>% 
+  filter(Mnth %in% dispersal.season) %>% 
+  mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE))
+
 set.seed(42)
-secweight <- windobs %>% 
-  filter(Mnth %in% dispersal.season) %>%
-  mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
-  sample_n(10000, weight = FF, replace = TRUE) %>% 
-  count(sector, .drop = FALSE) %>% 
-  mutate(normalized = n/sum(n))
+sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
+  add_column(weight = sample_frequency(among = windobs, of = quo(sector), weightedby = quo(FF)))
+set.seed(42)
+winds <- lapply(sectors360$sector, function(x) {
+  filter(windobs, sector == x) %>% 
+    # assume probability of abscission is directly related to wind speed
+    sample_n(100, replace = TRUE, weight = FF) %>% 
+    pull(FF)
+})
 
-src.arr <- array(data = NA, dim = c(nx, ny, nrow(src)), 
-                 dimnames = list(x=seq(nx), y=seq(ny), src=seq(nrow(src))))
+pb <- txtProgressBar(0, nrow(sources), style = 3)
 
-pb <- txtProgressBar(min(seq_along(src$geometry)), max(seq_along(src$geometry)), 
-                     style = 3)
-for (i in seq_along(src$geometry)) { # i <- 50
-  dX <- st_coordinates(src)[i,1] - st_coordinates(landscape)[,1]
-  dY <- st_coordinates(src)[i,2] - st_coordinates(landscape)[,2]
-  landscape <- mutate(landscape, angle = angle(dX, dY)) %>% # compass bearing FROM landscape TO source (matches wind direction DD)
-    mutate(sector = cut(angle, sector.breaks, include.lowest = TRUE)) %>% 
-    mutate(dist.to.src = as.numeric(st_distance(landscape, src[i,])))
+src.arr <- array(dim = c(nx, ny, nrow(sources)))
 
-  sec.arr <- array(data = NA, dim = c(nx, ny, length(levels(landscape$sector))), 
-                 dimnames = list(x=seq(nx), y=seq(ny), sec=levels(landscape$sector)))
+for (i in seq_along(sources$geometry)) { # i <- 1
+  landscape$sector <- assign_sectors(to = landscape, around = sources[i, ], 
+                            between = sector.breaks)
+  landscape$distance <- as.numeric(st_distance(landscape, sources[i,]))
+  src.sectors <- sectors360$sector[sectors360$sector %in% landscape$sector]
   
-  for (j in seq_along(levels(landscape$sector))) { # j <- 1
+  sec.arr <- array(dim = c(nx, ny, length(src.sectors)))
+  
+  for (j in seq_along(src.sectors)) { # j <- 1
+
     vegheight <- landscape %>% 
-      filter(sector == levels(landscape$sector)[j]) %>% 
+      filter(sector == src.sectors[j]) %>% 
       pull(vegheight) %>% 
       mean()
-    if (is.nan(vegheight)) {vegheight <- 0.1}
-    set.seed(42)
-    wind <- windobs %>% 
-      filter(Mnth %in% dispersal.season) %>%
-      mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE)) %>%
-      filter(sector == levels(landscape$sector)[j]) %>%
-      sample_n(100, replace = TRUE, weight = FF) %>% # assume probability of abscission is directly related to wind speed
-      pull(FF)
+    distances <- landscape$distance
+    distances[landscape$sector != src.sectors[j]] <- NA
     
-    distances <- landscape$dist.to.src
-    distances[landscape$sector != levels(landscape$sector)[j]] <- NA
+    wind.arr <- array(data = NA, dim = c(nx, ny, 100))
     
-    wind.arr <- array(data = NA, dim = c(nx, ny, length(wind)), 
-                 dimnames = list(x=seq(nx), y=seq(ny), windspeed=wind))
-    
-    for (k in seq_along(wind)) { # k <- 1
-      WALD <- function(x, 
-                      H = pull(src[i,], "height"), 
-                      Fm = terminal.velocity,
-                      Um = wind[k], zm = 10, # measured 10 m above ground at station 
-                      h = vegheight) {
-        d <- calc_d(h)
-        z0 <- calc_z0(h)
-        ustar <- calc_ustar(Um, zm, d, z0)
-        U <- calc_U(H, ustar, d, z0)
-        sigma <- calc_sigma(z = H, d, ustar, U)
-        nu <- calc_nu(H, U, Fm)
-        lambda <- calc_lambda(H, sigma)
-        statmod::dinvgauss(x, mean=nu, shape=lambda)
-      }
+    for (k in 1:100) { # k <- 1
+      WALD <- parameterize_WALD(H = pull(sources[i,], "height"), 
+                                Fm = terminal.velocity,
+                                Um = winds[[j]][k], zm = 10, # measured 10 m above ground at station 
+                                h = vegheight)
       
-      # Divisor below accounts for the fact that the WALD formulation was "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). 
-      # Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
-      wind.arr[, , k] <- WALD(distances) / (2*pi*distances)/(length(levels(landscape$sector)))
-      
+      # Divisor below accounts for the fact that the WALD formulation used here is the "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
+      wind.arr[, , k] <- WALD(distances) / (2*pi*distances)/(length(nrow(sectors360)))
     }
-    
-    sec.arr[, , j] <- rowSums(wind.arr, dims = 2)
+    sec.arr[, , j] <- sum_third_dim(wind.arr)
   }
-
-  for (z in seq_along(levels(landscape$sector))) {
-    sec.arr[, , z] <- sec.arr[, , z] * secweight$normalized[z]
-  }
-
-  src.arr[, , i] <- rowSums(sec.arr, na.rm = TRUE, dims = 2)
+  src.arr[, , i] <- sum_third_dim(sec.arr, 
+                                  sectors360$weight[which(sectors360$sector %in% src.sectors)])
   setTxtProgressBar(pb, i)
 }      
 close(pb)
+rm(list = setdiff(ls(), c(freeze, "src.arr")))
 
 saveRDS(src.arr, here("output","broervika","WALD_src-arr.rds"))      
-#src.arr <- readRDS(here("output","broervika","WALD_src-arr.rds"))
+# src.arr <- readRDS(here("output","broervika","WALD_src-arr.rds"))
 
-for (z in seq_along(src$geometry)) {
-  src.arr[, , z] <- src.arr[, , z] * src$cones[z]
-}
-src.mat <- rowSums(src.arr, dims = 2)
+src.mat <- sum_third_dim(src.arr, sources$cones)
 
 WALD.grd <- grd
 WALD.grd[, "density"] <- src.mat[1:length(src.mat)]
@@ -170,13 +142,15 @@ WALD.ras <- raster::raster(nrows=ny, ncols=nx,
                            ymn=st_bbox(grd)[2], ymx=st_bbox(grd)[4],
                            crs=st_crs(grd)$proj4string)
 WALD.ras <- raster::rasterize(as(WALD.grd, "Spatial"), WALD.ras, field="density")
-raster::plot(WALD.ras)
 raster::writeRaster(WALD.ras, here("output","broervika","WALD_src-ras.tif"))
+raster::plot(WALD.ras)
 points(as(src, "Spatial"))
 points(as(traps, "Spatial"), pch=20, col="red")
 ```
 
+
 ```{r validation}
+# WALD.ras <- raster::raster(here("output","broervika","WALD_src-ras.tif"))
 trapdata <- read_csv(here("data","raw","seedtraps","seedtraps.csv")) %>% 
   mutate(WALDdensity = raster::extract(WALD.ras, as(traps, "Spatial"))) %>% 
   mutate(WALDseeds = WALDdensity*sum(seeds)/sum(WALDdensity))

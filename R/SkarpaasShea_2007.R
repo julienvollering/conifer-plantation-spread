@@ -49,3 +49,14 @@ calc_d <- function(h) {
 calc_z0 <- function(h) {
   0.1*h
 }
+
+parameterize_WALD <- function(H, Fm, Um, zm, h) {
+  d <- calc_d(h)
+  z0 <- calc_z0(h)
+  ustar <- calc_ustar(Um, zm, d, z0)
+  U <- calc_U(H, ustar, d, z0)
+  sigma <- calc_sigma(z = H, d, ustar, U)
+  nu <- calc_nu(H, U, Fm)
+  lambda <- calc_lambda(H, sigma)
+  function(x) {statmod::dinvgauss(x, mean=nu, shape=lambda)}
+}
