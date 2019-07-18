@@ -18,13 +18,13 @@ calc_lambda <- function(H, sigma) {(H/sigma)^2}
 # z0 surface roughness parameter z0
 calc_U <- function(H, ustar, d, z0) {
   (1/H)*integrate(function(z, ustar, d, z0) {(ustar/0.4)*log((z-d)/z0)}, 
-                  lower=z0+d, upper=H, # lower limit set to z0+d to avoid log(0) and log(negative)
+                  lower=z0+d, upper=H, # lower limit set to z0+d to avoid log(<1)
                   ustar=ustar, d=d, z0=z0)$value 
 }
 
 # Eq. A2:
 # Um mean wind speed at measurement height
-# zm wind speed at measurement height
+# zm wind speed measurement height
 # d surface roughness parameter d
 # z0 surface roughness parameter z0
 calc_ustar <- function(Um, zm, d, z0) {
@@ -51,11 +51,16 @@ calc_z0 <- function(h) {
 }
 
 parameterize_WALD <- function(H, Fm, Um, zm, h) {
+  if (h > zm) { zm <- h } # Avoids unrealistic estimates of friction velocity (ustar)
   d <- calc_d(h)
   z0 <- calc_z0(h)
   ustar <- calc_ustar(Um, zm, d, z0)
-  U <- calc_U(H, ustar, d, z0)
-  sigma <- calc_sigma(z = H, d, ustar, U)
+  if (h >= 0.8*H) { # Avoids wind speeds below friction velocity (ustar), else they decrease to zero
+    U <- ustar 
+  } else {
+    U <- calc_U(H, ustar, d, z0)
+  }
+  sigma <- calc_sigma(z = max(H, h), d, ustar, U) # Avoids sqrt(<0), z = turbulent flow height above ground
   nu <- calc_nu(H, U, Fm)
   lambda <- calc_lambda(H, sigma)
   function(x) {statmod::dinvgauss(x, mean=nu, shape=lambda)}

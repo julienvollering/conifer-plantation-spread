@@ -37,7 +37,6 @@ bb <- st_bbox(grd)
 nx <- unname((bb$xmax - bb$xmin)/gridres)
 ny <- unname((bb$ymax - bb$ymin)/gridres)
 paste(nx, "x", ny)
-plot(grd[c(1,121:122),]) #features ordered SW to NE, by row
 ```
 
 ```{r add data to geometry}
@@ -75,13 +74,13 @@ windobs <- windobs %>%
   filter(Mnth %in% dispersal.season) %>% 
   mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE))
 
+# Assume probability of abscission is directly related to wind speed
 set.seed(42)
 sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
   add_column(weight = sample_frequency(among = windobs, of = quo(sector), weightedby = quo(FF)))
 set.seed(42)
 winds <- lapply(sectors360$sector, function(x) {
   filter(windobs, sector == x) %>% 
-    # assume probability of abscission is directly related to wind speed
     sample_n(100, replace = TRUE, weight = FF) %>% 
     pull(FF)
 })
@@ -125,9 +124,8 @@ for (i in seq_along(sources$geometry)) { # i <- 1
   setTxtProgressBar(pb, i)
 }      
 close(pb)
-rm(list = setdiff(ls(), c(freeze, "src.arr")))
 
-saveRDS(src.arr, here("output","broervika","WALD_src-arr.rds"))      
+saveRDS(src.arr, here("output","broervika","WALD-absdep_src-arr.rds"))      
 # src.arr <- readRDS(here("output","broervika","WALD_src-arr.rds"))
 
 src.mat <- sum_third_dim(src.arr, sources$cones)
@@ -135,34 +133,135 @@ src.mat <- sum_third_dim(src.arr, sources$cones)
 WALD.grd <- grd
 WALD.grd[, "density"] <- src.mat[1:length(src.mat)]
 plot(WALD.grd)
-plot(st_geometry(src), pch=3, col="white", add=TRUE) # not working
+plot(st_geometry(sources), pch=3, col="white", add=TRUE) # not working
 
 WALD.ras <- raster::raster(nrows=ny, ncols=nx, 
                            xmn=st_bbox(grd)[1], xmx=st_bbox(grd)[3], 
                            ymn=st_bbox(grd)[2], ymx=st_bbox(grd)[4],
                            crs=st_crs(grd)$proj4string)
 WALD.ras <- raster::rasterize(as(WALD.grd, "Spatial"), WALD.ras, field="density")
-raster::writeRaster(WALD.ras, here("output","broervika","WALD_src-ras.tif"))
-raster::plot(WALD.ras)
-points(as(src, "Spatial"))
+raster::writeRaster(WALD.ras, here("output","broervika","WALD-absdep_src-ras.tif"))
+raster::plot(log(WALD.ras))
+points(as(sources, "Spatial"))
 points(as(traps, "Spatial"), pch=20, col="red")
+
+rm(list = setdiff(ls(), c(freeze)))
 ```
 
+```{r abscission-independent WALD model}
+freeze <- ls()
+source(here("R","functions.R"))
+source(here("R","SkarpaasShea_2007.R"))
+
+terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
+sector.breaks <- seq(0, 360, by=10)
+dispersal.season <- c(9:12,1:2) # after Harris, A. S. 1990.
+windobs <- windobs %>% 
+  filter(Mnth %in% dispersal.season) %>% 
+  mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE))
+
+# Assume probability of abscission is UNRELATED to wind speed (constant)
+set.seed(42)
+sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
+  add_column(weight = sample_frequency(among = windobs, of = quo(sector), weightedby = NULL))
+set.seed(42)
+winds <- lapply(sectors360$sector, function(x) {
+  filter(windobs, sector == x) %>% 
+    # assume probability of abscission is directly related to wind speed
+    sample_n(100, replace = TRUE, weight = NULL) %>% 
+    pull(FF)
+})
+
+pb <- txtProgressBar(0, nrow(sources), style = 3)
+
+src.arr <- array(dim = c(nx, ny, nrow(sources)))
+
+for (i in seq_along(sources$geometry)) { # i <- 1
+  landscape$sector <- assign_sectors(to = landscape, around = sources[i, ], 
+                            between = sector.breaks)
+  landscape$distance <- as.numeric(st_distance(landscape, sources[i,]))
+  src.sectors <- sectors360$sector[sectors360$sector %in% landscape$sector]
+  
+  sec.arr <- array(dim = c(nx, ny, length(src.sectors)))
+  
+  for (j in seq_along(src.sectors)) { # j <- 1
+
+    vegheight <- landscape %>% 
+      filter(sector == src.sectors[j]) %>% 
+      pull(vegheight) %>% 
+      mean()
+    distances <- landscape$distance
+    distances[landscape$sector != src.sectors[j]] <- NA
+    
+    wind.arr <- array(data = NA, dim = c(nx, ny, 100))
+    
+    for (k in 1:100) { # k <- 1
+      WALD <- parameterize_WALD(H = pull(sources[i,], "height"), 
+                                Fm = terminal.velocity,
+                                Um = winds[[j]][k], zm = 10, # measured 10 m above ground at station 
+                                h = vegheight)
+      
+      # Divisor below accounts for the fact that the WALD formulation used here is the "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
+      wind.arr[, , k] <- WALD(distances) / (2*pi*distances)/(length(nrow(sectors360)))
+    }
+    sec.arr[, , j] <- sum_third_dim(wind.arr)
+  }
+  src.arr[, , i] <- sum_third_dim(sec.arr, 
+                                  sectors360$weight[which(sectors360$sector %in% src.sectors)])
+  setTxtProgressBar(pb, i)
+}      
+close(pb)
+
+saveRDS(src.arr, here("output","broervika","WALD-absind_src-arr.rds"))      
+# src.arr <- readRDS(here("output","broervika","WALD_src-arr.rds"))
+
+src.mat <- sum_third_dim(src.arr, sources$cones)
+
+WALD.grd <- grd
+WALD.grd[, "density"] <- src.mat[1:length(src.mat)]
+plot(WALD.grd)
+plot(st_geometry(sources), pch=3, col="white", add=TRUE) # not working
+
+WALD.ras <- raster::raster(nrows=ny, ncols=nx, 
+                           xmn=st_bbox(grd)[1], xmx=st_bbox(grd)[3], 
+                           ymn=st_bbox(grd)[2], ymx=st_bbox(grd)[4],
+                           crs=st_crs(grd)$proj4string)
+WALD.ras <- raster::rasterize(as(WALD.grd, "Spatial"), WALD.ras, field="density")
+raster::writeRaster(WALD.ras, here("output","broervika","WALD-absind_src-ras.tif"))
+raster::plot(log(WALD.ras))
+points(as(sources, "Spatial"))
+points(as(traps, "Spatial"), pch=20, col="red")
+
+rm(list = setdiff(ls(), c(freeze)))
+```
 
 ```{r validation}
-# WALD.ras <- raster::raster(here("output","broervika","WALD_src-ras.tif"))
+adWALD.ras <- raster::raster(here("output","broervika","WALD-absdep_src-ras.tif"))
+aiWALD.ras <- raster::raster(here("output","broervika","WALD-absind_src-ras.tif"))
+
 trapdata <- read_csv(here("data","raw","seedtraps","seedtraps.csv")) %>% 
-  mutate(WALDdensity = raster::extract(WALD.ras, as(traps, "Spatial"))) %>% 
-  mutate(WALDseeds = WALDdensity*sum(seeds)/sum(WALDdensity))
-plot(trapdata$seeds, trapdata$WALDseeds) 
+  mutate(adWALD = raster::extract(adWALD.ras, as(traps, "Spatial"))) %>% 
+  mutate(adWALDseeds = adWALD*sum(seeds)/sum(adWALD)) %>% 
+  mutate(aiWALD = raster::extract(aiWALD.ras, as(traps, "Spatial"))) %>% 
+  mutate(aiWALDseeds = aiWALD*sum(seeds)/sum(aiWALD))
+
+plot(trapdata$seeds, trapdata$adWALDseeds)
+points(trapdata$seeds, trapdata$aiWALDseeds, pch=2)
+abline(0, 1)
+
+plot(log(trapdata$seeds), log(trapdata$adWALDseeds))
+points(log(trapdata$seeds), log(trapdata$aiWALDseeds), pch=2)
+abline(0, 1)
+
 arrange(trapdata, desc(seeds))
 
 trapdata$nearestsrc <- sapply(st_geometry(traps), function(x) {
-  ind <- st_nearest_feature(x, src)
-  st_distance(x, st_geometry(src)[[ind]])
+  ind <- st_nearest_feature(x, sources)
+  st_distance(x, st_geometry(sources)[[ind]])
 })
-plot(trapdata$nearestsrc, (trapdata$seeds-trapdata$WALDseeds)^2, 
+plot(trapdata$nearestsrc, (trapdata$seeds-trapdata$adWALDseeds)^2, 
      xlab = "Nearest source (m)", ylab = "Squared error")
+points(trapdata$nearestsrc, (trapdata$seeds-trapdata$aiWALDseeds)^2, pch=2)
 ```
 
 ```{r sessionInfo}
