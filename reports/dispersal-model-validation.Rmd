@@ -140,7 +140,7 @@ WALD.ras <- raster::raster(nrows=ny, ncols=nx,
                            ymn=st_bbox(grd)[2], ymx=st_bbox(grd)[4],
                            crs=st_crs(grd)$proj4string)
 WALD.ras <- raster::rasterize(as(WALD.grd, "Spatial"), WALD.ras, field="density")
-raster::writeRaster(WALD.ras, here("output","broervika","WALD-absdep_src-ras.tif"))
+raster::writeRaster(WALD.ras, here("output","broervika","adWALD.tif"))
 raster::plot(log(WALD.ras))
 points(as(sources, "Spatial"))
 points(as(traps, "Spatial"), pch=20, col="red")
@@ -227,7 +227,7 @@ WALD.ras <- raster::raster(nrows=ny, ncols=nx,
                            ymn=st_bbox(grd)[2], ymx=st_bbox(grd)[4],
                            crs=st_crs(grd)$proj4string)
 WALD.ras <- raster::rasterize(as(WALD.grd, "Spatial"), WALD.ras, field="density")
-raster::writeRaster(WALD.ras, here("output","broervika","WALD-absind_src-ras.tif"))
+raster::writeRaster(WALD.ras, here("output","broervika","aiWALD.tif"))
 raster::plot(log(WALD.ras))
 points(as(sources, "Spatial"))
 points(as(traps, "Spatial"), pch=20, col="red")
@@ -235,33 +235,92 @@ points(as(traps, "Spatial"), pch=20, col="red")
 rm(list = setdiff(ls(), c(freeze)))
 ```
 
+```{r generalized Exponential Power model}
+freeze <- ls()
+source(here("R","functions.R"))
+
+# From Bullock et al. 2017
+a <- 2.7825
+b <- 0.8346
+exp_power <- function(d) {
+  b*(2*pi*a^2*gamma(2/b))^-1*exp(-(d^b/a^b))
+}
+
+src.arr <- array(dim = c(nx, ny, nrow(sources)))
+
+for (i in seq_along(sources$geometry)) { # i <- 1
+  landscape$distance <- as.numeric(st_distance(landscape, sources[i,]))
+  src.arr[, , i] <- exp_power(landscape$distance)
+}
+
+src.mat <- sum_third_dim(src.arr, sources$cones)
+
+Exppow.grd <- grd
+Exppow.grd[, "density"] <- src.mat[1:length(src.mat)]
+plot(Exppow.grd)
+plot(st_geometry(sources), pch=3, col="white", add=TRUE) # not working
+
+Exppow.ras <- raster::raster(nrows=ny, ncols=nx, 
+                           xmn=st_bbox(grd)[1], xmx=st_bbox(grd)[3], 
+                           ymn=st_bbox(grd)[2], ymx=st_bbox(grd)[4],
+                           crs=st_crs(grd)$proj4string)
+Exppow.ras <- raster::rasterize(as(Exppow.grd, "Spatial"), Exppow.ras, field="density")
+raster::writeRaster(Exppow.ras, here("output","broervika","EP.tif"))
+raster::plot(log(Exppow.ras))
+points(as(sources, "Spatial"))
+points(as(traps, "Spatial"), pch=20, col="red")
+
+rm(list = setdiff(ls(), c(freeze)))
+```
+
+
 ```{r validation}
-adWALD.ras <- raster::raster(here("output","broervika","WALD-absdep_src-ras.tif"))
-aiWALD.ras <- raster::raster(here("output","broervika","WALD-absind_src-ras.tif"))
+files <- list.files(here("output","broervika"), pattern = "tif", full.names = TRUE)
+stack.ras <- raster::stack(files)
 
 trapdata <- read_csv(here("data","raw","seedtraps","seedtraps.csv")) %>% 
-  mutate(adWALD = raster::extract(adWALD.ras, as(traps, "Spatial"))) %>% 
-  mutate(adWALDseeds = adWALD*sum(seeds)/sum(adWALD)) %>% 
-  mutate(aiWALD = raster::extract(aiWALD.ras, as(traps, "Spatial"))) %>% 
-  mutate(aiWALDseeds = aiWALD*sum(seeds)/sum(aiWALD))
+  add_column(adWALD = raster::extract(stack.ras$adWALD, as(traps, "Spatial"))) %>% 
+  mutate(adWALD = adWALD*sum(seeds)/sum(adWALD)) %>% 
+  add_column(aiWALD = raster::extract(stack.ras$aiWALD, as(traps, "Spatial"))) %>% 
+  mutate(aiWALD = aiWALD*sum(seeds)/sum(aiWALD)) %>% 
+  add_column(EP = raster::extract(stack.ras$EP, as(traps, "Spatial"))) %>% 
+  mutate(EP = EP*sum(seeds)/sum(EP)) %>% 
+  arrange(desc(seeds))
 
-plot(trapdata$seeds, trapdata$adWALDseeds)
-points(trapdata$seeds, trapdata$aiWALDseeds, pch=2)
-abline(0, 1)
-
-plot(log(trapdata$seeds), log(trapdata$adWALDseeds))
-points(log(trapdata$seeds), log(trapdata$aiWALDseeds), pch=2)
-abline(0, 1)
-
-arrange(trapdata, desc(seeds))
-
-trapdata$nearestsrc <- sapply(st_geometry(traps), function(x) {
+trapdata <- add_column(trapdata, nearest.src = sapply(st_geometry(traps), function(x) {
   ind <- st_nearest_feature(x, sources)
-  st_distance(x, st_geometry(sources)[[ind]])
-})
-plot(trapdata$nearestsrc, (trapdata$seeds-trapdata$adWALDseeds)^2, 
-     xlab = "Nearest source (m)", ylab = "Squared error")
-points(trapdata$nearestsrc, (trapdata$seeds-trapdata$aiWALDseeds)^2, pch=2)
+  st_distance(x, st_geometry(sources)[[ind]]) %>% 
+    round()
+}), .before = "seeds")
+
+long <- trapdata %>% 
+  gather("adWALD", "aiWALD", "EP", key = "model", value = "predicted")
+
+g <- ggplot(long, aes(seeds, predicted, color = model)) + 
+  geom_point() +
+  geom_abline(aes(slope=1, intercept=0)) +
+  theme_bw()
+g
+
+g + coord_cartesian(xlim = c(0, 200), ylim = c(0,250))
+
+g + scale_x_log10() + scale_y_log10()
+
+ggplot(long, aes(nearest.src, predicted - seeds, color = model)) +
+  geom_point() +
+  geom_abline(aes(slope=0, intercept=0)) +
+  theme_bw()
+
+cor(trapdata$seeds, trapdata$adWALD, method = "spearman")
+cor(trapdata$seeds, trapdata$aiWALD, method = "spearman")
+cor(trapdata$seeds, trapdata$EP, method = "spearman")
+
+?glm
+glm(seeds ~ adWALD - 1, family = poisson, trapdata)
+glm(seeds ~ aiWALD - 1, family = poisson, trapdata)
+glm(seeds ~ EP - 1, family = poisson, trapdata)
+
+#subset of data by nearest.src?
 ```
 
 ```{r sessionInfo}
