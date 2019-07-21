@@ -52,7 +52,7 @@ colnames(landscape)[1] <- "vegheight"
 landscape$vegheight[(is.na(landscape$vegheight))] <- 0 
 ```
 
-```{r wind Floro station, warning=FALSE, include=FALSE}
+```{r wind Floro station, warning=FALSE, eval=FALSE, include=FALSE}
 windobs <- read_delim(here("data","raw","eKlima","obswind-stnr57710FLORO-20190604.txt"), 
                       delim = ";", na = "-9999", skip = 24) %>% 
   drop_na()
