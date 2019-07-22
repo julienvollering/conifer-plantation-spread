@@ -1,0 +1,66 @@
+---
+title: "wildlings-NiN-density"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(sf)
+library(units)
+```
+
+```{r wildlings per NiN}
+nin <- st_read(here("data","qc","dale","NiN.shp"))
+nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) 
+nin <- nin %>% 
+  group_by(code) %>% 
+  summarize()
+plot(nin[1])
+nin$area <- st_area(nin)
+units(nin$area) <- with(ud_units, daa)
+
+wildlings <- st_read(here("data","qc","dale","wildlings.shp"))
+plot(st_geometry(nin), col = sf.colors(6, categorical = TRUE))
+plot(st_geometry(wildlings), pch = 3, col = 'red', add = TRUE)
+
+tally <- wildlings %>% 
+  st_intersection(nin) %>% 
+  group_by(code) %>% 
+  summarize(n = n()) %>% 
+  st_set_geometry(NULL)
+
+wdens <- left_join(nin, tally, by = "code") %>% 
+  st_set_geometry(NULL) %>% 
+  mutate(density = round(n/area, digits = 1)) %>% 
+  add_column(locality = "dale", .before = "code")
+  arrange(desc(density))
+  
+wdens
+```
+
+```{r wildlings per cell}
+gridres <- 10
+datageom <- st_geometry(nin) 
+bb <- st_bbox(datageom)
+grd <- st_sf(st_make_grid(datageom, cellsize = gridres, 
+                          offset = floor(bb[c("xmin", "ymin")]))) %>% 
+  rename(geometry = 1)
+
+pts <- st_sf(st_make_grid(datageom, cellsize = gridres,
+                          offset = floor(st_bbox(datageom)[c("xmin", "ymin")]),
+                          what = "centers"))
+plot(st_geometry(nin), col = sf.colors(6, categorical = TRUE))
+plot(st_geometry(grd[1,]), add = TRUE)
+
+temp <- st_touches(st_as_sfc(bb),grd)
+str(temp)
+
+i <- 11
+int <- st_intersection(grd[i,], nin)
+plot(st_geometry(int), add = TRUE)
+```
+
