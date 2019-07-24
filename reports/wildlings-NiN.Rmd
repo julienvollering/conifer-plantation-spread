@@ -1,5 +1,5 @@
 ---
-title: "wildlings-NiN-density"
+title: "wildlings-NiN"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -11,149 +11,59 @@ library(tidyverse)
 library(here)
 library(sf)
 library(units)
+source(here("R","locality-functions.R"))
 ```
 
-```{r wildlings per NiN}
-nin <- st_read(here("data","qc","dale","NiN.shp"))
-nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) 
-nin <- nin %>% 
-  group_by(code) %>% 
-  summarize()
-plot(nin[1])
-nin$area <- st_area(nin)
-units(nin$area) <- with(ud_units, daa)
+```{r wildlings per polygon}
+localities <- list.files(here("data","qc"))
 
-wildlings <- st_read(here("data","qc","dale","wildlings.shp"))
-plot(st_geometry(nin), col = sf.colors(6, categorical = TRUE))
-plot(st_geometry(wildlings), pch = 3, col = 'red', add = TRUE)
+perNiN <- list()
 
-tally <- wildlings %>% 
-  st_intersection(nin) %>% 
-  group_by(code) %>% 
-  summarize(n = n()) %>% 
-  st_set_geometry(NULL)
-
-wildling.density <- left_join(nin, tally, by = "code") %>% 
-  st_set_geometry(NULL) %>% 
-  mutate(density = round(n/area, digits = 1)) %>% 
-  add_column(locality = "dale", .before = "code") %>% 
-  arrange(desc(density))
-  
-wildling.density
+for (i in localities) {
+  nin <- st_read(here("data","qc",i,"nin.shp"), quiet = TRUE) %>% 
+    as_tibble %>% st_as_sf()
+  nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
+    make.names()
+  wildlings <- st_read(here("data","qc",i,"wildlings.shp"), quiet = TRUE)
+  wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, field = code)
+  perNiN[[i]] <- wildling.density
+}
 ```
 
 ```{r wildlings per cell}
-gridres <- 10
-datageom <- st_geometry(nin) 
-bb <- st_bbox(datageom)
-grd <- st_sf(st_make_grid(datageom, cellsize = gridres, offset = floor(bb[c("xmin", "ymin")]))) %>% 
-  rename(geometry = 1) 
+localities <- list.files(here("data","qc"))
 
-plot(st_geometry(nin), col = sf.colors(6, categorical = TRUE))
-plot(st_geometry(grd[1,]), add = TRUE)
+percell <- list()
 
-nin <- lwgeom::st_make_valid(nin) %>% 
-  mutate(area = NULL)
-int <- st_intersection(nin, grd) %>% 
-  mutate(area = st_area(geometry))
+for (i in localities) {
+  message(i)
+  nin <- st_read(here("data","qc",i,"nin.shp"), quiet = TRUE) %>% 
+    as_tibble %>% st_as_sf()
+  nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
+    make.names()
+  grd <- make_grid(nin, gridres = 10)
 
-for (i in seq_along(unique(int$code))) {
-  type <- unique(int$code)[i]
-  ind <- filter(int, code == type) %>%
-    st_covered_by(grd) %>% as.numeric()
-  grd[ind, type] <- filter(int, code == type) %>% 
-    pull(area) %>% 
-    round() %>%
-    `/`(100)
+  grd <- add_dummies_to_grid(grd, nin, field = code) %>% 
+    as_tibble() %>% st_as_sf()
+  grd <- grd %>% 
+    mutate(rsum = rowSums(st_set_geometry(grd, NULL), na.rm = TRUE)) %>% 
+    filter(rsum >= 0.5) %>% 
+    select(-rsum) %>% 
+    mutate_at(vars(-geometry), round, digits = 3) 
+
+  sources <- st_read(here("data","qc",i,"sources.shp"), quiet = TRUE)
+  grd <- add_seed_shadow(grd, sources)
+
+  source.poly <- st_read(here("data","qc",i,"source_polygon.shp"), quiet = TRUE) %>% 
+    filter(FID == 0)
+  dtm <- raster::raster(here("data","qc",i,"dtm1","data","dtm1.tif")) %>% 
+    raster::aggregate(fact = 2)
+  grd <- add_relative_elevation(grd, source.poly, dtm)
+
+  wildlings <- st_read(here("data","qc",i,"wildlings.shp"), quiet = TRUE)
+  grd <- add_wildlings(grd, wildlings)
+
+  percell[[i]] <- select(grd, wildlings, everything())
 }
-
-plot(st_geometry(nin), col = sf.colors(6, categorical = TRUE))
-filter(grd, T45 > 0.5) %>% st_geometry() %>% plot(add=TRUE)
-filter(grd, T34 < 0.9) %>% st_geometry() %>% plot(add=TRUE)
-
-grd <- as_tibble(grd) %>% st_as_sf()
-grd <- grd %>% 
-  mutate(rsum = rowSums(st_set_geometry(grd, NULL), na.rm = TRUE)) %>% 
-  filter(rsum >= 0.5) %>% 
-  select(-rsum)
-
-plot(st_geometry(nin), col = sf.colors(6, categorical = TRUE))
-grd %>% st_geometry() %>% plot(add=TRUE)
-```
-
-```{r propagule pressure}
-sources <- st_read(here("data","qc","dale","sources.shp"))
-sources %>% st_geometry() %>% plot()
-
-# density <- set_units(0.1,  m^-2)
-# nr <- st_area(source) %>% sum %>% `*`(density) %>% round() %>% as.numeric
-# temp <- st_sample(source, nr)
-
-# From Bullock et al. 2017
-exp_power <- function(d, a = 2.7825, b = 0.8346) {
-  b*(2*pi*a^2*gamma(2/b))^-1*exp(-(d^b/a^b))
-}
-
-centr <- st_centroid(grd)
-src.array <- matrix(nrow = nrow(grd), ncol = nrow(sources))
-for (i in 1:nrow(sources)) {
-  src.array[, i] <- st_distance(sources[i,], centr) %>% 
-    as.numeric() %>% 
-    exp_power()
-}
-
-grd <- grd %>% 
-  add_column(seeds = rowSums(src.array, na.rm = TRUE), .before = "geometry")
-plot(grd["seeds"])
-grd <- mutate(grd, log.seeds = log(seeds))
-plot(grd["log.seeds"])
-```
-
-```{r elevation}
-dtm <- raster::raster(here("data","qc","dale","dtm1","data","dtm1.tif")) %>% 
-  raster::aggregate(fact = 2)
-
-source.poly <- st_read(here("data","qc","dale","source_polygon.shp")) %>% 
-  filter(FID == 0) %>% 
-  as("Spatial") %>% 
-  sp::spTransform(CRSobj = raster::projection(dtm))
-elevref <- raster::extract(dtm, source.poly, fun = max) %>% 
-  as.numeric()
-
-grd.proj <- grd %>% 
-  as("Spatial") %>%   
-  sp::spTransform(CRSobj = raster::projection(dtm))
-elev <- raster::extract(dtm, grd.proj, fun = mean) %>% 
-  as.numeric
-grd <- grd %>% 
-  add_column(relelev = elev, .before = "geometry") %>% 
-  mutate(relelev = relelev - elevref)
-
-plot(grd["relelev"])
-```
-
-```{r wildlings}
-wildlings <- st_read(here("data","qc","dale","wildlings.shp"))
-
-plot(st_geometry(grd))
-wildlings %>% st_geometry() %>% plot(add=TRUE)
-
-grd <- grd %>% 
-  add_column(ID = 1:nrow(grd))
-
-tally <- grd %>% 
-  st_intersection(wildlings) %>% 
-  st_set_geometry(NULL) %>% 
-  group_by(ID) %>% 
-  summarize(wildlings = n())
-
-grd <- grd %>% 
-  left_join(tally, by = "ID") %>% 
-  select(-ID)
-
-plot(grd["wildlings"])
-
-grd <- select(grd, wildlings, everything()) %>% 
-  st_set_geometry(NULL)
 ```
 

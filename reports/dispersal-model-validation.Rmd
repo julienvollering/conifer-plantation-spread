@@ -88,7 +88,7 @@ windobs <- NORAwind
 
 ```{r abscission-dependent WALD model, cache=TRUE}
 freeze <- ls()
-source(here("R","functions.R"))
+source(here("R","dispersal-functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
 
 terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
@@ -167,7 +167,7 @@ rm(list = setdiff(ls(), c(freeze)))
 
 ```{r abscission-independent WALD model, cache=TRUE}
 freeze <- ls()
-source(here("R","functions.R"))
+source(here("R","dispersal-functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
 
 terminal.velocity <- 0.94 # m/s, after Sandvik, H. 2012.
@@ -247,7 +247,7 @@ rm(list = setdiff(ls(), c(freeze)))
 
 ```{r generalized Exponential Power model}
 freeze <- ls()
-source(here("R","functions.R"))
+source(here("R","dispersal-functions.R"))
 
 # From Bullock et al. 2017
 a <- 2.7825
@@ -278,7 +278,7 @@ rm(list = setdiff(ls(), c(freeze)))
 
 ```{r generalized Log-sech model}
 freeze <- ls()
-source(here("R","functions.R"))
+source(here("R","dispersal-functions.R"))
 
 # From Bullock et al. 2017
 a <- 3.4581
