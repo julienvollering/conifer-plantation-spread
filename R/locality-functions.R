@@ -47,7 +47,9 @@ add_dummies_to_grid <- function(grid, poly, field) {
   
   field.enq <- enquo(field)
   grid <- add_column(grid, ID = 1:nrow(grid))
-  poly <- lwgeom::st_make_valid(poly)
+  poly <- lwgeom::st_make_valid(poly) %>% 
+    group_by(!!field.enq) %>% 
+    summarize()
   
   suppressWarnings({
     int <- st_intersection(poly, grid) %>% 
@@ -69,7 +71,14 @@ add_dummies_to_grid <- function(grid, poly, field) {
     select(-ID) %>% 
     mutate_at(groups, `/`, st_area(grid)) %>% 
     mutate_at(groups, as.numeric)
-    return(grid)
+  
+  rowS <- select(grid, groups) %>% 
+    st_set_geometry(NULL) %>% 
+    rowSums(na.rm = TRUE)
+  fact <- ifelse(rowS > 1, 1/rowS, 1)
+  grid <- mutate_at(grid, groups, function(x) {x * fact})
+  
+  return(grid)
 }
 
 
@@ -99,7 +108,8 @@ add_relative_elevation <- function(grid, sourcepoly, dtm) {
   sourcepoly <- as(sourcepoly, "Spatial") %>% 
     sp::spTransform(CRSobj = raster::projection(dtm))
   elevref <- raster::extract(dtm, sourcepoly, fun = max) %>% 
-    as.numeric()
+    as.numeric() %>% 
+    max()
   
   grd.proj <- grid %>% 
     as("Spatial") %>%   

@@ -65,5 +65,8 @@ for (i in localities) {
 
   percell[[i]] <- select(grd, wildlings, everything())
 }
+
+saveRDS(percell, here("output","percell-data.rds"))
+#percell <- readRDS(here("output","percell-data.rds"))
 ```
 
