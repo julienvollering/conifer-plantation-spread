@@ -31,42 +31,48 @@ for (i in localities) {
 ```
 
 ```{r wildlings per cell}
-localities <- list.files(here("data","qc"))
+species <- list.files(here("data","qc"))
 
 percell <- list()
 
-for (i in localities) {
-  message(i)
-  nin <- st_read(here("data","qc",i,"nin.shp"), quiet = TRUE) %>% 
-    as_tibble %>% st_as_sf()
-  nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
-    make.names()
-  grd <- make_grid(nin, gridres = 10)
-
-  grd <- add_dummies_to_grid(grd, nin, field = code) %>% 
-    as_tibble() %>% st_as_sf()
-  grd <- grd %>% 
-    mutate(rsum = rowSums(st_set_geometry(grd, NULL), na.rm = TRUE)) %>% 
-    filter(rsum >= 0.5) %>% 
-    select(-rsum) %>% 
-    mutate_at(vars(-geometry), round, digits = 3) 
-
-  sources <- st_read(here("data","qc",i,"sources.shp"), quiet = TRUE)
-  grd <- add_seed_shadow(grd, sources)
-
-  source.poly <- st_read(here("data","qc",i,"source_polygon.shp"), quiet = TRUE) %>% 
-    filter(FID == 0)
-  dtm <- raster::raster(here("data","qc",i,"dtm1","data","dtm1.tif")) %>% 
-    raster::aggregate(fact = 2)
-  grd <- add_relative_elevation(grd, source.poly, dtm)
-
-  wildlings <- st_read(here("data","qc",i,"wildlings.shp"), quiet = TRUE)
-  grd <- add_wildlings(grd, wildlings)
-
-  percell[[i]] <- select(grd, wildlings, everything())
+for (j in species) {
+  message(j)
+  localities <- list.files(here("data","qc",j))
+  
+  for (i in localities) {
+    message(i)
+    nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
+      as_tibble %>% st_as_sf()
+    nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
+      make.names()
+    grd <- make_grid(nin, gridres = 10)
+    
+    grd <- add_dummies_to_grid(grd, nin, field = code) %>% 
+      as_tibble() %>% st_as_sf()
+    grd <- grd %>% 
+      mutate(rsum = rowSums(st_set_geometry(grd, NULL), na.rm = TRUE)) %>% 
+      filter(rsum >= 0.5) %>% 
+      select(-rsum) %>% 
+      mutate_at(vars(-geometry), round, digits = 3) 
+    
+    sources <- st_read(here("data","qc",j,i,"sources.shp"), quiet = TRUE)
+    grd <- add_seed_shadow(grd, sources)
+    
+    source.poly <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) %>% 
+      filter(FID == 0)
+    dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
+      raster::aggregate(fact = 2)
+    grd <- add_relative_elevation(grd, source.poly, dtm)
+    
+    wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
+    grd <- add_wildlings(grd, wildlings)
+    
+    percell[[j]][[i]] <- select(grd, wildlings, everything())
+  }
 }
 
 saveRDS(percell, here("output","percell-data.rds"))
 #percell <- readRDS(here("output","percell-data.rds"))
+#localities <- setdiff(list.files(here("data","qc",j)), names(percell[[j]]))
 ```
 
