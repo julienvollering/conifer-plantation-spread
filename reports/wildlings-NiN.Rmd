@@ -60,8 +60,12 @@ for (j in species) {
     
     source.poly <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) %>% 
       filter(FID == 0)
-    dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
-      raster::aggregate(fact = 2)
+    if (file.exists(here("data","qc",j,i,"dtm1","data","dtm1.tif"))) {
+      dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
+        raster::aggregate(fact = 2)
+    } else {
+      dtm <- raster::raster(here("data","qc",j,i,"dtm10","data","dtm10.tif"))
+    }
     grd <- add_relative_elevation(grd, source.poly, dtm)
     
     wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
