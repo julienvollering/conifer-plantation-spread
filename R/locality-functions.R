@@ -92,6 +92,9 @@ add_seed_shadow <- function(grid, sourcepts) {
   suppressWarnings({
     centr <- st_centroid(grid) 
   })
+  if (st_crs(sourcepts) != st_crs(centr)) {
+    sourcepts <- st_transform(sourcepts, st_crs(centr))
+  }
   src.array <- matrix(nrow = nrow(grid), ncol = nrow(sourcepts))
   for (i in 1:nrow(sourcepts)) {
     src.array[, i] <- st_distance(sourcepts[i,], centr) %>% 
