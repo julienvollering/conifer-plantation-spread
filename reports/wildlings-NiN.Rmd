@@ -15,19 +15,76 @@ source(here("R","locality-functions.R"))
 ```
 
 ```{r wildlings per polygon}
-localities <- list.files(here("data","qc"))
+species <- list.files(here("data","qc"))
 
 perNiN <- list()
 
-for (i in localities) {
-  nin <- st_read(here("data","qc",i,"nin.shp"), quiet = TRUE) %>% 
-    as_tibble %>% st_as_sf()
-  nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
-    make.names()
-  wildlings <- st_read(here("data","qc",i,"wildlings.shp"), quiet = TRUE)
-  wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, field = code)
-  perNiN[[i]] <- wildling.density
+for (j in species) {
+  message(j)
+  localities <- list.files(here("data","qc",j))
+
+  for (i in localities) {
+    nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
+      as_tibble %>% st_as_sf()
+    nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
+      make.names()
+    wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
+    wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, field = code)
+    perNiN[[j]][[i]] <- wildling.density
+  }
 }
+```
+
+```{r types to groups}
+types <- perNiN %>% 
+  flatten %>%
+  bind_rows %>%
+  group_by(code) %>% 
+  summarize(area = sum(area)) %>% 
+  arrange(desc(area))
+View(types)
+
+tribble(
+  ~type, ~group,
+  "T45", "cultivated grassland",
+  "T4", "forest",
+  "T34", "coastal heathland",
+  "T32", "semi-natural grassland",
+  "V1", "fen",
+  "T44", "cultivated field",
+  "T38", "plantation forest",
+  "T31", "boreal heathland",
+  "V9", "fen",
+  "T35", "disturbed",
+  "V3", "bog",
+  "T43", "disturbed",
+  "T40", "disturbed",
+  "T41", "cultivated grassland",
+  "T27", "talus",
+  "T35.T37.T39.T43", "disturbed",
+  "T1", "rock",
+  "V10", "fen",
+  "V2", "swamp",
+  "T39", "disturbed",
+  "V4", "spring",
+  "T37", "disturbed",
+  "T6", "rock",
+  "T13", "talus",
+  "T16", "talus",
+  "V12", "drained mire",
+  "T35.T37", "disturbed",
+  "T21"            
+  "T2"              
+  "T42"             
+  "T33"             
+  "T17"             
+  "T30"             
+  "V8"              
+  "V13"            
+  "T29"             
+  "T18"             
+  "T3"              
+  "V11" ) -> grouping
 ```
 
 ```{r wildlings per cell}

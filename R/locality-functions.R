@@ -25,7 +25,7 @@ calc_density_by_field <- function(poly, pts, field) {
     st_set_geometry(NULL) %>%
     mutate(n = replace_na(n, 0)) %>%
     mutate(density = round(n/area, digits = 1)) %>%
-    arrange(desc(density), desc(n))
+    arrange(desc(density), desc(n), area)
   
   return(density)
 }
