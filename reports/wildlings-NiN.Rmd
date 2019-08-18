@@ -14,35 +14,19 @@ library(units)
 source(here("R","locality-functions.R"))
 ```
 
-```{r wildlings per polygon}
-species <- list.files(here("data","qc"))
-
-perNiN <- list()
-
-for (j in species) {
-  message(j)
-  localities <- list.files(here("data","qc",j))
-
-  for (i in localities) {
-    nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
-      as_tibble %>% st_as_sf()
-    nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
-      make.names()
-    wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
-    wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, field = code)
-    perNiN[[j]][[i]] <- wildling.density
-  }
-}
-```
-
 ```{r types to groups}
-types <- perNiN %>% 
-  flatten %>%
-  bind_rows %>%
-  group_by(code) %>% 
-  summarize(area = sum(area)) %>% 
-  arrange(desc(area))
-View(types)
+ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
+codes <- character()
+nincodes <- for (i in ninfiles) {
+  shp <- st_read(here("data","qc",i), quiet = TRUE)
+  code <- gsub("(.*?)(-.*)", "\\1", as.character(shp[[1]])) %>% 
+    make.names()
+  codes <- append(codes, code)
+  shp <- mutate(shp, code = code)
+  st_write(shp, here("data","qc",i), delete_layer = TRUE, quiet = TRUE)
+}
+
+sort(unique(codes))
 
 tribble(
   ~type, ~group,
@@ -73,18 +57,40 @@ tribble(
   "T16", "talus",
   "V12", "drained mire",
   "T35.T37", "disturbed",
-  "T21"            
-  "T2"              
-  "T42"             
-  "T33"             
-  "T17"             
-  "T30"             
-  "V8"              
-  "V13"            
-  "T29"             
-  "T18"             
-  "T3"              
-  "V11" ) -> grouping
+  "T21", "dune",
+  "T2", "rock",
+  "T42", "disturbed",
+  "T33", "semi-natural grassland",
+  "T17", "talus",
+  "T30", "forest",
+  "V8", "swamp",
+  "V13", "new wetland",
+  "T29", "beach",
+  "T18", "floodplain",
+  "T3", "tundra",
+  "V11", "turf roof") -> grouping
+
+```
+
+```{r wildlings per polygon}
+species <- list.files(here("data","qc"))
+
+perNiN <- list()
+
+for (j in species) {
+  message(j)
+  localities <- list.files(here("data","qc",j))
+
+  for (i in localities) {
+    nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
+      as_tibble %>% st_as_sf()
+    nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
+      make.names()
+    wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
+    wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, field = code)
+    perNiN[[j]][[i]] <- wildling.density
+  }
+}
 ```
 
 ```{r wildlings per cell}
