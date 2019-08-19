@@ -13,12 +13,20 @@ calc_density_by_field <- function(poly, pts, field) {
   units(poly$area) <- with(ud_units, daa)
 
   pts <- st_transform(pts, st_crs(poly))
+  browser()
   suppressWarnings({
-    tally <- pts %>%
-      st_intersection(poly) %>%
-      group_by(!!field.enq) %>%
-      summarize(n = n()) %>%
-      st_set_geometry(NULL)
+    if (nrow(st_intersection(pts, poly)) > 0) {
+      tally <- pts %>%
+        st_intersection(poly) %>%
+        group_by(!!field.enq) %>%
+        summarize(n = n()) %>%
+        st_set_geometry(NULL)
+    } else {
+      tally <- poly %>% 
+        group_by(!!field.enq) %>%
+        summarize(n = 0) %>%
+        st_set_geometry(NULL)
+    }
   })
 
   density <- left_join(poly, tally, by = quo_name(field.enq)) %>%

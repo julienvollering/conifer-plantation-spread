@@ -17,7 +17,7 @@ source(here("R","locality-functions.R"))
 ```{r types to groups}
 ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
 codes <- character()
-nincodes <- for (i in ninfiles) {
+for (i in ninfiles) {
   shp <- st_read(here("data","qc",i), quiet = TRUE)
   code <- gsub("(.*?)(-.*)", "\\1", as.character(shp[[1]])) %>% 
     make.names()
@@ -26,50 +26,57 @@ nincodes <- for (i in ninfiles) {
   st_write(shp, here("data","qc",i), delete_layer = TRUE, quiet = TRUE)
 }
 
-sort(unique(codes))
+codes <- unique(codes)
+codes[order(substring(codes, 1, 1), as.numeric(substring(codes, 2)))]
 
-tribble(
-  ~type, ~group,
-  "T45", "cultivated grassland",
-  "T4", "forest",
-  "T34", "coastal heathland",
-  "T32", "semi-natural grassland",
-  "V1", "fen",
-  "T44", "cultivated field",
-  "T38", "plantation forest",
-  "T31", "boreal heathland",
-  "V9", "fen",
-  "T35", "disturbed",
-  "V3", "bog",
-  "T43", "disturbed",
-  "T40", "disturbed",
-  "T41", "cultivated grassland",
-  "T27", "talus",
-  "T35.T37.T39.T43", "disturbed",
+grouping <- tribble(
+  ~code, ~group,
   "T1", "rock",
-  "V10", "fen",
-  "V2", "swamp",
-  "T39", "disturbed",
-  "V4", "spring",
-  "T37", "disturbed",
+  "T2", "rock",
+  "T3", "tundra",
+  "T4", "forest",
   "T6", "rock",
   "T13", "talus",
   "T16", "talus",
-  "V12", "drained mire",
-  "T35.T37", "disturbed",
-  "T21", "dune",
-  "T2", "rock",
-  "T42", "disturbed",
-  "T33", "semi-natural grassland",
   "T17", "talus",
-  "T30", "forest",
-  "V8", "swamp",
-  "V13", "new wetland",
-  "T29", "beach",
   "T18", "floodplain",
-  "T3", "tundra",
-  "V11", "turf roof") -> grouping
+  "T21", "dune",
+  "T27", "talus",
+  "T29", "beach",
+  "T30", "forest",
+  "T31", "boreal heathland",
+  "T32", "semi-natural grassland",
+  "T33", "semi-natural grassland",
+  "T34", "coastal heathland",
+  "T35", "disturbed",
+  "T37", "disturbed",
+  "T38", "plantation forest",
+  "T39", "disturbed",
+  "T40", "disturbed",
+  "T41", "cultivated grassland",
+  "T42", "disturbed",
+  "T43", "disturbed",
+  "T44", "cultivated field",
+  "T45", "cultivated grassland",
+  "T35.T37.T39.T43", "disturbed",
+  "T35.T37", "disturbed",
+  "V1", "fen",
+  "V2", "swamp",
+  "V3", "bog",
+  "V4", "spring",
+  "V8", "swamp",
+  "V9", "fen",
+  "V10", "fen",
+  "V11", "turf roof",
+  "V12", "drained mire",
+  "V13", "new wetland")
 
+for (i in ninfiles) {
+  shp <- st_read(here("data","qc",i), quiet = TRUE) %>% 
+    mutate(code = as.character(code))
+  shp <- left_join(shp, grouping, by = "code")
+  st_write(shp, here("data","qc",i), delete_layer = TRUE, quiet = TRUE)
+}
 ```
 
 ```{r wildlings per polygon}
@@ -84,10 +91,8 @@ for (j in species) {
   for (i in localities) {
     nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf()
-    nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
-      make.names()
     wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
-    wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, field = code)
+    wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, field = group)
     perNiN[[j]][[i]] <- wildling.density
   }
 }
