@@ -13,7 +13,6 @@ calc_density_by_field <- function(poly, pts, field) {
   units(poly$area) <- with(ud_units, daa)
 
   pts <- st_transform(pts, st_crs(poly))
-  browser()
   suppressWarnings({
     if (nrow(st_intersection(pts, poly)) > 0) {
       tally <- pts %>%

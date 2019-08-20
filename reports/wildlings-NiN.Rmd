@@ -14,7 +14,7 @@ library(units)
 source(here("R","locality-functions.R"))
 ```
 
-```{r types to groups}
+```{r types to groups, eval=FALSE}
 ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
 codes <- character()
 for (i in ninfiles) {
@@ -96,6 +96,8 @@ for (j in species) {
     perNiN[[j]][[i]] <- wildling.density
   }
 }
+
+# TODO: aggregate per species
 ```
 
 ```{r wildlings per cell}
