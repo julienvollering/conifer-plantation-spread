@@ -79,7 +79,17 @@ for (i in ninfiles) {
 }
 ```
 
-```{r wildlings per polygon}
+```{r check topology, eval=FALSE}
+ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
+for (i in ninfiles) {
+  shp <- st_read(here("data","qc",i), quiet = TRUE)
+  if (!all(st_is_valid(shp))) {
+    message(paste(i, "contains invalid topology"))
+  }
+}
+```
+
+```{r wildlings per polygon, include=FALSE}
 species <- list.files(here("data","qc"))
 
 perNiN <- list()
@@ -97,10 +107,21 @@ for (j in species) {
   }
 }
 
-# TODO: aggregate per species
+perNiN.agg <- lapply(perNiN, function(x) {
+  bind_rows(x) %>% 
+    group_by(group) %>% 
+    summarize(area = sum(area), n = sum(n)) %>% 
+    mutate(density = n/area) %>%
+    arrange(desc(density), desc(n), area) %>% 
+    mutate(area = round(area), density = round(density, digits = 1))
+})
 ```
 
-```{r wildlings per cell}
+```{r perNiN aggregated}
+lapply(perNiN.agg, knitr::kable)
+```
+
+```{r wildlings per cell, eval=FALSE}
 species <- list.files(here("data","qc"))
 
 percell <- list()
