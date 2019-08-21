@@ -6,10 +6,13 @@ library(here)
 calc_density_by_field <- function(poly, pts, field) {
   
   field.enq <- enquo(field)
+
   poly <- poly %>%
+    mutate(area = st_area(poly)) %>% 
+    mutate(mosaic = st_equals(poly, poly, sparse = FALSE) %>% apply(1, sum)) %>% 
+    mutate(area.corrected = area/mosaic) %>% 
     group_by(!!field.enq) %>%
-    summarize()
-  poly <- mutate(poly, area = st_area(poly))
+    summarize(area = sum(area.corrected))
   units(poly$area) <- with(ud_units, daa)
 
   pts <- st_transform(pts, st_crs(poly))
