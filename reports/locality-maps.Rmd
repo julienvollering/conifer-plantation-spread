@@ -1,0 +1,41 @@
+---
+title: "Locality maps"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(sf)
+```
+
+```{r}
+plotting <- readRDS(here::here("output","percell-data.rds"))
+for (i in seq_along(plotting)) {
+  plotting[[i]] <- plotting[[i]] %>% 
+    lapply(function(x) {
+      mutate(x, logseeds = log(seeds)) %>% 
+      select(wildlings, seeds, logseeds, relelev, everything())
+      })
+}
+maxplot <- max(flatten(plotting) %>% sapply(ncol))
+```
+
+```{r results='asis'}
+for (i in names(plotting)) {
+  cat('\n#', i, '\n')
+  for (j in names(plotting[[i]])){
+    cat('\n##', j, '\n')
+    suppressWarnings(
+      plot(plotting[[i]][[j]], max.plot = maxplot)
+    )
+    cat('\n')
+  }
+}
+
+```
