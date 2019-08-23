@@ -134,11 +134,9 @@ for (j in species) {
     message(i)
     nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf()
-    nin$code <- gsub("(.*?)(-.*)", "\\1", as.character(nin$NiN.kode)) %>% 
-      make.names()
     grd <- make_grid(nin, gridres = 10)
     
-    grd <- add_dummies_to_grid(grd, nin, field = code) %>% 
+    grd <- add_dummies_to_grid(grd, nin, field = group) %>% 
       as_tibble() %>% st_as_sf()
     grd <- grd %>% 
       mutate(rsum = rowSums(st_set_geometry(grd, NULL), na.rm = TRUE)) %>% 

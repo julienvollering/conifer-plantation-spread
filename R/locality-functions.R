@@ -57,10 +57,10 @@ add_dummies_to_grid <- function(grid, poly, field) {
   
   field.enq <- enquo(field)
   grid <- add_column(grid, ID = 1:nrow(grid))
-  poly <- lwgeom::st_make_valid(poly) %>% 
+  poly <- lwgeom::st_make_valid(poly) %>%
+    mutate(!!field.enq := as.character(!!field.enq)) %>% 
     group_by(!!field.enq) %>% 
     summarize()
-  
   suppressWarnings({
     int <- st_intersection(poly, grid) %>% 
       mutate(area = st_area(geometry))
