@@ -117,7 +117,7 @@ perNiN.agg <- lapply(perNiN, function(x) {
 })
 ```
 
-```{r perNiN aggregated}
+```{r wildlings per polygon aggregated}
 lapply(perNiN.agg, knitr::kable)
 ```
 
@@ -165,7 +165,27 @@ for (j in species) {
 }
 
 saveRDS(percell, here("output","percell-data.rds"))
-#percell <- readRDS(here("output","percell-data.rds"))
-#localities <- setdiff(list.files(here("data","qc",j)), names(percell[[j]]))
+```
+
+```{r wildlings per cell aggregated}
+percell <- readRDS(here("output","percell-data.rds"))
+plot(percell$`P.sitchensis-lutz`$dale)
+
+percell.agg <- percell
+for (i in seq_along(percell)) {
+  for (j in seq_along(percell[[i]])) {
+    percell.agg[[i]][[j]] <- percell[[i]][[j]] %>% 
+      st_set_geometry(NULL) %>% 
+      add_column(locality = names(percell[[i]][j]))
+  }
+  percell.agg[[i]] <- bind_rows(percell.agg[[i]]) %>% 
+    select(locality, wildlings, seeds, relelev, everything()) %>% 
+    lapply(function(x) {replace_na(x, 0)}) %>% 
+    as_tibble()
+}
+str(percell.agg)
+
+glimpse(percell.agg[["Larix"]])
+summary(percell.agg[["Larix"]])
 ```
 
