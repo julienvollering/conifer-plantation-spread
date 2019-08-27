@@ -31,33 +31,33 @@ codes[order(substring(codes, 1, 1), as.numeric(substring(codes, 2)))]
 
 grouping <- tribble(
   ~code, ~group,
-  "T1", "rock",
-  "T2", "rock",
-  "T3", "tundra",
-  "T4", "forest",
-  "T6", "rock",
-  "T13", "talus",
-  "T16", "talus",
-  "T17", "talus",
-  "T18", "floodplain",
-  "T21", "dune",
-  "T27", "talus",
-  "T29", "beach",
-  "T30", "forest",
-  "T31", "boreal heathland",
-  "T32", "semi-natural grassland",
-  "T33", "semi-natural grassland",
-  "T34", "coastal heathland",
+  "T1", "T1",
+  "T2", "T2",
+  "T3", "T3",
+  "T4", "T4",
+  "T6", "T6",
+  "T13", "T13",
+  "T16", "T16",
+  "T17", "T17",
+  "T18", "T18",
+  "T21", "T21",
+  "T27", "T27",
+  "T29", "T29",
+  "T30", "T30",
+  "T31", "T31",
+  "T32", "T32",
+  "T33", "T33",
+  "T34", "T34",
   "T35", "disturbed",
   "T37", "disturbed",
   "T38", "plantation forest",
   "T39", "disturbed",
   "T40", "disturbed",
-  "T41", "cultivated grassland",
+  "T41", "cultivated",
   "T42", "disturbed",
   "T43", "disturbed",
-  "T44", "cultivated field",
-  "T45", "cultivated grassland",
+  "T44", "cultivated",
+  "T45", "cultivated",
   "T35.T37.T39.T43", "disturbed",
   "T35.T37", "disturbed",
   "V1", "fen",
@@ -67,13 +67,14 @@ grouping <- tribble(
   "V8", "swamp",
   "V9", "fen",
   "V10", "fen",
-  "V11", "turf roof",
-  "V12", "drained mire",
-  "V13", "new wetland")
+  "V11", "disturbed",
+  "V12", "disturbed",
+  "V13", "disturbed")
 
 for (i in ninfiles) {
   shp <- st_read(here("data","qc",i), quiet = TRUE) %>% 
-    mutate(code = as.character(code))
+    mutate(code = as.character(code)) %>% 
+    mutate(group = NULL)
   shp <- left_join(shp, grouping, by = "code")
   st_write(shp, here("data","qc",i), delete_layer = TRUE, quiet = TRUE)
 }
@@ -120,6 +121,8 @@ perNiN.agg <- lapply(perNiN, function(x) {
 ```{r wildlings per polygon aggregated}
 lapply(perNiN.agg, knitr::kable)
 ```
+
+WALD seed shadows produced in separate Rmd report because of long computation time. 
 
 ```{r wildlings per cell, eval=FALSE}
 species <- list.files(here("data","qc"))

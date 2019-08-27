@@ -1,0 +1,68 @@
+---
+title: "Locality WALD"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(sf)
+library(units)
+source(here("R","locality-functions.R"))
+```
+
+```{r WALD seed shadows, eval=FALSE}
+poi <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
+poi <- mutate(poi, site = 1:nrow(poi)) %>% 
+  st_as_sf(coords=c("X", "Y"), crs = 4326)
+
+species <- list.files(here("data","qc"))
+
+percell <- list()
+
+for (j in species) {
+  message(j)
+  localities <- list.files(here("data","qc",j))
+  
+  for (i in localities) {
+    message(i)
+    nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
+      as_tibble %>% st_as_sf() %>% 
+      filter(group != "plantation forest")
+    grd <- make_grid(nin, gridres = 10)
+    
+    grd <- add_dummies_to_grid(grd, nin, field = group) %>% 
+      as_tibble() %>% st_as_sf()
+    grd <- grd %>% 
+      mutate(rsum = rowSums(st_set_geometry(grd, NULL), na.rm = TRUE)) %>% 
+      filter(rsum >= 0.5) %>% 
+      select(-rsum) %>% 
+      mutate_at(vars(-geometry), round, digits = 3) 
+    
+    sources <- st_read(here("data","qc",j,i,"sources.shp"), quiet = TRUE)
+   
+    site <- st_transform(grd[1,], crs = st_crs(poi)) %>% 
+      st_nearest_feature(poi)
+    st_transform(grd[1,], crs = st_crs(poi)) %>%
+      st_distance(poi[site,]) %>% 
+      round() %>% 
+      paste("meters away") %>% 
+      message
+    DD <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.txt"), delim = ";") %>% 
+      filter(SITE == site)
+    FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = ";") %>% 
+      filter(SITE == site)
+    NORAwind <- left_join(DD, FF, by = "TIME") %>% 
+      rename(DD = WD, FF = WS) %>% 
+      mutate(TIME = as.character(TIME)) %>% 
+      mutate(Mnth = substring(TIME, 5, 6)) %>% 
+      drop_na()
+    windobs <- NORAwind
+  }
+}
+
+```
+
