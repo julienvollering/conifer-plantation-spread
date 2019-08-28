@@ -12,13 +12,28 @@ library(here)
 library(sf)
 library(units)
 source(here("R","locality-functions.R"))
+source(here("R","dispersal-functions.R"))
+source(here("R","SkarpaasShea_2007.R"))
 ```
 
-```{r WALD seed shadows, eval=FALSE}
+```{r species dispersal traits}
+traits <- tribble(
+  ~species, ~terminal.velocity, ~dispersal.season,
+  "Larix", 1.0, c(12,1:5), # After Sandvik 2012 (for L. decidua), and Sullivan 1994 (for L. decidua)
+  "P.abies", 0.58, c(11:12,1:5), # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Sullivan 1994
+  "P.contorta", 0.82, c(9:12), # After Sandvik 2012
+  "P.sitchesis-lutz", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
+)
+```
+
+```{r wind data sites}
 poi <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
 poi <- mutate(poi, site = 1:nrow(poi)) %>% 
   st_as_sf(coords=c("X", "Y"), crs = 4326)
+```
 
+
+```{r WALD seed shadows, eval=FALSE}
 species <- list.files(here("data","qc"))
 
 percell <- list()
