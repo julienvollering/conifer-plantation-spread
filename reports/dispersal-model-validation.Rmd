@@ -184,7 +184,6 @@ sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = 
 set.seed(42)
 winds <- lapply(sectors360$sector, function(x) {
   filter(windobs, sector == x) %>% 
-    # assume probability of abscission is directly related to wind speed
     sample_n(100, replace = TRUE, weight = NULL) %>% 
     pull(FF)
 })

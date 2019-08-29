@@ -22,29 +22,96 @@ traits <- tribble(
   "Larix", 1.0, c(12,1:5), # After Sandvik 2012 (for L. decidua), and Sullivan 1994 (for L. decidua)
   "P.abies", 0.58, c(11:12,1:5), # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Sullivan 1994
   "P.contorta", 0.82, c(9:12), # After Sandvik 2012
-  "P.sitchesis-lutz", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
+  "P.sitchensis-lutz", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
 )
 ```
 
-```{r wind data sites}
+```{r localities table}
+loc.tab <- read_csv(here("data","localities.csv"))
+loc.tab[is.na(loc.tab$age.at.registration),]
+loc.tab[loc.tab$locality=="Håkøya", "age.at.registration"] <- loc.tab %>% 
+  filter(species == "P.sitchensis-lutz", county %in% c("Troms","Nordland")) %>% 
+  pull(age.at.registration) %>% mean(na.rm = TRUE) %>% round()
+loc.tab[is.na(loc.tab$height.source),]
+
+for (i in which(is.na(loc.tab$height.source))) {
+  loc.tab[i, "height.source"] <- interpolate_height(loc.tab[i,], loc.tab)
+}
+
+g <- ggplot(loc.tab, aes(x=age.at.registration, y=height.source, color=species))
+g + geom_point()
+```
+
+```{r wind data}
 poi <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
 poi <- mutate(poi, site = 1:nrow(poi)) %>% 
   st_as_sf(coords=c("X", "Y"), crs = 4326)
+
+DD <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.txt"), delim = ";")
+FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = ";")
+sector.breaks <- seq(0, 360, by=10)
 ```
 
+```{r vegetation height}
+grouping <- tribble(
+  ~code, ~group, ~vegheight,
+  "T1", "T1", 0,
+  "T2", "T2", 0.5,
+  "T3", "T3", 0.5,
+  "T4", "T4", 10,
+  "T6", "T6", 0,
+  "T13", "T13", 0,
+  "T16", "T16", 0.5,
+  "T17", "T17", 0,
+  "T18", "T18", 0,
+  "T21", "T21", 0,
+  "T27", "T27", 0,
+  "T29", "T29", 0,
+  "T30", "T30", 10,
+  "T31", "T31", 0.5,
+  "T32", "T32", 0.5,
+  "T33", "T33", 0.5,
+  "T34", "T34", 0.5,
+  "T35", "disturbed", 0, 
+  "T37", "disturbed", 0,
+  "T38", "plantation forest", 10,
+  "T39", "disturbed", 0,
+  "T40", "disturbed", 0,
+  "T41", "cultivated", 0.5,
+  "T42", "disturbed", 0,
+  "T43", "disturbed", 0,
+  "T44", "cultivated", 0.5,
+  "T45", "cultivated", 0.5,
+  "T35.T37.T39.T43", "disturbed", 0,
+  "T35.T37", "disturbed", 0,
+  "V1", "fen", 0,
+  "V2", "swamp", 10,
+  "V3", "bog", 0,
+  "V4", "spring", 0,
+  "V8", "swamp", 10,
+  "V9", "fen", 0,
+  "V10", "fen", 0,
+  "V11", "disturbed", 0,
+  "V12", "disturbed", 0,
+  "V13", "disturbed", 0) 
+```
 
 ```{r WALD seed shadows, eval=FALSE}
 species <- list.files(here("data","qc"))
 
-percell <- list()
-
-for (j in species) {
-  message(j)
-  localities <- list.files(here("data","qc",j))
+for (i in species) {
+  message(i)
+  terminal.velocity <- filter(traits, species == i) %>% 
+    pull(terminal.velocity)
+  dispersal.season <- filter(traits, species == i) %>% 
+    pull(dispersal.season) %>% 
+    unlist()
   
-  for (i in localities) {
-    message(i)
-    nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
+  localities <- list.files(here("data","qc",i))
+  
+  for (j in localities) {
+    message(j)
+    nin <- st_read(here("data","qc",i,j,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf() %>% 
       filter(group != "plantation forest")
     grd <- make_grid(nin, gridres = 10)
@@ -56,26 +123,101 @@ for (j in species) {
       filter(rsum >= 0.5) %>% 
       select(-rsum) %>% 
       mutate_at(vars(-geometry), round, digits = 3) 
+    vegheights.group <- distinct(grouping, group, .keep_all = TRUE) %>% 
+      filter(group %in% colnames(grd)) %>% 
+      arrange(match(group, colnames(grd))) %>% 
+      pull(vegheight)
+    grd <- grd %>%
+      mutate(normalizer = st_set_geometry(., NULL) %>% rowSums(., na.rm = TRUE))
+    grd <- grd %>% 
+      mutate(vegheight = grd %>% 
+               st_set_geometry(NULL) %>%
+               select(-normalizer) %>% 
+               replace(is.na(.), 0) %>% 
+               as.matrix %*% vegheights.group %>% 
+               as.vector())
+    grd <- grd %>%
+      mutate(vegheight = vegheight / normalizer) %>% 
+      select(-normalizer)
+    grd.pts <- st_centroid(st_geometry(grd))
+
+    sources <- st_read(here("data","qc",i,j,"sources.shp"), quiet = TRUE)
+    height <- loc.tab %>% 
+      mutate(locality = tolower(locality)) %>% 
+      filter(species == i, locality == j) %>% 
+      pull(height.source)
     
-    sources <- st_read(here("data","qc",j,i,"sources.shp"), quiet = TRUE)
-   
-    site <- st_transform(grd[1,], crs = st_crs(poi)) %>% 
+    windsite <- st_transform(grd[1,], crs = st_crs(poi)) %>% 
       st_nearest_feature(poi)
     st_transform(grd[1,], crs = st_crs(poi)) %>%
-      st_distance(poi[site,]) %>% 
+      st_distance(poi[windsite,]) %>% 
       round() %>% 
       paste("meters away") %>% 
-      message
-    DD <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.txt"), delim = ";") %>% 
-      filter(SITE == site)
-    FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = ";") %>% 
-      filter(SITE == site)
-    NORAwind <- left_join(DD, FF, by = "TIME") %>% 
+      message()
+    DDsite <- filter(DD, SITE == windsite) %>% 
+      select(-SITE)
+    FFsite <- filter(FF, SITE == windsite) %>% 
+      select(-SITE)
+    windobs <- left_join(DDsite, FFsite, by = "TIME") %>% 
       rename(DD = WD, FF = WS) %>% 
       mutate(TIME = as.character(TIME)) %>% 
-      mutate(Mnth = substring(TIME, 5, 6)) %>% 
+      mutate(Mnth = as.numeric(substring(TIME, 5, 6))) %>% 
       drop_na()
-    windobs <- NORAwind
+    windobs <- windobs %>% 
+      filter(Mnth %in% dispersal.season) %>% 
+      mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE))
+    # Assume probability of abscission is UNRELATED to wind speed (constant)
+    set.seed(42)
+    sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
+      add_column(weight = sample_frequency(among = windobs, of = quo(sector), weightedby = NULL))
+    set.seed(42)
+    winds <- lapply(sectors360$sector, function(x) {
+      filter(windobs, sector == x) %>% 
+        sample_n(100, replace = TRUE, weight = NULL) %>% 
+        pull(FF)
+    })
+  
+    pb <- txtProgressBar(0, nrow(sources), style = 3)
+    
+    src.arr <- array(dim = c(nrow(grd), nrow(sources)))
+    
+    for (k in seq_along(sources$geometry)) {
+      grd$sector <- assign_sectors(to = grd.pts, around = sources[k, ], 
+                                   between = sector.breaks)
+      grd$distance <- as.numeric(st_distance(grd.pts, sources[k,]))
+      src.sectors <- sectors360$sector[sectors360$sector %in% grd$sector]
+  
+      sec.arr <- array(dim = c(nrow(grd), length(src.sectors)))
+  
+      for (l in seq_along(src.sectors)) {
+
+        vegheight <- grd %>% 
+          filter(sector == src.sectors[l]) %>% 
+          pull(vegheight) %>% 
+          mean()
+        distances <- grd$distance
+        distances[grd$sector != src.sectors[l]] <- NA
+    
+        wind.arr <- array(data = NA, dim = c(nrow(grd), 100))
+    
+        for (m in 1:100) {
+          WALD <- parameterize_WALD(H = height, 
+                                    Fm = terminal.velocity,
+                                    Um = winds[[l]][m], zm = 10, # 10 m above ground 
+                                    h = vegheight)
+          
+          # Divisor below accounts for the fact that the WALD formulation used here is the "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
+          wind.arr[, m] <- WALD(distances) / (2*pi*distances)/(length(nrow(sectors360)))
+        }
+        sec.arr[, l] <- sum_second_dim(wind.arr)
+      }
+      src.arr[, k] <- sum_second_dim(sec.arr, 
+                                     sectors360$weight[which(sectors360$sector %in% src.sectors)])
+      setTxtProgressBar(pb, k)
+    }      
+    close(pb)
+    
+    # TODO: Save species-locality (i-j) to output
   }
 }
 

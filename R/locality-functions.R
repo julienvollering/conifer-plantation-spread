@@ -3,6 +3,18 @@ library(units)
 library(sf)
 library(here)
 
+interpolate_height <- function(locality, localities) {
+  sp <- pull(locality, species)
+  age <- pull(locality, age.at.registration)
+  localities <- filter(localities, species == sp) %>% 
+    select(height.source, age.at.registration) %>% 
+    na.omit() %>% 
+    mutate(weight = ifelse(age == age.at.registration, 2,
+                           1/abs(age.at.registration - age)))
+  weighted.mean(localities$height.source, localities$weight) %>% round()
+}
+
+
 calc_density_by_field <- function(poly, pts, field) {
   
   field.enq <- enquo(field)

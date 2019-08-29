@@ -35,3 +35,12 @@ sum_third_dim <- function(array, weights = NULL) {
   }
   rowSums(array, na.rm = TRUE, dims = 2)
 }
+
+sum_second_dim <- function(array, weights = NULL) {
+  if (!is.null(weights)) {
+    for (i in 1:dim(array)[2]) {
+      array[, i] <- array[, i] * weights[i]
+    }
+  }
+  rowSums(array, na.rm = TRUE)
+}
