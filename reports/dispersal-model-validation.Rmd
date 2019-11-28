@@ -138,8 +138,11 @@ for (i in seq_along(sources$geometry)) { # i <- 1
                                 Um = winds[[j]][k], zm = 10, # measured 10 m above ground at station 
                                 h = vegheight)
       
-      # Divisor below accounts for the fact that the WALD formulation used here is the "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
-      wind.arr[, , k] <- WALD(distances) / (2*pi*distances)/(length(nrow(sectors360)))
+      # Divisor below accounts for the fact that the WALD formulation used here (inverse gaussian dist) is the "dispersal DISTANCE kernel" (eq. 15.3 Nathan et al. 2012). 
+      # 2πr reduces the probability density by spreading it across a 2D ring
+      # nrow(sectors360) further reduces the probability density because we take only a fraction of the 2D ring (an arc)
+      # Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a longer arc at distance.
+      wind.arr[, , k] <- WALD(distances) / (2*pi*distances*nrow(sectors360))
     }
     sec.arr[, , j] <- sum_third_dim(wind.arr)
   }
@@ -217,8 +220,11 @@ for (i in seq_along(sources$geometry)) { # i <- 1
                                 Um = winds[[j]][k], zm = 10, # measured 10 m above ground at station 
                                 h = vegheight)
       
-      # Divisor below accounts for the fact that the WALD formulation used here is the "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
-      wind.arr[, , k] <- WALD(distances) / (2*pi*distances)/(length(nrow(sectors360)))
+      # Divisor below accounts for the fact that the WALD formulation used here (inverse gaussian dist) is the "dispersal DISTANCE kernel" (eq. 15.3 Nathan et al. 2012). 
+      # 2πr reduces the probability density by spreading it across a 2D ring
+      # nrow(sectors360) further reduces the probability density because we take only a fraction of the 2D ring (an arc)
+      # Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a longer arc at distance.
+      wind.arr[, , k] <- WALD(distances) / (2*pi*distances*nrow(sectors360))
     }
     sec.arr[, , j] <- sum_third_dim(wind.arr)
   }

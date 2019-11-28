@@ -94,6 +94,10 @@ grouping <- tribble(
   "V11", "disturbed", 0,
   "V12", "disturbed", 0,
   "V13", "disturbed", 0) 
+
+vegheights <- grouping %>% 
+  group_by(group) %>% 
+  summarize(vegheight = mean(vegheight))
 ```
 
 ```{r WALD seed shadows, eval=FALSE}
@@ -115,7 +119,6 @@ for (i in species) {
       as_tibble %>% st_as_sf() %>% 
       filter(group != "plantation forest")
     grd <- make_grid(nin, gridres = 10)
-    
     grd <- add_dummies_to_grid(grd, nin, field = group) %>% 
       as_tibble() %>% st_as_sf()
     grd <- grd %>% 
@@ -123,7 +126,7 @@ for (i in species) {
       filter(rsum >= 0.5) %>% 
       select(-rsum) %>% 
       mutate_at(vars(-geometry), round, digits = 3) 
-    vegheights.group <- distinct(grouping, group, .keep_all = TRUE) %>% 
+    vegheights.j <- vegheights %>% 
       filter(group %in% colnames(grd)) %>% 
       arrange(match(group, colnames(grd))) %>% 
       pull(vegheight)
@@ -134,7 +137,7 @@ for (i in species) {
                st_set_geometry(NULL) %>%
                select(-normalizer) %>% 
                replace(is.na(.), 0) %>% 
-               as.matrix %*% vegheights.group %>% 
+               as.matrix() %*% vegheights.j %>% 
                as.vector())
     grd <- grd %>%
       mutate(vegheight = vegheight / normalizer) %>% 
@@ -176,43 +179,44 @@ for (i in species) {
         sample_n(100, replace = TRUE, weight = NULL) %>% 
         pull(FF)
     })
+    names(winds) <- sectors360$sector
   
     pb <- txtProgressBar(0, nrow(sources), style = 3)
     
     src.arr <- array(dim = c(nrow(grd), nrow(sources)))
-    
     for (k in seq_along(sources$geometry)) {
       grd$sector <- assign_sectors(to = grd.pts, around = sources[k, ], 
                                    between = sector.breaks)
-      grd$distance <- as.numeric(st_distance(grd.pts, sources[k,]))
-      src.sectors <- sectors360$sector[sectors360$sector %in% grd$sector]
+      distances.k <- as.numeric(st_distance(grd.pts, sources[k,]))
+      sectors.k <- sectors360$sector[sectors360$sector %in% grd$sector]
   
-      sec.arr <- array(dim = c(nrow(grd), length(src.sectors)))
-  
-      for (l in seq_along(src.sectors)) {
-
+      sec.arr <- array(dim = c(nrow(grd), length(sectors.k)))
+      for (l in sectors.k) {
         vegheight <- grd %>% 
-          filter(sector == src.sectors[l]) %>% 
+          filter(sector == l) %>% 
           pull(vegheight) %>% 
           mean()
-        distances <- grd$distance
-        distances[grd$sector != src.sectors[l]] <- NA
+        distances.l <- distances.k
+        distances.l[grd$sector != l] <- NA
     
         wind.arr <- array(data = NA, dim = c(nrow(grd), 100))
-    
         for (m in 1:100) {
           WALD <- parameterize_WALD(H = height, 
                                     Fm = terminal.velocity,
-                                    Um = winds[[l]][m], zm = 10, # 10 m above ground 
+                                    Um = winds[[l]][m], 
+                                    zm = 10, # 10 m above ground 
                                     h = vegheight)
           
-          # Divisor below accounts for the fact that the WALD formulation used here is the "dispersal DISTANCE kernel" (see eq. 15.3 in Nathan 2012). Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a wider sector at distance.
-          wind.arr[, m] <- WALD(distances) / (2*pi*distances)/(length(nrow(sectors360)))
+          # Divisor below accounts for the fact that the WALD formulation used here (inverse gaussian dist) is the "dispersal DISTANCE kernel" (eq. 15.3 Nathan et al. 2012). 
+          # 2πr reduces the probability density by spreading it across a 2D ring
+          # nrow(sectors360) further reduces the probability density because we take only a fraction of the 2D ring (an arc)
+          # Essentially, far cells are reduced relative to close cells, because the distance kernel is spread over a longer arc at distance.
+          wind.arr[, m] <- WALD(distances.l) / (2*pi*distances.l*nrow(sectors360))
         }
         sec.arr[, l] <- sum_second_dim(wind.arr)
       }
       src.arr[, k] <- sum_second_dim(sec.arr, 
-                                     sectors360$weight[which(sectors360$sector %in% src.sectors)])
+                                     sectors360$weight[which(sectors360$sector %in% sectors.k)])
       setTxtProgressBar(pb, k)
     }      
     close(pb)
