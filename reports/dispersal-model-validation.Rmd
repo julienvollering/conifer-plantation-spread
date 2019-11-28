@@ -159,7 +159,7 @@ src.mat <- sum_third_dim(src.arr, sources$cones)
 
 grd[, "density"] <- src.mat[1:length(src.mat)]
 ras <- raster::rasterize(as(grd, "Spatial"), ras, field="density")
-raster::writeRaster(ras, here("output","broervika","adWALD.tif"))
+raster::writeRaster(ras, here("output","broervika","adWALD.tif"), overwrite=TRUE)
 
 raster::plot(log(ras), main = "log(abscission-dependent WALD)", col = viridis::viridis(n=255))
 points(as(sources, "Spatial"))
@@ -241,7 +241,7 @@ src.mat <- sum_third_dim(src.arr, sources$cones)
 
 grd[, "density"] <- src.mat[1:length(src.mat)]
 ras <- raster::rasterize(as(grd, "Spatial"), ras, field="density")
-raster::writeRaster(ras, here("output","broervika","aiWALD.tif"))
+raster::writeRaster(ras, here("output","broervika","aiWALD.tif"), overwrite=TRUE)
 
 raster::plot(log(ras), main = "log(abscission-independent WALD)", col = viridis::viridis(n=255))
 points(as(sources, "Spatial"))
@@ -272,7 +272,7 @@ src.mat <- sum_third_dim(src.arr, sources$cones)
 
 grd[, "density"] <- src.mat[1:length(src.mat)]
 ras <- raster::rasterize(as(grd, "Spatial"), ras, field="density")
-raster::writeRaster(ras, here("output","broervika","ExP.tif"))
+raster::writeRaster(ras, here("output","broervika","ExP.tif"), overwrite=TRUE)
 
 raster::plot(log(ras), main = "log(Exponential Power)", col = viridis::viridis(n=255))
 points(as(sources, "Spatial"))
@@ -303,7 +303,7 @@ src.mat <- sum_third_dim(src.arr, sources$cones)
 
 grd[, "density"] <- src.mat[1:length(src.mat)]
 ras <- raster::rasterize(as(grd, "Spatial"), ras, field="density")
-raster::writeRaster(ras, here("output","broervika","LogS.tif"))
+raster::writeRaster(ras, here("output","broervika","LogS.tif"), overwrite=TRUE)
 
 raster::plot(log(ras), main = "log(Log-sech)", col = viridis::viridis(n=255))
 points(as(sources, "Spatial"))
