@@ -12,6 +12,8 @@ library(here)
 library(sf)
 ```
 
+# Windstations
+
 ```{r, windstation coords}
 windstations <- read_delim(here("data", "raw", "eKlima", "windstationsEklima.txt"), 
                      delim = ";", na=c("-9999"), col_types = cols())
@@ -42,11 +44,11 @@ ggplot() +
 
 ```{r POI with windstations}
 plantations <- read_csv(here("data", "localities.csv"), col_types = cols()) %>% 
-  select(2:4, 9:10) %>% 
-  st_as_sf(coords=c("UTM33easting", "UTM33northing"))
+  select(3, 5:6, 15:16) %>% 
+  st_as_sf(coords=c("utm33.easting", "utm33.northing"))
 
-broervika <- tibble(Locality = "Broervika", Municipality = "Askvoll", 
-                   County = "Sogn og Fjordane", 
+broervika <- tibble(locality = "Broervika", municipality = "Askvoll", 
+                   county = "Sogn og Fjordane", 
                    geometry = st_sfc(st_point(c(-34167, 6839532)))) %>% 
   st_as_sf()
 
@@ -63,14 +65,14 @@ poi$windst.dist <- round(poi$windst.dist/1000)
 
 ```{r, results='asis'}
 as_tibble(poi) %>% 
-  arrange(Locality) %>% 
-  distinct(Locality, .keep_all = TRUE) %>% 
+  arrange(windst.dist) %>% 
+  distinct(locality, .keep_all = TRUE) %>% 
   knitr::kable()
 ```
 
 ```{r windstation distances}
 ggplot(poi, aes(windst.dist))  +
-  geom_histogram(aes(fill=County), binwidth = 2) + 
+  geom_histogram(aes(fill=county), binwidth = 2) + 
   labs(title="Distance to nearest windstation by county",
        x="distance to nearest windstation (km)")
 
@@ -82,18 +84,63 @@ ggplot() +
        subtitle="POIs = black, windstations = red")
 ```
 
+# NORA10
+
+Coordinates to MET:
+
 ```{r lonlat to Met}
 lonlat <- st_transform(poi, 4326) %>% # WGS 84
   st_coordinates() %>% 
   as_tibble()
-lonlat <- lonlat[!duplicated(poi$Locality), ]
+lonlat <- lonlat[!duplicated(poi$locality), ]
+```
 
+```{r, eval=FALSE}
 ggplot() +
   geom_sf(data = st_transform(nor, 4326)) + # WGS 84
   geom_sf(data = st_as_sf(lonlat, coords=1:2, crs=4326)) # WGS 84
 
-write_csv(lonlat, here("data", "raw", "eKlima", "poi-lonlat.csv"))
+write_csv(lonlat, here("data", "raw", "NORA10", "poi-lonlat.csv"))
 ```
+
+Data from MET:
+
+```{r}
+DD <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.txt"), delim = ";") %>% 
+  drop_na()
+FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = ";") %>% 
+  drop_na()
+NORAwind <- inner_join(DD, FF, by = c("SITE", "TIME")) %>% 
+  rename(DD = WD, FF = WS) %>% 
+  mutate(TIME = as.character(TIME)) %>% 
+  mutate(Mnth = substring(TIME, 5, 6)) %>% 
+  drop_na()
+write_csv(NORAwind, here("data","raw","NORA10","NORAwind.csv"))
+
+mutate(lonlat, SITE = 1:nrow(lonlat)) %>% 
+  filter(SITE %in% NORAwind$SITE) %>% 
+  write_csv(here("data","raw","NORA10","NORAsites.csv"))
+```
+
+Data from eKlima:
+
+```{r}
+EKLIMAwind <- list.files(here("data","raw","eKlima","obswind"), full.names = TRUE) %>% 
+  lapply(read_delim, delim = ";", na = "-9999", skip = 24)
+EKLIMAwind <- lapply(EKLIMAwind, function(y) filter(y, FF != "x" & DD != "x")) %>% 
+  lapply(FUN = function(y) mutate(y, FF = as.numeric(FF), DD = as.numeric(DD))) %>% 
+  bind_rows() %>% 
+  drop_na()
+
+
+```
+
+```{r}
+windobs %>% 
+  group_by(Mnth) %>% 
+  summarize(mean=mean(FF), sd=sd(FF))
+```
+
 
 ```{r sessionInfo}
 sessionInfo()

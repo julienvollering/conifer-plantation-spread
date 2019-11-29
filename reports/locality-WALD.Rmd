@@ -43,13 +43,18 @@ g + geom_point()
 ```
 
 ```{r wind data}
-poi <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
-poi <- mutate(poi, site = 1:nrow(poi)) %>% 
+
+
+sites <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
+sites <- mutate(sites, site = 1:nrow(sites)) %>% 
   st_as_sf(coords=c("X", "Y"), crs = 4326)
 
 DD <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.txt"), delim = ";")
 FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = ";")
 sector.breaks <- seq(0, 360, by=10)
+
+# If nearest station > 10 km AND nearest NORA < 10 km, NORA;
+# else, station
 ```
 
 ```{r vegetation height}
@@ -103,7 +108,7 @@ vegheights <- grouping %>%
 ```{r WALD seed shadows, eval=FALSE}
 species <- list.files(here("data","qc"))
 
-for (i in species) {
+for (i in species) { # i <- species[1]
   message(i)
   terminal.velocity <- filter(traits, species == i) %>% 
     pull(terminal.velocity)
@@ -113,7 +118,7 @@ for (i in species) {
   
   localities <- list.files(here("data","qc",i))
   
-  for (j in localities) {
+  for (j in localities) { # j <- localities[1]
     message(j)
     nin <- st_read(here("data","qc",i,j,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf() %>% 
@@ -184,20 +189,20 @@ for (i in species) {
     pb <- txtProgressBar(0, nrow(sources), style = 3)
     
     src.arr <- array(dim = c(nrow(grd), nrow(sources)))
-    for (k in seq_along(sources$geometry)) {
+    for (k in seq_along(sources$geometry)) { # k <- 1
       grd$sector <- assign_sectors(to = grd.pts, around = sources[k, ], 
                                    between = sector.breaks)
       distances.k <- as.numeric(st_distance(grd.pts, sources[k,]))
       sectors.k <- sectors360$sector[sectors360$sector %in% grd$sector]
   
       sec.arr <- array(dim = c(nrow(grd), length(sectors.k)))
-      for (l in sectors.k) {
+      for (l in seq_along(sectors.k)) { # l <- 1
         vegheight <- grd %>% 
-          filter(sector == l) %>% 
+          filter(sector == sectors.k[l]) %>% 
           pull(vegheight) %>% 
           mean()
         distances.l <- distances.k
-        distances.l[grd$sector != l] <- NA
+        distances.l[grd$sector != sectors.k[l]] <- NA
     
         wind.arr <- array(data = NA, dim = c(nrow(grd), 100))
         for (m in 1:100) {
@@ -221,7 +226,12 @@ for (i in species) {
     }      
     close(pb)
     
-    # TODO: Save species-locality (i-j) to output
+    grd <- mutate(grd, wald = sum_second_dim(src.arr))
+    ras <- grd %>% 
+      select(wald) %>% 
+      as("Spatial") %>% 
+      raster::rasterize(raster::raster(grd, resolution = 10), "wald")
+    raster::writeRaster(ras, here("data","qc",i,j,"wald.tif"), overwrite = TRUE)
   }
 }
 
