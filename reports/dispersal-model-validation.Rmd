@@ -86,7 +86,7 @@ NORAwind <- left_join(DD, FF, by = "TIME") %>%
 windobs <- NORAwind
 ```
 
-```{r abscission-dependent WALD model, cache=TRUE}
+```{r abscission-dependent WALD model}
 freeze <- ls()
 source(here("R","dispersal-functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
@@ -168,7 +168,7 @@ points(as(traps, "Spatial"), pch=20, col="red")
 rm(list = setdiff(ls(), c(freeze)))
 ```
 
-```{r abscission-independent WALD model, cache=TRUE}
+```{r abscission-independent WALD model}
 freeze <- ls()
 source(here("R","dispersal-functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
