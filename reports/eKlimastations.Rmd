@@ -122,6 +122,14 @@ mutate(lonlat, SITE = 1:nrow(lonlat)) %>%
   write_csv(here("data","raw","NORA10","NORAsites.csv"))
 ```
 
+```{r}
+NORAwind %>%
+  mutate(SITE = as_factor(SITE), Mnth = as.numeric(Mnth)) %>% 
+  group_by(SITE, Mnth) %>% 
+  summarize(mean=mean(FF), sd=sd(FF)) %>% 
+  ggplot(aes(Mnth, mean, color = SITE)) + geom_line()
+```
+
 Data from eKlima:
 
 ```{r}
@@ -131,16 +139,20 @@ EKLIMAwind <- lapply(EKLIMAwind, function(y) filter(y, FF != "x" & DD != "x")) %
   lapply(FUN = function(y) mutate(y, FF = as.numeric(FF), DD = as.numeric(DD))) %>% 
   bind_rows() %>% 
   drop_na()
+write_csv(EKLIMAwind, here("data","raw","eKlima","EKLIMAwind.csv"))
 
-
+windstations %>%
+  filter(Stnr %in% EKLIMAwind$St.no) %>% 
+  write_csv(here("data","raw","eKlima","EKLIMAsites.csv"))
 ```
 
 ```{r}
-windobs %>% 
-  group_by(Mnth) %>% 
-  summarize(mean=mean(FF), sd=sd(FF))
+EKLIMAwind %>% 
+  mutate(St.no = as_factor(St.no)) %>% 
+  group_by(St.no, Mnth) %>% 
+  summarize(mean=mean(FF), sd=sd(FF)) %>% 
+  ggplot(aes(Mnth, mean, color = St.no)) + geom_line()
 ```
-
 
 ```{r sessionInfo}
 sessionInfo()
