@@ -43,18 +43,15 @@ g + geom_point()
 ```
 
 ```{r wind data}
+noraxy <- st_read(here("data","raw","NORA10","NORAsites.shp"))
+nora <- read_csv(here("data","raw","NORA10","NORAwind.csv"))
 
+eklimaxy <- st_read(here("data","raw","eKlima","EKLIMAsites.shp"))
+eklima <- read_csv(here("data","raw","eKlima","EKLIMAwind.csv"))
 
-sites <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
-sites <- mutate(sites, site = 1:nrow(sites)) %>% 
-  st_as_sf(coords=c("X", "Y"), crs = 4326)
+length(intersect(nora$SITE, eklima$St.no))
 
-DD <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.txt"), delim = ";")
-FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = ";")
 sector.breaks <- seq(0, 360, by=10)
-
-# If nearest station > 10 km AND nearest NORA < 10 km, NORA;
-# else, station
 ```
 
 ```{r vegetation height}
@@ -155,23 +152,27 @@ for (i in species) { # i <- species[1]
       filter(species == i, locality == j) %>% 
       pull(height.source)
     
-    windsite <- st_transform(grd[1,], crs = st_crs(poi)) %>% 
-      st_nearest_feature(poi)
-    st_transform(grd[1,], crs = st_crs(poi)) %>%
-      st_distance(poi[windsite,]) %>% 
-      round() %>% 
-      paste("meters away") %>% 
-      message()
-    DDsite <- filter(DD, SITE == windsite) %>% 
-      select(-SITE)
-    FFsite <- filter(FF, SITE == windsite) %>% 
-      select(-SITE)
-    windobs <- left_join(DDsite, FFsite, by = "TIME") %>% 
-      rename(DD = WD, FF = WS) %>% 
-      mutate(TIME = as.character(TIME)) %>% 
-      mutate(Mnth = as.numeric(substring(TIME, 5, 6))) %>% 
-      drop_na()
+    grdxy <- grd[1,] %>%  st_transform(st_crs(eklimaxy)) # EPSG 25833
+    eklima.near <- eklimaxy[st_nearest_feature(grdxy, eklimaxy), ]
+    nora.near <- noraxy[st_nearest_feature(grdxy, noraxy), ]
+    if (st_distance(grdxy, eklima.near, by_element = TRUE) > set_units(10e3, "m") & 
+        st_distance(grdxy, nora.near, by_element = TRUE) < set_units(10e3, "m")) {
+      windobs <- filter(nora, SITE == nora.near$SITE)
+      st_distance(grdxy, nora.near, by_element = TRUE) %>% 
+        `/`(1e3) %>% 
+        round() %>% 
+        paste("km away, NORA") %>% 
+        message()
+    } else {
+      windobs <- filter(eklima, St.no == eklima.near$Stnr)
+      st_distance(grdxy, eklima.near, by_element = TRUE) %>% 
+        `/`(1e3) %>% 
+        round() %>% 
+        paste("km away, eKlima") %>% 
+        message()
+    }
     windobs <- windobs %>% 
+      select(Mnth, DD, FF) %>% 
       filter(Mnth %in% dispersal.season) %>% 
       mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE))
     # Assume probability of abscission is UNRELATED to wind speed (constant)

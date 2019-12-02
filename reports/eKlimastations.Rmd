@@ -86,21 +86,10 @@ ggplot() +
 
 # NORA10
 
-Coordinates to MET:
+Coordinates sent to MET:
 
-```{r lonlat to Met}
-lonlat <- st_transform(poi, 4326) %>% # WGS 84
-  st_coordinates() %>% 
-  as_tibble()
-lonlat <- lonlat[!duplicated(poi$locality), ]
-```
-
-```{r, eval=FALSE}
-ggplot() +
-  geom_sf(data = st_transform(nor, 4326)) + # WGS 84
-  geom_sf(data = st_as_sf(lonlat, coords=1:2, crs=4326)) # WGS 84
-
-write_csv(lonlat, here("data", "raw", "NORA10", "poi-lonlat.csv"))
+```{r}
+poi <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
 ```
 
 Data from MET:
@@ -113,13 +102,16 @@ FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = "
 NORAwind <- inner_join(DD, FF, by = c("SITE", "TIME")) %>% 
   rename(DD = WD, FF = WS) %>% 
   mutate(TIME = as.character(TIME)) %>% 
-  mutate(Mnth = substring(TIME, 5, 6)) %>% 
+  mutate(Mnth = as.numeric(substring(TIME, 5, 6))) %>% 
   drop_na()
 write_csv(NORAwind, here("data","raw","NORA10","NORAwind.csv"))
 
-mutate(lonlat, SITE = 1:nrow(lonlat)) %>% 
-  filter(SITE %in% NORAwind$SITE) %>% 
-  write_csv(here("data","raw","NORA10","NORAsites.csv"))
+st_as_sf(poi, coords = c("X", "Y")) %>% 
+  st_set_crs(4326) %>% 
+  st_transform(25833) %>% 
+  mutate(SITE = 1:nrow(poi)) %>% 
+  filter(SITE %in% NORAwind$SITE) %>%  
+  st_write(here("data","raw","NORA10","NORAsites.shp"), delete_dsn=TRUE)
 ```
 
 ```{r}
@@ -129,6 +121,8 @@ NORAwind %>%
   summarize(mean=mean(FF), sd=sd(FF)) %>% 
   ggplot(aes(Mnth, mean, color = SITE)) + geom_line()
 ```
+
+# eKlima
 
 Data from eKlima:
 
@@ -143,7 +137,8 @@ write_csv(EKLIMAwind, here("data","raw","eKlima","EKLIMAwind.csv"))
 
 windstations %>%
   filter(Stnr %in% EKLIMAwind$St.no) %>% 
-  write_csv(here("data","raw","eKlima","EKLIMAsites.csv"))
+  select(Stnr) %>% 
+  st_write(here("data","raw","eKlima","EKLIMAsites.shp"), delete_dsn=TRUE)
 ```
 
 ```{r}
