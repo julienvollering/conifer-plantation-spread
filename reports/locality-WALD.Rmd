@@ -51,7 +51,7 @@ eklima <- read_csv(here("data","raw","eKlima","EKLIMAwind.csv"))
 
 length(intersect(nora$SITE, eklima$St.no))
 
-sector.breaks <- seq(0, 360, by=10)
+sector.breaks <- seq(0, 360, by=20)
 ```
 
 ```{r vegetation height}
@@ -146,7 +146,11 @@ for (i in species) { # i <- species[1]
       select(-normalizer)
     grd.pts <- st_centroid(st_geometry(grd))
 
-    sources <- st_read(here("data","qc",i,j,"sources.shp"), quiet = TRUE)
+    source <- st_read(here("data","qc",i,j,"source_polygon.shp"), quiet = TRUE)
+    nsources <- st_area(source) %>% sum() %>% `/`(100) %>% drop_units() %>% round()
+    set.seed(42)
+    sources <- st_sample(source, nsources, type = "hexagonal") %>% st_sf()
+    # sources <- st_read(here("data","qc",i,j,"sources.shp"), quiet = TRUE)
     height <- loc.tab %>% 
       mutate(locality = tolower(locality)) %>% 
       filter(species == i, locality == j) %>% 
@@ -236,5 +240,12 @@ for (i in species) { # i <- species[1]
   }
 }
 
+```
+
+```{r}
+slow <- raster::raster(here("data","qc","Larix","anisdal","wald100daa.tif"))
+fast <- raster::raster(here("data","qc","Larix","anisdal","wald.tif"))
+st <- raster::stack(slow, fast)
+raster::as.data.frame(st, na.rm=TRUE) %>% cor()
 ```
 
