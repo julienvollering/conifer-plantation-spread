@@ -42,12 +42,12 @@ calc_sigma <- function(z, d, ustar, U) {
 
 # h vegetation height
 calc_d <- function(h) {
-  0.7*h
+  0.7*h + 0.01 # Avoids NaN in calc_U integration
 }
 
 # h vegetation height
 calc_z0 <- function(h) {
-  0.1*h
+  0.1*h + 0.01 # Avoids NaN in calc_U integration
 }
 
 parameterize_WALD <- function(H, Fm, Um, zm, h) {

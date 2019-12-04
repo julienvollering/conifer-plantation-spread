@@ -102,7 +102,7 @@ vegheights <- grouping %>%
   summarize(vegheight = mean(vegheight))
 ```
 
-```{r WALD seed shadows, eval=FALSE}
+```{r WALD seed shadows}
 species <- list.files(here("data","qc"))
 
 for (i in species) { # i <- species[1]
