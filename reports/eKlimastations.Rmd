@@ -124,15 +124,61 @@ NORAwind %>%
 
 # eKlima
 
-Data from eKlima:
+Frequency data for two stations where observations are unavailable from eKlima are transformed into observation data with identical format as the downloaded observation data.
+
+```{r, eval=FALSE, include=FALSE}
+files <- list.files(here("data","raw","eKlima","obswindfreq"), full.names = TRUE)
+N <- 1e3
+for (i in seq_along(files)) {
+  freq <- read_delim(files[i], delim = ";", na = "-9999", skip = 18)
+  freq <- t(freq)
+  colnames(freq) <- freq[1,]
+  freq <- freq[-(1:2),]
+  long <- as_tibble(cbind(DD = rownames(freq), freq)) %>% 
+    mutate_all(as.numeric) %>% 
+    select(1:7) %>% 
+    gather(key = minspeed, value = frequency, -1) %>% 
+    drop_na()
+  sum(long$frequency)
+  
+  DD <- vector("list", length = nrow(long))
+  FF <- vector("list", length = nrow(long))
+  set.seed(42)
+  for (j in 1:nrow(long)) {
+    dir <- long$DD[j]
+    spe <- long$minspeed[j]
+    dec <- long$frequency[j]/100
+    DD[[j]] <- rep(dir, dec * N)
+    FF[[j]] <- if (spe == "0.1") {
+      runif(dec * N, min = 0, max = 6.2) %>% round(1)
+    } else if (spe == "6.4") {
+      runif(dec * N, min = 6.4, max = 12.5) %>% round(1)
+    } else if (spe == "12.6") {
+      runif(dec * N, min = 12.6, max = 18.8) %>% round(1)
+    } else if (spe == "18.8") {
+      runif(dec * N, min = 18.8, max = 25) %>% round(1)
+    } else {
+      runif(dec * N, min = 25, max = 30) %>% round(1)
+    }
+  }
+  outpath <- sub("obswindfreq", "obswind", files[i])
+  writeLines(rep("\n", 23) %>% paste(collapse = " "), con = outpath)
+  tibble(St.no = as.numeric(substr(basename(files[i]), 5, 9)), 
+         Year = NA_real_, Mnth = 12, Date = NA_real_, `Time(NMT)` = NA_real_, 
+         DD = flatten_dbl(DD), fDD = "OK", FF = flatten_dbl(FF), fFF = "OK") %>% 
+    write_delim(path = outpath, delim = ";", na = "-9999", append = TRUE, 
+                col_names = TRUE)
+}
+```
+
+Observation data from eKlima:
 
 ```{r}
 EKLIMAwind <- list.files(here("data","raw","eKlima","obswind"), full.names = TRUE) %>% 
   lapply(read_delim, delim = ";", na = "-9999", skip = 24)
-EKLIMAwind <- lapply(EKLIMAwind, function(y) filter(y, FF != "x" & DD != "x")) %>% 
+EKLIMAwind <- lapply(EKLIMAwind, function(y) filter(y, fFF == "OK" & fDD == "OK")) %>% 
   lapply(FUN = function(y) mutate(y, FF = as.numeric(FF), DD = as.numeric(DD))) %>% 
-  bind_rows() %>% 
-  drop_na()
+  bind_rows()
 write_csv(EKLIMAwind, here("data","raw","eKlima","EKLIMAwind.csv"))
 
 windstations %>%
