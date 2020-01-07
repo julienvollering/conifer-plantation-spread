@@ -28,12 +28,13 @@ calc_density_by_field <- function(poly, pts, field) {
   units(poly$area) <- with(ud_units, daa)
 
   pts <- st_transform(pts, st_crs(poly))
+  if (!has_name(pts, "count")) {pts <- add_column(pts, count = 1)}
   suppressWarnings({
     if (nrow(st_intersection(pts, poly)) > 0) {
       tally <- pts %>%
         st_intersection(poly) %>%
         group_by(!!field.enq) %>%
-        summarize(n = n()) %>%
+        tally(wt = count) %>% 
         st_set_geometry(NULL)
     } else {
       tally <- poly %>% 
@@ -153,12 +154,13 @@ add_wildlings <- function(grid, pts) {
   grid <- add_column(grid, ID = 1:nrow(grid))
   
   pts <- st_transform(pts, st_crs(grid))
+  if (!has_name(pts, "count")) {pts <- add_column(pts, count = 1)}
   suppressWarnings({
     tally <- grid %>% 
       st_intersection(pts) %>% 
       st_set_geometry(NULL) %>% 
-      group_by(ID) %>% 
-      summarize(wildlings = n())
+      group_by(ID) %>%
+      tally(wt = count, name = "wildlings")
   })  
   
   grid %>% 
