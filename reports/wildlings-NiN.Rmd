@@ -154,18 +154,23 @@ for (j in species) { # j <- species[1]
       select(-rsum) %>% 
       mutate_at(vars(-geometry), round, digits = 3) 
     
-    sources <- st_read(here("data","qc",j,i,"sources.shp"), quiet = TRUE)
+    source <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) 
+    source <- mutate(source, nsources = st_area(source) %>% 
+                       `/`(100) %>% 
+                       drop_units() %>% 
+                       round())
+    set.seed(42)
+    sources <- st_sample(source, source$nsources, type = "regular") %>% st_sf() # st_sample throws error with "regular and "hexagonal". Also with projected source polygons.
+
     grd <- add_seed_shadow(grd, sources)
     
-    source.poly <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) %>% 
-      filter(FID == 0)
     if (file.exists(here("data","qc",j,i,"dtm1","data","dtm1.tif"))) {
       dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
         raster::aggregate(fact = 2)
     } else {
       dtm <- raster::raster(here("data","qc",j,i,"dtm10","data","dtm10.tif"))
     }
-    grd <- add_relative_elevation(grd, source.poly, dtm)
+    grd <- add_relative_elevation(grd, filter(source, FID == 0), dtm)
     
     wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
     grd <- add_wildlings(grd, wildlings)
