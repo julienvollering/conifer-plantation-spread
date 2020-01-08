@@ -162,8 +162,9 @@ for (j in species) { # j <- species[1]
     source.nonz <- filter(source, nsources > 0)
     set.seed(42)
     sources <- st_sample(source.nonz, source.nonz$nsources, type = "hexagonal") %>% st_sf()
-
     grd <- add_seeds_ExP(grd, sources)
+    
+    grd <- add_seeds_WALD(grd, raster::raster(here("data","qc",j,i,"wald.tif")))
     
     if (file.exists(here("data","qc",j,i,"dtm1","data","dtm1.tif"))) {
       dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
