@@ -156,13 +156,14 @@ for (j in species) { # j <- species[1]
     
     source <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) 
     source <- mutate(source, nsources = st_area(source) %>% 
-                       `/`(100) %>% 
+                       `/`(10) %>% # 10 sources per 100m2 (gridres 10x10m)
                        drop_units() %>% 
                        round())
+    source.nonz <- filter(source, nsources > 0)
     set.seed(42)
-    sources <- st_sample(source, source$nsources, type = "regular") %>% st_sf() # st_sample throws error with "regular and "hexagonal". Also with projected source polygons.
+    sources <- st_sample(source.nonz, source.nonz$nsources, type = "hexagonal") %>% st_sf()
 
-    grd <- add_seed_shadow(grd, sources)
+    grd <- add_seeds_ExP(grd, sources)
     
     if (file.exists(here("data","qc",j,i,"dtm1","data","dtm1.tif"))) {
       dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
@@ -194,7 +195,6 @@ for (i in seq_along(percell)) {
   }
   percell.agg[[i]] <- bind_rows(percell.agg[[i]]) %>% 
     select(locality, wildlings, seeds, relelev, everything()) %>% 
-    lapply(function(x) {replace_na(x, 0)}) %>% 
     as_tibble()
 }
 str(percell.agg)

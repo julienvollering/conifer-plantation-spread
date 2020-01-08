@@ -73,7 +73,7 @@ add_dummies_to_grid <- function(grid, poly, field) {
   poly <- lwgeom::st_make_valid(poly) %>%
     mutate(!!field.enq := as.character(!!field.enq)) %>% 
     group_by(!!field.enq) %>% 
-    summarize()
+    summarize() # geometry union
   suppressWarnings({
     int <- st_intersection(poly, grid) %>% 
       mutate(area = st_area(geometry))
@@ -99,19 +99,21 @@ add_dummies_to_grid <- function(grid, poly, field) {
     st_set_geometry(NULL) %>% 
     rowSums(na.rm = TRUE)
   fact <- ifelse(rowS > 1, 1/rowS, 1)
-  grid <- mutate_at(grid, groups, function(x) {x * fact})
+  grid <- grid %>% 
+    mutate_at(groups, function(x) {x * fact}) %>% 
+    mutate_at(groups, ~ replace_na(., replace = 0))
   
   return(grid)
 }
 
 
 # From Bullock et al. 2017
-exp_power <- function(d, a = 2.7825, b = 0.8346) {
+ExP <- function(d, a = 2.7825, b = 0.8346) {
   b*(2*pi*a^2*gamma(2/b))^-1*exp(-(d^b/a^b))
 }
 
 
-add_seed_shadow <- function(grid, sourcepts) {
+add_seeds_ExP <- function(grid, sourcepts) {
   suppressWarnings({
     centr <- st_centroid(grid) 
   })
@@ -122,10 +124,10 @@ add_seed_shadow <- function(grid, sourcepts) {
   for (i in 1:nrow(sourcepts)) {
     src.array[, i] <- st_distance(sourcepts[i,], centr) %>% 
       as.numeric() %>% 
-      exp_power()
+      ExP()
   }
   
-  add_column(grid, seeds = rowSums(src.array, na.rm = TRUE), .before = "geometry")
+  add_column(grid, seeds.ExP = rowSums(src.array, na.rm = TRUE), .before = "geometry")
 }
 
 
