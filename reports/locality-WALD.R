@@ -1,11 +1,6 @@
----
-title: "Locality WALD"
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
-
-```{r setup, include=FALSE}
+# setup #### 
+speciesi <- 1 # adjust for RStudio jobs partitioning
+localitiesi <- 1 # adjust for RStudio jobs partitioning
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
@@ -14,9 +9,8 @@ library(units)
 source(here("R","locality-functions.R"))
 source(here("R","dispersal-functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
-```
 
-```{r species dispersal traits}
+# species dispersal traits ####
 traits <- tribble(
   ~species, ~terminal.velocity, ~dispersal.season,
   "Larix", 1.0, c(12,1:5), # After Sandvik 2012 (for L. decidua), and Sullivan 1994 (for L. decidua)
@@ -24,9 +18,8 @@ traits <- tribble(
   "P.contorta", 0.82, c(9:12), # After Sandvik 2012
   "P.sitchensis-lutz", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
 )
-```
 
-```{r localities table}
+# localities table ####
 loc.tab <- read_csv(here("data","localities.csv"))
 loc.tab[is.na(loc.tab$age.at.registration),]
 loc.tab[loc.tab$locality=="Håkøya", "age.at.registration"] <- loc.tab %>% 
@@ -38,11 +31,7 @@ for (i in which(is.na(loc.tab$height.source))) {
   loc.tab[i, "height.source"] <- interpolate_height(loc.tab[i,], loc.tab)
 }
 
-g <- ggplot(loc.tab, aes(x=age.at.registration, y=height.source, color=species))
-g + geom_point()
-```
-
-```{r wind data}
+# wind data ####
 noraxy <- st_read(here("data","raw","NORA10","NORAsites.shp"))
 nora <- read_csv(here("data","raw","NORA10","NORAwind.csv"))
 
@@ -52,9 +41,8 @@ eklima <- read_csv(here("data","raw","eKlima","EKLIMAwind.csv"))
 length(intersect(nora$SITE, eklima$St.no))
 
 sector.breaks <- seq(0, 360, by=20)
-```
 
-```{r vegetation height}
+# vegetation height ####
 grouping <- tribble(
   ~code, ~group, ~vegheight,
   "T1", "T1", 0,
@@ -103,12 +91,11 @@ grouping <- tribble(
 vegheights <- grouping %>% 
   group_by(group) %>% 
   summarize(vegheight = mean(vegheight))
-```
 
-```{r WALD seed shadows}
+# WALD seed shadows ####
 species <- list.files(here("data","qc"))
 
-for (i in species[1]) { # i <- species[1]
+for (i in speciesi) { 
   message(i)
   terminal.velocity <- filter(traits, species == i) %>% 
     pull(terminal.velocity)
@@ -118,7 +105,7 @@ for (i in species[1]) { # i <- species[1]
   
   localities <- list.files(here("data","qc",i))
   
-  for (j in localities[1]) { # j <- localities[1]
+  for (j in localitiesi) { 
     message(j)
     nin <- st_read(here("data","qc",i,j,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf() %>% 
@@ -150,7 +137,7 @@ for (i in species[1]) { # i <- species[1]
       mutate(vegheight = vegheight / normalizer) %>% 
       select(-normalizer)
     grd.pts <- st_centroid(st_geometry(grd))
-
+    
     source <- st_read(here("data","qc",i,j,"source_polygon.shp"), quiet = TRUE) 
     source <- mutate(source, nsources = st_area(source) %>% 
                        `/`(100) %>% # 1 source per 100m2 (gridres 10x10m)
@@ -200,7 +187,7 @@ for (i in species[1]) { # i <- species[1]
         pull(FF)
     })
     names(winds) <- sectors360$sector
-  
+    
     pb <- txtProgressBar(0, nrow(sources), style = 3)
     
     src.arr <- array(dim = c(nrow(grd), nrow(sources)))
@@ -209,7 +196,7 @@ for (i in species[1]) { # i <- species[1]
                                    between = sector.breaks)
       distances.k <- as.numeric(st_distance(grd.pts, sources[k,]))
       sectors.k <- sectors360$sector[sectors360$sector %in% grd$sector]
-  
+      
       sec.arr <- array(dim = c(nrow(grd), length(sectors.k)))
       for (l in seq_along(sectors.k)) { # l <- 1
         vegheight <- grd %>% 
@@ -218,7 +205,7 @@ for (i in species[1]) { # i <- species[1]
           mean()
         distances.l <- distances.k
         distances.l[grd$sector != sectors.k[l]] <- NA
-    
+        
         wind.arr <- array(data = NA, dim = c(nrow(grd), 100))
         for (m in 1:100) {
           WALD <- parameterize_WALD(H = height, 
@@ -249,18 +236,3 @@ for (i in species[1]) { # i <- species[1]
     raster::writeRaster(ras, here("data","qc",i,j,"wald.tif"), overwrite = TRUE)
   }
 }
-
-```
-
-```{r}
-slow <- raster::raster(here("data","qc","Larix","anisdal","wald10daa.tif"))
-fast <- raster::raster(here("data","qc","Larix","anisdal","wald.tif"))
-st <- raster::stack(slow, fast)
-df <- raster::as.data.frame(st, na.rm=TRUE)
-cor(df)
-pairs(df)
-```
-
-```{r sessionInfo}
-sessionInfo()
-```
