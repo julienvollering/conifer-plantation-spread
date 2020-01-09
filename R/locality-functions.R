@@ -176,8 +176,9 @@ add_wildlings <- function(grid, pts) {
       tally(wt = count, name = "wildlings")
   })  
   
-  grid %>% 
+  grid <- grid %>% 
     left_join(tally, by = "ID") %>% 
     select(-ID) %>% 
     select(-geometry, geometry)
+  mutate(grid, wildlings = replace_na(grid$wildlings, 0))
 }
