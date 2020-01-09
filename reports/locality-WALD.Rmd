@@ -158,7 +158,9 @@ for (i in species) { # i <- species[1]
                        round())
     source.nonz <- filter(source, nsources > 0)
     set.seed(42)
-    sources <- st_sample(source.nonz, source.nonz$nsources, type = "hexagonal") %>% st_sf()
+    sources <- st_sample(source.nonz, source.nonz$nsources, type = "hexagonal") %>% 
+      st_sf() %>% 
+      st_transform(st_crs(grd))
     height <- loc.tab %>% 
       mutate(locality = tolower(locality)) %>% 
       filter(species == i, locality == j) %>% 
