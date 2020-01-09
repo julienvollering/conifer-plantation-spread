@@ -1,5 +1,5 @@
 ---
-title: "eKlima stations"
+title: "Climate data"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -122,7 +122,7 @@ NORAwind %>%
   ggplot(aes(Mnth, mean, color = SITE)) + geom_line()
 ```
 
-# eKlima
+# eKlima wind
 
 Frequency data for two stations where observations are unavailable from eKlima are transformed into observation data with identical format as the downloaded observation data.
 
@@ -194,6 +194,26 @@ EKLIMAwind %>%
   summarize(mean=mean(FF), sd=sd(FF)) %>% 
   ggplot(aes(Mnth, mean, color = St.no)) + geom_line()
 ```
+
+# Vegetation sections and zones
+
+```{r}
+sect <- raster::raster(here("data","raw","Bakkestuen","seksjoner.tif"))
+zone <- raster::raster(here("data","raw","Bakkestuen","soner.tif"))
+df <- raster::rasterToPoints(raster::stack(sect, zone), spatial = TRUE) 
+chelsa <- list.files(here("data","raw","CHELSA"), pattern = ".tif", 
+                     full.names = TRUE) %>% 
+  raster::stack()
+bb <- sp::spTransform(df, raster::crs(chelsa)) %>% sp::bbox()
+chelsa <- raster::crop(chelsa, bb)
+df <- raster::extract(chelsa, df, sp = TRUE)
+df <- as_tibble(df) %>% select(-x, -y)
+correl <- cor(df, use = "complete")[-(1:2),1:2]
+correl[order(correl[,1]), 1, drop=FALSE]
+correl[order(correl[,2]), 2, drop=FALSE]
+```
+
+Bio19 (precip coldest qtr) correlates best with sections, and Bio1 (annual mean temp) correlates best with zones.
 
 ```{r sessionInfo}
 sessionInfo()
