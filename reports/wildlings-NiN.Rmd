@@ -127,7 +127,7 @@ perNiN.agg <- lapply(perNiN, function(x) {
 lapply(perNiN.agg, knitr::kable)
 ```
 
-WALD seed shadows produced in separate Rmd report because of long computation time. 
+WALD seed shadows produced separately because of long computation time. 
 
 ```{r wildlings per cell, eval=FALSE}
 species <- list.files(here("data","qc"))
@@ -137,7 +137,7 @@ percell <- list()
 for (j in species) { # j <- species[1]
   message(j)
   localities <- list.files(here("data","qc",j))
-  
+
   for (i in localities) { # i <- localities[1]
     message(i)
     nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
@@ -166,6 +166,14 @@ for (j in species) { # j <- species[1]
     
     grd <- add_seeds_WALD(grd, raster::raster(here("data","qc",j,i,"wald.tif")))
     
+    grd <- mutate(grd, seeds.ExP = case_when(
+      is.na(seeds.WALD) ~ NA_real_,
+      TRUE ~ seeds.ExP
+    )) 
+    grd <- grd %>% 
+      mutate(seeds.ExP = seeds.ExP/sum(seeds.ExP, na.rm = TRUE), 
+             seeds.WALD = seeds.WALD/sum(seeds.WALD, na.rm = TRUE))
+
     if (file.exists(here("data","qc",j,i,"dtm1","data","dtm1.tif"))) {
       dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
         raster::aggregate(fact = 2)
@@ -187,6 +195,13 @@ saveRDS(percell, here("output","percell-data.rds"))
 ```{r wildlings per cell aggregated}
 percell <- readRDS(here("output","percell-data.rds"))
 
+str(percell, 2)
+percell <- map(percell, ~ map(., ~ st_set_geometry(., NULL)))
+percell.agg <- map(percell, ~ map_dfr(., identity, .id = "locality"))
+str(percell.agg, 1)
+percell.agg
+
+
 percell.agg <- percell
 for (i in seq_along(percell)) {
   for (j in seq_along(percell[[i]])) {
@@ -205,3 +220,20 @@ for (i in names(percell.agg)) {
 }
 ```
 
+```{r locality climate}
+localities <- read_csv(here("data", "localities.csv")) %>% 
+  select(locality, species, utm33.easting, utm33.northing) %>% 
+  st_as_sf(coords=c("utm33.easting", "utm33.northing")) %>% 
+  st_set_crs(25833) %>% 
+  as("Spatial")
+chelsa <- raster::stack(here("data","raw","CHELSA","CHELSA_bio_1.tif"),
+                        here("data","raw","CHELSA","CHELSA_bio_19.tif"))
+jointable <- raster::extract(chelsa, localities, sp = TRUE) %>% 
+  st_as_sf() %>% st_set_geometry(NULL) %>% as_tibble() %>% 
+  rename(bio01 = CHELSA_bio_1, bio19 = CHELSA_bio_19)
+anyNA(jointable)
+```
+
+```{r sessionInfo}
+sessionInfo()
+```
