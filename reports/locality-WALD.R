@@ -1,6 +1,6 @@
 # setup #### 
-speciesi <- 1 # adjust for RStudio jobs partitioning
-localitiesi <- 1 # adjust for RStudio jobs partitioning
+speciesi <- "Larix" # adjust for RStudio jobs partitioning
+localitiesi <- "voren" # adjust for RStudio jobs partitioning
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
