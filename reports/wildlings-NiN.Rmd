@@ -200,37 +200,52 @@ percell.agg <- map(percell, ~ map_dfr(., identity, .id = "locality"))
 str(percell.agg, 1)
 percell.agg
 
-
-percell.agg <- percell
-for (i in seq_along(percell)) {
-  for (j in seq_along(percell[[i]])) {
-    percell.agg[[i]][[j]] <- percell[[i]][[j]] %>% 
-      st_set_geometry(NULL) %>% 
-      add_column(locality = names(percell[[i]][j]))
-  }
-  percell.agg[[i]] <- bind_rows(percell.agg[[i]]) %>% 
-    select(locality, wildlings, seeds, relelev, everything()) %>% 
-    as_tibble()
-}
-str(percell.agg)
-
-for (i in names(percell.agg)) {  
-  hist(percell.agg[[i]][["wildlings"]], xlab = "wildlings", main = i, xlim = c(0,20), breaks = 50)
-}
+excluded <- c("wildlings", "locality", "seeds.ExP", "seeds.WALD", "relelev")
+percell.agg <- map(percell.agg, function(x) {
+  included <- names(x)[!(names(x) %in% excluded)]
+  mutate_at(x, included, ~replace_na(., 0))
+})
 ```
 
 ```{r locality covariates}
-localities <- read_csv(here("data", "localities.csv")) %>% 
+localities <- read_csv(here("data", "localities.csv")) 
+filter(localities, is.na(age.at.registration))
+HåkøyaAge <- localities %>% 
+  filter(species == "P.sitchensis-lutz", county %in% c("Troms","Nordland")) %>% 
+  pull(age.at.registration) %>% 
+  mean(na.rm = TRUE) %>% 
+  round()
+localities <- mutate(localities, age.at.registration = case_when(
+  locality == "Håkøya" & species == "P.sitchensis-lutz" ~ HåkøyaAge,
+  TRUE ~ age.at.registration
+))
+
+localities <- localities %>% 
   select(locality, species, age.at.registration, utm33.easting, utm33.northing) %>% 
   st_as_sf(coords=c("utm33.easting", "utm33.northing")) %>% 
   st_set_crs(25833) %>% 
   as("Spatial")
+
 chelsa <- raster::stack(here("data","raw","CHELSA","CHELSA_bio_1.tif"),
                         here("data","raw","CHELSA","CHELSA_bio_19.tif"))
 jointable <- raster::extract(chelsa, localities, sp = TRUE) %>% 
   st_as_sf() %>% st_set_geometry(NULL) %>% as_tibble() %>% 
-  rename(age = age.at.registration, bio01 = CHELSA_bio_1, bio19 = CHELSA_bio_19)
+  rename(age = age.at.registration, bio01 = CHELSA_bio_1, bio19 = CHELSA_bio_19) %>% 
+  mutate(locality = tolower(locality))
 anyNA(jointable)
+
+percell.agg <- percell.agg %>% 
+  map_dfr(identity, .id = 'species') %>% 
+  left_join(jointable, by = c("species", "locality")) %>%
+  select(species, locality, wildlings, age, bio01, bio19, 
+         seeds.ExP, seeds.WALD, relelev, `plantation forest`, everything()) %>% 
+  group_split(species, keep = TRUE)
+names(percell.agg) <- map_chr(percell.agg, ~pull(., species) %>% unique())
+
+str(map(percell, ~ map_dfr(., identity, .id = "locality")), 1)
+str(percell.agg, 1)
+
+saveRDS(percell.agg, here("output","data.rds"))
 ```
 
 ```{r sessionInfo}
