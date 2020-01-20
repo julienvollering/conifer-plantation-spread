@@ -1,0 +1,98 @@
+---
+title: 'Exotic conifer spread in Norway'
+author:
+  - Julien Vollering:
+      email: julienvollering@gmail.com
+      institute: [IMN, NHM]
+      correspondence: true
+  - name: Et Al
+    institute: NHM
+institute:
+  - IMN: Department of Environmental Sciences, Western Norway University of Applied Sciences, Sogndal, Norway
+  - NHM: Department of Research and Collections, Natural History Museum, University of Oslo, Oslo, Norway
+bibliography: invasibility-ms.bib
+output: 
+  word_document:
+    pandoc_args:
+      - '--lua-filter=lua-filters/scholarly-metadata.lua'
+      - '--lua-filter=lua-filters/author-info-blocks.lua'
+editor_options:
+  chunk_output_type: console
+link-citations: yes
+csl: ecology.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy=TRUE, tidy.opts = list(width.cutoff=60))
+```
+
+# ORCIDs
+
+Julien Vollering: <https://orcid.org/0000-0002-7409-2898>
+
+# Running head
+
+Exotic conifers in Norway
+
+# Abstract
+
+
+# Keywords
+
+
+# Introduction
+
+Plantations of non-native conifers are widespread in Norway, as they are in many countries, and offspring from these plantations frequently establish in surrounding areas [@richardsonConifersInvasiveAliens2004].
+In some cases these naturalized offspring --- or wildlings --- are observed to be abundant and distant from the nearest plantation, but not always. 
+Depending on how rapidly and how far wildlings spread, their expansion may be considered invasive. 
+Implications for integrity of the ecosystem, especially important for areas of high value, and potentially affecting ecosystem services.
+For example, biodiversity, coastal heathland, landscape changes.
+As a result, managers are interested in limiting spread from plantations of exotic species (compared to natural regeneration of mixed stand forestry)
+
+'Invasive' normally applied to species, but differences among plantations of the same species are also observed.
+
+Fertile plantations produce highest propagule pressure on their immediate surroundings, because their seeds are (primarily?) wind-dispersed.
+Extensive
+LDD less important
+
+Norway has only two native conifer species that cover large areas: Scots pine, *Pinus sylvestris* and Norway spruce, *Picea abies*).
+As a result, 20th century efforts to increase forest cover relied heavily on exotic species [@oyenBiomassPotentialSelected2017]. 
+
+Managers are interested in limiting or eliminating spread from plantations, especially into areas with high ecological value (protected areas?).
+Therefore, the key process that we examine is naturalized spread, which can be broken down into the processes of seed arrival and then germination, growth, and survival (assuming that the seed is viable when it arrives).
+Seed arrival depends on disperal from source populations, and is a fundamentally spatial process. 
+Meanwhile, germination, growth, and survival (hereafter: "establishment") depend on the conditions at the arrival location.
+To better understand which factors govern naturalized spread, we need to know how seeds are dispersed from plantations, and which landing site conditions promote or inhibit establishment. 
+
+Therefore, the number of wildlings in the surroundings of a plantation is a function of the seed shadow from the plantation and the environmental characteristics of the proximal area.
+Note that the seed shadow is not purely a function of plantation characteristics; plantation surroundings also affect the seed shadow.  
+For example, lower elevations may trap more seeds.
+
+The degree of naturalized spread observed surrounding plantations is highly variable.
+Specifically, the number of naturalized individuals, their location with respect to the plantation, and their rate of growth varies. 
+Many factors may be hypothesized to affect the degree of naturalized spread: the species in the plantation, the seed production of the plantation, the dispersal capacity of the the seeds, and the establishment rate of the seeds in the surroundings.  
+
+It is important to consider at what spatial scale variability in natural recruitment occurs. This may differ between species. If most variation occurs at the coarsest spatial scale, drivers that also vary at course scales, such as climate, are likely to be important. If variation between plantations is greater than variation between regions, climate and other coarse-scale factors are probably less important, and drivers that vary at the plantation scale are likely important. If more variation occurs around single plantations than between plantations, site characteristics (e.g. surrounding nature types) are likely the most important governing factors. 
+
+# Methods
+
+## Overall conceptual model
+
+$$(Number\; of\; individuals)_{xy} \propto (Seed\; supply)_{xy}\; * (Establishment\; rate)_{xy}$$
+where xy is the location. 
+
+Rearranged:
+
+$$(Establishment\; rate)_{xy}  \propto \frac{(Number\; of\; individuals)_{xy}}{(Seed\; supply)_{xy}}$$
+
+# Discussion
+
+Advantage to observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
+
+
+# sessionInfo
+```{r sessionInfo}
+capture.output(sessionInfo(), file="sessionInfo.txt")
+```
+
+# References
