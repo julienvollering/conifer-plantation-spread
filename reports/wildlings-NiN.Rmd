@@ -14,17 +14,6 @@ library(units)
 source(here("R","locality-functions.R"))
 ```
 
-```{r recode types, eval=FALSE}
-ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
-for (i in ninfiles) {
-  shp <- st_read(here("data","qc",i), quiet = TRUE)
-  code <- gsub("(.*?)(-.*)", "\\1", as.character(shp[[1]])) %>% 
-    make.names()
-  shp <- mutate(shp, code = code)
-  st_write(shp, here("data","qc",i), delete_layer = TRUE, quiet = TRUE)
-}
-```
-
 ```{r unique types, eval=FALSE}
 ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
 codes <- map(ninfiles, ~ st_read(here("data","qc",.), quiet = TRUE) %>% 
@@ -94,7 +83,7 @@ for (i in ninfiles) {
 }
 ```
 
-```{r wildlings per polygon, include=FALSE}
+```{r wildlings per polygon}
 species <- list.files(here("data","qc"))
 
 perNiN <- list()
@@ -131,7 +120,7 @@ lapply(perNiN.agg, knitr::kable)
 
 WALD seed shadows produced separately because of long computation time. 
 
-```{r wildlings per cell, eval=FALSE}
+```{r wildlings per cell}
 species <- list.files(here("data","qc"))
 
 percell <- list()
