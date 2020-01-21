@@ -1,0 +1,145 @@
+---
+title: "Exploring data sets for modelling"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(summarytools)
+library(DataExplorer)
+library(ggplot2)
+```
+
+```{r}
+dat <- readRDS(here("output","data.rds"))
+nottypes <- c("wildlings","age","bio01","bio19","seeds.ExP","seeds.WALD","relelev")
+```
+
+```{r, include=FALSE}
+theme_dotplot <- theme_bw(14) +
+    theme(axis.text.y = element_text(size = rel(.75)),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_text(size = rel(.75)),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(size = 0.5),
+        panel.grid.minor.x = element_blank())
+```
+
+# Larix
+
+```{r, echo = FALSE, results='asis'}
+dfSummary(dat$Larix, plain.ascii = FALSE, style = "grid", 
+          graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
+```
+
+```{r}
+plot_histogram(dat$Larix[nottypes])
+```
+
+```{r}
+ggplot(dat$Larix, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
+ggplot(dat$Larix, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat$Larix, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
+```
+
+```{r}
+hist(dat$Larix$wildlings, prob=TRUE, breaks=30)
+fit <- MASS::fitdistr(dat$Larix$wildlings, "negative binomial"); fit
+points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
+```
+
+```{r}
+pairs(dat$Larix[sample(nrow(dat$Larix), 1e4), nottypes])
+cor(dat$Larix[nottypes], use = "complete")
+```
+ 
+# P.abies
+
+```{r, echo = FALSE, results='asis'}
+dfSummary(dat$P.abies, plain.ascii = FALSE, style = "grid", 
+          graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
+```
+
+```{r}
+plot_histogram(dat$P.abies[nottypes])
+```
+
+```{r}
+ggplot(dat$P.abies, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
+ggplot(dat$P.abies, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat$P.abies, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
+```
+
+```{r}
+hist(dat$P.abies$wildlings, prob=TRUE, breaks=15)
+fit <- MASS::fitdistr(dat$P.abies$wildlings, "negative binomial"); fit
+points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
+```
+
+```{r}
+pairs(dat$P.abies[sample(nrow(dat$P.abies), 1e4), nottypes])
+cor(dat$P.abies[nottypes], use = "complete")
+```
+
+# P.contorta
+
+```{r, echo = FALSE, results='asis'}
+dfSummary(dat$P.contorta, plain.ascii = FALSE, style = "grid", 
+          graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
+```
+
+```{r}
+plot_histogram(dat$P.contorta[nottypes])
+```
+
+```{r}
+ggplot(dat$P.contorta, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
+ggplot(dat$P.contorta, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat$P.contorta, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
+```
+
+```{r}
+hist(dat$P.contorta$wildlings, prob=TRUE, breaks=135)
+fit <- MASS::fitdistr(dat$P.contorta$wildlings, "negative binomial"); fit
+points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
+```
+
+```{r}
+pairs(dat$P.contorta[sample(nrow(dat$P.contorta), 1e4), nottypes])
+cor(dat$P.contorta[nottypes], use = "complete")
+```
+
+# P.sitchensis
+
+```{r, echo = FALSE, results='asis'}
+dfSummary(dat$P.sitchensis, plain.ascii = FALSE, style = "grid", 
+          graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
+```
+
+```{r}
+plot_histogram(dat$P.sitchensis[nottypes])
+```
+
+```{r}
+ggplot(dat$P.sitchensis, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
+ggplot(dat$P.sitchensis, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat$P.sitchensis, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
+```
+
+```{r}
+hist(dat$P.sitchensis$wildlings, prob=TRUE, breaks=200)
+fit <- MASS::fitdistr(dat$P.sitchensis$wildlings, "negative binomial"); fit
+points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
+```
+
+```{r}
+pairs(dat$P.sitchensis[sample(nrow(dat$P.sitchensis), 1e4), nottypes])
+cor(dat$P.sitchensis[nottypes], use = "complete")
+```
+
+```{r sessionInfo}
+sessionInfo()
+```

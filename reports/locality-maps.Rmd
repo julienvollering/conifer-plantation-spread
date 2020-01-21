@@ -10,17 +10,18 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(here)
 library(tidyverse)
 library(sf)
 ```
 
 ```{r}
-plotting <- readRDS(here::here("output","percell-data.rds"))
+plotting <- readRDS(here("output","percell-data.rds"))
+plotting[[1]][1]
 for (i in seq_along(plotting)) {
   plotting[[i]] <- plotting[[i]] %>% 
     lapply(function(x) {
-      mutate(x, logseeds = log(seeds)) %>% 
-      select(wildlings, seeds, logseeds, relelev, everything())
+      select(x, wildlings, seeds.WALD, seeds.ExP, relelev, everything())
       })
 }
 maxplot <- max(flatten(plotting) %>% sapply(ncol))
