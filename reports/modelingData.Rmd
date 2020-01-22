@@ -1,6 +1,9 @@
 ---
 title: "Modeling"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 editor_options: 
   chunk_output_type: console
 ---
@@ -10,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(tidyverse)
 library(glmmTMB)
+library(DHARMa)
+library(emmeans)
 ```
 
 ```{r}
@@ -19,16 +24,16 @@ datlist <- readRDS(here("output","data.rds"))
 # Larix
 
 ```{r}
-dat <- datlist$Larix %>% 
+L_dat <- datlist$Larix %>% 
   psycho::standardize(subset = list("seeds.WALD","seeds.ExP","age",
                                     "bio01","bio19","relelev"))
-str(dat)
-paste(names(dat), collapse = " + ")
+str(L_dat)
+paste(names(L_dat), collapse = " + ")
 ```
 
-```{r}
-f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T13 + T4 + T2 + T1 + swamp + T30 + T18 + T27 + T17 + (1 | locality)")
-m1 <- glmmTMB(f1, dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
+```{r, eval=FALSE}
+L_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T13 + T4 + T2 + T1 + swamp + T30 + T18 + T27 + T17 + (1 | locality)")
+L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
 # Warning messages:
 # 1: In fitTMB(TMBStruc) :
 # Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
@@ -39,14 +44,125 @@ m1 <- glmmTMB(f1, dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
 Perfectly separated: T18, T30, T2, T27, swamp, T13
 
 ```{r}
-f2 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T4 + T1 + T17 + (1 | locality)")
-m2 <- glmmTMB(f2, dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
-summary(m2)
+L_f2 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T4 + T1 + T17 + (1 | locality)")
+L_m2 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
+summary(L_m2)
+ranef(L_m2)
+
+which.max(fitted(L_m2))
+L_m2$frame[19364,]
+datlist$Larix %>% 
+  filter(locality == "stordalslia") %>% 
+  arrange(desc(seeds.WALD))
+cor(L_m2$frame$wildlings[-19364], fitted(L_m2)[-19364])
+```
+
+```{r}
+L_fzi3 <- formula("~ age")
+L_m3 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = L_fzi3, verbose = TRUE)
+summary(L_m3)
+ranef(L_m3)
+```
+
+m3 is better than m2: better AIC, zero-inflation components significant
+
+```{r}
+L_m4 <- glmmTMB(L_f3, L_dat, family = "genpois", ziformula = L_fzi3, verbose = TRUE)
+summary(L_m4)
+ranef(L_m4)
+
+bbmle::AICtab(L_m3, L_m4)
+```
+
+m3 is better than m4: better AIC
+
+```{r, eval=FALSE}
+L_m5 <- glmmTMB(L_f3, L_dat, family = "compois", ziformula = L_fzi3, verbose = TRUE)
+# Did not converge after 2 hours --- stopped.
+```
+
+```{r}
+L_m6 <- glmmTMB(L_f3, filter(L_dat, seeds.WALD < 19), family = "nbinom2", 
+                ziformula = L_fzi3, verbose = TRUE)
+summary(L_m6)
+ranef(L_m6)
+
+bbmle::AICtab(L_m3, L_m6)
+```
+
+Not surprisingly, excluding the outlies gives a slightly better AIC. However, the models are very similar.
+
+```{r}
+L_m7 <- glmmTMB(L_f3, L_dat, family = "nbinom2", ziformula = ~0, verbose = TRUE)
+summary(L_m7)
+
+bbmle::AICtab(L_m3, L_m7)
+
+simulationOutput <- simulateResiduals(fittedModel = L_m7)
+plot(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = L_m3)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+Diagnostics look good.
+
+```{r}
+?emm_basis.glmmTMB
+?ref_grid
+ref_grid(L_m3, at = list(cultivated = c(0,1),
+                         disturbed = c(0,1),
+                         T32 = c(0,1),
+                         fen = c(0,1),
+                         T34 = c(0,1),
+                         T4 = c(0,1),
+                         T1 = c(0,1),
+                         T17 = c(0,1)))@grid
 ```
 
 
 # P.abies
 
+```{r}
+Pa_dat <- datlist$P.abies %>% 
+  psycho::standardize(subset = list("seeds.WALD","seeds.ExP","age",
+                                    "bio01","bio19","relelev"))
+str(Pa_dat)
+paste(names(Pa_dat), collapse = " + ")
+```
+
+Perfectly separated: T6, spring, T31, T2
+
+```{r}
+Pa_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T4 + T1 + swamp + bog + (1 | locality)")
+Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
+summary(Pa_m1)
+```
+
+```{r}
+Pa_fzi2 <- formula("~ age")
+Pa_m2 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = Pa_fzi2, verbose = TRUE)
+summary(Pa_m2)
+ranef(Pa_m2)
+
+bbmle::AICtab(Pa_m1, Pa_m2)
+```
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Pa_m2)
+plot(simulationOutput) # Highest predicted values (from ~90th percentile)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+The model's highest predicted values (from ~90th percentile and up) tend to underestimate the observed values --- but not to a degree that look egregious. 
+
+Could this be due to spatial autocorrelation at a scale smaller than the minimum polygon size?
 
 # P.contorta
 
