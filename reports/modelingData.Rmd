@@ -104,7 +104,26 @@ testZeroInflation(simulationOutput)
 ```
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = L_m3)
+L_f8 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T4 + T1 + T17 + (1 | locality)")
+L_m8 <- glmmTMB(L_f8, L_dat, family = "nbinom2", ziformula = L_fzi3)
+summary(L_m8)
+
+bbmle::AICtab(L_m3, L_m8)
+```
+
+m8 is better than m3: better AIC
+
+```{r}
+L_f9 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T4 + T1 + T17 + (1 | locality)")
+L_m9 <- glmmTMB(L_f9, L_dat, family = "nbinom2", ziformula = L_fzi3)
+summary(L_m9)
+
+bbmle::AICtab(L_m8, L_m9)
+```
+
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = L_m8)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -115,16 +134,17 @@ Diagnostics look good.
 ```{r}
 ?emm_basis.glmmTMB
 ?ref_grid
-ref_grid(L_m3, at = list(cultivated = c(0,1),
+effect <- ref_grid(L_m8, at = list(cultivated = c(0,1),
                          disturbed = c(0,1),
                          T32 = c(0,1),
                          fen = c(0,1),
                          T34 = c(0,1),
                          T4 = c(0,1),
                          T1 = c(0,1),
-                         T17 = c(0,1)))@grid
+                         T17 = c(0,1)))
+emm <- emmeans(effect, specs = c("cultivated","disturbed"))
+plot(emm, comparisons = TRUE)
 ```
-
 
 # P.abies
 
@@ -165,6 +185,22 @@ The model's highest predicted values (from ~90th percentile and up) tend to unde
 Could this be due to spatial autocorrelation at a scale smaller than the minimum polygon size?
 
 # P.contorta
+
+```{r}
+Pc_dat <- datlist$P.contorta %>% 
+  psycho::standardize(subset = list("seeds.WALD","seeds.ExP","age",
+                                    "bio01","bio19","relelev"))
+str(Pc_dat)
+paste(names(Pc_dat)[map_lgl(Pc_dat, ~ !all(is.na(.)))], collapse = " + ")
+```
+
+Perfectly separated: cultivated, T27, T32
+
+```{r}
+Pc_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + disturbed + fen + T34 + T4 + T1 + swamp + T30 + bog + (1 | locality)")
+Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
+summary(Pc_m1)
+```
 
 
 # P.sitchensis
