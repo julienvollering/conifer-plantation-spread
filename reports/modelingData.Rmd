@@ -24,127 +24,111 @@ datlist <- readRDS(here("output","data.rds"))
 # Larix
 
 ```{r}
-L_dat <- datlist$Larix %>% 
+L_dat <- Filter(function(x)!all(is.na(x)), datlist$Larix)
+
+excluded <- "plantation forest"
+perfectlyseparated <- c('T18', 'T30', 'T2', 'T27', 'swamp', 'T13')
+removed <- c(excluded, perfectlyseparated)
+L_dat <- L_dat %>% 
+  filter_at(removed, all_vars(. < 0.5)) %>% 
+  filter(!(is.na(seeds.ExP) | is.na(seeds.ExP))) %>% 
+  select(-c('species')) %>% 
   psycho::standardize(subset = list("seeds.WALD","seeds.ExP","age",
                                     "bio01","bio19","relelev"))
-str(L_dat)
-paste(names(L_dat), collapse = " + ")
+summary(L_dat)
+
+contrast <- "T4"
+paste(names(L_dat)[!(names(L_dat) %in% c(contrast, removed))], collapse = " + ")
 ```
 
-```{r, eval=FALSE}
-L_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T13 + T4 + T2 + T1 + swamp + T30 + T18 + T27 + T17 + (1 | locality)")
-L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
-# Warning messages:
-# 1: In fitTMB(TMBStruc) :
-# Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
-# 2: In fitTMB(TMBStruc) :
-# Model convergence problem; singular convergence (7). See vignette('troubleshooting')
-```
+Perfectly separated: T18, T30, T2, T27, swamp, T13 (0 wildlings, from wildlings-NiN.Rmd)
 
-Perfectly separated: T18, T30, T2, T27, swamp, T13
+### Compare WALD vs ExP
 
 ```{r}
-L_f2 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T4 + T1 + T17 + (1 | locality)")
-L_m2 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
+L_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T1 + T17 + (1 | locality)")
+L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ 0)
+summary(L_m1)
+```
+
+```{r}
+L_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T1 + T17 + (1 | locality)")
+L_m2 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = ~ 0)
 summary(L_m2)
-ranef(L_m2)
-
-which.max(fitted(L_m2))
-L_m2$frame[19364,]
-datlist$Larix %>% 
-  filter(locality == "stordalslia") %>% 
-  arrange(desc(seeds.WALD))
-cor(L_m2$frame$wildlings[-19364], fitted(L_m2)[-19364])
 ```
 
 ```{r}
-L_fzi3 <- formula("~ age")
-L_m3 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = L_fzi3, verbose = TRUE)
+bbmle::AICtab(L_m1, L_m2)
+```
+
+Continue with WALD.
+
+### Compare zero inflation effects
+
+```{r}
+L_m3 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ 1)
 summary(L_m3)
-ranef(L_m3)
 ```
 
-m3 is better than m2: better AIC, zero-inflation components significant
-
 ```{r}
-L_m4 <- glmmTMB(L_f3, L_dat, family = "genpois", ziformula = L_fzi3, verbose = TRUE)
+L_m4 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ age)
 summary(L_m4)
-ranef(L_m4)
-
-bbmle::AICtab(L_m3, L_m4)
-```
-
-m3 is better than m4: better AIC
-
-```{r, eval=FALSE}
-L_m5 <- glmmTMB(L_f3, L_dat, family = "compois", ziformula = L_fzi3, verbose = TRUE)
-# Did not converge after 2 hours --- stopped.
 ```
 
 ```{r}
-L_m6 <- glmmTMB(L_f3, filter(L_dat, seeds.WALD < 19), family = "nbinom2", 
-                ziformula = L_fzi3, verbose = TRUE)
-summary(L_m6)
-ranef(L_m6)
-
-bbmle::AICtab(L_m3, L_m6)
-```
-
-Not surprisingly, excluding the outlies gives a slightly better AIC. However, the models are very similar.
-
-```{r}
-L_m7 <- glmmTMB(L_f3, L_dat, family = "nbinom2", ziformula = ~0, verbose = TRUE)
-summary(L_m7)
-
-bbmle::AICtab(L_m3, L_m7)
-
-simulationOutput <- simulateResiduals(fittedModel = L_m7)
-plot(simulationOutput)
-testZeroInflation(simulationOutput)
+L_m5 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+summary(L_m5)
 ```
 
 ```{r}
-L_f8 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T4 + T1 + T17 + (1 | locality)")
-L_m8 <- glmmTMB(L_f8, L_dat, family = "nbinom2", ziformula = L_fzi3)
-summary(L_m8)
-
-bbmle::AICtab(L_m3, L_m8)
+bbmle::AICtab(L_m1, L_m3, L_m4, L_m5)
 ```
 
-m8 is better than m3: better AIC
+m5 is better than m1, m3, and m4: much better AIC, clear zero-inflation effects
 
 ```{r}
-L_f9 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T34 + T4 + T1 + T17 + (1 | locality)")
-L_m9 <- glmmTMB(L_f9, L_dat, family = "nbinom2", ziformula = L_fzi3)
-summary(L_m9)
-
-bbmle::AICtab(L_m8, L_m9)
-```
-
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = L_m8)
+simulationOutput <- simulateResiduals(fittedModel = L_m5)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Diagnostics look good.
+Diagnostics look OK.
 
 ```{r}
-?emm_basis.glmmTMB
-?ref_grid
-effect <- ref_grid(L_m8, at = list(cultivated = c(0,1),
-                         disturbed = c(0,1),
-                         T32 = c(0,1),
-                         fen = c(0,1),
-                         T34 = c(0,1),
-                         T4 = c(0,1),
-                         T1 = c(0,1),
-                         T17 = c(0,1)))
-emm <- emmeans(effect, specs = c("cultivated","disturbed"))
-plot(emm, comparisons = TRUE)
+L_m5$frame %>% map_dbl(mean)
+
+nd <- expand_grid(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
+                  cultivated = c(0,1), disturbed = c(0,1), T32 = c(0,1), 
+                  fen = c(0,1), T34 = c(0,1), T1 = c(0,1), T17 = c(0,1), 
+                  locality = NA_real_) %>% 
+  mutate(sum = cultivated + disturbed + T32 + fen + T34 + T1 + T17) %>% 
+  filter(sum %in% c(0,1)) %>% 
+  select(-sum)
+
+link <- cbind(nd, predict(L_m5, nd, se.fit = TRUE, type = "link")); link
+resp <- cbind(nd, predict(L_m5, nd, se.fit = TRUE, type = "response")); resp
+cond <- cbind(nd, predict(L_m5, nd, se.fit = TRUE, type = "conditional")); cond
+
+ndz1 <- expand_grid(seeds.WALD = -1, age = -1, bio01 = -1, bio19 = -1, relelev = -1,
+                      cultivated = c(0,1), disturbed = c(0,1), T32 = c(0,1), 
+                      fen = c(0,1), T34 = c(0,1), T1 = c(0,1), T17 = c(0,1), 
+                      locality = NA_real_) %>% 
+  mutate(sum = cultivated + disturbed + T32 + fen + T34 + T1 + T17) %>% 
+  filter(sum %in% c(0,1)) %>% 
+  select(-sum) 
+condz1 <- cbind(ndz1, predict(L_m5, ndz1, se.fit = TRUE, type = "conditional")); condz1
+
+cond <- mutate(cond, NiN = c('T4','T17','T1','T34','fen','T32','disturbed','cultivated'))
+condz1 <- mutate(condz1, NiN = c('T4','T17','T1','T34','fen','T32','disturbed','cultivated'))
+
+ggplot(cond, aes(NiN, fit)) + geom_linerange(mapping = aes(ymin = fit - se.fit/2, ymax = fit + se.fit/2)) + scale_y_log10()
+ggplot(condz1, aes(NiN, fit)) + geom_linerange(mapping = aes(ymin = fit - se.fit/2, ymax = fit + se.fit/2)) + scale_y_log10()
+
+ggplot(cond, aes(NiN, fit)) + geom_linerange(mapping = aes(ymin = fit - se.fit, ymax = fit + se.fit)) + scale_y_log10()
 ```
+
+Note: ratios of resp estimates are identical to ratios of cond estimates
 
 # P.abies
 
