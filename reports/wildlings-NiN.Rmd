@@ -114,6 +114,8 @@ perNiN.agg <- lapply(perNiN, function(x) {
 })
 ```
 
+Important note: the following tables count the number of wildlings by the polygons that they intersect. As a result, wildlings occurring in mosaics (overlapping polygons) are counted more than once!
+
 ```{r wildlings per polygon aggregated}
 lapply(perNiN.agg, knitr::kable)
 ```

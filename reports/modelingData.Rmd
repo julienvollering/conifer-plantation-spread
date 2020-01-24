@@ -37,11 +37,26 @@ L_dat <- L_dat %>%
                                     "bio01","bio19","relelev"))
 summary(L_dat)
 
+
+
 contrast <- "T4"
 paste(names(L_dat)[!(names(L_dat) %in% c(contrast, removed))], collapse = " + ")
 ```
 
 Perfectly separated: T18, T30, T2, T27, swamp, T13 (0 wildlings, from wildlings-NiN.Rmd)
+
+```{r}
+L_arith <- pivot_longer(L_dat, 9:23, names_to = "nin", values_to = "are") %>%
+  group_by(nin) %>% 
+  summarize(daa = sum(are)/10, # units from are to decare
+            n = sum(wildlings*are)) %>% 
+  mutate(density = n/daa) %>%
+  arrange(desc(density), desc(n), daa)
+scaler <- filter(L_arith, nin == contrast) %>% 
+  pull(density)
+L_arith <- mutate(L_arith, fit = density/scaler)
+```
+
 
 ### Compare WALD vs ExP
 
@@ -106,29 +121,48 @@ nd <- expand_grid(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
   filter(sum %in% c(0,1)) %>% 
   select(-sum)
 
-link <- cbind(nd, predict(L_m5, nd, se.fit = TRUE, type = "link")); link
-resp <- cbind(nd, predict(L_m5, nd, se.fit = TRUE, type = "response")); resp
-cond <- cbind(nd, predict(L_m5, nd, se.fit = TRUE, type = "conditional")); cond
+link <- bind_cols(nd, predict(L_m5, nd, se.fit = TRUE, type = "link")); link
+link.exp <- mutate(link, lower = fit - 3*se.fit) %>% 
+  mutate(expfit = exp(fit), explower = exp(lower)) %>% 
+  mutate(expse = expfit - explower)
+  
 
-ndz1 <- expand_grid(seeds.WALD = -1, age = -1, bio01 = -1, bio19 = -1, relelev = -1,
-                      cultivated = c(0,1), disturbed = c(0,1), T32 = c(0,1), 
-                      fen = c(0,1), T34 = c(0,1), T1 = c(0,1), T17 = c(0,1), 
-                      locality = NA_real_) %>% 
-  mutate(sum = cultivated + disturbed + T32 + fen + T34 + T1 + T17) %>% 
-  filter(sum %in% c(0,1)) %>% 
-  select(-sum) 
-condz1 <- cbind(ndz1, predict(L_m5, ndz1, se.fit = TRUE, type = "conditional")); condz1
+resp <- bind_cols(nd, predict(L_m5, nd, se.fit = TRUE, type = "response")); resp
+cond <- bind_cols(nd, predict(L_m5, nd, se.fit = TRUE, type = "conditional")); cond
+cond <- mutate(cond, se.l = fit - se.fit, se.u = fit + se.fit) %>% 
+  mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
+  mutate(ci.l = fit + 1.96*(se.l - fit),
+         ci.u = fit + 1.96*(se.u - fit)) %>% 
+  mutate_at(.vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'), ~ exp(.))
+  
+# ndz1 <- expand_grid(seeds.WALD = -1, age = -1, bio01 = -1, bio19 = -1, relelev = -1,
+#                       cultivated = c(0,1), disturbed = c(0,1), T32 = c(0,1), 
+#                       fen = c(0,1), T34 = c(0,1), T1 = c(0,1), T17 = c(0,1), 
+#                       locality = NA_real_) %>% 
+#   mutate(sum = cultivated + disturbed + T32 + fen + T34 + T1 + T17) %>% 
+#   filter(sum %in% c(0,1)) %>% 
+#   select(-sum) 
+# condz1 <- cbind(ndz1, predict(L_m5, ndz1, se.fit = TRUE, type = "conditional")); condz1
 
-cond <- mutate(cond, NiN = c('T4','T17','T1','T34','fen','T32','disturbed','cultivated'))
-condz1 <- mutate(condz1, NiN = c('T4','T17','T1','T34','fen','T32','disturbed','cultivated'))
+cond <- mutate(cond, nin = names(cond[6:12])[apply(cond[6:12], 1, match, x = 1)]) %>% 
+  replace_na(list(nin = "T4"))
+scaler <- filter(cond, nin == "T4") %>% 
+  pull(fit)
+cond.scaled <- mutate_at(cond, 14:19, ~  `/`(., scaler))
 
-ggplot(cond, aes(NiN, fit)) + geom_linerange(mapping = aes(ymin = fit - se.fit/2, ymax = fit + se.fit/2)) + scale_y_log10()
-ggplot(condz1, aes(NiN, fit)) + geom_linerange(mapping = aes(ymin = fit - se.fit/2, ymax = fit + se.fit/2)) + scale_y_log10()
-
-ggplot(cond, aes(NiN, fit)) + geom_linerange(mapping = aes(ymin = fit - se.fit, ymax = fit + se.fit)) + scale_y_log10()
 ```
 
 Note: ratios of resp estimates are identical to ratios of cond estimates
+
+```{r}
+gg <- ggplot(cond.scaled, aes(nin, fit)) + 
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
+  geom_point()  + 
+  geom_point(data = filter(L_arith, nin %in% cond.scaled$nin), 
+             col = "grey", pch = 1)
+gg + scale_y_log10() + coord_flip()
+```
+
 
 # P.abies
 
