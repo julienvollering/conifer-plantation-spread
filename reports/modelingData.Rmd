@@ -14,7 +14,6 @@ library(here)
 library(tidyverse)
 library(glmmTMB)
 library(DHARMa)
-library(emmeans)
 ```
 
 ```{r}
@@ -41,8 +40,6 @@ contrast <- "T4"
 paste(names(L_dat)[!(names(L_dat) %in% c(contrast, removed))], collapse = " + ")
 ```
 
-Perfectly separated: T18, T30, T2, T27, swamp, T13 (0 wildlings, from wildlings-NiN.Rmd)
-
 ```{r}
 L_arith <- pivot_longer(L_dat, 9:ncol(L_dat), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
@@ -54,6 +51,8 @@ scaler <- filter(L_arith, nin == contrast) %>%
   pull(density)
 L_arith <- mutate(L_arith, fit = density/scaler)
 ```
+
+Perfectly separated: T18, T30, T2, T27, swamp, T13 (0 wildlings)
 
 ### Compare WALD vs ExP
 
@@ -178,8 +177,6 @@ contrast <- "T4"
 paste(names(Pa_dat)[!(names(Pa_dat) %in% c(contrast, removed))], collapse = " + ")
 ```
 
-Perfectly separated: T6, spring, T31, T2
-
 ```{r}
 Pa_arith <- pivot_longer(Pa_dat, 9:ncol(Pa_dat), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
@@ -191,6 +188,8 @@ scaler <- filter(Pa_arith, nin == contrast) %>%
   pull(density)
 Pa_arith <- mutate(Pa_arith, fit = density/scaler)
 ```
+
+Perfectly separated: T6, spring, T31, T2 (0 wildlings)
 
 ### Compare WALD vs ExP
 
@@ -348,65 +347,370 @@ gg + scale_y_log10() + coord_flip()
 ```
 
 
-
-# P.abies
-
-```{r}
-Pa_dat <- datlist$P.abies %>% 
-  psycho::standardize(subset = list("seeds.WALD","seeds.ExP","age",
-                                    "bio01","bio19","relelev"))
-str(Pa_dat)
-paste(names(Pa_dat), collapse = " + ")
-```
-
-Perfectly separated: T6, spring, T31, T2
-
-```{r}
-Pa_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + cultivated + disturbed + T32 + fen + T4 + T1 + swamp + bog + (1 | locality)")
-Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
-summary(Pa_m1)
-```
-
-```{r}
-Pa_fzi2 <- formula("~ age")
-Pa_m2 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = Pa_fzi2, verbose = TRUE)
-summary(Pa_m2)
-ranef(Pa_m2)
-
-bbmle::AICtab(Pa_m1, Pa_m2)
-```
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m2)
-plot(simulationOutput) # Highest predicted values (from ~90th percentile)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-The model's highest predicted values (from ~90th percentile and up) tend to underestimate the observed values --- but not to a degree that look egregious. 
-
-Could this be due to spatial autocorrelation at a scale smaller than the minimum polygon size?
-
 # P.contorta
 
 ```{r}
-Pc_dat <- datlist$P.contorta %>% 
+Pc_dat <- Filter(function(x)!all(is.na(x)), datlist$P.contorta)
+
+excluded <- "plantation forest"
+perfectlyseparated <- c('cultivated', 'T27', 'T32')
+removed <- c(excluded, perfectlyseparated)
+Pc_dat <- Pc_dat %>% 
+  filter_at(removed, all_vars(. < 0.5)) %>% 
+  filter(!(is.na(seeds.ExP) | is.na(seeds.ExP))) %>% 
+  select(-c('species')) %>% 
   psycho::standardize(subset = list("seeds.WALD","seeds.ExP","age",
                                     "bio01","bio19","relelev"))
-str(Pc_dat)
-paste(names(Pc_dat)[map_lgl(Pc_dat, ~ !all(is.na(.)))], collapse = " + ")
+summary(Pc_dat)
+
+contrast <- "T4"
+paste(names(Pc_dat)[!(names(Pc_dat) %in% c(contrast, removed))], collapse = " + ")
+```
+
+```{r}
+Pc_arith <- pivot_longer(Pc_dat, 9:ncol(Pc_dat), names_to = "nin", values_to = "are") %>%
+  group_by(nin) %>% 
+  summarize(daa = sum(are)/10, # units from are to decare
+            n = sum(wildlings*are)) %>% 
+  mutate(density = n/daa) %>%
+  arrange(desc(density), desc(n), daa)
+scaler <- filter(Pc_arith, nin == contrast) %>% 
+  pull(density)
+Pc_arith <- mutate(Pc_arith, fit = density/scaler)
 ```
 
 Perfectly separated: cultivated, T27, T32
 
+### Compare WALD vs ExP
+
 ```{r}
-Pc_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + disturbed + fen + T34 + T4 + T1 + swamp + T30 + bog + (1 | locality)")
-Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~1, verbose = TRUE)
+Pc_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + disturbed + fen + T34 + T1 + swamp + T30 + bog + (1 | locality)")
+Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pc_m1)
 ```
 
+```{r}
+Pc_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + disturbed + fen + T34 + T1 + swamp + T30 + bog + (1 | locality)")
+Pc_m2 <- glmmTMB(Pc_f2, Pc_dat, family = "nbinom2", ziformula = ~ 0)
+summary(Pc_m2)
+```
 
-# P.sitchensis
+```{r}
+bbmle::AICtab(Pc_m1, Pc_m2)
+```
+
+Continue with WALD.
+
+### Compare zero inflation effects
+
+```{r}
+Pc_m3 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ 1)
+summary(Pc_m3)
+```
+
+```{r}
+Pc_m4 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age)
+summary(Pc_m4)
+```
+
+```{r}
+Pc_m5 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+summary(Pc_m5)
+# Warning messages:
+# 1: In fitTMB(TMBStruc) :
+# Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
+# 2: In fitTMB(TMBStruc) :
+# Model convergence problem; false convergence (8). See vignette('troubleshooting')
+```
+
+Overparameterized model? bio01 and bio19 show largest coefficients (5-6) while they were not significant in other species. Try dropping them.
+
+```{r}
+Pc_f6 <- formula("wildlings ~ seeds.WALD * age + relelev + disturbed + fen + T34 + T1 + swamp + T30 + bog + (1 | locality)")
+Pc_m6 <- glmmTMB(Pc_f6, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+summary(Pc_m6)
+# Error in optimHess(par.fixed, obj$fn, obj$gr) : 
+# gradient in optim evaluated to length 1 not 17
+```
+
+```{r}
+Pc_m7 <- glmmTMB(Pc_f1, Pc_dat, family = "genpois", ziformula = ~ age + (1 | locality))
+summary(Pc_m7)
+```
+
+Huge overdispersion parameter (87.5). Also huge huge coefficients for bio01 and bio19. 
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Pc_m7)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+Diagnostics look OK.
+
+Replace bi01 and bio19 with region effect? (2 levels is too few for random effect).
+
+```{r}
+unique(Pc_dat$locality)
+regionjoin <- tribble(
+  ~locality, ~region,
+  "fiskvikrokkdalen", "hedmark",
+  "gulemyrane", "romsdal",
+  "selvik", "romsdal",
+  "skarsheia", "romsdal",
+  "sollitangen", "hedmark",
+  "tomasmyra", "hedmark")
+Pc_dat <- left_join(Pc_dat, regionjoin, by = "locality")
+```
+
+```{r}
+Pc_f8 <- update.formula(Pc_f1, ~ . + region - bio01 - bio19)
+Pc_m8 <- glmmTMB(Pc_f8, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+# Warning messages:
+# 1: In fitTMB(TMBStruc) :
+# Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
+# 2: In fitTMB(TMBStruc) :
+# Model convergence problem; false convergence (8). See vignette('troubleshooting')
+```
+
+```{r}
+bbmle::AICtab(Pc_m3, Pc_m4, Pc_m7)
+```
+
+Continue with generalized poisson model: best AIC and OK diagnostics. 
+
+### Interpret relative establishment probability
+
+```{r}
+Pc_m7$frame %>% map_dbl(mean)
+
+nd <- expand_grid(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
+                  disturbed = c(0,1), fen = c(0,1), T34 = c(0,1), 
+                  T1 = c(0,1), swamp = c(0,1), T30 = c(0,1), bog = c(0,1), 
+                  locality = NA_real_) %>% 
+  mutate(sum = disturbed + fen + T34 + T1 + swamp + T30 + bog) %>% 
+  filter(sum %in% c(0,1)) %>% 
+  select(-sum)
+
+link <- bind_cols(nd, predict(Pc_m7, nd, se.fit = TRUE, type = "link")); link
+link <- mutate(link, ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+  select(-se.fit) %>% 
+  mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.))
+link <- mutate(link, nin = names(link[6:12])[apply(link[6:12], 1, match, x = 1)]) %>% 
+  replace_na(list(nin = "T4"))
+scaler <- filter(link, nin == "T4") %>% 
+  pull(fit)
+link.scaled <- mutate_at(link, c('fit', 'ci.l', 'ci.u'), ~  `/`(., scaler))
+
+```
+
+```{r}
+gg <- ggplot(link.scaled, aes(nin, fit)) + 
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
+  geom_point()  + 
+  geom_point(data = filter(Pc_arith, nin %in% link.scaled$nin), 
+             col = "grey", pch = 1)
+gg + scale_y_log10() + coord_flip()
+```
+
+
+# P.sitchensis-lutz
+
+```{r}
+Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutz`)
+
+excluded <- "plantation forest"
+perfectlyseparated <- c('T18', 'T3', 'T33', 'spring')
+removed <- c(excluded, perfectlyseparated)
+Ps_dat <- Ps_dat %>% 
+  filter_at(removed, all_vars(. < 0.5)) %>% 
+  filter(!(is.na(seeds.ExP) | is.na(seeds.ExP))) %>% 
+  select(-c('species')) %>% 
+  psycho::standardize(subset = list("seeds.WALD","seeds.ExP","age",
+                                    "bio01","bio19","relelev"))
+summary(Ps_dat)
+
+contrast <- "T4"
+paste(names(Ps_dat)[!(names(Ps_dat) %in% c(contrast, removed))], collapse = " + ")
+```
+
+```{r}
+Ps_arith <- pivot_longer(Ps_dat, 9:ncol(Ps_dat), names_to = "nin", values_to = "are") %>%
+  group_by(nin) %>% 
+  summarize(daa = sum(are)/10, # units from are to decare
+            n = sum(wildlings*are)) %>% 
+  mutate(density = n/daa) %>%
+  arrange(desc(density), desc(n), daa)
+scaler <- filter(Ps_arith, nin == contrast) %>% 
+  pull(density)
+Ps_arith <- mutate(Ps_arith, fit = density/scaler)
+```
+
+Perfectly separated: T18, T3, T33, spring (0 wildlings)
+
+### Compare WALD vs ExP
+
+```{r}
+Ps_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
+                 cultivated + disturbed + T32 + fen + T34 + T13 + T2 + T1 + 
+                 swamp + T27 + T17 + bog + T6 + T31 + T16 + T29 + T12 + T24 + 
+                 T21 + (1 | locality)")
+Ps_m1 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ 0)
+summary(Ps_m1)
+```
+
+```{r}
+Ps_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
+                 cultivated + disturbed + T32 + fen + T34 + T13 + T2 + T1 + 
+                 swamp + T27 + T17 + bog + T6 + T31 + T16 + T29 + T12 + T24 + 
+                 T21 + (1 | locality)")
+Ps_m2 <- glmmTMB(Ps_f2, Ps_dat, family = "nbinom2", ziformula = ~ 0)
+summary(Ps_m2)
+```
+
+```{r}
+bbmle::AICtab(Ps_m1, Ps_m2)
+```
+
+Continue with WALD.
+
+### Compare zero inflation effects
+
+```{r}
+Pa_m3 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ 1)
+summary(Pa_m3)
+```
+
+```{r}
+Pa_m4 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age)
+summary(Pa_m4)
+```
+
+```{r}
+Pa_m5 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+summary(Pa_m5)
+```
+
+```{r}
+bbmle::AICtab(Pa_m1, Pa_m3, Pa_m4, Pa_m5)
+```
+
+m5 is better than m1, m3, and m4: much better AIC, zero-inflation effects
+
+Drop insignificant interaction?
+
+```{r}
+Pa_f6 <- update.formula(Pa_f1, ~ . - seeds.WALD:age)
+Pa_m6 <- glmmTMB(Pa_f6, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+summary(Pa_m6)
+```
+
+```{r}
+bbmle::AICtab(Pa_m5, Pa_m6)
+```
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Pa_m6)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+Diagnostics look bad. Dispersion test p-value = 0.02. Zero-inflation test p-value = 0.38.
+
+```{r}
+Pa_m7 <- glmmTMB(Pa_f6, Pa_dat, family = "genpois", ziformula = ~ age + (1 | locality))
+summary(Pa_m7)
+```
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Pa_m7)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+Better diagnostics with generalized poisson. Dispersion test p-value = 0.12. Zero-inflation test p-value = 0.55.
+
+```{r}
+Pa_m8 <- glmmTMB(Pa_f6, Pa_dat, family = poisson, ziformula = ~ age + (1 | locality))
+summary(Pa_m8)
+```
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Pa_m8)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+Better diagnostics with poisson. Dispersion test p-value = 0.34. Zero-inflation test p-value = 0.64.
+
+```{r}
+bbmle::AICtab(Pa_m6, Pa_m7, Pa_m8)
+```
+
+Continue with generalized poisson model: best AIC and OK diagnostics. 
+
+### Interpret relative establishment probability
+
+```{r}
+Pa_m7$frame %>% map_dbl(mean)
+
+nd <- expand_grid(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
+                  cultivated = c(0,1), disturbed = c(0,1), T32 = c(0,1), 
+                  fen = c(0,1), T1 = c(0,1), swamp = c(0,1), bog = c(0,1), 
+                  locality = NA_real_) %>% 
+  mutate(sum = cultivated + disturbed + T32 + fen + T1 + swamp + bog) %>% 
+  filter(sum %in% c(0,1)) %>% 
+  select(-sum)
+
+link <- bind_cols(nd, predict(Pa_m7, nd, se.fit = TRUE, type = "link")); link
+link <- mutate(link, ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+  select(-se.fit) %>% 
+  mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.))
+link <- mutate(link, nin = names(link[6:12])[apply(link[6:12], 1, match, x = 1)]) %>% 
+  replace_na(list(nin = "T4"))
+scaler <- filter(link, nin == "T4") %>% 
+  pull(fit)
+link.scaled <- mutate_at(link, c('fit', 'ci.l', 'ci.u'), ~  `/`(., scaler))
+
+cond <- bind_cols(nd, predict(Pa_m7, nd, se.fit = TRUE, type = "conditional")); cond
+cond <- mutate(cond, se.l = fit - se.fit, se.u = fit + se.fit) %>% 
+  mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
+  mutate(ci.l = fit + 1.96*(se.l - fit),
+         ci.u = fit + 1.96*(se.u - fit)) %>% 
+  mutate_at(.vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'), ~ exp(.))
+cond <- mutate(cond, nin = names(cond[6:12])[apply(cond[6:12], 1, match, x = 1)]) %>% 
+  replace_na(list(nin = "T4"))
+scaler <- filter(cond, nin == "T4") %>% 
+  pull(fit)
+cond.scaled <- mutate_at(cond, 14:19, ~  `/`(., scaler))
+
+```
+
+Note: ratios of resp estimates are identical to ratios of cond estimates
+
+```{r}
+gg <- ggplot(cond.scaled, aes(nin, fit)) + 
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
+  geom_point()  + 
+  geom_point(data = filter(Pa_arith, nin %in% cond.scaled$nin), 
+             col = "grey", pch = 1)
+gg + scale_y_log10() + coord_flip()
+```
+
+```{r}
+gg <- ggplot(link.scaled, aes(nin, fit)) + 
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
+  geom_point()  + 
+  geom_point(data = filter(Pa_arith, nin %in% cond.scaled$nin), 
+             col = "grey", pch = 1)
+gg + scale_y_log10() + coord_flip()
+```
+
+
 
 
 ```{r sessionInfo}
