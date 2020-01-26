@@ -578,22 +578,76 @@ Continue with WALD.
 ### Compare zero inflation effects
 
 ```{r}
-Pa_m3 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ 1)
-summary(Pa_m3)
+Ps_m3 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ 1)
+summary(Ps_m3)
+```
+
+ Family: nbinom2  ( log )
+Formula:          wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + cultivated +  
+    disturbed + T32 + fen + T34 + T13 + T2 + T1 + swamp + T27 +  
+    T17 + bog + T6 + T31 + T16 + T29 + T12 + T24 + T21 + (1 |      locality)
+Zero inflation:             ~1
+Data: Ps_dat
+
+     AIC      BIC   logLik deviance df.resid 
+ 44878.3  45145.1 -22410.1  44820.3    73280 
+
+Random effects:
+
+Conditional model:
+ Groups   Name        Variance Std.Dev.
+ locality (Intercept) 3.745    1.935   
+Number of obs: 73309, groups:  locality, 36
+
+Overdispersion parameter for nbinom2 family (): 0.0788 
+
+Conditional model:
+                 Estimate Std. Error z value Pr(>|z|)    
+(Intercept)    -2.3588826  0.3312219   -7.12 1.07e-12 ***
+seeds.WALD      0.9385074  0.0266387   35.23  < 2e-16 ***
+age             0.2582882  0.3360732    0.77 0.442162    
+bio01           0.5948216  0.4141232    1.44 0.150906    
+bio19          -0.5308007  0.4021053   -1.32 0.186817    
+relelev        -0.2616964  0.0360642   -7.26 3.98e-13 ***
+cultivated     -2.6215078  0.1013185  -25.87  < 2e-16 ***
+disturbed      -0.1932046  0.1223341   -1.58 0.114263    
+T32            -0.9566731  0.1188114   -8.05 8.14e-16 ***
+fen            -0.4023916  0.1093918   -3.68 0.000235 ***
+T34            -0.1604635  0.1097424   -1.46 0.143691    
+T13             0.3284436  0.8961246    0.37 0.713980    
+T2              0.0008862  0.1998404    0.00 0.996462    
+T1             -2.0711986  0.2804756   -7.38 1.53e-13 ***
+swamp          -2.3173310  0.2126978  -10.89  < 2e-16 ***
+T27             1.1607030  0.4601308    2.52 0.011651 *  
+T17             2.8532586  1.0404906    2.74 0.006102 ** 
+bog            -1.5504769  0.1971573   -7.86 3.72e-15 ***
+T6             -1.4496469  0.3818395   -3.80 0.000147 ***
+T31             1.0035677  0.2054108    4.89 1.03e-06 ***
+T16             0.3940391  0.4827768    0.82 0.414390    
+T29            -1.4845403  1.1672111   -1.27 0.203419    
+T12            -1.8896773  1.4457986   -1.31 0.191208    
+T24            -3.1045989  2.1623385   -1.44 0.151071    
+T21            -3.4085395  0.7636025   -4.46 8.05e-06 ***
+seeds.WALD:age  0.1599326  0.0259335    6.17 6.96e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Zero-inflation model:
+            Estimate Std. Error z value Pr(>|z|)
+(Intercept)   -17.33     550.26  -0.031    0.975
+
+```{r}
+Ps_m4 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ age)
+summary(Ps_m4)
 ```
 
 ```{r}
-Pa_m4 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age)
-summary(Pa_m4)
+Ps_m5 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+summary(Ps_m5)
 ```
 
 ```{r}
-Pa_m5 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
-summary(Pa_m5)
-```
-
-```{r}
-bbmle::AICtab(Pa_m1, Pa_m3, Pa_m4, Pa_m5)
+bbmle::AICtab(Ps_m1, Ps_m3, Ps_m4, Ps_m5)
 ```
 
 m5 is better than m1, m3, and m4: much better AIC, zero-inflation effects
