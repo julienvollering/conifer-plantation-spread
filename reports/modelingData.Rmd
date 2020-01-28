@@ -10,6 +10,9 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
 library(here)
 library(tidyverse)
 library(glmmTMB)
@@ -150,7 +153,7 @@ Ps_link <- mutate(Ps_link, ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %
   mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.))
 scaler <- filter(Ps_link, nin == "T4") %>% 
   pull(fit)
-link.scaled <- mutate_at(link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
+link.scaled <- mutate_at(Ps_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 ```
 
 ```{r}
@@ -162,7 +165,7 @@ gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) +
 gg + scale_y_log10() + coord_flip()
 ```
 
-```{r, include=FALSE}
+```{r, eval=FALSE, include=FALSE}
 cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
 cond <- mutate(cond, se.l = fit - se.fit, se.u = fit + se.fit) %>% 
   mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
@@ -338,7 +341,7 @@ gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) +
 gg + scale_y_log10() + coord_flip()
 ```
 
-```{r, include=FALSE}
+```{r, eval=FALSE, include=FALSE}
 cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
 cond <- mutate(cond, se.l = fit - se.fit, se.u = fit + se.fit) %>% 
   mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
@@ -559,7 +562,7 @@ gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) +
 gg + scale_y_log10() + coord_flip()
 ```
 
-```{r, include=FALSE}
+```{r, eval=FALSE, include=FALSE}
 cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
 cond <- mutate(cond, se.l = fit - se.fit, se.u = fit + se.fit) %>% 
   mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
@@ -759,7 +762,7 @@ gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) +
 gg + scale_y_log10() + coord_flip()
 ```
 
-```{r, include=FALSE}
+```{r, eval=FALSE, include=FALSE}
 cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
 cond <- mutate(cond, se.l = fit - se.fit, se.u = fit + se.fit) %>% 
   mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
@@ -829,14 +832,12 @@ gg <- ggplot(link.scaled, aes(fct_reorder(nin, fit, first), fit, color = species
   geom_point(position = position_dodge(width = 0.5))  + 
   geom_point(data = arith.scaled, pch = 1, position = position_dodge(width = 0.5))
 gg + scale_y_log10() + coord_flip() + 
-  labs(x = 'NiN type', y = 'relative establishment probability', title = 'Relative establishment across species and NiN types', caption = 'filled points are model estimates with lines showing 95% confidence intervals, open points are calculated directly from the number of wildlings per unit area of each type')
+  labs(x = 'NiN type', y = 'relative establishment probability', title = 'Relative establishment across species and NiN types', caption = 'Filled points are model estimates with lines showing 95% confidence intervals. Open points are calculated directly from the number of wildlings per unit area.')
 ```
-
 
 # sessionInfo
 
 ```{r sessionInfo}
 sessionInfo()
 ```
-
 
