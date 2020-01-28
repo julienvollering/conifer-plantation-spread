@@ -44,7 +44,7 @@ scaler <- filter(Ps_arith, nin == contrast) %>%
 Ps_arith <- mutate(Ps_arith, fit = density/scaler)
 ```
 
-```{r}
+```{r, echo=FALSE, results='asis'}
 knitr::kable(Ps_arith, digits = 1)
 ```
 
@@ -88,7 +88,7 @@ Ps_m2 <- glmmTMB(Ps_f2, Ps_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Ps_m2)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Ps_m1, Ps_m2)
 ```
 
@@ -111,7 +111,7 @@ Ps_m5 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ age + (1 | loc
 summary(Ps_m5)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Ps_m1, Ps_m3, Ps_m4, Ps_m5)
 ```
 
@@ -222,7 +222,7 @@ scaler <- filter(L_arith, nin == contrast) %>%
 L_arith <- mutate(L_arith, fit = density/scaler)
 ```
 
-```{r}
+```{r, echo=FALSE, results='asis'}
 knitr::kable(L_arith, digits = 1)
 ```
 
@@ -264,7 +264,7 @@ L_m2 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = ~ 0)
 summary(L_m2)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(L_m1, L_m2)
 ```
 
@@ -287,7 +287,7 @@ L_m5 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ age + (1 | locali
 summary(L_m5)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(L_m1, L_m3, L_m4, L_m5)
 ```
 
@@ -398,7 +398,7 @@ scaler <- filter(Pa_arith, nin == contrast) %>%
 Pa_arith <- mutate(Pa_arith, fit = density/scaler)
 ```
 
-```{r}
+```{r, echo=FALSE, results='asis'}
 knitr::kable(Pa_arith, digits = 1)
 ```
 
@@ -440,7 +440,7 @@ Pa_m2 <- glmmTMB(Pa_f2, Pa_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pa_m2)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Pa_m1, Pa_m2)
 ```
 
@@ -463,7 +463,7 @@ Pa_m5 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | loc
 summary(Pa_m5)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Pa_m1, Pa_m3, Pa_m4, Pa_m5)
 ```
 
@@ -477,7 +477,7 @@ Pa_m6 <- glmmTMB(Pa_f6, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | loc
 summary(Pa_m6)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Pa_m5, Pa_m6)
 ```
 
@@ -518,7 +518,7 @@ testZeroInflation(simulationOutput)
 
 Better diagnostics with poisson --- including dispersion test.
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Pa_m6, Pa_m7, Pa_m8)
 ```
 
@@ -619,7 +619,7 @@ scaler <- filter(Pc_arith, nin == contrast) %>%
 Pc_arith <- mutate(Pc_arith, fit = density/scaler)
 ```
 
-```{r}
+```{r, echo=FALSE, results='asis'}
 knitr::kable(Pc_arith, digits = 1)
 ```
 
@@ -659,7 +659,7 @@ Pc_m2 <- glmmTMB(Pc_f2, Pc_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pc_m2)
 ```
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Pc_m1, Pc_m2)
 ```
 
@@ -672,17 +672,15 @@ Pc_m3 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ 1)
 summary(Pc_m3)
 ```
 
-```{r}
+```{r, eval=FALSE}
 Pc_m4 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age)
-summary(Pc_m4)
 # Warning messages:
 # 1: In fitTMB(TMBStruc) :
 # Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
 ```
 
-```{r}
+```{r, eval=FALSE}
 Pc_m5 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
-summary(Pc_m5)
 # Warning messages:
 # 1: In fitTMB(TMBStruc) :
 # Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
@@ -690,12 +688,11 @@ summary(Pc_m5)
 # Model convergence problem; false convergence (8). See vignette('troubleshooting')
 ```
 
-Overparameterized model? bio01 and bio19 show largest coefficients (5-6) while insignificant for other species. Try dropping them.
+Overparameterized models? bio01 and bio19 show largest coefficients (5-6) while insignificant for other species. Try dropping them.
 
-```{r}
+```{r, eval=FALSE}
 Pc_f6 <- update.formula(Pc_f1, ~ . - bio01 - bio19)
 Pc_m6 <- glmmTMB(Pc_f6, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
-summary(Pc_m6)
 # Warning messages:
 # 1: In fitTMB(TMBStruc) :
 # Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
@@ -708,7 +705,7 @@ summary(Pc_m7)
 
 Huge overdispersion parameter. Also huge coefficients for bio01 and bio19. 
 
-```{r}
+```{r, echo=FALSE}
 bbmle::AICtab(Pc_m3, Pc_m7)
 ```
 
