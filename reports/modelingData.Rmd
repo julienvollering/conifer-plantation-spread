@@ -426,16 +426,16 @@ paste(names(Pa_dat)[!(names(Pa_dat) %in% c(contrast, removed))], collapse = " + 
 
 ```{r}
 Pa_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 cultivated + disturbed + T32 + fen + T2 + T1 + swamp + spring +
-                 bog + (1 | locality)")
+                 cultivated + disturbed + T32 + fen + T1 + swamp + spring + bog + 
+                 (1 | locality)")
 Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pa_m1)
 ```
 
 ```{r}
 Pa_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 cultivated + disturbed + T32 + fen + T2 + T1 + swamp + spring +
-                 bog + (1 | locality)")
+                 cultivated + disturbed + T32 + fen + T1 + swamp + spring + bog +
+                 (1 | locality)")
 Pa_m2 <- glmmTMB(Pa_f2, Pa_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pa_m2)
 ```
@@ -829,8 +829,10 @@ gg <- ggplot(link.scaled, aes(fct_reorder(nin, fit, first), fit, color = species
   geom_point(position = position_dodge(width = 0.5))  + 
   geom_point(data = arith.scaled, pch = 1, position = position_dodge(width = 0.5))
 gg + scale_y_log10() + coord_flip() + 
-  labs(x = 'NiN type', y = 'relative establishment probability', title = 'Relative establishment across species and NiN types', caption = 'Filled points are model estimates with lines showing 95% confidence intervals. Open points are calculated directly from the number of wildlings per unit area.')
+  labs(x = 'NiN type', y = 'relative establishment probability', title = 'Relative establishment across species and NiN types')
 ```
+
+Filled points are model estimates with lines showing 95% confidence intervals. Open points are calculated directly from the number of wildlings per unit area.
 
 # sessionInfo
 
