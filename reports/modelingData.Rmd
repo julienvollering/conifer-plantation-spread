@@ -204,6 +204,59 @@ gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) +
 gg + scale_y_log10() + coord_flip()
 ```
 
+```{r}
+rezi <- ranef(Ps_m5)$zi$locality
+rezi <- tibble(locality = rownames(rezi), rezi = rezi[,1]) %>% 
+  arrange(desc(rezi))
+cordat <- Ps_dat %>% 
+  select(locality, bio01, bio19) %>% 
+  distinct() %>% 
+  left_join(rezi)
+pairs(cordat[2:4])
+cor(cordat[2:4])
+```
+
+```{r}
+Ps_m6 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", 
+                 ziformula = ~ age + bio01 + bio19 + (1 | locality))
+summary(Ps_m6)
+bbmle::AICtab(Ps_m5, Ps_m6)
+
+selmod <- Ps_m6
+terms <- attributes(selmod$frame)$terms 
+newdat <- attributes(terms)$factors %>% 
+  as_tibble() %>% 
+  select(-`seeds.WALD:age`) %>% 
+  mutate(seeds.WALD = (Ps_means["seeds.WALD"] - Ps_means["seeds.WALD"]) / Ps_sds["seeds.WALD"],
+         age = (Ps_means["age"] - Ps_means["age"]) / Ps_sds["age"],
+         bio01 = (Ps_means["bio01"] - Ps_means["bio01"]) / Ps_sds["bio01"],
+         bio19 = (Ps_means["bio19"] - Ps_means["bio19"]) / Ps_sds["bio19"],
+         relelev = (Ps_means["relelev"] - Ps_means["relelev"]) / Ps_sds["relelev"],
+         locality = NA_character_) %>% 
+  distinct()
+newdat <- newdat %>% 
+  mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
+  replace_na(list(nin = "T4"))
+
+newdat.locality <- newdat %>% 
+  select(-locality) %>% 
+  expand_grid(locality = c(NA_character_, unique(Ps_dat$locality)))
+resp.locality <- newdat.locality %>% 
+  bind_cols(fit = predict(selmod, newdat.locality, type = "response"))
+scaler <- filter(resp.locality, nin == "T4" & is.na(locality)) %>% 
+  pull(fit)
+resp.locality.scaled <- mutate_at(resp.locality, 'fit', ~ `/`(., scaler))
+
+gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) + 
+  geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
+             mapping = aes(color = locality), cex = 0.5, show.legend = FALSE)  + 
+  geom_point(data = filter(resp.locality.scaled, is.na(locality)))  + 
+  geom_point(data = filter(Ps_arith, nin %in% resp.locality.scaled$nin), 
+             color = "grey50",pch = 1)
+gg + scale_y_log10() + coord_flip()
+```
+
+
 # Larix
 
 ```{r}
