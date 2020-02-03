@@ -78,14 +78,41 @@ For example, lower elevations may trap more seeds.
 
 # Methods
 
-## Overall conceptual model
+## Approach
 
-$$(Number\; of\; individuals)_{xy} \propto (Seed\; supply)_{xy}\; * (Establishment\; rate)_{xy}$$
-where xy is the location. 
+- Observational
+- Mechanisitic motivation for the statistical model
+- 4 species/complexes
+- complete mapping
 
-Rearranged:
+We quantified the establishment probability of exotic conifers in various nature types with observational data. 
+Specifically, we used observations of wildlings and nature types mapped across coincident areas.
+These data were collected around sexually mature plantations, from which the wildlings presumably originated.
+By modeling seed dispersal from the plantations, we also estimated the relative number of seeds arriving at different locations within the mapped areas. 
+These elements comprised the conceptual model on which we based our analysis:   
 
-$$(Establishment\; rate)_{xy}  \propto \frac{(Number\; of\; individuals)_{xy}}{(Seed\; supply)_{xy}}$$
+$$(Number\; of\; wildlings)_{xy} \propto (Seed\; density)_{xy}\; * (Establishment\; probability)_{xy}$$
+where xy represents a given location around a plantation. 
+This simple model is motivated by our basic mechanistic understanding of the spread process: a seed disperses from its source to a new location, and the conditions at that location determine the likelihood that the seed establishes as a wildling.    
+
+Because the ages of the plantations and the wildings varied, it is worth considering the conceptual model's temporal dimension.
+The number of wildlings at a given location accrued from the time that the plantation began producing seeds to the time that the observation was made.
+If we knew the absolute number of seeds that arrived during that same period, the relationship in the conceptual model would mirror the definition of establishment probability, and could be treated as an equality.
+Instead, we calculated seed arrival as a probability density, which is why the the relationship in the conceptual model is a proportionality..
+Similarly, 
+
+Establishment probability was hypothesized to vary primarily by nature type, 
+To isolate 
+
+Sustained establishment (includes survival probabilities)
+
+## Field data
+
+## Modeled seed dispersal
+
+## Statistical modeling of establishment
+
+# Results
 
 # Discussion
 
