@@ -85,20 +85,26 @@ For example, lower elevations may trap more seeds.
 - 4 species/complexes
 - complete mapping
 
-We quantified the establishment probability of exotic conifers in various nature types with observational data. 
-Specifically, we used observations of wildlings and nature types mapped across coincident areas.
-These data were collected around sexually mature plantations, from which the wildlings presumably originated.
-By modeling seed dispersal from the plantations, we also estimated the relative number of seeds arriving at different locations within the mapped areas. 
+We compared the frequency with which four groups of exotic conifers establish in various nature types, using observational data. 
+Specifically, we used observations of wildlings and nature types, mapped around sexually mature plantations from which the wildlings presumably originated.
+We analysed the data in two ways, to answer distinct questions about differences in establishment.
+
+The first analysis was a simple tallying of the number of wildlings of each conifer per unit area of each nature type.
+In this way, we summarized the state of wildling establishment from exotic conifer plantations under prevailing conditions.
+In the tallying analysis, variation in the density of wildlings from is partly attributable to differences between conifers and between nature types, and partly to contingent factors, such as the spatial distribution of nature types around plantations. 
+The motivation for this approach was to break down the realised spread of wildlings at the specific localities in the data set --- to give a picture of the current status of the naturalization process.
+
+We also estimated the relative number of seeds arriving at different locations within the mapped areas, by modeling seed dispersal from the plantations. 
 These elements comprised the conceptual model on which we based our analysis:   
 
 $$(Number\; of\; wildlings)_{xy} \propto (Seed\; density)_{xy}\; * (Establishment\; probability)_{xy}$$
 where xy represents a given location around a plantation. 
 This simple model is motivated by our basic mechanistic understanding of the spread process: a seed disperses from its source to a new location, and the conditions at that location determine the likelihood that the seed establishes as a wildling.    
 
-Because the ages of the plantations and the wildings varied, it is worth considering the conceptual model's temporal dimension.
+Our observational data represent processes that occur over time, so it is worth considering the conceptual model's temporal dimension.
 The number of wildlings at a given location accrued from the time that the plantation began producing seeds to the time that the observation was made.
-If we knew the absolute number of seeds that arrived during that same period, the relationship in the conceptual model would mirror the definition of establishment probability, and could be treated as an equality.
-Instead, we calculated seed arrival as a probability density, which is why the the relationship in the conceptual model is a proportionality..
+If we knew the absolute number of seeds that arrived during that period, the relationship in the conceptual model would mirror the definition of establishment probability, and could be treated as an equality.
+However, we calculated seed arrival as a probability density, which is why the the relationship in the conceptual model is a proportionality.
 Similarly, 
 
 Establishment probability was hypothesized to vary primarily by nature type, 
@@ -110,9 +116,11 @@ Sustained establishment (includes survival probabilities)
 
 ## Modeled seed dispersal
 
-## Statistical modeling of establishment
+## Statistical modeling of establishment probability
 
 # Results
+
+- Caution against drawing conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment.
 
 # Discussion
 
