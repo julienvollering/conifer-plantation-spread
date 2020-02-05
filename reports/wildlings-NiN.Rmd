@@ -14,6 +14,8 @@ library(units)
 source(here("R","locality-functions.R"))
 ```
 
+# Setup
+
 ```{r unique types, eval=FALSE}
 ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
 codes <- map(ninfiles, ~ st_read(here("data","qc",.), quiet = TRUE) %>% 
@@ -83,6 +85,8 @@ for (i in ninfiles) {
 }
 ```
 
+# Polygon intersection
+
 ```{r wildlings per polygon}
 species <- list.files(here("data","qc"))
 
@@ -119,6 +123,8 @@ Important note: the following tables count the number of wildlings by the polygo
 ```{r wildlings per polygon aggregated}
 lapply(perNiN.agg, knitr::kable)
 ```
+
+# Cell intersection
 
 WALD seed shadows produced separately because of long computation time. 
 
@@ -201,13 +207,13 @@ percell.agg <- map(percell.agg, function(x) {
 ```{r locality covariates}
 localities <- read_csv(here("data", "localities.csv")) 
 filter(localities, is.na(age.at.registration))
-HåkøyaAge <- localities %>% 
-  filter(species == "P.sitchensis-lutz", county %in% c("Troms","Nordland")) %>% 
+HaakoeyaAge <- localities %>% 
+  filter(species == "P.sitchensis-lutzii", county %in% c("Troms","Nordland")) %>% 
   pull(age.at.registration) %>% 
   mean(na.rm = TRUE) %>% 
   round()
 localities <- mutate(localities, age.at.registration = case_when(
-  locality == "Håkøya" & species == "P.sitchensis-lutz" ~ HåkøyaAge,
+  locality == "Haakoeya" & species == "P.sitchensis-lutzii" ~ HaakoeyaAge,
   TRUE ~ age.at.registration
 ))
 
