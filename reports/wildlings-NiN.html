@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -268,6 +268,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -329,7 +330,6 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
-  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -341,6 +341,18 @@ summary {
   display: none;
 }
 </style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
 
 <!-- code folding -->
 
@@ -397,29 +409,29 @@ codes[order(substring(codes, 1, 1), as.numeric(substring(codes, 2)))]</code></pr
   &quot;T32&quot;, &quot;T32&quot;, 0.5,
   &quot;T33&quot;, &quot;T33&quot;, 0.5,
   &quot;T34&quot;, &quot;T34&quot;, 0.5,
-  &quot;T35&quot;, &quot;disturbed&quot;, 0,
-  &quot;T36&quot;, &quot;disturbed&quot;, 0.5,
-  &quot;T37&quot;, &quot;disturbed&quot;, 0,
+  &quot;T35&quot;, &quot;artificial&quot;, 0,
+  &quot;T36&quot;, &quot;T36&quot;, 0.5,
+  &quot;T37&quot;, &quot;artificial&quot;, 0,
   &quot;T38&quot;, &quot;plantation forest&quot;, 10,
-  &quot;T39&quot;, &quot;disturbed&quot;, 0,
-  &quot;T40&quot;, &quot;disturbed&quot;, 0,
-  &quot;T41&quot;, &quot;cultivated&quot;, 0.5,
-  &quot;T42&quot;, &quot;disturbed&quot;, 0,
-  &quot;T43&quot;, &quot;disturbed&quot;, 0,
-  &quot;T44&quot;, &quot;cultivated&quot;, 0.5,
-  &quot;T45&quot;, &quot;cultivated&quot;, 0.5,
-  &quot;T35.T37.T39.T43&quot;, &quot;disturbed&quot;, 0,
-  &quot;T35.T37&quot;, &quot;disturbed&quot;, 0,
-  &quot;V1&quot;, &quot;fen&quot;, 0,
-  &quot;V2&quot;, &quot;swamp&quot;, 10,
-  &quot;V3&quot;, &quot;bog&quot;, 0,
-  &quot;V4&quot;, &quot;spring&quot;, 0,
-  &quot;V8&quot;, &quot;swamp&quot;, 10,
-  &quot;V9&quot;, &quot;fen&quot;, 0,
-  &quot;V10&quot;, &quot;fen&quot;, 0,
-  &quot;V11&quot;, &quot;disturbed&quot;, 0,
-  &quot;V12&quot;, &quot;disturbed&quot;, 0,
-  &quot;V13&quot;, &quot;disturbed&quot;, 0) </code></pre>
+  &quot;T39&quot;, &quot;artificial&quot;, 0,
+  &quot;T40&quot;, &quot;T40&quot;, 0,
+  &quot;T41&quot;, &quot;T41&quot;, 0.5,
+  &quot;T42&quot;, &quot;T42&quot;, 0,
+  &quot;T43&quot;, &quot;artificial&quot;, 0,
+  &quot;T44&quot;, &quot;T44&quot;, 0.5,
+  &quot;T45&quot;, &quot;T45&quot;, 0.5,
+  &quot;T35.T37.T39.T43&quot;, &quot;artificial&quot;, 0,
+  &quot;T35.T37&quot;, &quot;artificial&quot;, 0,
+  &quot;V1&quot;, &quot;V1&quot;, 0,
+  &quot;V2&quot;, &quot;V2&quot;, 10,
+  &quot;V3&quot;, &quot;V3&quot;, 0,
+  &quot;V4&quot;, &quot;V4&quot;, 0,
+  &quot;V8&quot;, &quot;V8&quot;, 10,
+  &quot;V9&quot;, &quot;V9&quot;, 0,
+  &quot;V10&quot;, &quot;V10&quot;, 0,
+  &quot;V11&quot;, &quot;V11&quot;, 0,
+  &quot;V12&quot;, &quot;V12&quot;, 0,
+  &quot;V13&quot;, &quot;V13&quot;, 0) </code></pre>
 <pre class="r"><code>species &lt;- list.files(here(&quot;data&quot;,&quot;qc&quot;))
 
 perNiN &lt;- list()
@@ -451,383 +463,384 @@ for (j in species) { # j &lt;- species[1]
     arrange(desc(density), desc(n), area) %&gt;% 
     mutate(area = round(area), density = round(density, digits = 1))
 })</code></pre>
-<pre><code>## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+<pre><code>## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes
 
-## Warning in bind_rows_(x, .id): Vectorizing &#39;units&#39; elements may not preserve
-## their attributes</code></pre>
+## Warning in bind_rows_(x, .id): Vectorizing 'units' elements may not
+## preserve their attributes</code></pre>
+<p>Important note: the following tables count the number of wildlings by the polygons that they intersect. As a result, wildlings occurring in mosaics (overlapping polygons) are counted more than once!</p>
 <pre class="r"><code>lapply(perNiN.agg, knitr::kable)</code></pre>
 <pre><code>## $Larix
 ## 
@@ -840,15 +853,22 @@ for (j in species) { # j &lt;- species[1]
 ## T34                   471   388       0.8
 ## T4                    336   244       0.7
 ## T1                     39    14       0.4
-## disturbed             187    19       0.1
-## cultivated           1253    94       0.1
-## fen                   133     5       0.0
+## artificial            175    19       0.1
+## T45                   940    94       0.1
+## V9                     92     4       0.0
+## V1                     24     1       0.0
+## T40                     0     0       0.0
 ## T18                     1     0       0.0
 ## T30                     1     0       0.0
 ## T2                      1     0       0.0
 ## T27                     2     0       0.0
-## swamp                   2     0       0.0
+## V2                      2     0       0.0
 ## T13                     3     0       0.0
+## T42                     4     0       0.0
+## V12                     8     0       0.0
+## V10                    18     0       0.0
+## T41                    65     0       0.0
+## T44                   248     0       0.0
 ## 
 ## $P.abies
 ## 
@@ -857,33 +877,43 @@ for (j in species) { # j &lt;- species[1]
 ## ------------------  -----  ----  --------
 ## T1                     10    42       4.2
 ## T4                    709   882       1.2
-## swamp                  34    31       0.9
+## V2                     34    31       0.9
 ## plantation forest      15    10       0.7
+## V1                     46    10       0.2
 ## T32                   309    51       0.2
-## fen                    87    12       0.1
-## disturbed              78    10       0.1
-## bog                     9     1       0.1
-## cultivated            635     4       0.0
+## artificial             75    10       0.1
+## V3                      9     1       0.1
+## V9                     19     2       0.1
+## T41                    65     1       0.0
+## T44                    74     1       0.0
+## T45                   495     2       0.0
+## T40                     0     0       0.0
+## T42                     3     0       0.0
 ## T6                      4     0       0.0
-## spring                  6     0       0.0
+## V4                      6     0       0.0
 ## T31                    18     0       0.0
 ## T2                     21     0       0.0
+## V10                    22     0       0.0
 ## 
 ## $P.contorta
 ## 
 ## 
 ## group                area      n   density
 ## ------------------  -----  -----  --------
-## disturbed             219   4154      19.0
+## T40                   122   4100      33.6
 ## T34                   120    238       2.0
+## artificial             96     54       0.6
 ## T1                     28     11       0.4
 ## T30                     3      1       0.4
 ## T4                    583    206       0.4
-## swamp                   5      1       0.2
-## fen                   221     44       0.2
+## V8                      3      1       0.3
+## V1                    220     44       0.2
 ## plantation forest     120     12       0.1
-## bog                    91      3       0.0
-## cultivated              8      0       0.0
+## V3                     91      3       0.0
+## V10                     0      0       0.0
+## V11                     1      0       0.0
+## V2                      1      0       0.0
+## T45                     8      0       0.0
 ## T27                     8      0       0.0
 ## T32                    24      0       0.0
 ## 
@@ -894,29 +924,39 @@ for (j in species) { # j &lt;- species[1]
 ## ------------------  -----  -----  --------
 ## T17                     2     41      20.2
 ## T2                    182   1884      10.4
+## T36                    11     92       8.6
+## V9                    165   1000       6.1
 ## T34                  1083   5969       5.5
-## disturbed             422   1841       4.4
+## artificial            361   1735       4.8
 ## T4                   1406   5994       4.3
-## fen                   752   3049       4.1
+## V1                    552   2046       3.7
 ## T1                    125    371       3.0
 ## T21                     6     17       2.7
 ## T32                   682   1707       2.5
 ## plantation forest      92    214       2.3
 ## T16                    15     33       2.1
-## bog                   183    349       1.9
+## V3                    183    349       1.9
 ## T27                    49     89       1.8
 ## T31                   320    509       1.6
 ## T6                     37     57       1.6
-## swamp                 162    214       1.3
+## V2                    161    214       1.3
 ## T24                     6      6       1.0
 ## T12                    10      8       0.8
-## cultivated           1849   1075       0.6
+## V12                     4      3       0.7
+## T45                  1681   1065       0.6
+## V13                     4      2       0.5
+## T40                    42      9       0.2
 ## T13                    12      2       0.2
+## V10                    36      3       0.1
+## T44                   165     10       0.1
+## V8                      1      0       0.0
+## T42                     1      0       0.0
 ## T18                     2      0       0.0
 ## T3                      3      0       0.0
+## T41                     3      0       0.0
 ## T29                     6      0       0.0
 ## T33                     6      0       0.0
-## spring                  9      0       0.0</code></pre>
+## V4                      9      0       0.0</code></pre>
 <p>WALD seed shadows produced separately because of long computation time.</p>
 <pre class="r"><code>species &lt;- list.files(here(&quot;data&quot;,&quot;qc&quot;))
 
@@ -976,12 +1016,12 @@ for (j in species) { # j &lt;- species[1]
 <pre><code>## Larix</code></pre>
 <pre><code>## anisdal</code></pre>
 <pre><code>## engjane</code></pre>
+<pre><code>## hålandsbotn</code></pre>
+<pre><code>## høgås</code></pre>
 <pre><code>## hyljafjellet</code></pre>
-<pre><code>## høgås</code></pre>
-<pre><code>## hålandsbotn</code></pre>
 <pre><code>## myrvoll</code></pre>
 <pre><code>## oaland</code></pre>
-<pre><code>## røynåsen</code></pre>
+<pre><code>## røynåsen</code></pre>
 <pre><code>## stordalslia</code></pre>
 <pre><code>## storemo</code></pre>
 <pre><code>## tøgjefjellet</code></pre>
@@ -1005,12 +1045,14 @@ for (j in species) { # j &lt;- species[1]
 <pre><code>## tomasmyra</code></pre>
 <pre><code>## P.sitchensis-lutz</code></pre>
 <pre><code>## alstahaugmyran</code></pre>
+<pre><code>## årheia</code></pre>
 <pre><code>## dale</code></pre>
 <pre><code>## fjøsne</code></pre>
 <pre><code>## førsvoll</code></pre>
-<pre><code>## gryttingdalen-vest</code></pre>
 <pre><code>## gryttingdalen-øst</code></pre>
+<pre><code>## gryttingdalen-vest</code></pre>
 <pre><code>## hagheia</code></pre>
+<pre><code>## håkøya</code></pre>
 <pre><code>## hamran</code></pre>
 <pre><code>## harteigen</code></pre>
 <pre><code>## holmsnes-nordvest</code></pre>
@@ -1018,371 +1060,375 @@ for (j in species) { # j &lt;- species[1]
 <pre><code>## hommeland</code></pre>
 <pre><code>## hov</code></pre>
 <pre><code>## hyljafjellet</code></pre>
-<pre><code>## håkøya</code></pre>
 <pre><code>## kvia</code></pre>
 <pre><code>## langvassfjellet</code></pre>
-<pre><code>## meåsen</code></pre>
+<pre><code>## meåsen</code></pre>
 <pre><code>## myrmo</code></pre>
 <pre><code>## oaland</code></pre>
 <pre><code>## olabergan</code></pre>
 <pre><code>## plogskjæret</code></pre>
-<pre><code>## røynåsen</code></pre>
-<pre><code>## råvollmarka</code></pre>
+<pre><code>## råvollmarka</code></pre>
+<pre><code>## røynåsen</code></pre>
 <pre><code>## sandmoan</code></pre>
 <pre><code>## sandve</code></pre>
 <pre><code>## skorphella</code></pre>
 <pre><code>## starebakkane</code></pre>
-<pre><code>## steinåsen</code></pre>
+<pre><code>## steinåsen</code></pre>
 <pre><code>## svinnes</code></pre>
 <pre><code>## tøgjefjellet</code></pre>
 <pre><code>## valan</code></pre>
 <pre><code>## veggjaberget</code></pre>
 <pre><code>## vikra</code></pre>
 <pre><code>## voren</code></pre>
-<pre><code>## årheia</code></pre>
 <pre class="r"><code>saveRDS(percell, here(&quot;output&quot;,&quot;percell-data.rds&quot;))</code></pre>
 <pre class="r"><code>percell &lt;- readRDS(here(&quot;output&quot;,&quot;percell-data.rds&quot;))
 
 str(percell, 2)</code></pre>
 <pre><code>## List of 4
 ##  $ Larix            :List of 12
-##   ..$ anisdal     :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2429 obs. of  11 variables:
+##   ..$ anisdal     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2429 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;cultivated&quot; &quot;disturbed&quot; &quot;T32&quot; ...
-##   ..$ engjane     :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2320 obs. of  11 variables:
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;T44&quot; ...
+##   ..$ engjane     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2320 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T34&quot; &quot;fen&quot; &quot;disturbed&quot; ...
-##   ..$ hyljafjellet:Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2374 obs. of  10 variables:
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T34&quot; &quot;V9&quot; &quot;artificial&quot; ...
+##   ..$ hålandsbotn :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2453 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T34&quot; &quot;fen&quot; ...
-##   ..$ høgås       :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2321 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T44&quot; &quot;artificial&quot; &quot;T45&quot; ...
+##   ..$ høgås       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2321 obs. of  13 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T34&quot; &quot;T13&quot; &quot;cultivated&quot; ...
-##   ..$ hålandsbotn :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2453 obs. of  9 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T34&quot; &quot;T13&quot; &quot;T45&quot; ...
+##   ..$ hyljafjellet:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2374 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;cultivated&quot; &quot;disturbed&quot; &quot;plantation forest&quot; ...
-##   ..$ myrvoll     :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2367 obs. of  12 variables:
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T45&quot; &quot;T34&quot; &quot;V9&quot; ...
+##   ..$ myrvoll     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2367 obs. of  15 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T4&quot; &quot;plantation forest&quot; ...
-##   ..$ oaland      :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2366 obs. of  14 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T45&quot; &quot;T4&quot; &quot;plantation forest&quot; ...
+##   ..$ oaland      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2366 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T1&quot; &quot;T34&quot; &quot;T4&quot; ...
-##   ..$ røynåsen    :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2368 obs. of  10 variables:
+##   ..$ røynåsen    :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2368 obs. of  12 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;T44&quot; ...
+##   ..$ stordalslia :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2461 obs. of  9 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;artificial&quot; &quot;T42&quot; &quot;T4&quot; ...
+##   ..$ storemo     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2058 obs. of  13 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T4&quot; &quot;artificial&quot; &quot;T32&quot; ...
+##   ..$ tøgjefjellet:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2398 obs. of  15 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;T27&quot; ...
+##   ..$ voren       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2421 obs. of  12 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T32&quot; &quot;V10&quot; &quot;T45&quot; ...
+##  $ P.abies          :List of 9
+##   ..$ efteland   :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1884 obs. of  13 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;artificial&quot; &quot;T45&quot; &quot;T42&quot; ...
+##   ..$ myklebostad:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2298 obs. of  16 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:15] &quot;wildlings&quot; &quot;V1&quot; &quot;V2&quot; &quot;T4&quot; ...
+##   ..$ myrvoll    :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2422 obs. of  15 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T45&quot; &quot;T4&quot; &quot;T32&quot; ...
+##   ..$ mysingveien:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2380 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;cultivated&quot; &quot;disturbed&quot; &quot;T32&quot; ...
-##   ..$ stordalslia :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2461 obs. of  8 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:7] &quot;wildlings&quot; &quot;disturbed&quot; &quot;T4&quot; &quot;swamp&quot; ...
-##   ..$ storemo     :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2058 obs. of  12 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;disturbed&quot; &quot;T32&quot; ...
-##   ..$ tøgjefjellet:Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2398 obs. of  15 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T32&quot; &quot;cultivated&quot; &quot;T27&quot; ...
-##   ..$ voren       :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2421 obs. of  11 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T4&quot; &quot;T32&quot; &quot;V2&quot; ...
+##   ..$ ollestad   :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2213 obs. of  11 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T32&quot; &quot;fen&quot; &quot;cultivated&quot; ...
-##  $ P.abies          :List of 9
-##   ..$ efteland   :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1884 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T45&quot; &quot;T32&quot; &quot;T4&quot; ...
+##   ..$ storbergan :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1993 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;cultivated&quot; &quot;disturbed&quot; &quot;swamp&quot; ...
-##   ..$ myklebostad:Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    2298 obs. of  13 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;V1&quot; &quot;T1&quot; ...
+##   ..$ svinnes    :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1431 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;fen&quot; &quot;swamp&quot; &quot;T4&quot; ...
-##   ..$ myrvoll    :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    2422 obs. of  12 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T4&quot; &quot;T32&quot; ...
-##   ..$ mysingveien:Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    2380 obs. of  10 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T4&quot; &quot;T32&quot; &quot;swamp&quot; ...
-##   ..$ ollestad   :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    2213 obs. of  10 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T32&quot; &quot;T4&quot; ...
-##   ..$ storbergan :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1993 obs. of  12 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;fen&quot; &quot;T4&quot; &quot;T1&quot; ...
-##   ..$ svinnes    :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1431 obs. of  14 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;bog&quot; &quot;fen&quot; &quot;T4&quot; ...
-##   ..$ tennes     :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    2345 obs. of  9 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;V1&quot; &quot;V3&quot; &quot;T4&quot; ...
+##   ..$ tennes     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2345 obs. of  9 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;T4&quot; &quot;T32&quot; &quot;T31&quot; ...
-##   ..$ varland    :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    2398 obs. of  9 variables:
+##   ..$ varland    :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2398 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T32&quot; &quot;T4&quot; ...
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T32&quot; &quot;T44&quot; &quot;T4&quot; ...
 ##  $ P.contorta       :List of 6
-##   ..$ fiskvikrokkdalen:Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2512 obs. of  11 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;plantation forest&quot; &quot;fen&quot; &quot;T4&quot; ...
-##   ..$ gulemyrane      :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2386 obs. of  9 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;fen&quot; &quot;plantation forest&quot; &quot;T34&quot; ...
-##   ..$ selvik          :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2398 obs. of  12 variables:
+##   ..$ fiskvikrokkdalen:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2512 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;disturbed&quot; &quot;cultivated&quot; &quot;plantation forest&quot; ...
-##   ..$ skarsheia       :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   1807 obs. of  12 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;bog&quot; &quot;fen&quot; ...
-##   ..$ sollitangen     :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2427 obs. of  11 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;plantation forest&quot; &quot;disturbed&quot; &quot;T4&quot; ...
-##   ..$ tomasmyra       :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   2829 obs. of  9 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;plantation forest&quot; &quot;V1&quot; &quot;T4&quot; ...
+##   ..$ gulemyrane      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2386 obs. of  9 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;T4&quot; &quot;disturbed&quot; &quot;T27&quot; ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;V1&quot; &quot;plantation forest&quot; &quot;T34&quot; ...
+##   ..$ selvik          :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2398 obs. of  13 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;artificial&quot; &quot;T45&quot; &quot;plantation forest&quot; ...
+##   ..$ skarsheia       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   1807 obs. of  13 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T4&quot; &quot;V3&quot; &quot;V1&quot; ...
+##   ..$ sollitangen     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2427 obs. of  12 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;plantation forest&quot; &quot;T40&quot; &quot;T4&quot; ...
+##   ..$ tomasmyra       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2829 obs. of  10 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T4&quot; &quot;artificial&quot; &quot;T40&quot; ...
 ##  $ P.sitchensis-lutz:List of 36
-##   ..$ alstahaugmyran    :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2033 obs. of  11 variables:
+##   ..$ alstahaugmyran    :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2033 obs. of  11 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;fen&quot; &quot;T4&quot; &quot;T1&quot; ...
-##   ..$ dale              :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1814 obs. of  10 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;V1&quot; &quot;T4&quot; &quot;T1&quot; ...
+##   ..$ årheia            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2204 obs. of  13 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;V1&quot; &quot;T34&quot; &quot;T32&quot; ...
+##   ..$ dale              :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1814 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T34&quot; &quot;T4&quot; ...
-##   ..$ fjøsne            :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2419 obs. of  9 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T45&quot; &quot;T34&quot; &quot;T4&quot; ...
+##   ..$ fjøsne            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2419 obs. of  9 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;T32&quot; &quot;cultivated&quot; &quot;disturbed&quot; ...
-##   ..$ førsvoll          :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2100 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;artificial&quot; ...
+##   ..$ førsvoll          :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2100 obs. of  13 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;cultivated&quot; &quot;disturbed&quot; &quot;fen&quot; ...
-##   ..$ gryttingdalen-vest:Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2249 obs. of  10 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;V9&quot; ...
+##   ..$ gryttingdalen-øst :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2376 obs. of  12 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;V1&quot; &quot;plantation forest&quot; ...
+##   ..$ gryttingdalen-vest:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2249 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;fen&quot; &quot;T4&quot; &quot;T32&quot; ...
-##   ..$ gryttingdalen-øst :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2376 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;V1&quot; &quot;T4&quot; &quot;T32&quot; ...
+##   ..$ hagheia           :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2360 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;fen&quot; &quot;plantation forest&quot; ...
-##   ..$ hagheia           :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2360 obs. of  11 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T31&quot; &quot;T32&quot; &quot;fen&quot; ...
-##   ..$ hamran            :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1262 obs. of  16 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T31&quot; &quot;T32&quot; &quot;V1&quot; ...
+##   ..$ håkøya            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2458 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:15] &quot;wildlings&quot; &quot;T6&quot; &quot;T4&quot; &quot;plantation forest&quot; ...
-##   ..$ harteigen         :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2497 obs. of  16 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;T32&quot; &quot;V1&quot; ...
+##   ..$ hamran            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1263 obs. of  17 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:15] &quot;wildlings&quot; &quot;bog&quot; &quot;fen&quot; &quot;T31&quot; ...
-##   ..$ holmsnes-nordvest :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1682 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:16] &quot;wildlings&quot; &quot;T6&quot; &quot;T4&quot; &quot;plantation forest&quot; ...
+##   ..$ harteigen         :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2497 obs. of  18 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T6&quot; &quot;T21&quot; &quot;cultivated&quot; ...
-##   ..$ holmsnes-sørøst   :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1621 obs. of  13 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:17] &quot;wildlings&quot; &quot;V1&quot; &quot;V3&quot; &quot;T31&quot; ...
+##   ..$ holmsnes-nordvest :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1682 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T6&quot; &quot;T4&quot; &quot;T29&quot; ...
-##   ..$ hommeland         :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1996 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T6&quot; &quot;T21&quot; &quot;T41&quot; ...
+##   ..$ holmsnes-sørøst   :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1621 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T34&quot; &quot;cultivated&quot; &quot;disturbed&quot; ...
-##   ..$ hov               :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2351 obs. of  13 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T6&quot; &quot;T4&quot; &quot;T29&quot; ...
+##   ..$ hommeland         :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1996 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T34&quot; &quot;T32&quot; &quot;disturbed&quot; ...
-##   ..$ hyljafjellet      :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2407 obs. of  10 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T34&quot; &quot;T45&quot; &quot;artificial&quot; ...
+##   ..$ hov               :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2351 obs. of  15 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T34&quot; &quot;T32&quot; &quot;artificial&quot; ...
+##   ..$ hyljafjellet      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2407 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T34&quot; &quot;fen&quot; ...
-##   ..$ håkøya            :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2458 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T45&quot; &quot;T34&quot; &quot;V9&quot; ...
+##   ..$ kvia              :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2441 obs. of  10 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T45&quot; &quot;V1&quot; &quot;artificial&quot; ...
+##   ..$ langvassfjellet   :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2413 obs. of  15 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;T32&quot; &quot;fen&quot; ...
-##   ..$ kvia              :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2441 obs. of  9 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;cultivated&quot; &quot;fen&quot; &quot;disturbed&quot; ...
-##   ..$ langvassfjellet   :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2413 obs. of  14 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T45&quot; &quot;V2&quot; &quot;artificial&quot; ...
+##   ..$ meåsen            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2219 obs. of  16 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;cultivated&quot; &quot;swamp&quot; &quot;disturbed&quot; ...
-##   ..$ meåsen            :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2219 obs. of  15 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:15] &quot;wildlings&quot; &quot;artificial&quot; &quot;T45&quot; &quot;T4&quot; ...
+##   ..$ myrmo             :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2259 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;disturbed&quot; &quot;cultivated&quot; &quot;T4&quot; ...
-##   ..$ myrmo             :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2259 obs. of  11 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;fen&quot; &quot;swamp&quot; &quot;T4&quot; ...
-##   ..$ oaland            :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2379 obs. of  14 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;V1&quot; &quot;T4&quot; &quot;V2&quot; ...
+##   ..$ oaland            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2379 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T1&quot; &quot;T34&quot; &quot;T4&quot; ...
-##   ..$ olabergan         :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1017 obs. of  13 variables:
+##   ..$ olabergan         :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1017 obs. of  15 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T6&quot; &quot;disturbed&quot; &quot;T12&quot; ...
-##   ..$ plogskjæret       :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1219 obs. of  17 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T6&quot; &quot;T40&quot; &quot;T12&quot; ...
+##   ..$ plogskjæret       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1219 obs. of  17 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:16] &quot;wildlings&quot; &quot;T29&quot; &quot;T6&quot; &quot;T4&quot; ...
-##   ..$ røynåsen          :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2368 obs. of  10 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;cultivated&quot; &quot;disturbed&quot; &quot;T32&quot; ...
-##   ..$ råvollmarka       :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1050 obs. of  10 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T34&quot; &quot;disturbed&quot; &quot;T32&quot; ...
-##   ..$ sandmoan          :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2208 obs. of  11 variables:
+##   ..$ råvollmarka       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1050 obs. of  11 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T4&quot; &quot;disturbed&quot; &quot;T31&quot; ...
-##   ..$ sandve            :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2480 obs. of  9 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;T34&quot; &quot;cultivated&quot; &quot;fen&quot; ...
-##   ..$ skorphella        :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1788 obs. of  13 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T34&quot; &quot;artificial&quot; &quot;T40&quot; ...
+##   ..$ røynåsen          :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2368 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T33&quot; &quot;T1&quot; ...
-##   ..$ starebakkane      :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2082 obs. of  14 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;T44&quot; ...
+##   ..$ sandmoan          :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2208 obs. of  11 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T4&quot; &quot;artificial&quot; &quot;T31&quot; ...
+##   ..$ sandve            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2480 obs. of  10 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T34&quot; &quot;T45&quot; &quot;V9&quot; ...
+##   ..$ skorphella        :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1788 obs. of  13 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T6&quot; &quot;cultivated&quot; &quot;T21&quot; ...
-##   ..$ steinåsen         :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1877 obs. of  12 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T33&quot; &quot;T45&quot; &quot;T1&quot; ...
+##   ..$ starebakkane      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2082 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T32&quot; &quot;cultivated&quot; &quot;disturbed&quot; ...
-##   ..$ svinnes           :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 1426 obs. of  14 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T6&quot; &quot;T45&quot; &quot;T21&quot; ...
+##   ..$ steinåsen         :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1877 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;bog&quot; &quot;fen&quot; &quot;T4&quot; ...
-##   ..$ tøgjefjellet      :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2234 obs. of  14 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;artificial&quot; ...
+##   ..$ svinnes           :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1426 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T32&quot; &quot;cultivated&quot; &quot;T27&quot; ...
-##   ..$ valan             :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2226 obs. of  18 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;V1&quot; &quot;V3&quot; &quot;T4&quot; ...
+##   ..$ tøgjefjellet      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2234 obs. of  14 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;T27&quot; ...
+##   ..$ valan             :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2226 obs. of  18 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:17] &quot;wildlings&quot; &quot;T31&quot; &quot;T4&quot; &quot;T1&quot; ...
-##   ..$ veggjaberget      :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2363 obs. of  12 variables:
+##   ..$ veggjaberget      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2363 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;cultivated&quot; &quot;T34&quot; &quot;disturbed&quot; ...
-##   ..$ vikra             :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2338 obs. of  8 variables:
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T45&quot; &quot;T34&quot; &quot;artificial&quot; ...
+##   ..$ vikra             :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2338 obs. of  9 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:7] &quot;wildlings&quot; &quot;T34&quot; &quot;disturbed&quot; &quot;cultivated&quot; ...
-##   ..$ voren             :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2110 obs. of  10 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T32&quot; &quot;fen&quot; &quot;cultivated&quot; ...
-##   ..$ årheia            :Classes &#39;sf&#39;, &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;: 2204 obs. of  11 variables:
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;T34&quot; &quot;artificial&quot; &quot;T45&quot; ...
+##   ..$ voren             :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2110 obs. of  11 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;fen&quot; &quot;T34&quot; &quot;T32&quot; ...</code></pre>
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T32&quot; &quot;V10&quot; &quot;T45&quot; ...</code></pre>
 <pre class="r"><code>percell &lt;- map(percell, ~ map(., ~ st_set_geometry(., NULL)))
 percell.agg &lt;- map(percell, ~ map_dfr(., identity, .id = &quot;locality&quot;))
 str(percell.agg, 1)</code></pre>
 <pre><code>## List of 4
-##  $ Larix            :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   28336 obs. of  20 variables:
-##  $ P.abies          :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   19364 obs. of  18 variables:
-##  $ P.contorta       :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   14359 obs. of  17 variables:
-##  $ P.sitchensis-lutz:Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   74326 obs. of  30 variables:</code></pre>
+##  $ Larix            :Classes 'tbl_df', 'tbl' and 'data.frame':   28336 obs. of  27 variables:
+##  $ P.abies          :Classes 'tbl_df', 'tbl' and 'data.frame':   19364 obs. of  24 variables:
+##  $ P.contorta       :Classes 'tbl_df', 'tbl' and 'data.frame':   14359 obs. of  21 variables:
+##  $ P.sitchensis-lutz:Classes 'tbl_df', 'tbl' and 'data.frame':   74327 obs. of  40 variables:</code></pre>
 <pre class="r"><code>percell.agg</code></pre>
 <pre><code>## $Larix
-## # A tibble: 28,336 x 20
-##    locality wildlings cultivated disturbed   T32   fen `plantation for~   T34
-##    &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-##  1 anisdal          0      0.941     0         0     0                0     0
-##  2 anisdal          0      0.989     0         0     0                0     0
-##  3 anisdal          0      0.989     0         0     0                0     0
-##  4 anisdal          0      0.989     0         0     0                0     0
-##  5 anisdal          0      0.989     0         0     0                0     0
-##  6 anisdal          0      0.989     0         0     0                0     0
-##  7 anisdal          0      0.989     0         0     0                0     0
-##  8 anisdal          0      0.989     0         0     0                0     0
-##  9 anisdal          0      0.914     0.076     0     0                0     0
-## 10 anisdal          0      0.623     0.367     0     0                0     0
-## # ... with 28,326 more rows, and 12 more variables: seeds.ExP &lt;dbl&gt;,
-## #   seeds.WALD &lt;dbl&gt;, relelev &lt;dbl&gt;, T13 &lt;dbl&gt;, T4 &lt;dbl&gt;, T2 &lt;dbl&gt;, T1 &lt;dbl&gt;,
-## #   swamp &lt;dbl&gt;, T30 &lt;dbl&gt;, T18 &lt;dbl&gt;, T27 &lt;dbl&gt;, T17 &lt;dbl&gt;
+## # A tibble: 28,336 x 27
+##    locality wildlings   T45 artificial   T44   T32    V9 `plantation for…
+##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt;
+##  1 anisdal          0 0.941      0         0     0     0                0
+##  2 anisdal          0 0.989      0         0     0     0                0
+##  3 anisdal          0 0.989      0         0     0     0                0
+##  4 anisdal          0 0.989      0         0     0     0                0
+##  5 anisdal          0 0.989      0         0     0     0                0
+##  6 anisdal          0 0.989      0         0     0     0                0
+##  7 anisdal          0 0.989      0         0     0     0                0
+##  8 anisdal          0 0.989      0         0     0     0                0
+##  9 anisdal          0 0.914      0.076     0     0     0                0
+## 10 anisdal          0 0.623      0.367     0     0     0                0
+## # … with 28,326 more rows, and 19 more variables: T34 &lt;dbl&gt;,
+## #   seeds.ExP &lt;dbl&gt;, seeds.WALD &lt;dbl&gt;, relelev &lt;dbl&gt;, V12 &lt;dbl&gt;, V1 &lt;dbl&gt;,
+## #   T13 &lt;dbl&gt;, T4 &lt;dbl&gt;, T41 &lt;dbl&gt;, T2 &lt;dbl&gt;, T40 &lt;dbl&gt;, T42 &lt;dbl&gt;,
+## #   T1 &lt;dbl&gt;, V10 &lt;dbl&gt;, V2 &lt;dbl&gt;, T30 &lt;dbl&gt;, T18 &lt;dbl&gt;, T27 &lt;dbl&gt;,
+## #   T17 &lt;dbl&gt;
 ## 
 ## $P.abies
-## # A tibble: 19,364 x 18
-##    locality wildlings cultivated disturbed swamp    T4   T32    T1   fen
-##    &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 efteland         0      0.846     0.051     0     0     0     0     0
-##  2 efteland         0      0.666     0.245     0     0     0     0     0
-##  3 efteland         0      0.91      0         0     0     0     0     0
-##  4 efteland         0      0.911     0         0     0     0     0     0
-##  5 efteland         0      0.911     0         0     0     0     0     0
-##  6 efteland         0      0.911     0         0     0     0     0     0
-##  7 efteland         0      0.911     0         0     0     0     0     0
-##  8 efteland         0      0.912     0         0     0     0     0     0
-##  9 efteland         0      0.912     0         0     0     0     0     0
-## 10 efteland         0      0.912     0         0     0     0     0     0
-## # ... with 19,354 more rows, and 9 more variables: seeds.ExP &lt;dbl&gt;,
-## #   seeds.WALD &lt;dbl&gt;, relelev &lt;dbl&gt;, `plantation forest` &lt;dbl&gt;, spring &lt;dbl&gt;,
-## #   T2 &lt;dbl&gt;, bog &lt;dbl&gt;, T6 &lt;dbl&gt;, T31 &lt;dbl&gt;
+## # A tibble: 19,364 x 24
+##    locality wildlings artificial   T45   T42    V2    T4   T32    T1    V1
+##    &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 efteland         0      0.051 0.846     0     0     0     0     0     0
+##  2 efteland         0      0.245 0.666     0     0     0     0     0     0
+##  3 efteland         0      0     0.91      0     0     0     0     0     0
+##  4 efteland         0      0     0.911     0     0     0     0     0     0
+##  5 efteland         0      0     0.911     0     0     0     0     0     0
+##  6 efteland         0      0     0.911     0     0     0     0     0     0
+##  7 efteland         0      0     0.911     0     0     0     0     0     0
+##  8 efteland         0      0     0.912     0     0     0     0     0     0
+##  9 efteland         0      0     0.912     0     0     0     0     0     0
+## 10 efteland         0      0     0.912     0     0     0     0     0     0
+## # … with 19,354 more rows, and 14 more variables: seeds.ExP &lt;dbl&gt;,
+## #   seeds.WALD &lt;dbl&gt;, relelev &lt;dbl&gt;, `plantation forest` &lt;dbl&gt;, V10 &lt;dbl&gt;,
+## #   V4 &lt;dbl&gt;, V9 &lt;dbl&gt;, T44 &lt;dbl&gt;, T41 &lt;dbl&gt;, T2 &lt;dbl&gt;, T40 &lt;dbl&gt;,
+## #   V3 &lt;dbl&gt;, T6 &lt;dbl&gt;, T31 &lt;dbl&gt;
 ## 
 ## $P.contorta
-## # A tibble: 14,359 x 17
-##    locality wildlings `plantation for~   fen    T4 disturbed   bog   T32
-##    &lt;chr&gt;        &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 fiskvik~         0            0.603 0         0         0     0     0
-##  2 fiskvik~         0            0.936 0         0         0     0     0
-##  3 fiskvik~         0            0.929 0         0         0     0     0
-##  4 fiskvik~         0            0.765 0.157     0         0     0     0
-##  5 fiskvik~         0            0.03  0.886     0         0     0     0
-##  6 fiskvik~         0            0     0.908     0         0     0     0
-##  7 fiskvik~         0            0     0.901     0         0     0     0
-##  8 fiskvik~         0            0     0.894     0         0     0     0
-##  9 fiskvik~         0            0     0.888     0         0     0     0
-## 10 fiskvik~         0            0     0.881     0         0     0     0
-## # ... with 14,349 more rows, and 9 more variables: seeds.ExP &lt;dbl&gt;,
-## #   seeds.WALD &lt;dbl&gt;, relelev &lt;dbl&gt;, T34 &lt;dbl&gt;, cultivated &lt;dbl&gt;, T1 &lt;dbl&gt;,
-## #   swamp &lt;dbl&gt;, T30 &lt;dbl&gt;, T27 &lt;dbl&gt;
+## # A tibble: 14,359 x 21
+##    locality wildlings `plantation for…    V1    T4 artificial    V3   T40
+##    &lt;chr&gt;        &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 fiskvik…         0            0.603 0         0          0     0     0
+##  2 fiskvik…         0            0.936 0         0          0     0     0
+##  3 fiskvik…         0            0.929 0         0          0     0     0
+##  4 fiskvik…         0            0.765 0.157     0          0     0     0
+##  5 fiskvik…         0            0.03  0.886     0          0     0     0
+##  6 fiskvik…         0            0     0.908     0          0     0     0
+##  7 fiskvik…         0            0     0.901     0          0     0     0
+##  8 fiskvik…         0            0     0.894     0          0     0     0
+##  9 fiskvik…         0            0     0.888     0          0     0     0
+## 10 fiskvik…         0            0     0.881     0          0     0     0
+## # … with 14,349 more rows, and 13 more variables: T32 &lt;dbl&gt;,
+## #   seeds.ExP &lt;dbl&gt;, seeds.WALD &lt;dbl&gt;, relelev &lt;dbl&gt;, T34 &lt;dbl&gt;,
+## #   T45 &lt;dbl&gt;, T1 &lt;dbl&gt;, V11 &lt;dbl&gt;, V8 &lt;dbl&gt;, V10 &lt;dbl&gt;, T30 &lt;dbl&gt;,
+## #   T27 &lt;dbl&gt;, V2 &lt;dbl&gt;
 ## 
 ## $`P.sitchensis-lutz`
-## # A tibble: 74,326 x 30
-##    locality wildlings   fen    T4    T1    T2 swamp   bog seeds.ExP seeds.WALD
-##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-##  1 alstaha~         0 0.908 0         0     0     0     0  0.000136   0.000434
-##  2 alstaha~         0 0.942 0         0     0     0     0  0.000632   0.000639
-##  3 alstaha~         0 0.942 0         0     0     0     0  0.00333    0.000949
-##  4 alstaha~         0 0.887 0         0     0     0     0  0.0192     0.00134 
-##  5 alstaha~         0 0.719 0         0     0     0     0  0.0377     0.000765
-##  6 alstaha~         0 0.942 0         0     0     0     0  0.00724    0.000578
-##  7 alstaha~         0 0.464 0.478     0     0     0     0  0.00166    0.000506
-##  8 alstaha~         0 0     0.942     0     0     0     0  0.000645   0.000442
-##  9 alstaha~         0 0     0.942     0     0     0     0  0.000946   0.000441
-## 10 alstaha~         0 0     0.942     0     0     0     0  0.00260    0.000467
-## # ... with 74,316 more rows, and 20 more variables: relelev &lt;dbl&gt;,
-## #   cultivated &lt;dbl&gt;, T34 &lt;dbl&gt;, T32 &lt;dbl&gt;, disturbed &lt;dbl&gt;, T31 &lt;dbl&gt;,
-## #   T18 &lt;dbl&gt;, `plantation forest` &lt;dbl&gt;, T16 &lt;dbl&gt;, T6 &lt;dbl&gt;, T29 &lt;dbl&gt;,
-## #   T12 &lt;dbl&gt;, T24 &lt;dbl&gt;, T27 &lt;dbl&gt;, T13 &lt;dbl&gt;, T3 &lt;dbl&gt;, T21 &lt;dbl&gt;,
-## #   spring &lt;dbl&gt;, T33 &lt;dbl&gt;, T17 &lt;dbl&gt;</code></pre>
+## # A tibble: 74,327 x 40
+##    locality wildlings    V1    T4    T1    T2    V2    V3 seeds.ExP
+##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+##  1 alstaha…         0 0.908 0         0     0     0     0  0.000136
+##  2 alstaha…         0 0.942 0         0     0     0     0  0.000632
+##  3 alstaha…         0 0.942 0         0     0     0     0  0.00333 
+##  4 alstaha…         0 0.887 0         0     0     0     0  0.0192  
+##  5 alstaha…         0 0.719 0         0     0     0     0  0.0377  
+##  6 alstaha…         0 0.942 0         0     0     0     0  0.00724 
+##  7 alstaha…         0 0.464 0.478     0     0     0     0  0.00166 
+##  8 alstaha…         0 0     0.942     0     0     0     0  0.000645
+##  9 alstaha…         0 0     0.942     0     0     0     0  0.000946
+## 10 alstaha…         0 0     0.942     0     0     0     0  0.00260 
+## # … with 74,317 more rows, and 31 more variables: seeds.WALD &lt;dbl&gt;,
+## #   relelev &lt;dbl&gt;, T34 &lt;dbl&gt;, T32 &lt;dbl&gt;, T45 &lt;dbl&gt;, V12 &lt;dbl&gt;,
+## #   artificial &lt;dbl&gt;, T44 &lt;dbl&gt;, V9 &lt;dbl&gt;, V10 &lt;dbl&gt;, V8 &lt;dbl&gt;,
+## #   `plantation forest` &lt;dbl&gt;, T16 &lt;dbl&gt;, T31 &lt;dbl&gt;, T18 &lt;dbl&gt;, V13 &lt;dbl&gt;,
+## #   V4 &lt;dbl&gt;, T6 &lt;dbl&gt;, T29 &lt;dbl&gt;, T12 &lt;dbl&gt;, T24 &lt;dbl&gt;, T42 &lt;dbl&gt;,
+## #   T27 &lt;dbl&gt;, T13 &lt;dbl&gt;, T3 &lt;dbl&gt;, T21 &lt;dbl&gt;, T41 &lt;dbl&gt;, T40 &lt;dbl&gt;,
+## #   T36 &lt;dbl&gt;, T33 &lt;dbl&gt;, T17 &lt;dbl&gt;</code></pre>
 <pre class="r"><code>excluded &lt;- c(&quot;wildlings&quot;, &quot;locality&quot;, &quot;seeds.ExP&quot;, &quot;seeds.WALD&quot;, &quot;relelev&quot;)
 percell.agg &lt;- map(percell.agg, function(x) {
   included &lt;- names(x)[!(names(x) %in% excluded)]
@@ -1412,8 +1458,8 @@ percell.agg &lt;- map(percell.agg, function(x) {
 <pre><code>## # A tibble: 1 x 16
 ##   year.registered reference locality locality.2 municipality county species
 ##             &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;  
-## 1            2017 Kyrkjeei~ Håkøya   Tromsø     Tromsø       Troms  P.sitc~
-## # ... with 9 more variables: species.latin &lt;chr&gt;, species.common &lt;chr&gt;,
+## 1            2017 Kyrkjeei… Håkøya   Tromsø     Tromsø       Troms  P.sitc…
+## # … with 9 more variables: species.latin &lt;chr&gt;, species.common &lt;chr&gt;,
 ## #   age.at.registration &lt;dbl&gt;, height.source &lt;dbl&gt;, utm.zone &lt;dbl&gt;,
 ## #   utm.easting &lt;dbl&gt;, `utm northing` &lt;dbl&gt;, utm33.easting &lt;dbl&gt;,
 ## #   utm33.northing &lt;dbl&gt;</code></pre>
@@ -1444,7 +1490,7 @@ jointable &lt;- raster::extract(chelsa, localities, sp = TRUE) %&gt;%
 <pre class="r"><code>anyNA(jointable)</code></pre>
 <pre><code>## [1] FALSE</code></pre>
 <pre class="r"><code>percell.agg &lt;- percell.agg %&gt;% 
-  map_dfr(identity, .id = &#39;species&#39;) %&gt;% 
+  map_dfr(identity, .id = 'species') %&gt;% 
   left_join(jointable, by = c(&quot;species&quot;, &quot;locality&quot;)) %&gt;%
   select(species, locality, wildlings, age, bio01, bio19, 
          seeds.ExP, seeds.WALD, relelev, `plantation forest`, everything()) %&gt;% 
@@ -1453,60 +1499,63 @@ names(percell.agg) &lt;- map_chr(percell.agg, ~pull(., species) %&gt;% unique())
 
 str(map(percell, ~ map_dfr(., identity, .id = &quot;locality&quot;)), 1)</code></pre>
 <pre><code>## List of 4
-##  $ Larix            :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   28336 obs. of  20 variables:
-##  $ P.abies          :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   19364 obs. of  18 variables:
-##  $ P.contorta       :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   14359 obs. of  17 variables:
-##  $ P.sitchensis-lutz:Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   74326 obs. of  30 variables:</code></pre>
+##  $ Larix            :Classes 'tbl_df', 'tbl' and 'data.frame':   28336 obs. of  27 variables:
+##  $ P.abies          :Classes 'tbl_df', 'tbl' and 'data.frame':   19364 obs. of  24 variables:
+##  $ P.contorta       :Classes 'tbl_df', 'tbl' and 'data.frame':   14359 obs. of  21 variables:
+##  $ P.sitchensis-lutz:Classes 'tbl_df', 'tbl' and 'data.frame':   74327 obs. of  40 variables:</code></pre>
 <pre class="r"><code>str(percell.agg, 1)</code></pre>
 <pre><code>## List of 4
-##  $ Larix            :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   28336 obs. of  35 variables:
-##  $ P.abies          :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   19364 obs. of  35 variables:
-##  $ P.contorta       :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   14359 obs. of  35 variables:
-##  $ P.sitchensis-lutz:Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   74326 obs. of  35 variables:
-##  - attr(*, &quot;ptype&quot;)=Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    0 obs. of  35 variables:
-##   ..- attr(*, &quot;groups&quot;)=Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    4 obs. of  2 variables:
+##  $ Larix            :Classes 'tbl_df', 'tbl' and 'data.frame':   28336 obs. of  46 variables:
+##  $ P.abies          :Classes 'tbl_df', 'tbl' and 'data.frame':   19364 obs. of  46 variables:
+##  $ P.contorta       :Classes 'tbl_df', 'tbl' and 'data.frame':   14359 obs. of  46 variables:
+##  $ P.sitchensis-lutz:Classes 'tbl_df', 'tbl' and 'data.frame':   74327 obs. of  46 variables:
+##  - attr(*, &quot;ptype&quot;)=Classes 'tbl_df', 'tbl' and 'data.frame':    0 obs. of  46 variables:
+##   ..- attr(*, &quot;groups&quot;)=Classes 'tbl_df', 'tbl' and 'data.frame':    4 obs. of  2 variables:
 ##   .. ..- attr(*, &quot;.drop&quot;)= logi TRUE</code></pre>
 <pre class="r"><code>saveRDS(percell.agg, here(&quot;output&quot;,&quot;data.rds&quot;))</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.2 (2019-12-12)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 18362)
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: OS X El Capitan 10.11.6
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=Norwegian Bokmål_Norway.1252 
-## [2] LC_CTYPE=Norwegian Bokmål_Norway.1252   
-## [3] LC_MONETARY=Norwegian Bokmål_Norway.1252
-## [4] LC_NUMERIC=C                            
-## [5] LC_TIME=Norwegian Bokmål_Norway.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] units_0.6-5     sf_0.8-0        here_0.1        forcats_0.4.0  
-##  [5] stringr_1.4.0   dplyr_0.8.3     purrr_0.3.3     readr_1.3.1    
-##  [9] tidyr_1.0.0     tibble_2.1.3    ggplot2_3.2.1   tidyverse_1.3.0
+##  [1] units_0.6-3     sf_0.7-6        here_0.1        forcats_0.4.0  
+##  [5] stringr_1.4.0   dplyr_0.8.3     purrr_0.3.2     readr_1.3.1    
+##  [9] tidyr_1.0.0     tibble_2.1.1    ggplot2_3.1.1   tidyverse_1.2.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.3         lubridate_1.7.4    lattice_0.20-38    class_7.3-15      
-##  [5] utf8_1.1.4         assertthat_0.2.1   zeallot_0.1.0      rprojroot_1.3-2   
-##  [9] digest_0.6.23      R6_2.4.1           cellranger_1.1.0   backports_1.1.5   
-## [13] reprex_0.3.0       evaluate_0.14      e1071_1.7-3        httr_1.4.1        
-## [17] highr_0.8          pillar_1.4.2       rlang_0.4.2        lazyeval_0.2.2    
-## [21] readxl_1.3.1       rstudioapi_0.10    raster_3.0-7       rmarkdown_1.18    
-## [25] rgdal_1.4-8        munsell_0.5.0      broom_0.5.2        compiler_3.6.2    
-## [29] modelr_0.1.5       xfun_0.11          pkgconfig_2.0.3    htmltools_0.4.0   
-## [33] tidyselect_0.2.5   codetools_0.2-16   fansi_0.4.0        crayon_1.3.4      
-## [37] dbplyr_1.4.2       withr_2.1.2        grid_3.6.2         nlme_3.1-142      
-## [41] jsonlite_1.6       lwgeom_0.1-7       gtable_0.3.0       lifecycle_0.1.0   
-## [45] DBI_1.0.0          magrittr_1.5       scales_1.1.0       KernSmooth_2.23-16
-## [49] cli_1.1.0          stringi_1.4.3      fs_1.3.1           sp_1.3-2          
-## [53] xml2_1.2.2         ellipsis_0.3.0     generics_0.0.2     vctrs_0.2.0       
-## [57] tools_3.6.2        glue_1.3.1         hms_0.5.2          parallel_3.6.2    
-## [61] yaml_2.2.0         colorspace_1.4-1   classInt_0.4-2     rvest_0.3.5       
-## [65] knitr_1.26         haven_2.2.0</code></pre>
+##  [1] Rcpp_1.0.1         lubridate_1.7.4    lattice_0.20-38   
+##  [4] class_7.3-15       utf8_1.1.4         assertthat_0.2.1  
+##  [7] zeallot_0.1.0      rprojroot_1.3-2    digest_0.6.19     
+## [10] R6_2.4.0           cellranger_1.1.0   plyr_1.8.4        
+## [13] backports_1.1.4    evaluate_0.13      e1071_1.7-1       
+## [16] httr_1.4.0         highr_0.8          pillar_1.4.0      
+## [19] rlang_0.4.2        lazyeval_0.2.2     readxl_1.3.1      
+## [22] rstudioapi_0.10    raster_2.8-19      rmarkdown_1.12    
+## [25] rgdal_1.4-3        munsell_0.5.0      broom_0.5.2       
+## [28] compiler_3.6.0     modelr_0.1.4       xfun_0.7          
+## [31] pkgconfig_2.0.2    htmltools_0.4.0    tidyselect_0.2.5  
+## [34] codetools_0.2-16   fansi_0.4.0        crayon_1.3.4      
+## [37] withr_2.1.2        grid_3.6.0         nlme_3.1-139      
+## [40] jsonlite_1.6       lwgeom_0.1-7       gtable_0.3.0      
+## [43] lifecycle_0.1.0    DBI_1.0.0          magrittr_1.5      
+## [46] scales_1.0.0       KernSmooth_2.23-15 cli_1.1.0         
+## [49] stringi_1.4.3      sp_1.3-1           xml2_1.2.0        
+## [52] ellipsis_0.3.0     generics_0.0.2     vctrs_0.2.1       
+## [55] tools_3.6.0        glue_1.3.1         hms_0.4.2         
+## [58] parallel_3.6.0     yaml_2.2.0         colorspace_1.4-1  
+## [61] classInt_0.3-3     rvest_0.3.4        knitr_1.23        
+## [64] haven_2.1.0</code></pre>
 
 
 
@@ -1525,23 +1574,6 @@ $(document).ready(function () {
 
 
 </script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
-<!-- code folding -->
-
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
