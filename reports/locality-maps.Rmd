@@ -17,7 +17,6 @@ library(sf)
 
 ```{r}
 plotting <- readRDS(here("output","percell-data.rds"))
-plotting[[1]][1]
 for (i in seq_along(plotting)) {
   plotting[[i]] <- plotting[[i]] %>% 
     lapply(function(x) {
@@ -38,5 +37,4 @@ for (i in names(plotting)) {
     cat('\n')
   }
 }
-
 ```

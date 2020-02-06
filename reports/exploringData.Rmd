@@ -115,7 +115,7 @@ pairs(dat$P.contorta[sample(nrow(dat$P.contorta), 1e4), nottypes])
 cor(dat$P.contorta[nottypes], use = "complete")
 ```
 
-# P.sitchensis
+# P.sitchensis-lutzii
 
 ```{r, echo = FALSE, results='asis'}
 dfSummary(dat$P.sitchensis, plain.ascii = FALSE, style = "grid", 
