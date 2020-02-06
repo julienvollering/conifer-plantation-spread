@@ -22,6 +22,10 @@ library(DHARMa)
 ```{r}
 datlist <- readRDS(here("output","data.rds"))
 locality.preds <- c('age','bio01','bio19','seeds.ExP','seeds.WALD','relelev')
+means <- tibble(species = NA_character_, age = NA_real_, bio01 = NA_real_,
+                bio19 = NA_real_, seeds.ExP = NA_real_, seeds.WALD = NA_real_,
+                relelev = NA_real_)
+sds <- means
 contrast <- "T4"
 excluded <- "plantation forest"
 ```
@@ -29,7 +33,7 @@ excluded <- "plantation forest"
 # P.sitchensis-lutz
 
 ```{r}
-Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutz`)
+Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutzii`)
 ```
 
 ```{r}
@@ -41,15 +45,15 @@ Ps_arith <- pivot_longer(Ps_dat, 10:ncol(Ps_dat), names_to = "nin", values_to = 
   arrange(desc(density), desc(n), daa)
 scaler <- filter(Ps_arith, nin == contrast) %>% 
   pull(density)
-Ps_arith <- mutate(Ps_arith, fit = density/scaler)
+Ps_arith.scaled <- mutate(Ps_arith, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(Ps_arith, digits = 1)
+knitr::kable(Ps_arith.scaled, digits = 1)
 ```
 
 ```{r}
-perfectlyseparated <- c('T18', 'T3', 'T33', 'spring')
+perfectlyseparated <- c("T42", "T18", "T3", "T41", "T33", "V4")
 removed <- c(perfectlyseparated, excluded)
 Ps_dat <- Ps_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
@@ -72,18 +76,18 @@ paste(names(Ps_dat)[!(names(Ps_dat) %in% c(contrast, removed))], collapse = " + 
 
 ```{r}
 Ps_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 cultivated + disturbed + T32 + fen + T34 + T13 + T2 + T1 + 
-                 swamp + T27 + T17 + bog + T6 + T31 + T16 + T29 + T12 + T24 + 
-                 T21 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T2 + 
+                 T40 + T1 + V10 + V2 + T27 + T17 + V3 + T6 + T31 + T16 + V13 + 
+                 T29 + T12 + T24 + T21 + T36 + (1 | locality)")
 Ps_m1 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Ps_m1)
 ```
 
 ```{r}
 Ps_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 cultivated + disturbed + T32 + fen + T34 + T13 + T2 + T1 + 
-                 swamp + T27 + T17 + bog + T6 + T31 + T16 + T29 + T12 + T24 + 
-                 T21 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T2 + 
+                 T40 + T1 + V10 + V2 + T27 + T17 + V3 + T6 + T31 + T16 + V13 + 
+                 T29 + T12 + T24 + T21 + T36 + (1 | locality)")
 Ps_m2 <- glmmTMB(Ps_f2, Ps_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Ps_m2)
 ```
@@ -160,7 +164,7 @@ link.scaled <- mutate_at(Ps_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(Ps_arith, nin %in% link.scaled$nin), 
+  geom_point(data = filter(Ps_arith.scaled, nin %in% link.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -199,63 +203,10 @@ gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) +
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
              mapping = aes(color = locality), cex = 0.5, show.legend = FALSE)  + 
   geom_point(data = filter(resp.locality.scaled, is.na(locality)))  + 
-  geom_point(data = filter(Ps_arith, nin %in% resp.locality.scaled$nin), 
+  geom_point(data = filter(Ps_arith.scaled, nin %in% resp.locality.scaled$nin), 
              color = "grey50",pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
-
-```{r}
-rezi <- ranef(Ps_m5)$zi$locality
-rezi <- tibble(locality = rownames(rezi), rezi = rezi[,1]) %>% 
-  arrange(desc(rezi))
-cordat <- Ps_dat %>% 
-  select(locality, bio01, bio19) %>% 
-  distinct() %>% 
-  left_join(rezi)
-pairs(cordat[2:4])
-cor(cordat[2:4])
-```
-
-```{r}
-Ps_m6 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", 
-                 ziformula = ~ age + bio01 + bio19 + (1 | locality))
-summary(Ps_m6)
-bbmle::AICtab(Ps_m5, Ps_m6)
-
-selmod <- Ps_m6
-terms <- attributes(selmod$frame)$terms 
-newdat <- attributes(terms)$factors %>% 
-  as_tibble() %>% 
-  select(-`seeds.WALD:age`) %>% 
-  mutate(seeds.WALD = (Ps_means["seeds.WALD"] - Ps_means["seeds.WALD"]) / Ps_sds["seeds.WALD"],
-         age = (Ps_means["age"] - Ps_means["age"]) / Ps_sds["age"],
-         bio01 = (Ps_means["bio01"] - Ps_means["bio01"]) / Ps_sds["bio01"],
-         bio19 = (Ps_means["bio19"] - Ps_means["bio19"]) / Ps_sds["bio19"],
-         relelev = (Ps_means["relelev"] - Ps_means["relelev"]) / Ps_sds["relelev"],
-         locality = NA_character_) %>% 
-  distinct()
-newdat <- newdat %>% 
-  mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
-  replace_na(list(nin = "T4"))
-
-newdat.locality <- newdat %>% 
-  select(-locality) %>% 
-  expand_grid(locality = c(NA_character_, unique(Ps_dat$locality)))
-resp.locality <- newdat.locality %>% 
-  bind_cols(fit = predict(selmod, newdat.locality, type = "response"))
-scaler <- filter(resp.locality, nin == "T4" & is.na(locality)) %>% 
-  pull(fit)
-resp.locality.scaled <- mutate_at(resp.locality, 'fit', ~ `/`(., scaler))
-
-gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) + 
-  geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
-             mapping = aes(color = locality), cex = 0.5, show.legend = FALSE)  + 
-  geom_point(data = filter(resp.locality.scaled, is.na(locality)))  + 
-  geom_point(data = filter(Ps_arith, nin %in% resp.locality.scaled$nin), 
-             color = "grey50",pch = 1)
-gg + scale_y_log10() + coord_flip()
-```
-
 
 # Larix
 
@@ -272,15 +223,16 @@ L_arith <- pivot_longer(L_dat, 10:ncol(L_dat), names_to = "nin", values_to = "ar
   arrange(desc(density), desc(n), daa)
 scaler <- filter(L_arith, nin == contrast) %>% 
   pull(density)
-L_arith <- mutate(L_arith, fit = density/scaler)
+L_arith.scaled <- mutate(L_arith, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(L_arith, digits = 1)
+knitr::kable(L_arith.scaled, digits = 1)
 ```
 
 ```{r}
-perfectlyseparated <- c('T18', 'T30', 'T2', 'T27', 'swamp', 'T13')
+perfectlyseparated <- c("T40", "T18", "T30", "T27", "T2", "V2", "T13", "T42", 
+                        "V12", "V10", "T41")
 removed <- c(perfectlyseparated, excluded)
 L_dat <- L_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
@@ -303,7 +255,7 @@ paste(names(L_dat)[!(names(L_dat) %in% c(contrast, removed))], collapse = " + ")
 
 ```{r}
 L_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                cultivated + disturbed + T32 + fen + T34 + T1 + T17 + 
+                T45 + artificial + T44 + T32 + V9 + T34 + V1 + T1 + T17 + 
                 (1 | locality)")
 L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ 0)
 summary(L_m1)
@@ -311,7 +263,7 @@ summary(L_m1)
 
 ```{r}
 L_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                cultivated + disturbed + T32 + fen + T34 + T1 + T17 + 
+                T45 + artificial + T44 + T32 + V9 + T34 + V1 + T1 + T17 + 
                 (1 | locality)")
 L_m2 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = ~ 0)
 summary(L_m2)
@@ -389,7 +341,7 @@ link.scaled <- mutate_at(L_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(L_arith, nin %in% link.scaled$nin), 
+  geom_point(data = filter(L_arith.scaled, nin %in% link.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -428,7 +380,7 @@ gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) +
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
              mapping = aes(color = locality), cex = 0.5, show.legend = FALSE)  + 
   geom_point(data = filter(resp.locality.scaled, is.na(locality)))  + 
-  geom_point(data = filter(L_arith, nin %in% resp.locality.scaled$nin), 
+  geom_point(data = filter(L_arith.scaled, nin %in% resp.locality.scaled$nin), 
              color = "grey50",pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -448,15 +400,15 @@ Pa_arith <- pivot_longer(Pa_dat, 10:ncol(Pa_dat), names_to = "nin", values_to = 
   arrange(desc(density), desc(n), daa)
 scaler <- filter(Pa_arith, nin == contrast) %>% 
   pull(density)
-Pa_arith <- mutate(Pa_arith, fit = density/scaler)
+Pa_arith.scaled <- mutate(Pa_arith, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(Pa_arith, digits = 1)
+knitr::kable(Pa_arith.scaled, digits = 1)
 ```
 
 ```{r}
-perfectlyseparated <- c('T6', 'T31', 'T2')
+perfectlyseparated <- c("T40", "T42", "T6", "T31")
 removed <- c(perfectlyseparated, excluded)
 Pa_dat <- Pa_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
@@ -479,16 +431,16 @@ paste(names(Pa_dat)[!(names(Pa_dat) %in% c(contrast, removed))], collapse = " + 
 
 ```{r}
 Pa_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 cultivated + disturbed + T32 + fen + T1 + swamp + spring + bog + 
-                 (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + V1 + T41 + T2 + T1 + V10 + 
+                 V2 + V4 + V3 + (1 | locality)")
 Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pa_m1)
 ```
 
 ```{r}
 Pa_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 cultivated + disturbed + T32 + fen + T1 + swamp + spring + bog +
-                 (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + V1 + T41 + T2 + T1 + V10 + 
+                 V2 + V4 + V3 + (1 | locality)")
 Pa_m2 <- glmmTMB(Pa_f2, Pa_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pa_m2)
 ```
@@ -522,16 +474,18 @@ bbmle::AICtab(Pa_m1, Pa_m3, Pa_m4, Pa_m5)
 
 m5 is better than m1, m3, and m4: much better AIC, zero-inflation effects
 
-Drop insignificant interaction term?
-
 ```{r}
-Pa_f6 <- update.formula(Pa_f1, ~ . - seeds.WALD:age)
-Pa_m6 <- glmmTMB(Pa_f6, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
-summary(Pa_m6)
+simulationOutput <- simulateResiduals(fittedModel = Pa_m5)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
 ```
 
-```{r, echo=FALSE}
-bbmle::AICtab(Pa_m5, Pa_m6)
+Diagnostics look bad --- particularly dispersion test.
+
+```{r}
+Pa_m6 <- glmmTMB(Pa_f1, Pa_dat, family = "genpois", ziformula = ~ age + (1 | locality))
+summary(Pa_m6)
 ```
 
 ```{r}
@@ -541,10 +495,10 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Diagnostics look bad --- particularly dispersion test.
+Better diagnostics with generalized poisson --- including dispersion test.
 
 ```{r}
-Pa_m7 <- glmmTMB(Pa_f6, Pa_dat, family = "genpois", ziformula = ~ age + (1 | locality))
+Pa_m7 <- glmmTMB(Pa_f1, Pa_dat, family = poisson, ziformula = ~ age + (1 | locality))
 summary(Pa_m7)
 ```
 
@@ -555,24 +509,10 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Better diagnostics with generalized poisson --- including dispersion test.
-
-```{r}
-Pa_m8 <- glmmTMB(Pa_f6, Pa_dat, family = poisson, ziformula = ~ age + (1 | locality))
-summary(Pa_m8)
-```
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m8)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
 Better diagnostics with poisson --- including dispersion test.
 
 ```{r, echo=FALSE}
-bbmle::AICtab(Pa_m6, Pa_m7, Pa_m8)
+bbmle::AICtab(Pa_m5, Pa_m6, Pa_m7)
 ```
 
 Continue with generalized poisson model: best AIC and OK diagnostics. 
@@ -580,10 +520,11 @@ Continue with generalized poisson model: best AIC and OK diagnostics.
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pa_m7
+selmod <- Pa_m6
 terms <- attributes(selmod$frame)$terms 
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
+  select(-`seeds.WALD:age`) %>% 
   mutate(seeds.WALD = (Ps_means["seeds.WALD"] - Pa_means["seeds.WALD"]) / Pa_sds["seeds.WALD"],
          age = (Ps_means["age"] - Pa_means["age"]) / Pa_sds["age"],
          bio01 = (Ps_means["bio01"] - Pa_means["bio01"]) / Pa_sds["bio01"],
@@ -610,7 +551,7 @@ link.scaled <- mutate_at(Pa_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(Pa_arith, nin %in% link.scaled$nin), 
+  geom_point(data = filter(Pa_arith.scaled, nin %in% link.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -649,7 +590,7 @@ gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) +
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
              mapping = aes(color = locality), cex = 0.5, show.legend = FALSE)  + 
   geom_point(data = filter(resp.locality.scaled, is.na(locality)))  + 
-  geom_point(data = filter(Pa_arith, nin %in% resp.locality.scaled$nin), 
+  geom_point(data = filter(Pa_arith.scaled, nin %in% resp.locality.scaled$nin), 
              color = "grey50",pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -669,7 +610,7 @@ Pc_arith <- pivot_longer(Pc_dat, 10:ncol(Pc_dat), names_to = "nin", values_to = 
   arrange(desc(density), desc(n), daa)
 scaler <- filter(Pc_arith, nin == contrast) %>% 
   pull(density)
-Pc_arith <- mutate(Pc_arith, fit = density/scaler)
+Pc_arith.scaled <- mutate(Pc_arith, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
@@ -677,7 +618,7 @@ knitr::kable(Pc_arith, digits = 1)
 ```
 
 ```{r}
-perfectlyseparated <- c('cultivated', 'T27', 'T32')
+perfectlyseparated <- c("V10", "V11", "V2", "T45", "T27", "T32")
 removed <- c(perfectlyseparated, excluded)
 Pc_dat <- Pc_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
@@ -700,14 +641,14 @@ paste(names(Pc_dat)[!(names(Pc_dat) %in% c(contrast, removed))], collapse = " + 
 
 ```{r}
 Pc_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 disturbed + fen + T34 + T1 + swamp + T30 + bog + (1 | locality)")
+                 artificial + T34 + V1 + T40 + T1 + T30 + V3 + V8 + (1 | locality)")
 Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pc_m1)
 ```
 
 ```{r}
 Pc_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 disturbed + fen + T34 + T1 + swamp + T30 + bog + (1 | locality)")
+                 artificial + T34 + V1 + T40 + T1 + T30 + V3 + V8 + (1 | locality)")
 Pc_m2 <- glmmTMB(Pc_f2, Pc_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pc_m2)
 ```
@@ -807,7 +748,7 @@ link.scaled <- mutate_at(Pc_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 gg <- ggplot(link.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(Pc_arith, nin %in% link.scaled$nin), 
+  geom_point(data = filter(Pc_arith.scaled, nin %in% link.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -827,7 +768,7 @@ cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
 gg <- ggplot(cond.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(L_arith, nin %in% cond.scaled$nin), 
+  geom_point(data = filter(Pc_arith.scaled, nin %in% cond.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -846,12 +787,23 @@ gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) +
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
              mapping = aes(color = locality), cex = 0.5, show.legend = FALSE)  + 
   geom_point(data = filter(resp.locality.scaled, is.na(locality)))  + 
-  geom_point(data = filter(L_arith, nin %in% resp.locality.scaled$nin), 
+  geom_point(data = filter(Pc_arith.scaled, nin %in% resp.locality.scaled$nin), 
              color = "grey50",pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
 
 # All species
+
+```{r}
+species <- c("P.sitchensis-lutzii", "Larix", "P.abies", "P.contorta")
+means <- rbind(Ps_means, L_means, Pa_means, Pc_means) %>% 
+  as_tibble() %>% 
+  add_column(species = species, .before = "age")
+sds <- rbind(Ps_sds, L_sds, Pa_sds, Pc_sds) %>% 
+  as_tibble() %>% 
+  add_column(species = species, .before = "age")
+models.list <- list(Ps_m5, L_m5, Pa_m6, Pc_m7)
+```
 
 ```{r}
 link.list <- list(Ps_link, L_link, Pa_link, Pc_link)
@@ -886,6 +838,11 @@ gg + scale_y_log10() + coord_flip() +
 ```
 
 Filled points are model estimates with lines showing 95% confidence intervals. Open points are calculated directly from the number of wildlings per unit area.
+
+```{r}
+results <- list(arith.list, means, sds, models.list, link.list)
+saveRDS(results, here("output","results.rds"))
+```
 
 # sessionInfo
 
