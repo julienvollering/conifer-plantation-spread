@@ -378,6 +378,8 @@ $(document).ready(function () {
 </div>
 
 
+<div id="setup" class="section level1">
+<h1>Setup</h1>
 <pre class="r"><code>ninfiles &lt;- list.files(here(&quot;data&quot;,&quot;qc&quot;), pattern = &quot;nin.shp&quot;, recursive = TRUE)
 codes &lt;- map(ninfiles, ~ st_read(here(&quot;data&quot;,&quot;qc&quot;,.), quiet = TRUE) %&gt;% 
                pull(code) %&gt;% 
@@ -432,6 +434,9 @@ codes[order(substring(codes, 1, 1), as.numeric(substring(codes, 2)))]</code></pr
   &quot;V11&quot;, &quot;V11&quot;, 0,
   &quot;V12&quot;, &quot;V12&quot;, 0,
   &quot;V13&quot;, &quot;V13&quot;, 0) </code></pre>
+</div>
+<div id="polygon-intersection" class="section level1">
+<h1>Polygon intersection</h1>
 <pre class="r"><code>species &lt;- list.files(here(&quot;data&quot;,&quot;qc&quot;))
 
 perNiN &lt;- list()
@@ -454,7 +459,7 @@ for (j in species) { # j &lt;- species[1]
 <pre><code>## Larix</code></pre>
 <pre><code>## P.abies</code></pre>
 <pre><code>## P.contorta</code></pre>
-<pre><code>## P.sitchensis-lutz</code></pre>
+<pre><code>## P.sitchensis-lutzii</code></pre>
 <pre class="r"><code>perNiN.agg &lt;- lapply(perNiN, function(x) {
   bind_rows(x) %&gt;% 
     group_by(group) %&gt;% 
@@ -917,7 +922,7 @@ for (j in species) { # j &lt;- species[1]
 ## T27                     8      0       0.0
 ## T32                    24      0       0.0
 ## 
-## $`P.sitchensis-lutz`
+## $`P.sitchensis-lutzii`
 ## 
 ## 
 ## group                area      n   density
@@ -957,6 +962,9 @@ for (j in species) { # j &lt;- species[1]
 ## T29                     6      0       0.0
 ## T33                     6      0       0.0
 ## V4                      9      0       0.0</code></pre>
+</div>
+<div id="cell-intersection" class="section level1">
+<h1>Cell intersection</h1>
 <p>WALD seed shadows produced separately because of long computation time.</p>
 <pre class="r"><code>species &lt;- list.files(here(&quot;data&quot;,&quot;qc&quot;))
 
@@ -1016,15 +1024,15 @@ for (j in species) { # j &lt;- species[1]
 <pre><code>## Larix</code></pre>
 <pre><code>## anisdal</code></pre>
 <pre><code>## engjane</code></pre>
-<pre><code>## hålandsbotn</code></pre>
-<pre><code>## høgås</code></pre>
+<pre><code>## haalandsbotn</code></pre>
+<pre><code>## hoegaas</code></pre>
 <pre><code>## hyljafjellet</code></pre>
 <pre><code>## myrvoll</code></pre>
 <pre><code>## oaland</code></pre>
-<pre><code>## røynåsen</code></pre>
+<pre><code>## roeynaasen</code></pre>
 <pre><code>## stordalslia</code></pre>
 <pre><code>## storemo</code></pre>
-<pre><code>## tøgjefjellet</code></pre>
+<pre><code>## toegjefjellet</code></pre>
 <pre><code>## voren</code></pre>
 <pre><code>## P.abies</code></pre>
 <pre><code>## efteland</code></pre>
@@ -1043,39 +1051,39 @@ for (j in species) { # j &lt;- species[1]
 <pre><code>## skarsheia</code></pre>
 <pre><code>## sollitangen</code></pre>
 <pre><code>## tomasmyra</code></pre>
-<pre><code>## P.sitchensis-lutz</code></pre>
+<pre><code>## P.sitchensis-lutzii</code></pre>
+<pre><code>## aarheia</code></pre>
 <pre><code>## alstahaugmyran</code></pre>
-<pre><code>## årheia</code></pre>
 <pre><code>## dale</code></pre>
-<pre><code>## fjøsne</code></pre>
-<pre><code>## førsvoll</code></pre>
-<pre><code>## gryttingdalen-øst</code></pre>
+<pre><code>## fjoesne</code></pre>
+<pre><code>## foersvoll</code></pre>
+<pre><code>## gryttingdalen-oest</code></pre>
 <pre><code>## gryttingdalen-vest</code></pre>
+<pre><code>## haakoeya</code></pre>
 <pre><code>## hagheia</code></pre>
-<pre><code>## håkøya</code></pre>
 <pre><code>## hamran</code></pre>
 <pre><code>## harteigen</code></pre>
 <pre><code>## holmsnes-nordvest</code></pre>
-<pre><code>## holmsnes-sørøst</code></pre>
+<pre><code>## holmsnes-soeroest</code></pre>
 <pre><code>## hommeland</code></pre>
 <pre><code>## hov</code></pre>
 <pre><code>## hyljafjellet</code></pre>
 <pre><code>## kvia</code></pre>
 <pre><code>## langvassfjellet</code></pre>
-<pre><code>## meåsen</code></pre>
+<pre><code>## meaasen</code></pre>
 <pre><code>## myrmo</code></pre>
 <pre><code>## oaland</code></pre>
 <pre><code>## olabergan</code></pre>
-<pre><code>## plogskjæret</code></pre>
-<pre><code>## råvollmarka</code></pre>
-<pre><code>## røynåsen</code></pre>
+<pre><code>## plogskjaeret</code></pre>
+<pre><code>## raavollmarka</code></pre>
+<pre><code>## roeynaasen</code></pre>
 <pre><code>## sandmoan</code></pre>
 <pre><code>## sandve</code></pre>
 <pre><code>## skorphella</code></pre>
 <pre><code>## starebakkane</code></pre>
-<pre><code>## steinåsen</code></pre>
+<pre><code>## steinaasen</code></pre>
 <pre><code>## svinnes</code></pre>
-<pre><code>## tøgjefjellet</code></pre>
+<pre><code>## toegjefjellet</code></pre>
 <pre><code>## valan</code></pre>
 <pre><code>## veggjaberget</code></pre>
 <pre><code>## vikra</code></pre>
@@ -1085,56 +1093,56 @@ for (j in species) { # j &lt;- species[1]
 
 str(percell, 2)</code></pre>
 <pre><code>## List of 4
-##  $ Larix            :List of 12
-##   ..$ anisdal     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2429 obs. of  12 variables:
+##  $ Larix              :List of 12
+##   ..$ anisdal      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2429 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;T44&quot; ...
-##   ..$ engjane     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2320 obs. of  12 variables:
+##   ..$ engjane      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2320 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T34&quot; &quot;V9&quot; &quot;artificial&quot; ...
-##   ..$ hålandsbotn :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2453 obs. of  10 variables:
+##   ..$ haalandsbotn :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2453 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T44&quot; &quot;artificial&quot; &quot;T45&quot; ...
-##   ..$ høgås       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2321 obs. of  13 variables:
+##   ..$ hoegaas      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2321 obs. of  13 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T34&quot; &quot;T13&quot; &quot;T45&quot; ...
-##   ..$ hyljafjellet:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2374 obs. of  10 variables:
+##   ..$ hyljafjellet :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2374 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T45&quot; &quot;T34&quot; &quot;V9&quot; ...
-##   ..$ myrvoll     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2367 obs. of  15 variables:
+##   ..$ myrvoll      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2367 obs. of  15 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T45&quot; &quot;T4&quot; &quot;plantation forest&quot; ...
-##   ..$ oaland      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2366 obs. of  14 variables:
+##   ..$ oaland       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2366 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T1&quot; &quot;T34&quot; &quot;T4&quot; ...
-##   ..$ røynåsen    :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2368 obs. of  12 variables:
+##   ..$ roeynaasen   :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2368 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;T44&quot; ...
-##   ..$ stordalslia :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2461 obs. of  9 variables:
+##   ..$ stordalslia  :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2461 obs. of  9 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;artificial&quot; &quot;T42&quot; &quot;T4&quot; ...
-##   ..$ storemo     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2058 obs. of  13 variables:
+##   ..$ storemo      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2058 obs. of  13 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T4&quot; &quot;artificial&quot; &quot;T32&quot; ...
-##   ..$ tøgjefjellet:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2398 obs. of  15 variables:
+##   ..$ toegjefjellet:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2398 obs. of  15 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;T27&quot; ...
-##   ..$ voren       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2421 obs. of  12 variables:
+##   ..$ voren        :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':  2421 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T32&quot; &quot;V10&quot; &quot;T45&quot; ...
-##  $ P.abies          :List of 9
+##  $ P.abies            :List of 9
 ##   ..$ efteland   :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1884 obs. of  13 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
@@ -1171,7 +1179,7 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T32&quot; &quot;T44&quot; &quot;T4&quot; ...
-##  $ P.contorta       :List of 6
+##  $ P.contorta         :List of 6
 ##   ..$ fiskvikrokkdalen:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':   2512 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
@@ -1196,28 +1204,28 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T4&quot; &quot;artificial&quot; &quot;T40&quot; ...
-##  $ P.sitchensis-lutz:List of 36
+##  $ P.sitchensis-lutzii:List of 36
+##   ..$ aarheia           :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2204 obs. of  13 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;V1&quot; &quot;T34&quot; &quot;T32&quot; ...
 ##   ..$ alstahaugmyran    :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2033 obs. of  11 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;V1&quot; &quot;T4&quot; &quot;T1&quot; ...
-##   ..$ årheia            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2204 obs. of  13 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;V1&quot; &quot;T34&quot; &quot;T32&quot; ...
 ##   ..$ dale              :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1814 obs. of  10 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;T45&quot; &quot;T34&quot; &quot;T4&quot; ...
-##   ..$ fjøsne            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2419 obs. of  9 variables:
+##   ..$ fjoesne           :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2419 obs. of  9 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:8] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;artificial&quot; ...
-##   ..$ førsvoll          :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2100 obs. of  13 variables:
+##   ..$ foersvoll         :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2100 obs. of  13 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:12] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;V9&quot; ...
-##   ..$ gryttingdalen-øst :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2376 obs. of  12 variables:
+##   ..$ gryttingdalen-oest:Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2376 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;V1&quot; &quot;plantation forest&quot; ...
@@ -1225,14 +1233,14 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;wildlings&quot; &quot;V1&quot; &quot;T4&quot; &quot;T32&quot; ...
+##   ..$ haakoeya          :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2458 obs. of  12 variables:
+##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
+##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;T32&quot; &quot;V1&quot; ...
 ##   ..$ hagheia           :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2360 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T31&quot; &quot;T32&quot; &quot;V1&quot; ...
-##   ..$ håkøya            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2458 obs. of  12 variables:
-##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
-##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
-##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T4&quot; &quot;T32&quot; &quot;V1&quot; ...
 ##   ..$ hamran            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1263 obs. of  17 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
@@ -1245,7 +1253,7 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T6&quot; &quot;T21&quot; &quot;T41&quot; ...
-##   ..$ holmsnes-sørøst   :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1621 obs. of  14 variables:
+##   ..$ holmsnes-soeroest :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1621 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T6&quot; &quot;T4&quot; &quot;T29&quot; ...
@@ -1269,7 +1277,7 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T45&quot; &quot;V2&quot; &quot;artificial&quot; ...
-##   ..$ meåsen            :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2219 obs. of  16 variables:
+##   ..$ meaasen           :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2219 obs. of  16 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:15] &quot;wildlings&quot; &quot;artificial&quot; &quot;T45&quot; &quot;T4&quot; ...
@@ -1285,15 +1293,15 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:14] &quot;wildlings&quot; &quot;T6&quot; &quot;T40&quot; &quot;T12&quot; ...
-##   ..$ plogskjæret       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1219 obs. of  17 variables:
+##   ..$ plogskjaeret      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1219 obs. of  17 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:16] &quot;wildlings&quot; &quot;T29&quot; &quot;T6&quot; &quot;T4&quot; ...
-##   ..$ råvollmarka       :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1050 obs. of  11 variables:
+##   ..$ raavollmarka      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1050 obs. of  11 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:10] &quot;wildlings&quot; &quot;T34&quot; &quot;artificial&quot; &quot;T40&quot; ...
-##   ..$ røynåsen          :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    2368 obs. of  12 variables:
+##   ..$ roeynaasen        :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2368 obs. of  12 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:11] &quot;wildlings&quot; &quot;T45&quot; &quot;artificial&quot; &quot;T44&quot; ...
@@ -1313,7 +1321,7 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T6&quot; &quot;T45&quot; &quot;T21&quot; ...
-##   ..$ steinåsen         :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame':    1877 obs. of  14 variables:
+##   ..$ steinaasen        :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 1877 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;artificial&quot; ...
@@ -1321,7 +1329,7 @@ str(percell, 2)</code></pre>
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;V1&quot; &quot;V3&quot; &quot;T4&quot; ...
-##   ..$ tøgjefjellet      :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2234 obs. of  14 variables:
+##   ..$ toegjefjellet     :Classes 'sf', 'tbl_df', 'tbl' and 'data.frame': 2234 obs. of  14 variables:
 ##   .. ..- attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;
 ##   .. ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA NA NA NA NA NA NA ...
 ##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;wildlings&quot; &quot;T32&quot; &quot;T45&quot; &quot;T27&quot; ...
@@ -1345,10 +1353,10 @@ str(percell, 2)</code></pre>
 percell.agg &lt;- map(percell, ~ map_dfr(., identity, .id = &quot;locality&quot;))
 str(percell.agg, 1)</code></pre>
 <pre><code>## List of 4
-##  $ Larix            :Classes 'tbl_df', 'tbl' and 'data.frame':   28336 obs. of  27 variables:
-##  $ P.abies          :Classes 'tbl_df', 'tbl' and 'data.frame':   19364 obs. of  24 variables:
-##  $ P.contorta       :Classes 'tbl_df', 'tbl' and 'data.frame':   14359 obs. of  21 variables:
-##  $ P.sitchensis-lutz:Classes 'tbl_df', 'tbl' and 'data.frame':   74327 obs. of  40 variables:</code></pre>
+##  $ Larix              :Classes 'tbl_df', 'tbl' and 'data.frame': 28336 obs. of  27 variables:
+##  $ P.abies            :Classes 'tbl_df', 'tbl' and 'data.frame': 19364 obs. of  24 variables:
+##  $ P.contorta         :Classes 'tbl_df', 'tbl' and 'data.frame': 14359 obs. of  21 variables:
+##  $ P.sitchensis-lutzii:Classes 'tbl_df', 'tbl' and 'data.frame': 74327 obs. of  40 variables:</code></pre>
 <pre class="r"><code>percell.agg</code></pre>
 <pre><code>## $Larix
 ## # A tibble: 28,336 x 27
@@ -1408,27 +1416,27 @@ str(percell.agg, 1)</code></pre>
 ## #   T45 &lt;dbl&gt;, T1 &lt;dbl&gt;, V11 &lt;dbl&gt;, V8 &lt;dbl&gt;, V10 &lt;dbl&gt;, T30 &lt;dbl&gt;,
 ## #   T27 &lt;dbl&gt;, V2 &lt;dbl&gt;
 ## 
-## $`P.sitchensis-lutz`
+## $`P.sitchensis-lutzii`
 ## # A tibble: 74,327 x 40
-##    locality wildlings    V1    T4    T1    T2    V2    V3 seeds.ExP
-##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-##  1 alstaha…         0 0.908 0         0     0     0     0  0.000136
-##  2 alstaha…         0 0.942 0         0     0     0     0  0.000632
-##  3 alstaha…         0 0.942 0         0     0     0     0  0.00333 
-##  4 alstaha…         0 0.887 0         0     0     0     0  0.0192  
-##  5 alstaha…         0 0.719 0         0     0     0     0  0.0377  
-##  6 alstaha…         0 0.942 0         0     0     0     0  0.00724 
-##  7 alstaha…         0 0.464 0.478     0     0     0     0  0.00166 
-##  8 alstaha…         0 0     0.942     0     0     0     0  0.000645
-##  9 alstaha…         0 0     0.942     0     0     0     0  0.000946
-## 10 alstaha…         0 0     0.942     0     0     0     0  0.00260 
-## # … with 74,317 more rows, and 31 more variables: seeds.WALD &lt;dbl&gt;,
-## #   relelev &lt;dbl&gt;, T34 &lt;dbl&gt;, T32 &lt;dbl&gt;, T45 &lt;dbl&gt;, V12 &lt;dbl&gt;,
-## #   artificial &lt;dbl&gt;, T44 &lt;dbl&gt;, V9 &lt;dbl&gt;, V10 &lt;dbl&gt;, V8 &lt;dbl&gt;,
-## #   `plantation forest` &lt;dbl&gt;, T16 &lt;dbl&gt;, T31 &lt;dbl&gt;, T18 &lt;dbl&gt;, V13 &lt;dbl&gt;,
-## #   V4 &lt;dbl&gt;, T6 &lt;dbl&gt;, T29 &lt;dbl&gt;, T12 &lt;dbl&gt;, T24 &lt;dbl&gt;, T42 &lt;dbl&gt;,
-## #   T27 &lt;dbl&gt;, T13 &lt;dbl&gt;, T3 &lt;dbl&gt;, T21 &lt;dbl&gt;, T41 &lt;dbl&gt;, T40 &lt;dbl&gt;,
-## #   T36 &lt;dbl&gt;, T33 &lt;dbl&gt;, T17 &lt;dbl&gt;</code></pre>
+##    locality wildlings    V1   T34   T32    T4   T45   V12 artificial   T44
+##    &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+##  1 aarheia          0 0.954     0     0     0     0     0          0     0
+##  2 aarheia          0 0.982     0     0     0     0     0          0     0
+##  3 aarheia          0 0.982     0     0     0     0     0          0     0
+##  4 aarheia          0 0.982     0     0     0     0     0          0     0
+##  5 aarheia          0 0.982     0     0     0     0     0          0     0
+##  6 aarheia          0 0.982     0     0     0     0     0          0     0
+##  7 aarheia          0 0.982     0     0     0     0     0          0     0
+##  8 aarheia          0 0.982     0     0     0     0     0          0     0
+##  9 aarheia          0 0.982     0     0     0     0     0          0     0
+## 10 aarheia          0 0.982     0     0     0     0     0          0     0
+## # … with 74,317 more rows, and 30 more variables: seeds.ExP &lt;dbl&gt;,
+## #   seeds.WALD &lt;dbl&gt;, relelev &lt;dbl&gt;, T1 &lt;dbl&gt;, T2 &lt;dbl&gt;, V2 &lt;dbl&gt;,
+## #   V3 &lt;dbl&gt;, V9 &lt;dbl&gt;, V10 &lt;dbl&gt;, V8 &lt;dbl&gt;, `plantation forest` &lt;dbl&gt;,
+## #   T16 &lt;dbl&gt;, T31 &lt;dbl&gt;, T18 &lt;dbl&gt;, V4 &lt;dbl&gt;, V13 &lt;dbl&gt;, T6 &lt;dbl&gt;,
+## #   T29 &lt;dbl&gt;, T12 &lt;dbl&gt;, T24 &lt;dbl&gt;, T42 &lt;dbl&gt;, T27 &lt;dbl&gt;, T13 &lt;dbl&gt;,
+## #   T3 &lt;dbl&gt;, T21 &lt;dbl&gt;, T41 &lt;dbl&gt;, T40 &lt;dbl&gt;, T36 &lt;dbl&gt;, T33 &lt;dbl&gt;,
+## #   T17 &lt;dbl&gt;</code></pre>
 <pre class="r"><code>excluded &lt;- c(&quot;wildlings&quot;, &quot;locality&quot;, &quot;seeds.ExP&quot;, &quot;seeds.WALD&quot;, &quot;relelev&quot;)
 percell.agg &lt;- map(percell.agg, function(x) {
   included &lt;- names(x)[!(names(x) %in% excluded)]
@@ -1440,6 +1448,7 @@ percell.agg &lt;- map(percell.agg, function(x) {
 ##   year.registered = col_double(),
 ##   reference = col_character(),
 ##   locality = col_character(),
+##   locality.specialchar = col_character(),
 ##   locality.2 = col_character(),
 ##   municipality = col_character(),
 ##   county = col_character(),
@@ -1455,21 +1464,22 @@ percell.agg &lt;- map(percell.agg, function(x) {
 ##   utm33.northing = col_double()
 ## )</code></pre>
 <pre class="r"><code>filter(localities, is.na(age.at.registration))</code></pre>
-<pre><code>## # A tibble: 1 x 16
-##   year.registered reference locality locality.2 municipality county species
-##             &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;  
-## 1            2017 Kyrkjeei… Håkøya   Tromsø     Tromsø       Troms  P.sitc…
-## # … with 9 more variables: species.latin &lt;chr&gt;, species.common &lt;chr&gt;,
+<pre><code>## # A tibble: 1 x 17
+##   year.registered reference locality locality.specia… locality.2
+##             &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;            &lt;chr&gt;     
+## 1            2017 Kyrkjeei… Haakoeya Håkøya           Tromsø    
+## # … with 12 more variables: municipality &lt;chr&gt;, county &lt;chr&gt;,
+## #   species &lt;chr&gt;, species.latin &lt;chr&gt;, species.common &lt;chr&gt;,
 ## #   age.at.registration &lt;dbl&gt;, height.source &lt;dbl&gt;, utm.zone &lt;dbl&gt;,
 ## #   utm.easting &lt;dbl&gt;, `utm northing` &lt;dbl&gt;, utm33.easting &lt;dbl&gt;,
 ## #   utm33.northing &lt;dbl&gt;</code></pre>
-<pre class="r"><code>HåkøyaAge &lt;- localities %&gt;% 
-  filter(species == &quot;P.sitchensis-lutz&quot;, county %in% c(&quot;Troms&quot;,&quot;Nordland&quot;)) %&gt;% 
+<pre class="r"><code>HaakoeyaAge &lt;- localities %&gt;% 
+  filter(species == &quot;P.sitchensis-lutzii&quot;, county %in% c(&quot;Troms&quot;,&quot;Nordland&quot;)) %&gt;% 
   pull(age.at.registration) %&gt;% 
   mean(na.rm = TRUE) %&gt;% 
   round()
 localities &lt;- mutate(localities, age.at.registration = case_when(
-  locality == &quot;Håkøya&quot; &amp; species == &quot;P.sitchensis-lutz&quot; ~ HåkøyaAge,
+  locality == &quot;Haakoeya&quot; &amp; species == &quot;P.sitchensis-lutzii&quot; ~ HaakoeyaAge,
   TRUE ~ age.at.registration
 ))
 
@@ -1499,16 +1509,16 @@ names(percell.agg) &lt;- map_chr(percell.agg, ~pull(., species) %&gt;% unique())
 
 str(map(percell, ~ map_dfr(., identity, .id = &quot;locality&quot;)), 1)</code></pre>
 <pre><code>## List of 4
-##  $ Larix            :Classes 'tbl_df', 'tbl' and 'data.frame':   28336 obs. of  27 variables:
-##  $ P.abies          :Classes 'tbl_df', 'tbl' and 'data.frame':   19364 obs. of  24 variables:
-##  $ P.contorta       :Classes 'tbl_df', 'tbl' and 'data.frame':   14359 obs. of  21 variables:
-##  $ P.sitchensis-lutz:Classes 'tbl_df', 'tbl' and 'data.frame':   74327 obs. of  40 variables:</code></pre>
+##  $ Larix              :Classes 'tbl_df', 'tbl' and 'data.frame': 28336 obs. of  27 variables:
+##  $ P.abies            :Classes 'tbl_df', 'tbl' and 'data.frame': 19364 obs. of  24 variables:
+##  $ P.contorta         :Classes 'tbl_df', 'tbl' and 'data.frame': 14359 obs. of  21 variables:
+##  $ P.sitchensis-lutzii:Classes 'tbl_df', 'tbl' and 'data.frame': 74327 obs. of  40 variables:</code></pre>
 <pre class="r"><code>str(percell.agg, 1)</code></pre>
 <pre><code>## List of 4
-##  $ Larix            :Classes 'tbl_df', 'tbl' and 'data.frame':   28336 obs. of  46 variables:
-##  $ P.abies          :Classes 'tbl_df', 'tbl' and 'data.frame':   19364 obs. of  46 variables:
-##  $ P.contorta       :Classes 'tbl_df', 'tbl' and 'data.frame':   14359 obs. of  46 variables:
-##  $ P.sitchensis-lutz:Classes 'tbl_df', 'tbl' and 'data.frame':   74327 obs. of  46 variables:
+##  $ Larix              :Classes 'tbl_df', 'tbl' and 'data.frame': 28336 obs. of  46 variables:
+##  $ P.abies            :Classes 'tbl_df', 'tbl' and 'data.frame': 19364 obs. of  46 variables:
+##  $ P.contorta         :Classes 'tbl_df', 'tbl' and 'data.frame': 14359 obs. of  46 variables:
+##  $ P.sitchensis-lutzii:Classes 'tbl_df', 'tbl' and 'data.frame': 74327 obs. of  46 variables:
 ##  - attr(*, &quot;ptype&quot;)=Classes 'tbl_df', 'tbl' and 'data.frame':    0 obs. of  46 variables:
 ##   ..- attr(*, &quot;groups&quot;)=Classes 'tbl_df', 'tbl' and 'data.frame':    4 obs. of  2 variables:
 ##   .. ..- attr(*, &quot;.drop&quot;)= logi TRUE</code></pre>
@@ -1556,6 +1566,7 @@ str(map(percell, ~ map_dfr(., identity, .id = &quot;locality&quot;)), 1)</code><
 ## [58] parallel_3.6.0     yaml_2.2.0         colorspace_1.4-1  
 ## [61] classInt_0.3-3     rvest_0.3.4        knitr_1.23        
 ## [64] haven_2.1.0</code></pre>
+</div>
 
 
 
