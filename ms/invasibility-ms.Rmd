@@ -86,7 +86,7 @@ For example, lower elevations may trap more seeds.
 - complete mapping
 
 We compared the frequency with which four groups of exotic conifer species establish in various nature types, using observational data.
-Specifically, we used observations of wildlings and nature types, mapped around sexually mature plantations from which the wildlings likely originated.
+Specifically, we used maps of wildlings and nature types around sexually mature plantations from which the wildlings likely originated.
 The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its hybrid, Lutz spruce (*Picea x lutzii*), (2) undetermined larches (*Larix* spp.), (3) Norway spruce (*Picea abies*), and (4) lodgepole pine (*Pinus contorta*).
 We analysed the data in two ways, to answer distinct questions about patterns of wildling establishment.
 
@@ -95,16 +95,24 @@ In this way, we summarized the state of wildling establishment from exotic conif
 In the tallying analysis, variation in the density of wildlings is partly attributable to differences between species and between nature types, and partly to contingent factors, such as the spatial distribution of nature types around plantations. 
 The motivation for this approach was descriptive: to break down the realized spread of wildlings at the specific localities in the data set.
 
-Our second analysis was designed to isolate the influence of nature type on the establishment probability of each species.
-To do so, we define establishment probability in a given area as the ratio of wildlings to deposited seeds, and rearrange to:
+Our second analysis was designed to isolate the influence of nature types on the establishment probability of each species.
+To do so, we defined establishment probability as the ratio of wildlings to deposited seeds in a given area, or:
 
 $$(wildlings)_{xy} 	= (seeds)_{xy}\; * (establishment\; probability)_{xy}$$
 
-where xy denotes a unit area. 
-This simple conceptual model mirrors our basic mechanistic understanding of the spread process: a seed disperses from its source to a new location, and the conditions at that location determine the likelihood that the seed establishes as a wildling.
+where xy denotes a unit area.
+Note that this simple conceptual model mirrors our basic mechanistic understanding of the spread process: a seed disperses from its source to a new location, and then the conditions at that location determine the likelihood that the seed establishes as a wildling.
+Guided by this equality, we specified a statistical model for the relationship between nature type and wildlings.
+The observed number of wildlings in a given area accrued from the 
 
-We further 
-We also estimated the relative number of seeds arriving at different locations within the mapped areas, by modeling seed dispersal from the plantations. 
+We estimated the probability density of seed deposition around each plantation by modeling seed dispersal, and assumed that the plantation's total seed production was proportional to .
+
+accounting for the fact that the number of wildlings in a given area could accrue from the time that the source plantation began producing seeds to the time that the observation was made.
+In particular, the number of seeds deposited to a given area over the fertile lifetime of the plantation was modeled as proportional to  we made establishment probability a function of nature type and climate, and the number of seeds a function of  
+In our observational data, there is also a temporal dimension that is implicit in the model above.
+The number of wildlings in a given area could accrue from the time that the source plantation began producing seeds to the time that the observation was made, so the number of deposited seeds must correspond to the same period. 
+
+We also estimated the relative number of seeds arriving at different locations within the mapped areas, by modeling seed dispersal from each plantation. 
 
 Our observational data represent processes that occur over time, so it is worth considering the conceptual model's temporal dimension.
 The number of wildlings at a given location accrued from the time that the plantation began producing seeds to the time that the observation was made.
@@ -112,13 +120,10 @@ If we knew the absolute number of seeds that arrived during that period, the rel
 However, we calculated seed arrival as a probability density, which is why the the relationship in the conceptual model is a proportionality.
 Similarly, 
 
-$$(wildlings)_{xy} 	= (mean\; annual\; seeds) * (fertile\; years) * (seed\; probability\; density)_{xy}\; *  (establishment\; probability)_{xy}$$
-
-$$(wildlings)_{xy} 	= C * (seed\; probability\; density)_{xy}\; *  (establishment\; probability)_{xy}$$
+$$(wildlings)_{xy,i} 	\propto [(plantation\; age)_{i} * (seed\; probability\; density)_{xy,i}] *  [(climate)_{i} * (nature\; type)_{xy}]$$
 
 
 Establishment probability was hypothesized to vary primarily by nature type, 
-To isolate 
 
 Sustained establishment (includes survival probabilities)
 
