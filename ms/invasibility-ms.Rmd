@@ -1,5 +1,5 @@
 ---
-title: 'Exotic conifer spread in Norway'
+title: 'Alien conifer spread in Norway'
 author:
   - Julien Vollering:
       email: julienvollering@gmail.com
@@ -32,7 +32,7 @@ Julien Vollering: <https://orcid.org/0000-0002-7409-2898>
 
 # Running head
 
-Exotic conifers in Norway
+Alien conifers in Norway
 
 # Abstract
 
@@ -42,17 +42,17 @@ Exotic conifers in Norway
 
 # Introduction
 
-Plantations of exotic conifers are widespread in Norway, as they are in many countries, and offspring from these plantations frequently establish in surrounding areas [@richardsonConifersInvasiveAliens2004].
+Plantations of alien conifers are widespread in Norway, as they are in many countries, and offspring from these plantations frequently establish in surrounding areas [@richardsonConifersInvasiveAliens2004].
 Around some plantations these naturalized offspring --- or wildlings --- are abundant and distant from the plantation boundary.
 Around others there are few or no wildlings [@nygaardNaturligSpredningAv1999].
 
 Depending on how rapidly wildlings spread, their expansion beyond the plantation may be considered invasive. 
 Implications for integrity of the ecosystem, especially important for areas of high value, and potentially affecting ecosystem services.
 For example, biodiversity, coastal heathland, landscape changes.
-As a result, managers are interested in limiting spread from plantations of exotic species (compared to natural regeneration of mixed stand forestry)
+As a result, managers are interested in limiting spread from plantations of alien species (compared to natural regeneration of mixed stand forestry)
 
 Norway has only two native conifer species that cover large areas: Scots pine, *Pinus sylvestris* and Norway spruce, *Picea abies*).
-As a result, 20th century efforts to increase forest cover relied heavily on exotic species [@oyenBiomassPotentialSelected2017]. 
+As a result, 20th century efforts to increase forest cover relied heavily on alien species [@oyenBiomassPotentialSelected2017]. 
 
 'Invasive' normally applied to species, but differences among plantations of the same species are also observed.
 
@@ -85,13 +85,13 @@ For example, lower elevations may trap more seeds.
 - 4 species/complexes
 - complete mapping
 
-We compared the frequency with which four groups of exotic conifer species establish in various nature types, using observational data.
+We compared the frequency with which four groups of alien conifer species establish in various nature types, using observational data.
 Specifically, we used maps of wildlings and nature types around sexually mature plantations from which the wildlings likely originated.
 The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its hybrid, Lutz spruce (*Picea x lutzii*), (2) undetermined larches (*Larix* spp.), (3) Norway spruce (*Picea abies*), and (4) lodgepole pine (*Pinus contorta*).
 We analysed the data in two ways, to answer distinct questions about patterns of wildling establishment.
 
 Our first analysis simply tallied of the number of wildlings of each species per unit area of each nature type.
-In this way, we summarized the state of wildling establishment from exotic conifer plantations under prevailing conditions.
+In this way, we summarized the state of wildling establishment from alien conifer plantations under prevailing conditions.
 In the tallying analysis, variation in the density of wildlings is partly attributable to differences between species and between nature types, and partly to contingent factors, such as the spatial distribution of nature types around plantations. 
 The motivation for this approach was descriptive: to break down the realized spread of wildlings at the specific localities in the data set.
 
@@ -128,6 +128,11 @@ Establishment probability was hypothesized to vary primarily by nature type,
 Sustained establishment (includes survival probabilities)
 
 ## Field data
+
+We used observations of wildlings and nature types collected around 63 sexually mature conifer plantations, belonging to four groups of alien species.
+The four groups comprised: (1) thirty-six plantations of Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea x lutzii*), (2) twelve plantations of undetermined larches (*Larix* spp.), (3) nine plantations of Norway spruce (*Picea abies*), and (4) six plantations of lodgepole pine (*Pinus contorta*).
+
+Note that the plantations of Norway spruce were located in parts of Norway where it not native [@aarrestadForeignNorwaySpruce2014].  
 
 ## Modeled seed dispersal
 
