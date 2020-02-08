@@ -32,44 +32,107 @@ norislands <- ne_load(scale = 10, type = 'minor_islands', category = 'physical',
   st_crop(xmin = 4, xmax = 32, ymin = 58, ymax = 72) %>% 
   st_transform(crs = 25833) # ETRS89 / UTM zone 33N
 
-nor50 <- ne_countries(scale = 50, country = "Norway", returnclass = "sf") %>% 
+norswe50 <- ne_countries(scale = 50, country = c("Norway","Sweden"), returnclass = "sf") %>% 
   st_transform(crs = 25833)
 nor10 <- ne_countries(scale = 10, country = "Norway", returnclass = "sf") %>% 
   st_transform(crs = 25833)
 
 locs <- read_csv(here("data", "localities.csv"), col_types = cols()) %>% 
   st_as_sf(coords=c("utm33.easting", "utm33.northing"), crs = 25833)
-locs <- mutate(locs, species.latin = as_factor(species.latin))
+locs <- mutate(locs, species.latin = factor(species.latin, 
+                                            levels = c("Picea sitchensis / lutzii",
+                                                       "Larix spp.",
+                                                       "Picea abies",
+                                                       "Pinus contorta")))
 st_bbox(locs)
 
+filter(locs, county == "Rogaland") %>% 
+  st_bbox()
+xlimits <- c(-60e3,10e3)
+ylimits <- c(6.5e6,6.61e6)
+inset <- st_polygon(list(matrix(c(xlimits[1],ylimits[1],
+                         xlimits[2],ylimits[1],
+                         xlimits[2],ylimits[2],
+                         xlimits[1],ylimits[2],
+                         xlimits[1],ylimits[1]), byrow = T, ncol = 2))) %>% 
+  st_sfc(crs = 25833)
+
+filter(locs, year.registered == 2019) %>% 
+  st_bbox()
+xlimits2 <- c(365e3,430e3)
+ylimits2 <- c(7.255e6,7.355e6)
+inset2 <- st_polygon(list(matrix(c(xlimits2[1],ylimits2[1],
+                         xlimits2[2],ylimits2[1],
+                         xlimits2[2],ylimits2[2],
+                         xlimits2[1],ylimits2[2],
+                         xlimits2[1],ylimits2[1]), byrow = T, ncol = 2))) %>% 
+  st_sfc(crs = 25833)
+
 g1 <- ggplot() +
-  geom_sf(data = nor50, fill = "antiquewhite") + 
-  geom_sf(data = st_jitter(locs, amount=5e3), mapping = aes(color = species.latin), 
-          show.legend = "point", size = 3, alpha = 0.5) + 
+  geom_sf(data = norswe50, fill = "white") + 
+  geom_sf(data = locs, #st_jitter(locs, amount=5e3)
+          mapping = aes(color = species.latin, shape = species.latin), 
+          show.legend = "point", size = 3, alpha = 0.7) +
+  scale_shape_manual(values = c(15, 16, 17, 18)) +
+  geom_sf(data = inset, fill = NA, linetype = "dashed") + 
+  geom_sf(data = inset2, fill = NA, linetype = "dashed") + 
   geom_sf(data = norcities) +
-  geom_sf_label(data = norcities, aes(label = NAME), nudge_y = 4e4, 
-                size = 3) +
+  geom_sf_label(data = norcities, aes(label = NAME), nudge_y = 3e4, 
+                size = 3, label.padding = unit(0.15, "lines")) +
   scale_color_brewer(palette="Dark2") +
   coord_sf(xlim = c(-60e3,670e3), ylim = c(6.5e6,7.8e6)) +
   theme_minimal() +
-  theme(legend.position = c(0.3,0.9), legend.title = element_blank(), 
-        legend.text = element_text(face = "italic"))
+  theme(legend.position = c(0.25,0.9), legend.title = element_blank(), 
+        legend.text = element_text(face = "italic"),
+        axis.title.x=element_blank(), axis.title.y=element_blank(),
+        panel.background = element_rect(fill = "aliceblue"))
 
-filter(locs, county %in% c("Hordaland", "Rogaland")) %>% 
-  st_bbox()
 g2 <- ggplot() +
-  geom_sf(data = nor10, fill = "antiquewhite") + 
-  geom_sf(data = norislands, fill = "antiquewhite") + 
-  geom_sf(data = locs, mapping = aes(color = species.latin), 
-          show.legend = FALSE, size = 3, alpha = 0.5) + 
+  geom_sf(data = nor10, fill = "white") + 
+  geom_sf(data = norislands, fill = "white") + 
+  geom_sf(data = locs, 
+          mapping = aes(color = species.latin, shape = species.latin), 
+          show.legend = FALSE, size = 3, alpha = 0.8) + 
+  scale_shape_manual(values = c(15, 16, 17, 18)) +
   scale_color_brewer(palette="Dark2") +
-  coord_sf(xlim = c(-60e3,10e3), ylim = c(6.5e6,6.66e6), datum = NA) +
-  theme_minimal()
+  coord_sf(xlim = xlimits, ylim = ylimits, datum = NA) +
+  theme_minimal() +
+  theme(panel.border = element_rect(color = "black", fill = NA, size=1),
+        panel.background = element_rect(fill = "aliceblue"))
 
-st_bbox(nor50)
-g1 + annotation_custom(ggplotGrob(g2), xmin = 1e5, xmax = 1e6, 
-                       ymin = 6.5e6, ymax = 7e6)
+g3 <- ggplot() +
+  geom_sf(data = nor10, fill = "white") + 
+  geom_sf(data = norislands, fill = "white") + 
+  geom_sf(data = locs, 
+          mapping = aes(color = species.latin, shape = species.latin), 
+          show.legend = FALSE, size = 3, alpha = 0.8) + 
+  scale_shape_manual(values = c(15, 16, 17, 18)) +
+  scale_color_brewer(palette="Dark2") +
+  coord_sf(xlim = xlimits2, ylim = ylimits2, datum = NA) +
+  theme_minimal() +
+  theme(panel.border = element_rect(color = "black", fill = NA, size=1),
+        panel.background = element_rect(fill = "aliceblue"))
 
+scalefactor <- 5
+g2x <- diff(xlimits)
+g2y <- diff(ylimits)
+st_bbox(locs)
+xmax <- 720e3
+ymin <- 6.41e6
+g12 <- g1 + annotation_custom(ggplotGrob(g2), 
+                              xmin = xmax - scalefactor*g2x, xmax = xmax, 
+                              ymin = ymin, ymax = ymin + scalefactor*g2y)
+
+g2x <- diff(xlimits2)
+g2y <- diff(ylimits2)
+st_bbox(locs)
+xmin <- -87e3
+ymin <- 7.07e6
+g123 <- g12 + annotation_custom(ggplotGrob(g3), 
+                                xmin = xmin, xmax = xmin + scalefactor*g2x, 
+                                ymin = ymin, ymax = ymin + scalefactor*g2y)
+
+g123
 ```
 
 ```{r sessionInfo}
