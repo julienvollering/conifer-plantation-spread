@@ -15,7 +15,7 @@ library(rnaturalearth)
 
 # Locality map
 
-```{r}
+```{r, eval=FALSE}
 ne_download(scale = 50, type = 'populated_places', category = 'cultural', 
             destdir = here("data", "raw", "cartographic"), load = FALSE)
 ne_download(scale = 10, type = 'minor_islands', category = 'physical', 
