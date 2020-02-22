@@ -150,6 +150,16 @@ ggsave(g123, filename= 'localities-map.pdf', path = here('ms', 'figures'),
 
 # Locality example
 
+Criteria for selecting example location:
+
+- Sitka spruce
+- Has mosaic types
+- Sources mapped outside 500x500 m
+
+Of those locations that fill these criteria, chose that with most wildlings
+
+# sessionInfo 
+
 ```{r sessionInfo}
 sessionInfo()
 ```
