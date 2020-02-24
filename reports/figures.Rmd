@@ -156,7 +156,40 @@ Criteria for selecting example location:
 - Has mosaic types
 - Sources mapped outside 500x500 m
 
-Of those locations that fill these criteria, chose that with most wildlings
+Of those locations that fill these criteria, chose that with most wildlings: Meaasen (2019).
+
+```{r}
+plotting <- readRDS(here("output","percell-data.rds"))
+meaasen <- plotting$`P.sitchensis-lutzii`$meaasen
+st_bbox(meaasen)
+```
+
+```{r}
+png(filename = here('ms', 'figures', 'locality-example', 'wildlings.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["wildlings"], main = 'wildlings', 
+     key.pos = 1, key.width = lcm(1.4))
+dev.off()
+
+png(filename = here('ms', 'figures', 'locality-example', 'WALD.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["seeds.WALD"], main = 'WALD seed probability density', 
+     key.pos = 1, key.width = lcm(1.4), logz = TRUE)
+dev.off()
+
+png(filename = here('ms', 'figures', 'locality-example', 'T2.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["T2"], main = 'open shallow-soil ground', 
+     key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
+dev.off()
+
+png(filename = here('ms', 'figures', 'locality-example', 'T4.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["T4"], main = 'forest', 
+     key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
+dev.off()
+```
+
 
 # sessionInfo 
 
