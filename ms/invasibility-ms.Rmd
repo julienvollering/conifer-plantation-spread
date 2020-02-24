@@ -12,7 +12,7 @@ institute:
   - NHM: Department of Research and Collections, Natural History Museum, University of Oslo, Oslo, Norway
 bibliography: invasibility-ms.bib
 output: 
-  word_document:
+  bookdown::word_document2:
     pandoc_args:
       - '--lua-filter=lua-filters/scholarly-metadata.lua'
       - '--lua-filter=lua-filters/author-info-blocks.lua'
@@ -23,7 +23,8 @@ csl: ecology.csl
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, tidy=TRUE, tidy.opts = list(width.cutoff=60))
+knitr::opts_chunk$set(echo = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=60))
+options(knitr.graphics.auto_pdf = TRUE)
 ```
 
 # ORCIDs
@@ -129,14 +130,23 @@ Sustained establishment (includes survival probabilities)
 
 ## Field data
 
-We used observations of wildlings and nature types collected around 63 sexually mature conifer plantations, belonging to four groups of alien species.
-The four groups comprised: (1) thirty-six plantations of Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea x lutzii*), (2) twelve plantations of undetermined larches (*Larix* spp.), (3) nine plantations of Norway spruce (*Picea abies*), and (4) six plantations of lodgepole pine (*Pinus contorta*).
+We used observations of wildlings and nature types collected around 63 sexually mature conifer plantations, belonging to four groups of alien species (hereafter: "species").
+The sample comprised: (1) thirty-six plantations of Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) twelve plantations of undetermined larches (*Larix* spp.), (3) nine plantations of Norway spruce (*Picea abies*), and (4) six plantations of lodgepole pine (*Pinus contorta*).
+Note that the plantations of Norway spruce were located in parts of Norway where it not native [fig. \@ref(fig:localities-map); @aarrestadForeignNorwaySpruce2014]. 
 
-Note that the plantations of Norway spruce were located in parts of Norway where it not native [@aarrestadForeignNorwaySpruce2014].  
+```{r localities-map, fig.cap='Locations across Norway of the 63 plantations in the data set.'}
+knitr::include_graphics('figures/localities-map.pdf')
+```
 
 ## Modeled seed dispersal
 
 ## Statistical modeling of establishment probability
+
+(fig. \@ref(fig:locality-example))
+
+```{r locality-example, fig.cap='A illustration of data from one of the 63 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m)'}
+knitr::include_graphics('figures/locality-example/locality-example.pdf')
+```
 
 # Results
 
@@ -146,10 +156,8 @@ Note that the plantations of Norway spruce were located in parts of Norway where
 
 Advantage to observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
 
+# References
 
-# sessionInfo
 ```{r sessionInfo}
 capture.output(sessionInfo(), file="sessionInfo.txt")
 ```
-
-# References
