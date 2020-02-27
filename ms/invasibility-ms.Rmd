@@ -185,7 +185,7 @@ Spatial grain limitations: minimum polygon area NiN, wildling group locations. A
 
 ## A1
 
-```{r localities-table}
+```{r load localities-table, include=FALSE}
 locs <- read_csv(here('output', 'localities-modified.csv')) # see 'wildlings-NiN.Rmd'
 locs <- locs %>% 
   select(year.registered, reference, species, 
@@ -194,6 +194,27 @@ locs <- locs %>%
          height.interpolated, age.interpolated) %>% 
   arrange(year.registered, reference, species) %>% 
   select(-year.registered)
+# Formating
+locs <- locs %>% 
+  mutate(species = case_when(
+    species == "P.contorta" ~ "Pinus contorta",
+    species == "P.sitchensis-lutzii" ~ "Picea sitchensis / lutzii",
+    species == "P.abies" ~ "Picea abies",
+    species == "Larix" ~ "Larix spp."
+  )) %>% 
+  rename(plantation = species) %>% 
+  mutate(locality = paste(toupper(substring(locality, 1, 1)), 
+                          substring(locality, 2), sep = "")) %>%
+  rename(easting = utm33.easting, northing = utm33.northing) %>% 
+  mutate(easting = round(easting), northing = round(northing)) %>% 
+  mutate(bio01 = round(bio01/10, digits = 2), bio19 = round(bio19/10, digits = 2))
+
+```
+
+```{r localities-table}
+kable(select(locs, -height.interpolated, -age.interpolated)) %>% 
+  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
+  footnote(general = "Easting and northing are given for UTM zone 33N, bio01 is given in ºC, and bio19 is given in cm.")
 ```
 
 
