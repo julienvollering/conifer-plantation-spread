@@ -25,6 +25,10 @@ csl: ecology.csl
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=60))
 options(knitr.graphics.auto_pdf = TRUE)
+library(tidyverse)
+library(here)
+library(knitr)
+library(kableExtra)
 ```
 
 # ORCIDs
@@ -130,21 +134,31 @@ Sustained establishment (includes survival probabilities)
 
 ## Field data
 
-We used observations of wildlings and nature types collected around 63 sexually mature conifer plantations, composed of four alien species groups (hereafter: "species").
+We used observations of wildlings and ecosystem types collected around 63 conifer plantations, belonging to four groups of alien species (hereafter: "species").
 The sample comprised: (1) thirty-six plantations of Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) twelve plantations of undetermined larches (*Larix* spp.), (3) nine plantations of Norway spruce (*Picea abies*), and (4) six plantations of lodgepole pine (*Pinus contorta*).
 Note that the plantations of Norway spruce were located in parts of Norway where it is not native [fig. \@ref(fig:localities-map); @aarrestadForeignNorwaySpruce2014].
-Plantation localities were selected manually from aerial imagery, aiming for plantations that were isolated from other plantations of the same species.
+We selected and delineated plantations manually --- using aerial imagery --- aiming for plantations that were isolated from other plantations of the same species.
+Furthermore, only plantations with cone-bearing individuals were included in the sample.
+We collected field data from each plantation in one of five field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019].
 
 ```{r localities-map, fig.cap='Locations across Norway of the 63 plantations in the data set.'}
 knitr::include_graphics('figures/localities-map.pdf')
 ```
 
-We collected field data from each plantation in one of five field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019].
-Wildlings and nature types were mapped comprehensively within a 500x500 m plot centered around each plantation.
-Specifically, we used GPS to register the point-positions of all wildlings over 30 cm in height, recording a single position for groups of wildlings occurring with less than 5 m between them.
+In the field, wildlings and ecosystem types were mapped comprehensively within a 500x500 m plot centered around the plantation of interest.
+Except in the 2016 field campaign, we also mapped as polygons any additional plantations of the same species within a larger 2x2 km plot.
+We used GPS to register the point-positions of all wildlings over 30 cm in height, recording a single position for groups of wildlings occurring with less than 5 m between them.
 A few exceptionally dense groups of wildlings were mapped by registering polygons instead of points and estimating the number of individuals by transect counts.
-Concurrently, we registered polygons for all terrestrial nature types following the Nature in Norway classification system (version 2.0 or 2.1), which is the national standard for mapping ecodiversity [@halvorsenNaturNorgeNiN2015].
-The nature types were registered at a scale of 1:5000, which requires identifying all polygons with a size over 250 m^2^ [@brynVeilederKartleggingAv2015].   
+Concurrently, we registered polygons for all terrestrial ecosystem types following the Nature in Norway classification system [version 2.0 or 2.1, @halvorsenNaturNorgeNiN2015].
+The Nature in Norway system is the national standard for land cover mapping and provides full spatial coverage (i.e. any location and any kind of land cover is assignable to an ecosystem type).
+It builds on the continuum concept in ecology, aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@austinContinuumConceptOrdination1985; @NatureTypesNorway2018; @whittakerGradientAnalysisVegetation1967].
+We mapped ecosystem types at a scale of 1:5000, which implies that all polygons with a size over 250 m^2^ were registered [@brynVeilederKartleggingAv2015].
+
+Some non-spatial data were also collected for each plantation. 
+We measured the height of a representative individual in the plantation by clinometer.
+We also estimated the age of the plantation at the time of the field campaign, either by contacting land owners or municipal officials, or by counting growth rings.
+
+
 
 
 ## Modeled seed dispersal
@@ -165,7 +179,23 @@ knitr::include_graphics('figures/locality-example/locality-example.pdf')
 
 Advantage to observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
 
-Spatial grain limitations: minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of nature types. 
+Spatial grain limitations: minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of nature types.
+
+# Appendix
+
+## A1
+
+```{r localities-table}
+locs <- read_csv(here('output', 'localities-modified.csv')) # see 'wildlings-NiN.Rmd'
+locs <- locs %>% 
+  select(year.registered, reference, species, 
+         locality, utm33.easting, utm33.northing,
+         height.source, age, bio01, bio19,
+         height.interpolated, age.interpolated) %>% 
+  arrange(year.registered, reference, species) %>% 
+  select(-year.registered)
+```
+
 
 # References
 
