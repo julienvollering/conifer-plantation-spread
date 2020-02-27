@@ -28,18 +28,29 @@ traits <- tribble(
 
 ```{r localities table}
 loc.tab <- read_csv(here("data","localities.csv"))
-loc.tab[is.na(loc.tab$age.at.registration),]
-loc.tab[loc.tab$locality=="Håkøya", "age.at.registration"] <- loc.tab %>% 
-  filter(species == "P.sitchensis-lutz", county %in% c("Troms","Nordland")) %>% 
-  pull(age.at.registration) %>% mean(na.rm = TRUE) %>% round()
-loc.tab[is.na(loc.tab$height.source),]
+filter(loc.tab, is.na(age.at.registration))
+loc.tab$age.interpolated <- FALSE
+# Need age to interpolate height
+HaakoeyaAge <- loc.tab %>% 
+  filter(species == "P.sitchensis-lutzii", county %in% c("Troms","Nordland")) %>% 
+  pull(age.at.registration) %>% 
+  mean(na.rm = TRUE) %>% 
+  round()
+loc.tab[loc.tab$locality=="Haakoeya", "age.at.registration"] <- HaakoeyaAge 
+loc.tab[loc.tab$locality=="Haakoeya", "age.interpolated"] <- TRUE
+filter(loc.tab, is.na(age.at.registration))
 
+filter(loc.tab, is.na(height.source))
+loc.tab$height.interpolated <- FALSE
 for (i in which(is.na(loc.tab$height.source))) {
   loc.tab[i, "height.source"] <- interpolate_height(loc.tab[i,], loc.tab)
+  loc.tab[i, "height.interpolated"] <- TRUE
 }
 
 g <- ggplot(loc.tab, aes(x=age.at.registration, y=height.source, color=species))
 g + geom_point()
+
+write_csv(loc.tab, here('output', 'localities-modified.csv'))
 ```
 
 ```{r wind data}

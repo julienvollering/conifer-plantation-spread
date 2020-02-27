@@ -205,19 +205,9 @@ percell.agg <- map(percell.agg, function(x) {
 ```
 
 ```{r locality covariates}
-localities <- read_csv(here("data", "localities.csv")) 
-filter(localities, is.na(age.at.registration))
-HaakoeyaAge <- localities %>% 
-  filter(species == "P.sitchensis-lutzii", county %in% c("Troms","Nordland")) %>% 
-  pull(age.at.registration) %>% 
-  mean(na.rm = TRUE) %>% 
-  round()
-localities <- mutate(localities, age.at.registration = case_when(
-  locality == "Haakoeya" & species == "P.sitchensis-lutzii" ~ HaakoeyaAge,
-  TRUE ~ age.at.registration
-))
+localities <- read_csv(here("output", "localities-modified.csv")) # see 'locality-WALD.Rmd' 
 
-localities <- localities %>% 
+locs <- localities %>% 
   select(locality, species, age.at.registration, utm33.easting, utm33.northing) %>% 
   st_as_sf(coords=c("utm33.easting", "utm33.northing")) %>% 
   st_set_crs(25833) %>% 
@@ -225,7 +215,7 @@ localities <- localities %>%
 
 chelsa <- raster::stack(here("data","raw","CHELSA","CHELSA_bio_1.tif"),
                         here("data","raw","CHELSA","CHELSA_bio_19.tif"))
-jointable <- raster::extract(chelsa, localities, sp = TRUE) %>% 
+jointable <- raster::extract(chelsa, locs, sp = TRUE) %>% 
   st_as_sf() %>% st_set_geometry(NULL) %>% as_tibble() %>% 
   rename(age = age.at.registration, bio01 = CHELSA_bio_1, bio19 = CHELSA_bio_19) %>% 
   mutate(locality = tolower(locality))
@@ -243,6 +233,11 @@ str(map(percell, ~ map_dfr(., identity, .id = "locality")), 1)
 str(percell.agg, 1)
 
 saveRDS(percell.agg, here("output","data.rds"))
+
+localities %>% 
+  mutate(locality = tolower(locality)) %>% 
+  left_join(jointable, by = c("species", "locality")) %>% 
+  write_csv(here('output', 'localities-modified.csv'))
 ```
 
 ```{r sessionInfo}
