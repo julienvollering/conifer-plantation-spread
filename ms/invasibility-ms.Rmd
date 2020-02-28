@@ -16,6 +16,7 @@ output:
     pandoc_args:
       - '--lua-filter=lua-filters/scholarly-metadata.lua'
       - '--lua-filter=lua-filters/author-info-blocks.lua'
+always_allow_html: true
 editor_options:
   chunk_output_type: console
 link-citations: yes
@@ -200,21 +201,36 @@ locs <- locs %>%
     species == "P.contorta" ~ "Pinus contorta",
     species == "P.sitchensis-lutzii" ~ "Picea sitchensis / lutzii",
     species == "P.abies" ~ "Picea abies",
-    species == "Larix" ~ "Larix spp."
-  )) %>% 
-  rename(plantation = species) %>% 
+    species == "Larix" ~ "Larix spp.")) %>% 
   mutate(locality = paste(toupper(substring(locality, 1, 1)), 
                           substring(locality, 2), sep = "")) %>%
-  rename(easting = utm33.easting, northing = utm33.northing) %>% 
-  mutate(easting = round(easting), northing = round(northing)) %>% 
-  mutate(bio01 = round(bio01/10, digits = 2), bio19 = round(bio19/10, digits = 2))
-
+  mutate_at(c("utm33.easting","utm33.northing"), round) %>% 
+  mutate_at(c("bio01","bio19"), ~ round(./10, digits = 2)) %>% 
+  rename(`species group` = species, easting = utm33.easting, northing = utm33.northing,
+         height = height.source)
+# Footnotes
+names(locs)[8] <- paste0(names(locs)[8], footnote_marker_alphabet(1))
+names(locs)[9] <- paste0(names(locs)[9], footnote_marker_alphabet(2))
+locs <- locs %>% 
+  mutate_at(c("height","age"), as.character) %>% 
+  mutate(height = case_when(
+    height.interpolated ~ paste0(height, footnote_marker_symbol(1)),
+    TRUE ~ height)) %>% 
+  mutate(age = case_when(
+    age.interpolated ~ paste0(age, footnote_marker_symbol(2)),
+    TRUE ~ age)) %>% 
+  select(-height.interpolated, -age.interpolated)
 ```
 
 ```{r localities-table}
-kable(select(locs, -height.interpolated, -age.interpolated)) %>% 
+kable(locs, escape = FALSE, align = "lllrrrrrr") %>% 
   kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
-  footnote(general = "Easting and northing are given for UTM zone 33N, bio01 is given in ºC, and bio19 is given in cm.")
+  column_spec(2, italic = TRUE) %>%
+  footnote(general = "Easting and northing are given for UTM zone 33N. Height is given in meters and age in years.",
+           alphabet = c("mean annual temperature (°C)",
+                        "precipitation of coldest quarter (cm)"),
+           symbol = c("interpolated as the mean height of other plantations of the same species, inversely weighted by difference in age",
+                      "interpolated as the mean age of other plantations of the same species in the same region"))
 ```
 
 
