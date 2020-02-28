@@ -66,7 +66,7 @@ The degree of naturalized spread observed surrounding plantations is highly vari
 Specifically, the number of naturalized individuals, their location with respect to the plantation, and their rate of growth varies. 
 Many factors may be hypothesized to affect the degree of naturalized spread: the species in the plantation, the seed production of the plantation, the dispersal capacity of the the seeds, and the establishment rate of the seeds in the surroundings.  
 
-It is important to consider at what spatial scale variability in natural recruitment occurs. This may differ between species. If most variation occurs at the coarsest spatial scale, drivers that also vary at course scales, such as climate, are likely to be important. If variation between plantations is greater than variation between regions, climate and other coarse-scale factors are probably less important, and drivers that vary at the plantation scale are likely important. If more variation occurs around single plantations than between plantations, site characteristics (e.g. surrounding nature types) are likely the most important governing factors. 
+It is important to consider at what spatial scale variability in natural recruitment occurs. This may differ between species. If most variation occurs at the coarsest spatial scale, drivers that also vary at course scales, such as climate, are likely to be important. If variation between plantations is greater than variation between regions, climate and other coarse-scale factors are probably less important, and drivers that vary at the plantation scale are likely important. If more variation occurs around single plantations than between plantations, site characteristics (e.g. surrounding ecosystem types) are likely the most important governing factors. 
 
 Fertile plantations produce highest propagule pressure on their immediate surroundings, because their seeds are (primarily?) wind-dispersed.
 Extensive
@@ -86,61 +86,36 @@ For example, lower elevations may trap more seeds.
 
 ## Approach
 
-- Observational
-- Mechanisitic motivation for the statistical model
-- 4 species/complexes
-- complete mapping
-
-We compared the frequency with which four groups of alien conifer species establish in various nature types, using observational data.
-Specifically, we used maps of wildlings and nature types around sexually mature plantations from which the wildlings likely originated.
-The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its hybrid, Lutz spruce (*Picea x lutzii*), (2) undetermined larches (*Larix* spp.), (3) Norway spruce (*Picea abies*), and (4) lodgepole pine (*Pinus contorta*).
+We compared the frequency with which four groups of alien conifer species establish in various ecosystem types, using observational data.
+Specifically, we used maps of wildlings and ecosystem types around the plantations from which the wildlings likely originated.
+The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) undetermined larches (*Larix* spp.), (3) Norway spruce (*Picea abies*), and (4) lodgepole pine (*Pinus contorta*).
 We analysed the data in two ways, to answer distinct questions about patterns of wildling establishment.
 
-Our first analysis simply tallied of the number of wildlings of each species per unit area of each nature type.
+Our first analysis tallied of the number of wildlings of each species per unit area of each ecosystem type.
 In this way, we summarized the state of wildling establishment from alien conifer plantations under prevailing conditions.
-In the tallying analysis, variation in the density of wildlings is partly attributable to differences between species and between nature types, and partly to contingent factors, such as the spatial distribution of nature types around plantations. 
-The motivation for this approach was descriptive: to break down the realized spread of wildlings at the specific localities in the data set.
+In the tallying analysis, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
+For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
+The motivation for this approach was descriptive: to break down the realized spread of wildlings from the specific plantations in the data set.
 
-Our second analysis was designed to isolate the influence of nature types on the establishment probability of each species.
-To do so, we defined establishment probability as the ratio of wildlings to deposited seeds in a given area, or:
+Our second analysis was designed to isolate the influence of ecosystem types on the establishment probability of each species.
+To do so, we defined establishment probability (E) as the ratio of wildlings (W) to deposited seeds (S) in a given area, or:
 
-$$(wildlings)_{xy} 	= (seeds)_{xy}\; * (establishment\; probability)_{xy}$$
+$$W_{xy} 	= S_{xy}\; * E_{xy}$$
 
 where xy denotes a unit area.
-Note that this simple conceptual model mirrors our basic mechanistic understanding of the spread process: a seed disperses from its source to a new location, and then the conditions at that location determine the likelihood that the seed establishes as a wildling.
-Guided by this equality, we specified a statistical model for the relationship between nature type and wildlings.
-The observed number of wildlings in a given area accrued from the 
-
-We estimated the probability density of seed deposition around each plantation by modeling seed dispersal, and assumed that the plantation's total seed production was proportional to .
-
-accounting for the fact that the number of wildlings in a given area could accrue from the time that the source plantation began producing seeds to the time that the observation was made.
-In particular, the number of seeds deposited to a given area over the fertile lifetime of the plantation was modeled as proportional to  we made establishment probability a function of nature type and climate, and the number of seeds a function of  
-In our observational data, there is also a temporal dimension that is implicit in the model above.
-The number of wildlings in a given area could accrue from the time that the source plantation began producing seeds to the time that the observation was made, so the number of deposited seeds must correspond to the same period. 
-
-We also estimated the relative number of seeds arriving at different locations within the mapped areas, by modeling seed dispersal from each plantation. 
-
-Our observational data represent processes that occur over time, so it is worth considering the conceptual model's temporal dimension.
-The number of wildlings at a given location accrued from the time that the plantation began producing seeds to the time that the observation was made.
-If we knew the absolute number of seeds that arrived during that period, the relationship in the conceptual model would mirror the definition of establishment probability, and could be treated as an equality.
-However, we calculated seed arrival as a probability density, which is why the the relationship in the conceptual model is a proportionality.
-Similarly, 
-
-$$(wildlings)_{xy,i} 	\propto [(plantation\; age)_{i} * (seed\; probability\; density)_{xy,i}] *  [(climate)_{i} * (nature\; type)_{xy}]$$
-
-
-Establishment probability was hypothesized to vary primarily by nature type, 
-
-Sustained establishment (includes survival probabilities)
+Note that this simple conceptual model mirrors our basic mechanistic understanding of the spread process: a seed (S) disperses from its source to a new location, and then the conditions at that location (E) determine the likelihood that the seed establishes as a wildling (W).
+Guided by this equality, we specified a statistical model for the relationship between wildlings and ecosystem types:
+$S_{xy}$ was assumed to be a function of the plantation's age and its probability of dispersing seeds to that area, while $E_{xy}$ was assumed to be a function of climate and ecosystem type.
+Plantation age was included in the model because the observed wildlings were not an annual cohort but rather accrued over the lifetime of the plantation.
 
 ## Field data
 
-We used observations of wildlings and ecosystem types collected around 63 conifer plantations, belonging to four groups of alien species (hereafter: "species").
-The sample comprised: (1) thirty-six plantations of Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) twelve plantations of undetermined larches (*Larix* spp.), (3) nine plantations of Norway spruce (*Picea abies*), and (4) six plantations of lodgepole pine (*Pinus contorta*).
-Note that the plantations of Norway spruce were located in parts of Norway where it is not native [fig. \@ref(fig:localities-map); @aarrestadForeignNorwaySpruce2014].
+We observed wildlings and ecosystem types around 63 plantations across Norway (fig. \@ref(fig:localities-map)).
+The sample comprised thirty-six plantations of Sitka/Lutz spruce, twelve plantations of larch, nine plantations of Norway spruce, and six plantations of lodgepole pine.
+Note that the plantations of Norway spruce were located in parts of Norway where it is not considered native [@aarrestadForeignNorwaySpruce2014].
 We selected and delineated plantations manually --- using aerial imagery --- aiming for plantations that were isolated from other plantations of the same species.
 Furthermore, only plantations with cone-bearing individuals were included in the sample.
-We collected field data from each plantation in one of five field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019].
+We collected the field data from each plantation in one of five field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019].
 
 ```{r localities-map, fig.cap='Locations across Norway of the 63 plantations in the data set.'}
 knitr::include_graphics('figures/localities-map.pdf')
@@ -158,13 +133,11 @@ We mapped ecosystem types at a scale of 1:5000, which implies that all polygons 
 Some non-spatial data were also collected for each plantation. 
 We measured the height of a representative individual in the plantation by clinometer.
 We also estimated the age of the plantation at the time of the field campaign, either by contacting land owners or municipal officials, or by counting growth rings.
+A table of the 63 plantations and their accompanying non-spatial data is provided in Appendix [A1].
 
+## Seed dispersal
 
-
-
-## Modeled seed dispersal
-
-## Statistical modeling of establishment probability
+## Establishment frequency
 
 (fig. \@ref(fig:locality-example))
 
@@ -180,7 +153,7 @@ knitr::include_graphics('figures/locality-example/locality-example.pdf')
 
 Advantage to observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
 
-Spatial grain limitations: minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of nature types.
+Spatial grain limitations: minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types.
 
 # Appendix
 
