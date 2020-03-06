@@ -137,6 +137,18 @@ A table of the 63 plantations and their accompanying non-spatial data is provide
 
 ## Seed dispersal
 
+For our second analysis --- isolating the effect of ecosystem type on establishment probability --- we needed estimates of the spatial distribution of seed deposition within the 500x500 m field plots.
+Because conspecific plantations were sometimes located nearby the plantation of interest, we considered all plantations within a 1 km radius to be potential seed sources.
+We used two models of seed dispersal to derive two different estimates of seed probability density.
+
+The first model was an empirical seed dispersal location kernel [@nathanDispersalKernels2012], with parameter estimates generalized from multiple data sets.
+Specifically, we selected from Bullock et al. [-@bullockSynthesisEmpiricalPlant2017] the kernel that performed best for 5-15 m tall trees with wind-adapted seeds (an Exponential Power function).
+Fifty-seven of the 63 plantations in our data set matched this height range better than a taller height range with a different kernel.
+
+The second model was mechanistic, using local wind velocity and direction to parameterize the Wald Analytical Long-distance Dispersal [WALD, @katulMechanisticAnalyticalModels2005] model in different directions from seed sources [following @skarpaasDispersalPatternsDispersal2007].
+...weighted by the frequency distribution of wind directions during the species' dispersal season (Appendix [A2]).
+
+
 ## Establishment frequency
 
 (fig. \@ref(fig:locality-example))
@@ -206,6 +218,27 @@ kable(locs, escape = FALSE, align = "lllrrrrrr") %>%
                       "interpolated as the mean age of other plantations of the same species in the same region"))
 ```
 
+## A2
+
+```{r recreate traits-table, include=FALSE}
+traits <- tribble(
+  ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
+  "Larix spp.", 1.0, "Dec - May", "2, 3",
+  "Picea abies", 0.58, "Nov - May", "2, 4",
+  "Pinus contorta", 0.82, "Sep - Dec", "2",
+  "Picea sitchensis / lutzii", 0.94, "Oct - Feb", "1, 2")
+```
+
+```{r traits-table}
+kable(traits, escape = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
+  column_spec(1, italic = TRUE) %>%
+  footnote(general = c("1. Harris, A. S. Sitka spruce. in Silvics of North America: 1. Conifers (eds. Burns, R. M. & Honkala, B. H.) vol. 2 513–529 (U.S. Department of Agriculture, Forest Service, 1990).",
+                       "2. Sandvik, H. Kunnskapsstatus for spredning og effekter av fremmede bartrær på biologisk mangfold. (2012).",
+                       "3. Sullivan, J. Larix decidua. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/lardec/all.html (1994).",
+                       "4. Sullivan, J. Picea abies. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/picabi/all.html (1994)."), 
+            general_title = "References: ")
+```
 
 # References
 
