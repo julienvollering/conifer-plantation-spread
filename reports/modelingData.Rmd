@@ -30,7 +30,7 @@ contrast <- "T4"
 excluded <- "plantation forest"
 ```
 
-# P.sitchensis-lutz
+# P.sitchensis-lutzii
 
 ```{r}
 Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutzii`)

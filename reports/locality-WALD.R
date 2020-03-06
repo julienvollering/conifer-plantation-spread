@@ -16,19 +16,28 @@ traits <- tribble(
   "Larix", 1.0, c(12,1:5), # After Sandvik 2012 (for L. decidua), and Sullivan 1994 (for L. decidua)
   "P.abies", 0.58, c(11:12,1:5), # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Sullivan 1994
   "P.contorta", 0.82, c(9:12), # After Sandvik 2012
-  "P.sitchensis-lutz", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
+  "P.sitchensis-lutzii", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
 )
 
 # localities table ####
 loc.tab <- read_csv(here("data","localities.csv"))
-loc.tab[is.na(loc.tab$age.at.registration),]
-loc.tab[loc.tab$locality=="Håkøya", "age.at.registration"] <- loc.tab %>% 
-  filter(species == "P.sitchensis-lutz", county %in% c("Troms","Nordland")) %>% 
-  pull(age.at.registration) %>% mean(na.rm = TRUE) %>% round()
-loc.tab[is.na(loc.tab$height.source),]
+filter(loc.tab, is.na(age.at.registration))
+loc.tab$age.interpolated <- FALSE
+# Need age to interpolate height
+HaakoeyaAge <- loc.tab %>% 
+  filter(species == "P.sitchensis-lutzii", county %in% c("Troms","Nordland")) %>% 
+  pull(age.at.registration) %>% 
+  mean(na.rm = TRUE) %>% 
+  round()
+loc.tab[loc.tab$locality=="Haakoeya", "age.at.registration"] <- HaakoeyaAge 
+loc.tab[loc.tab$locality=="Haakoeya", "age.interpolated"] <- TRUE
+filter(loc.tab, is.na(age.at.registration))
 
+filter(loc.tab, is.na(height.source))
+loc.tab$height.interpolated <- FALSE
 for (i in which(is.na(loc.tab$height.source))) {
   loc.tab[i, "height.source"] <- interpolate_height(loc.tab[i,], loc.tab)
+  loc.tab[i, "height.interpolated"] <- TRUE
 }
 
 # wind data ####

@@ -22,7 +22,7 @@ traits <- tribble(
   "Larix", 1.0, c(12,1:5), # After Sandvik 2012 (for L. decidua), and Sullivan 1994 (for L. decidua)
   "P.abies", 0.58, c(11:12,1:5), # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Sullivan 1994
   "P.contorta", 0.82, c(9:12), # After Sandvik 2012
-  "P.sitchensis-lutz", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
+  "P.sitchensis-lutzii", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
 )
 ```
 
