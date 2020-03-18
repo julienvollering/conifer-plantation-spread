@@ -151,10 +151,10 @@ The WALD model takes the form of an inverse Gaussian distribution whose mean ($\
 $$\mu  = \frac{HU}{F}$$
 $$\lambda = \left(\frac{H}{\sigma}\right)^2$$
 where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter that we estimated as a function of vegetation height [see Appendix in @skarpaasDispersalPatternsDispersal2007 for details].
-We parameterized separate WALD models for 20-degree sectors around seed sources, to make seed dispersal anisotropic.
-In each sector we estimated vegetation height based on the composition of mapped ecosystem types (Appendix [A2]), and randomly sampled 100 wind velocities from all measurements with that direction.
+We parameterized separate WALD models for 20-degree sectors around each seed source, to make seed dispersal anisotropic (directional).
+In each sector we estimated vegetation height based on the composition of mapped ecosystem types (Appendix [A2]), and randomly sampled 100 wind velocities from all measurements in the direction of the sector.
 The seed probability density in the sector was obtained by summing the estimates of the 100 resulting WALD kernels. 
-We combined all sectors around a source, weighted by the frequency distribution of wind directions during the species' dispersal season (Appendix [A3]).
+Then we combined sectors, weighing the sectors by the frequency distribution of corresponding wind directions during the species' dispersal season (Appendix [A3]).
 For this second model, polygons of seed sources were transformed into point sources by...
 
 We used wind data from...
@@ -221,7 +221,7 @@ locs <- locs %>%
 kable(locs, escape = FALSE, align = "lllrrrrrr") %>% 
   kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
   column_spec(2, italic = TRUE) %>%
-  footnote(general = "Easting and northing are given for UTM zone 33N. Height is given in meters and age in years.",
+  footnote(general = "Easting and Northing are given for UTM zone 33N. Height is given in meters and age in years.",
            alphabet = c("mean annual temperature (°C)",
                         "precipitation of coldest quarter (cm)"),
            symbol = c("interpolated as the mean height of other plantations of the same species, inversely weighted by difference in age",
@@ -264,8 +264,6 @@ grouping <- tribble( # from 'locality-WALD.Rmd'
   "T43", "artificial", 0,
   "T44", "T44", 0.5,
   "T45", "T45", 0.5,
-  "T35.T37.T39.T43", "artificial", 0,
-  "T35.T37", "artificial", 0,
   "V1", "V1", 0,
   "V2", "V2", 10,
   "V3", "V3", 0,
@@ -276,8 +274,18 @@ grouping <- tribble( # from 'locality-WALD.Rmd'
   "V11", "V11", 0,
   "V12", "V12", 0,
   "V13", "V13", 0)  
+nin <- left_join(grouping, types, by = c('group' = 'type'))
+nin <- select(nin, code, name, vegheight) %>% 
+  rename(`vegetation height` = vegheight)
+# Footnotes
+names(nin)[3] <- paste0(names(nin)[3], footnote_marker_alphabet(1))
 ```
 
+```{r nin-table}
+kable(nin, escape = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
+  footnote(alphabet = "approximate vegetation heights (meters) are used only to estimate wind turbulence")
+```
 
 ## A3
 
