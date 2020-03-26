@@ -111,7 +111,7 @@ Plantation age was included in the model because the observed wildlings were not
 ## Field data
 
 We observed wildlings and ecosystem types around 63 plantations across Norway (fig. \@ref(fig:localities-map)).
-The sample comprised thirty-six plantations of Sitka/Lutz spruce, twelve plantations of larch, nine plantations of Norway spruce, and six plantations of lodgepole pine.
+The sample comprised thirty-six localities with Sitka/Lutz spruce, twelve with larch, nine with Norway spruce, and six with lodgepole pine.
 Note that the plantations of Norway spruce were located in parts of Norway where it is not considered native [@aarrestadForeignNorwaySpruce2014].
 We selected and delineated plantations manually --- using aerial imagery --- aiming for plantations that were isolated from other plantations of the same species.
 Furthermore, only plantations with cone-bearing individuals were included in the sample.
@@ -138,26 +138,28 @@ A table of the 63 plantations and their accompanying non-spatial data is provide
 ## Seed dispersal
 
 For our second analysis --- isolating the effect of ecosystem type on establishment probability --- we needed estimates of the spatial distribution of seed deposition within the 500x500 m field plots.
-Because conspecific plantations were sometimes located nearby the plantation of interest, we considered all plantations within a 1 km radius to be potential seed sources.
+Because conspecific plantations were sometimes located nearby the central plantation, we considered all plantations within a 1 km radius to be potential seed sources.
 We used two models of seed dispersal to derive two different estimates of seed probability density.
 
 The first model was an empirical seed dispersal location kernel [@nathanDispersalKernels2012], with parameter estimates generalized from multiple data sets.
-Specifically, we selected from Bullock et al. [-@bullockSynthesisEmpiricalPlant2017] the kernel that performed best for 5-15 m tall trees with wind-adapted seeds (an Exponential Power function).
-Fifty-seven of the 63 plantations in our data set matched this height range better than a taller height range with a different kernel.
-For this first model, polygons of seed sources were transformed into point sources by...
+Specifically, we selected from Bullock et al. [-@bullockSynthesisEmpiricalPlant2017] the kernel that performed best for wind-adapted seeds from 5-15 m tall trees (an Exponential Power function).
+Fifty-seven of the 63 plantations in our data set matched this height range better than a taller height range with a different empirical kernel.
 
 The second model was mechanistic, using local wind velocity and direction to parameterize the Wald Analytical Long-distance Dispersal [WALD, @katulMechanisticAnalyticalModels2005] model in different directions from seed sources [following @skarpaasDispersalPatternsDispersal2007].
 The WALD model takes the form of an inverse Gaussian distribution whose mean ($\mu$) and shape ($\lambda$) parameters are calculated from physical characteristics of the dispersal system:
 $$\mu  = \frac{HU}{F}$$
 $$\lambda = \left(\frac{H}{\sigma}\right)^2$$
-where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter that we estimated as a function of vegetation height [see Appendix in @skarpaasDispersalPatternsDispersal2007 for details].
-We parameterized separate WALD models for 20-degree sectors around each seed source, to make seed dispersal anisotropic (directional).
-In each sector we estimated vegetation height based on the composition of mapped ecosystem types (Appendix [A2]), and randomly sampled 100 wind velocities from all measurements in the direction of the sector.
-The seed probability density in the sector was obtained by summing the estimates of the 100 resulting WALD kernels. 
-Then we combined sectors, weighing the sectors by the frequency distribution of corresponding wind directions during the species' dispersal season (Appendix [A3]).
-For this second model, polygons of seed sources were transformed into point sources by...
+where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter.
+We set $H$ to the height of the central plantation, estimated $U$ from a computed vertical wind profile, obtained $F$ from literature (Appendix [A2]), and calculated $\sigma$ from an equation for turbulent flow as a function of vegetation height [@skarpaasDispersalPatternsDispersal2007, eq. A4].
+We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional).
+In each sector we estimated vegetation height based on the composition of mapped ecosystem types (Appendix [A3]).
+Simulataneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season (Appendix [A2]), using data from a high resolution atmospheric reanalysis [@haakenstad15yearHighResolution2017] or from the nearest weather station (MET Norway).
+The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, restricting winds to the species' dispersal season).
 
-We used wind data from...
+Discretizing
+Grain (10x10m)
+For this first model, polygons of seed sources were transformed into point sources by...
+For this second model, polygons of seed sources were transformed into point sources by...
 
 ## Establishment frequency
 
@@ -230,6 +232,28 @@ kable(locs, escape = FALSE, align = "lllrrrrrr") %>%
 
 ## A2
 
+```{r recreate traits-table, include=FALSE}
+traits <- tribble(
+  ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
+  "Larix spp.", 1.0, "Dec - May", "2, 3",
+  "Picea abies", 0.58, "Nov - May", "2, 4",
+  "Pinus contorta", 0.82, "Sep - Dec", "2",
+  "Picea sitchensis / lutzii", 0.94, "Oct - Feb", "1, 2")
+```
+
+```{r traits-table}
+kable(traits, escape = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
+  column_spec(1, italic = TRUE) %>%
+  footnote(general = c("1. Harris, A. S. Sitka spruce. in Silvics of North America: 1. Conifers (eds. Burns, R. M. & Honkala, B. H.) vol. 2 513–529 (U.S. Department of Agriculture, Forest Service, 1990).",
+                       "2. Sandvik, H. Kunnskapsstatus for spredning og effekter av fremmede bartrær på biologisk mangfold. (2012).",
+                       "3. Sullivan, J. Larix decidua. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/lardec/all.html (1994).",
+                       "4. Sullivan, J. Picea abies. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/picabi/all.html (1994)."), 
+            general_title = "References: ")
+```
+
+## A3
+
 ```{r recreate vegheight table, include=FALSE}
 types <- read_csv(here('data', 'typenames.csv'))
 grouping <- tribble( # from 'locality-WALD.Rmd'
@@ -285,28 +309,6 @@ names(nin)[3] <- paste0(names(nin)[3], footnote_marker_alphabet(1))
 kable(nin, escape = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
   footnote(alphabet = "approximate vegetation heights (meters) are used only to estimate wind turbulence")
-```
-
-## A3
-
-```{r recreate traits-table, include=FALSE}
-traits <- tribble(
-  ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
-  "Larix spp.", 1.0, "Dec - May", "2, 3",
-  "Picea abies", 0.58, "Nov - May", "2, 4",
-  "Pinus contorta", 0.82, "Sep - Dec", "2",
-  "Picea sitchensis / lutzii", 0.94, "Oct - Feb", "1, 2")
-```
-
-```{r traits-table}
-kable(traits, escape = FALSE) %>% 
-  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
-  column_spec(1, italic = TRUE) %>%
-  footnote(general = c("1. Harris, A. S. Sitka spruce. in Silvics of North America: 1. Conifers (eds. Burns, R. M. & Honkala, B. H.) vol. 2 513–529 (U.S. Department of Agriculture, Forest Service, 1990).",
-                       "2. Sandvik, H. Kunnskapsstatus for spredning og effekter av fremmede bartrær på biologisk mangfold. (2012).",
-                       "3. Sullivan, J. Larix decidua. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/lardec/all.html (1994).",
-                       "4. Sullivan, J. Picea abies. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/picabi/all.html (1994)."), 
-            general_title = "References: ")
 ```
 
 # References
