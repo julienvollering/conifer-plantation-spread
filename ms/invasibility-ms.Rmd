@@ -156,10 +156,8 @@ In each sector we estimated vegetation height based on the composition of mapped
 Simulataneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season (Appendix [A2]), using data from a high resolution atmospheric reanalysis [@haakenstad15yearHighResolution2017] or from the nearest weather station (MET Norway).
 The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, restricting winds to the species' dispersal season).
 
-Discretizing
-Grain (10x10m)
-For this first model, polygons of seed sources were transformed into point sources by...
-For this second model, polygons of seed sources were transformed into point sources by...
+Both models of seed probability density were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
+Field-mapped polygons of seed sources were transformed into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
 
 ## Establishment frequency
 
