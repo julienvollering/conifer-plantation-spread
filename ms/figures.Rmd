@@ -1,0 +1,198 @@
+---
+title: "Climate data"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(cowplot)
+library(here)
+library(sf)
+library(rnaturalearth)
+```
+
+# Localities map
+
+```{r, eval=FALSE}
+ne_download(scale = 50, type = 'populated_places', category = 'cultural', 
+            destdir = here("data", "raw", "cartographic"), load = FALSE)
+ne_download(scale = 10, type = 'minor_islands', category = 'physical', 
+            destdir = here("data", "raw", "cartographic"), load = FALSE)
+```
+
+```{r}
+cities <- ne_load(scale = 50, type = 'populated_places', category = 'cultural', 
+                  destdir = here("data", "raw", "cartographic"), returnclass = 'sf')
+norcities <- filter(cities, NAME %in% c("Oslo", "Trondheim", "Bergen"))
+norislands <- ne_load(scale = 10, type = 'minor_islands', category = 'physical', 
+                destdir = here("data", "raw", "cartographic"), returnclass = 'sf') %>% 
+  st_crop(xmin = 4, xmax = 32, ymin = 58, ymax = 72) %>% 
+  st_transform(crs = 25833) # ETRS89 / UTM zone 33N
+
+nor50 <- ne_countries(scale = 50, country = c("Norway"), returnclass = "sf") %>% 
+  st_transform(crs = 25833)
+nor10 <- ne_countries(scale = 10, country = "Norway", returnclass = "sf") %>% 
+  st_transform(crs = 25833)
+
+locs <- read_csv(here("data", "localities.csv"), col_types = cols()) %>% 
+  st_as_sf(coords=c("utm33.easting", "utm33.northing"), crs = 25833)
+locs <- mutate(locs, species.latin = factor(species.latin, 
+                                            levels = c("Picea sitchensis / lutzii",
+                                                       "Larix spp.",
+                                                       "Picea abies",
+                                                       "Pinus contorta")))
+st_bbox(locs)
+
+filter(locs, county == "Rogaland") %>% 
+  st_bbox()
+xlimits <- c(-70e3,10e3)
+ylimits <- c(6.51e6,6.62e6)
+inset <- st_polygon(list(matrix(c(xlimits[1],ylimits[1],
+                         xlimits[2],ylimits[1],
+                         xlimits[2],ylimits[2],
+                         xlimits[1],ylimits[2],
+                         xlimits[1],ylimits[1]), byrow = T, ncol = 2))) %>% 
+  st_sfc(crs = 25833)
+
+filter(locs, year.registered == 2019) %>% 
+  st_bbox()
+xlimits2 <- c(362e3,430e3)
+ylimits2 <- c(7.255e6,7.355e6)
+inset2 <- st_polygon(list(matrix(c(xlimits2[1],ylimits2[1],
+                         xlimits2[2],ylimits2[1],
+                         xlimits2[2],ylimits2[2],
+                         xlimits2[1],ylimits2[2],
+                         xlimits2[1],ylimits2[1]), byrow = T, ncol = 2))) %>% 
+  st_sfc(crs = 25833)
+
+g1 <- ggplot() +
+  geom_sf(data = nor50, fill = "white") + 
+  geom_sf(data = locs, #st_jitter(locs, amount=5e3)
+          mapping = aes(color = species.latin, shape = species.latin), 
+          show.legend = "point", size = 2, alpha = 0.7) +
+  scale_shape_manual(values = c(15, 16, 17, 18)) +
+  geom_sf(data = inset, fill = NA, linetype = "longdash") + 
+  geom_sf(data = inset2, fill = NA, linetype = "longdash") + 
+  geom_sf(data = norcities) +
+  geom_sf_label(data = norcities, aes(label = NAME), nudge_y = 3e4, 
+                size = 2, label.padding = unit(0.15, "lines")) +
+  scale_color_brewer(palette="Dark2") +
+  coord_sf(xlim = c(-60e3,700e3), ylim = c(6.5e6,7.8e6)) +
+  theme_minimal() +
+  theme(legend.position = c(0.35,0.88), legend.title = element_blank(), 
+        legend.text = element_text(face = "italic"),
+        axis.title.x=element_blank(), axis.title.y=element_blank(),
+        panel.background = element_rect(fill = "ghostwhite"))
+
+g2 <- ggplot() +
+  geom_sf(data = nor10, fill = "white") + 
+  geom_sf(data = norislands, fill = "white") + 
+  geom_sf(data = locs, 
+          mapping = aes(color = species.latin, shape = species.latin), 
+          show.legend = FALSE, size = 2, alpha = 0.9) + 
+  scale_shape_manual(values = c(15, 16, 17, 18)) +
+  scale_color_brewer(palette="Dark2") +
+  coord_sf(xlim = xlimits, ylim = ylimits, datum = NA) +
+  theme_minimal() +
+  theme(plot.margin = margin(0, 0, 0, 0),
+        panel.border = element_rect(fill = NA, size=1),
+        panel.background = element_rect(fill = "ghostwhite"))
+
+g3 <- ggplot() +
+  geom_sf(data = nor10, fill = "white") + 
+  geom_sf(data = norislands, fill = "white") + 
+  geom_sf(data = locs, 
+          mapping = aes(color = species.latin, shape = species.latin), 
+          show.legend = FALSE, size = 2, alpha = 0.9) + 
+  scale_shape_manual(values = c(15, 16, 17, 18)) +
+  scale_color_brewer(palette="Dark2") +
+  coord_sf(xlim = xlimits2, ylim = ylimits2, datum = NA) +
+  theme_minimal() +
+  theme(plot.margin = margin(0, 0, 0, 0),
+        panel.border = element_rect(color = "black", fill = NA, size=1),
+        panel.background = element_rect(fill = "ghostwhite"))
+
+scalefactor <- 4
+g2x <- diff(xlimits)
+g2y <- diff(ylimits)
+ggplot_build(g1)$layout$coord$limits
+xmax <- 720e3
+ymin <- 6.45e6
+g12 <- g1 + 
+  annotation_custom(ggplotGrob(g2), 
+                    xmin = xmax - scalefactor*g2x, xmax = xmax, 
+                    ymin = ymin, ymax = ymin + scalefactor*g2y) +
+  annotate("segment", linetype = "dotted",
+           x = xlimits[2], xend = xmax - scalefactor*g2x, 
+           y = ylimits[1], yend = ymin)
+  
+g2x <- diff(xlimits2)
+g2y <- diff(ylimits2)
+st_bbox(locs)
+xmin <- -80e3
+ymin <- 7.11e6
+g123 <- g12 + 
+  annotation_custom(ggplotGrob(g3), 
+                                xmin = xmin, xmax = xmin + scalefactor*g2x, 
+                                ymin = ymin, ymax = ymin + scalefactor*g2y) +
+  annotate("segment", linetype = "dotted",
+           x = xlimits2[1], xend = xmin + scalefactor*g2x, 
+           y = ylimits2[2], yend = ymin + scalefactor*g2y)
+```
+
+```{r}
+ggsave(g123, filename= 'localities-map.pdf', path = here('ms', 'figures'),
+  scale = 1, width = 7, height = 11, units = 'cm', dpi = 300)
+```
+
+# Locality example
+
+Criteria for selecting example location:
+
+- Sitka spruce
+- Has mosaic types
+- Sources mapped outside 500x500 m
+
+Of those locations that fill these criteria, chose that with most wildlings: Meaasen (2019).
+
+```{r}
+plotting <- readRDS(here("output","percell-data.rds"))
+meaasen <- plotting$`P.sitchensis-lutzii`$meaasen
+st_bbox(meaasen)
+```
+
+```{r}
+png(filename = here('ms', 'figures', 'locality-example', 'wildlings.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["wildlings"], main = 'wildlings', 
+     key.pos = 1, key.width = lcm(1.4))
+dev.off()
+
+png(filename = here('ms', 'figures', 'locality-example', 'WALD.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["seeds.WALD"], main = 'WALD seed probability density', 
+     key.pos = 1, key.width = lcm(1.4), logz = TRUE)
+dev.off()
+
+png(filename = here('ms', 'figures', 'locality-example', 'T2.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["T2"], main = 'open shallow-soil ground', 
+     key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
+dev.off()
+
+png(filename = here('ms', 'figures', 'locality-example', 'T4.png'),
+    width = 10, height = 10, units = 'cm', res = 300)
+plot(meaasen["T4"], main = 'forest', 
+     key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
+dev.off()
+```
+
+
+# sessionInfo 
+
+```{r sessionInfo}
+sessionInfo()
+```
