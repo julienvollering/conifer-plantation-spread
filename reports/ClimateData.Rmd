@@ -15,17 +15,27 @@ library(sf)
 # Windstations
 
 ```{r, windstation coords}
-windstations <- read_delim(here("data", "raw", "eKlima", "windstationsEklima.txt"), 
+windstations <- read_delim(here("data", "raw", "eKlima", "NOwindstationsEklima.txt"), 
                      delim = ";", na=c("-9999"), col_types = cols())
+windstations <- filter(windstations, !grepl("\\*", Name))
 files <- list.files(here("data", "raw", "eKlima"), 
                     pattern = "metastations", full.names = TRUE)
-stationsmeta <- lapply(files, read_delim, delim = ";", col_types = cols()) %>% 
+stationsmeta <- lapply(files, read_delim, delim = ";", col_types = cols()) %>%
+  lapply(select, Stnr:Name, Utm_e:Utm_zone) %>% 
   bind_rows() %>% 
-  select(Stnr:Name, Utm_e:Utm_zone) %>% 
   distinct(Stnr, .keep_all = TRUE)
   
 windstations <- left_join(windstations, stationsmeta, by = "Stnr") %>% 
   drop_na()
+```
+
+Stations for which wind data on eKlima were not available or poor quality:
+
+```{r remove stations without data}
+windstations <- windstations %>% 
+  filter(Stnr != 47498) %>%  # Etne II
+  filter(Stnr != 49490) %>%  # Ullensvang
+  filter(Stnr != 44640) # Stavanger Våland
 ```
 
 ```{r windstation map, warning=FALSE}
@@ -44,10 +54,10 @@ ggplot() +
 
 ```{r POI with windstations}
 plantations <- read_csv(here("data", "localities.csv"), col_types = cols()) %>% 
-  select(3, 5:6, 15:16) %>% 
+  select("locality", "county", "utm33.easting", "utm33.northing") %>% 
   st_as_sf(coords=c("utm33.easting", "utm33.northing"))
 
-broervika <- tibble(locality = "Broervika", municipality = "Askvoll", 
+broervika <- tibble(locality = "Broervika", 
                    county = "Sogn og Fjordane", 
                    geometry = st_sfc(st_point(c(-34167, 6839532)))) %>% 
   st_as_sf()
