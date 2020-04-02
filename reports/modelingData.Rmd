@@ -56,9 +56,10 @@ knitr::kable(Ps_arith.scaled, digits = 1)
 perfectlyseparated <- c("T42", "T18", "T3", "T41", "T33", "V4")
 removed <- c(perfectlyseparated, excluded)
 Ps_dat <- Ps_dat %>% 
-  filter_at(removed, all_vars(. < 0.5)) %>% 
-  filter(!(is.na(seeds.ExP) | is.na(seeds.ExP))) %>% 
+  filter_at(removed, all_vars(. < 0.5)) %>%
+  filter(!(is.na(seeds.ExP)), !(is.na(seeds.WALD))) %>% 
   select(-c('species'))
+sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
 ```
 
 ```{r}
@@ -236,8 +237,9 @@ perfectlyseparated <- c("T40", "T18", "T30", "T27", "T2", "V2", "T13", "T42",
 removed <- c(perfectlyseparated, excluded)
 L_dat <- L_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
-  filter(!(is.na(seeds.ExP) | is.na(seeds.ExP))) %>% 
+  filter(!(is.na(seeds.ExP)), !(is.na(seeds.WALD))) %>% 
   select(-c('species'))
+sum(complete.cases(L_dat)) == nrow(L_dat)
 ```
 
 ```{r}
@@ -412,8 +414,9 @@ perfectlyseparated <- c("T40", "T42", "T6", "T31")
 removed <- c(perfectlyseparated, excluded)
 Pa_dat <- Pa_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
-  filter(!(is.na(seeds.ExP) | is.na(seeds.ExP))) %>% 
+  filter(!(is.na(seeds.ExP)), !(is.na(seeds.WALD))) %>% 
   select(-c('species'))
+sum(complete.cases(Pa_dat)) == nrow(Pa_dat)
 ```
 
 ```{r}
@@ -622,8 +625,9 @@ perfectlyseparated <- c("V10", "V11", "V2", "T45", "T27", "T32")
 removed <- c(perfectlyseparated, excluded)
 Pc_dat <- Pc_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
-  filter(!(is.na(seeds.ExP) | is.na(seeds.ExP) | is.na(relelev))) %>% 
+  filter(!(is.na(seeds.ExP) | is.na(seeds.WALD) | is.na(relelev))) %>% 
   select(-c('species'))
+sum(complete.cases(Pc_dat)) == nrow(Pc_dat)
 ```
 
 ```{r}
