@@ -21,11 +21,14 @@ library(DHARMa)
 
 ```{r}
 datlist <- readRDS(here("output","data.rds"))
+
 locality.preds <- c('age','bio01','bio19','seeds.ExP','seeds.WALD','relelev')
-means <- tibble(species = NA_character_, age = NA_real_, bio01 = NA_real_,
-                bio19 = NA_real_, seeds.ExP = NA_real_, seeds.WALD = NA_real_,
-                relelev = NA_real_)
-sds <- means
+locality.preds.vals <- datlist %>% 
+  map(~ select(., !!!syms(locality.preds))) %>% 
+  bind_rows() 
+gmeans <- map_dbl(locality.preds.vals, mean, na.rm = TRUE)
+gsds <- map_dbl(locality.preds.vals, sd, na.rm = TRUE)
+
 contrast <- "T4"
 excluded <- "plantation forest"
 ```
@@ -33,7 +36,8 @@ excluded <- "plantation forest"
 # P.sitchensis-lutzii
 
 ```{r}
-Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutzii`)
+#Remove types (columns) that do not exist in the species' data
+Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutzii`) 
 ```
 
 ```{r}
@@ -66,7 +70,7 @@ sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
 Ps_means <- Ps_dat[, locality.preds] %>% map_dbl(mean)
 Ps_sds <- Ps_dat[, locality.preds] %>% map_dbl(sd)
 for (i in locality.preds) {
-  Ps_dat <- modify_at(Ps_dat, .at = i, ~ (. - Ps_means[i])/Ps_sds[i])
+  Ps_dat <- modify_at(Ps_dat, .at = i, ~ (. - means[i])/sds[i])
 }
 summary(Ps_dat)
 
@@ -212,6 +216,7 @@ gg + scale_y_log10() + coord_flip()
 # Larix
 
 ```{r}
+#Remove types (columns) that do not exist in the species' data
 L_dat <- Filter(function(x)!all(is.na(x)), datlist$Larix)
 ```
 
@@ -390,6 +395,7 @@ gg + scale_y_log10() + coord_flip()
 # P.abies
 
 ```{r}
+#Remove types (columns) that do not exist in the species' data
 Pa_dat <- Filter(function(x)!all(is.na(x)), datlist$P.abies)
 ```
 
@@ -601,6 +607,7 @@ gg + scale_y_log10() + coord_flip()
 # P.contorta
 
 ```{r}
+#Remove types (columns) that do not exist in the species' data
 Pc_dat <- Filter(function(x)!all(is.na(x)), datlist$P.contorta)
 ```
 
