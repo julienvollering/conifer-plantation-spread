@@ -53,17 +53,10 @@ ggplot() +
 ```
 
 ```{r POI with windstations}
-plantations <- read_csv(here("data", "localities.csv"), col_types = cols()) %>% 
+poi <- read_csv(here("data", "localities.csv")) %>% 
   select("locality", "county", "utm33.easting", "utm33.northing") %>% 
-  st_as_sf(coords=c("utm33.easting", "utm33.northing"))
-
-broervika <- tibble(locality = "Broervika", 
-                   county = "Sogn og Fjordane", 
-                   geometry = st_sfc(st_point(c(-34167, 6839532)))) %>% 
-  st_as_sf()
-
-poi <- rbind(broervika, plantations) %>% 
-  st_set_crs(25833) # ETRS89 / UTM zone 33N
+  st_as_sf(coords=c("utm33.easting", "utm33.northing")) %>% 
+  st_set_crs(25833)
 
 nearest <- st_nearest_feature(poi, windstations)
 poi$windst.nr <- windstations$Stnr[nearest]
