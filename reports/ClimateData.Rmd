@@ -94,110 +94,140 @@ ggplot() +
        subtitle="POIs = black, windstations = red")
 ```
 
-# NORA10
+# NORA10BC
 
-## Request 1
-
-Coordinates sent to MET:
+Data request nr 2 from MET (for sites in Sandven et al. 2019):
 
 ```{r}
-poi <- read_csv(here("data","raw","NORA10","poi-lonlat.csv"))
-
-poi.sp <- poi %>% 
-  st_as_sf(coords = c("X", "Y"), crs = 4326)
-ggplot() + geom_sf(data = poi.sp)
-sum(poi$Y > 65)
-which(poi$Y > 65)
+poi2 <- read_csv(here("data","raw","NORA10","poi2-lonlat.csv"))
+DD2 <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.poi2.txt"), 
+                  delim = ";")
+FF2 <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.poi2.txt"), 
+                  delim = ";")
 ```
 
-Includes 11 sites outside the extent of the data coverage. 
-
-Data from MET:
-
-```{r}
-DD <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.txt"), delim = ";")
-DD$SITE %>% unique
-drop_na(DD)$SITE %>% unique()
-
-FF <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.txt"), delim = ";")
-FF$SITE %>% unique
-drop_na(FF)$SITE %>% unique()
-```
-
-11 sites with NA data are relegated to the end of the text file (sites 33-44). Remove these from the list of coordinates before joining.
-
-```{r}
-poi <- filter(poi, Y < 65)
-DD <- drop_na(DD)
-FF <- drop_na(FF)
-```
-
-```{r}
-NORAwind <- inner_join(DD, FF, by = c("SITE", "TIME")) %>% 
-  rename(DD = WD, FF = WS) %>% 
-  mutate(TIME = as.character(TIME)) %>% 
-  mutate(Mnth = as.numeric(substring(TIME, 5, 6)))
-```
-
-## Request 2
-
-```{r}
-DD2 <- read_delim(here("data","raw","NORA10","nora10bc.WindDir2.txt"), delim = ";")
-FF2 <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed2.txt"), delim = ";")
-NORAwind2 <- inner_join(DD2, FF2, by = c("SITE", "TIME")) %>% 
-  rename(DD = WD, FF = WS) %>% 
-  mutate(TIME = as.character(TIME)) %>% 
-  mutate(Mnth = as.numeric(substring(TIME, 5, 6))) 
-```
-
-```{r check2, include=FALSE}
+```{r eye test 2, include=FALSE}
 poi2.sp <- poi2 %>% 
   st_as_sf(coords = c("X", "Y"), crs = 4326)
 which(st_distance(poi2.sp) < units::set_units(2e3, 'm'), arr.ind = TRUE) %>% 
   as_tibble() %>% 
   filter(row != col)
+NORAwind2 <- inner_join(DD2, FF2, by = c("SITE", "TIME"))
 
 st_distance(poi2.sp[7,], poi2.sp[14,])
-filter(NORAwind2, SITE == 7)
-filter(NORAwind2, SITE == 14)
-openair::windRose(filter(NORAwind2, SITE == 7), ws = 'FF', wd = 'DD')
-openair::windRose(filter(NORAwind2, SITE == 14), ws = 'FF', wd = 'DD')
+openair::windRose(filter(NORAwind2, SITE == 7), ws = 'WS', wd = 'WD')
+openair::windRose(filter(NORAwind2, SITE == 14), ws = 'WS', wd = 'WD')
+```
+
+Data request nr 3 from MET (for sites in southern Norway excluding Sandven et al. 2019):
+
+```{r}
+poi3 <- read_csv(here("data","raw","NORA10","poi3-lonlat.csv"))
+DD3 <- read_delim(here("data","raw","NORA10","nora10bc.WindDir.poi3.txt"), 
+                  delim = ";")
+FF3 <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.poi3.txt"), 
+                  delim = ";")
+```
+
+```{r eye test 3, include=FALSE}
+poi3.sp <- poi3 %>% 
+  st_as_sf(coords = c("X", "Y"), crs = 4326)
+which(st_distance(poi3.sp) < units::set_units(1e3, 'm'), arr.ind = TRUE) %>% 
+  as_tibble() %>% 
+  filter(row != col)
+NORAwind3 <- inner_join(DD3, FF3, by = c("SITE", "TIME"))
+
+st_distance(poi3.sp[8,], poi3.sp[9,])
+openair::windRose(filter(NORAwind3, SITE == 8), ws = 'WS', wd = 'WD')
+openair::windRose(filter(NORAwind3, SITE == 9), ws = 'WS', wd = 'WD')
+st_distance(poi3.sp[23,], poi3.sp[27,])
+openair::windRose(filter(NORAwind3, SITE == 23), ws = 'WS', wd = 'WD')
+openair::windRose(filter(NORAwind3, SITE == 27), ws = 'WS', wd = 'WD')
+```
+
+Row-bind data requests and write formatted:
+
+```{r}
+poi3 <- mutate(poi3, site = site + nrow(poi2))
+DD3 <- mutate(DD3, SITE = SITE + nrow(poi2))
+FF3 <- mutate(FF3, SITE = SITE + nrow(poi2))
+
+bind_rows(poi2, poi3) %>% 
+  st_as_sf(coords = c('X','Y'), crs = 4326) %>%
+  st_transform(crs = 25833) %>% 
+  st_write(here("data","raw","NORA10","NORA10BCsites.shp"), delete_dsn=TRUE)
+
+DD <- bind_rows(DD2, DD3)
+FF <- bind_rows(FF2, FF3)
+NORA10BC <- inner_join(DD, FF, by = c("SITE", "TIME")) %>% 
+  rename(DD = WD, FF = WS) %>% 
+  mutate(TIME = as.character(TIME)) %>% 
+  mutate(Mnth = as.numeric(substring(TIME,5,6))) %>% 
+  select(-TIME)
+write_csv(NORA10BC, here("data","raw","NORA10","NORA10BCwind.csv"))
 ```
 
 ```{r}
-
-bind_rows(NORAwind, NORAwind2) %>% tail
-write_csv(NORAwind, here("data","raw","NORA10","NORAwind.csv"))
-
-st_as_sf(poi, coords = c("X", "Y"), crs = 4326) %>% 
-  st_transform(25833) %>% 
-  mutate(SITE = 1:nrow(poi)) %>% 
-  filter(SITE %in% NORAwind$SITE) %>%  
-  st_write(here("data","raw","NORA10","NORAsites.shp"), delete_dsn=TRUE)
-```
-
-```{r}
-NORAwind %>%
+NORA10BC %>%
   mutate(SITE = as_factor(SITE), Mnth = as.numeric(Mnth)) %>% 
   group_by(SITE, Mnth) %>% 
   summarize(mean=mean(FF), sd=sd(FF)) %>% 
   ggplot(aes(Mnth, mean, color = SITE)) + geom_line()
 ```
 
-THREDDS attempt:
+# NORA10
+
+Note: NORA10BC (BC = bias corrected) is not available for northern Norway, but its parent data --- NORA10 --- is.
+
+Data request nr 3 from MET (for sites in northern Norway):
 
 ```{r}
-library(raster)
-?brick
-temp <- brick("https://thredds.met.no/thredds/dodsC/nora10ei/wam10ei_20171221.nc", 
-              varname = 'wind_speed')
-temp
-plot(subset(temp,1))
+poi4 <- read_csv(here("data","raw","NORA10","poi4-lonlat.csv"))
+DD4 <- read_delim(here("data","raw","NORA10","nora10.WindDir.poi4.txt"), 
+                  delim = ";")
+FF4 <- read_delim(here("data","raw","NORA10","nora10.WindSpeed.poi4.txt"), 
+                  delim = ";")
+```
 
-temp <- brick("https://thredds.met.no/thredds/dodsC/wisline/NoraBC25/windspeed_10m/windspeed_10m_201412.nc", 
-              varname = 'windspeed_10m')
-temp
-plot(subset(temp,3))
+```{r eye test 4, include=FALSE}
+poi4.sp <- poi4 %>% 
+  st_as_sf(coords = c("X", "Y"), crs = 4326)
+which(st_distance(poi4.sp) < units::set_units(1e3, 'm'), arr.ind = TRUE) %>% 
+  as_tibble() %>% 
+  filter(row != col)
+NORAwind4 <- inner_join(DD4, FF4, by = c("SITE", "TIME"))
+
+st_distance(poi4.sp[6,], poi4.sp[7,])
+openair::windRose(filter(NORAwind4, SITE == 6), ws = 'WS', wd = 'WD')
+openair::windRose(filter(NORAwind4, SITE == 7), ws = 'WS', wd = 'WD')
+```
+
+Write formatted:
+
+```{r}
+poi4 <- mutate(poi4, site = site + nrow(poi2) + nrow(poi3))
+DD4 <- mutate(DD4, SITE = SITE + nrow(poi2) + nrow(poi3))
+FF4 <- mutate(FF4, SITE = SITE + nrow(poi2) + nrow(poi3))
+
+poi4 %>% 
+  st_as_sf(coords = c('X','Y'), crs = 4326) %>%
+  st_transform(crs = 25833) %>% 
+  st_write(here("data","raw","NORA10","NORA10sites.shp"), delete_dsn=TRUE)
+
+NORA10 <- inner_join(DD4, FF4, by = c("SITE", "TIME")) %>% 
+  rename(DD = WD, FF = WS) %>% 
+  mutate(TIME = as.character(TIME)) %>% 
+  mutate(Mnth = as.numeric(substring(TIME,5,6))) %>% 
+  select(-TIME)
+write_csv(NORA10, here("data","raw","NORA10","NORA10wind.csv"))
+```
+
+```{r}
+NORA10 %>%
+  mutate(SITE = as_factor(SITE), Mnth = as.numeric(Mnth)) %>% 
+  group_by(SITE, Mnth) %>% 
+  summarize(mean=mean(FF), sd=sd(FF)) %>% 
+  ggplot(aes(Mnth, mean, color = SITE)) + geom_line()
 ```
 
 # eKlima wind
@@ -256,7 +286,8 @@ EKLIMAwind <- list.files(here("data","raw","eKlima","obswind"), full.names = TRU
   lapply(read_delim, delim = ";", na = "-9999", skip = 24)
 EKLIMAwind <- lapply(EKLIMAwind, function(y) filter(y, fFF == "OK" & fDD == "OK")) %>% 
   lapply(FUN = function(y) mutate(y, FF = as.numeric(FF), DD = as.numeric(DD))) %>% 
-  bind_rows()
+  bind_rows() %>% 
+  select(St.no, Mnth, DD, FF)
 write_csv(EKLIMAwind, here("data","raw","eKlima","EKLIMAwind.csv"))
 
 windstations %>%
