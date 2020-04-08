@@ -9,15 +9,6 @@ angle <- function(dx,dy)
   return(a)
 }
 
-sample_frequency <- function(among, of, weightedby = NULL, n = 10000) {
-  library("tidyverse")
-  among %>% 
-    sample_n(n, weight = !!weightedby, replace = TRUE) %>% 
-    count(!!of) %>% 
-    mutate(normalized = n/sum(n)) %>% 
-    pull(normalized)
-}
-
 assign_sectors <- function(to, around, between) {
   # compass bearing FROM "around" TO "to (matches wind direction DD)
   dX <- st_coordinates(around)[,1] - st_coordinates(to)[,1]

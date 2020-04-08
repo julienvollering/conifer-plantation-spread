@@ -54,13 +54,17 @@ write_csv(loc.tab, here('output', 'localities-modified.csv'))
 ```
 
 ```{r wind data}
-noraxy <- st_read(here("data","raw","NORA10","NORAsites.shp"))
-nora <- read_csv(here("data","raw","NORA10","NORAwind.csv"))
+norabcxy <- st_read(here("data","raw","NORA10","NORA10BCsites.shp")) %>% 
+  st_set_crs(25833)
+norabc <- read_csv(here("data","raw","NORA10","NORA10BCwind.csv"))
 
-eklimaxy <- st_read(here("data","raw","eKlima","EKLIMAsites.shp"))
+noraxy <- st_read(here("data","raw","NORA10","NORA10sites.shp")) %>% 
+  st_set_crs(25833)
+nora <- read_csv(here("data","raw","NORA10","NORA10wind.csv"))
+
+eklimaxy <- st_read(here("data","raw","eKlima","EKLIMAsites.shp")) %>% 
+  st_set_crs(25833)
 eklima <- read_csv(here("data","raw","eKlima","EKLIMAwind.csv"))
-
-length(intersect(nora$SITE, eklima$St.no))
 
 sector.breaks <- seq(0, 360, by=20)
 ```
@@ -116,10 +120,14 @@ vegheights <- grouping %>%
   summarize(vegheight = mean(vegheight))
 ```
 
+```{r}
+rlogging::SetLogFile(base.file="locality-WALD.log", folder=here('reports'))
+```
+
 ```{r WALD seed shadows}
 species <- list.files(here("data","qc"))
 
-for (i in species[1]) { # i <- species[1]
+for (i in species) { # i <- species[1]
   message(i)
   terminal.velocity <- filter(traits, species == i) %>% 
     pull(terminal.velocity)
@@ -129,7 +137,7 @@ for (i in species[1]) { # i <- species[1]
   
   localities <- list.files(here("data","qc",i))
   
-  for (j in localities[1]) { # j <- localities[1]
+  for (j in localities) { # j <- localities[1]
     message(j)
     nin <- st_read(here("data","qc",i,j,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf() %>% 
@@ -167,7 +175,8 @@ for (i in species[1]) { # i <- species[1]
                        `/`(100) %>% # 1 source per 100m2 (gridres 10x10m)
                        drop_units() %>% 
                        round())
-    source.nonz <- filter(source, nsources > 0)
+    source.nonz <- filter(source, nsources > 0) %>% 
+      st_zm(drop = TRUE, what = "ZM")
     set.seed(42)
     sources <- st_sample(source.nonz, source.nonz$nsources, type = "hexagonal") %>% 
       st_sf() %>% 
@@ -179,31 +188,43 @@ for (i in species[1]) { # i <- species[1]
     
     grdxy <- grd[1,] %>%  st_transform(st_crs(eklimaxy)) # EPSG 25833
     eklima.near <- eklimaxy[st_nearest_feature(grdxy, eklimaxy), ]
+    norabc.near <- norabcxy[st_nearest_feature(grdxy, norabcxy), ]
     nora.near <- noraxy[st_nearest_feature(grdxy, noraxy), ]
-    if (st_distance(grdxy, eklima.near, by_element = TRUE) > set_units(10e3, "m") & 
-        st_distance(grdxy, nora.near, by_element = TRUE) < set_units(10e3, "m")) {
-      windobs <- filter(nora, SITE == nora.near$SITE)
-      st_distance(grdxy, nora.near, by_element = TRUE) %>% 
-        `/`(1e3) %>% 
-        round() %>% 
-        paste("km away, NORA") %>% 
-        message()
-    } else {
+    if (st_distance(grdxy, eklima.near, by_element = TRUE) < set_units(2.5e3, "m")) {
       windobs <- filter(eklima, St.no == eklima.near$Stnr)
-      st_distance(grdxy, eklima.near, by_element = TRUE) %>% 
+      x <- st_distance(grdxy, eklima.near, by_element = TRUE) %>% 
         `/`(1e3) %>% 
-        round() %>% 
-        paste("km away, eKlima") %>% 
-        message()
-    }
+        round() 
+      paste(i, j, paste0("eKlima station no. ", eklima.near$Stnr), 
+            paste0(x," km away"),
+            sep = ", ") %>% 
+        rlogging::message()
+    } else if (st_distance(grdxy, norabc.near, by_element = TRUE) < set_units(10e3, "m")) {
+      windobs <- filter(norabc, SITE == norabc.near$site)
+      x <- st_distance(grdxy, norabc.near, by_element = TRUE) %>% 
+        `/`(1e3) %>% 
+        round() 
+      paste(i, j, paste0("NORA10BC site ", norabc.near$site), 
+            paste0(x," km away"),
+            sep = ", ") %>% 
+        rlogging::message()
+    } else {
+      windobs <- filter(nora, SITE == nora.near$site)
+      x <- st_distance(grdxy, nora.near, by_element = TRUE) %>% 
+        `/`(1e3) %>% 
+        round()
+      paste(i, j, paste0("NORA10 site ", nora.near$site), 
+            paste0(x," km away"),
+            sep = ", ") %>% 
+        rlogging::message()
+      }
     windobs <- windobs %>% 
       select(Mnth, DD, FF) %>% 
       filter(Mnth %in% dispersal.season) %>% 
       mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE))
     # Assume probability of abscission is UNRELATED to wind speed (constant)
-    set.seed(42)
-    sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
-      add_column(weight = sample_frequency(among = windobs, of = quo(sector), weightedby = NULL))
+      sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
+      left_join(as.data.frame(prop.table(table(windobs$sector))), by=c('sector' = 'Var1'))
     set.seed(42)
     winds <- lapply(sectors360$sector, function(x) {
       filter(windobs, sector == x) %>% 
@@ -247,7 +268,7 @@ for (i in species[1]) { # i <- species[1]
         sec.arr[, l] <- sum_second_dim(wind.arr)
       }
       src.arr[, k] <- sum_second_dim(sec.arr, 
-                                     sectors360$weight[which(sectors360$sector %in% sectors.k)])
+                                     sectors360$Freq[which(sectors360$sector %in% sectors.k)])
       setTxtProgressBar(pb, k)
     }      
     close(pb)
@@ -263,7 +284,7 @@ for (i in species[1]) { # i <- species[1]
 
 ```
 
-```{r}
+```{r, include=FALSE}
 slow <- raster::raster(here("data","qc","Larix","anisdal","wald10daa.tif"))
 fast <- raster::raster(here("data","qc","Larix","anisdal","wald.tif"))
 st <- raster::stack(slow, fast)
