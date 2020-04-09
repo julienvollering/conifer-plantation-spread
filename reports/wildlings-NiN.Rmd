@@ -85,45 +85,6 @@ for (i in ninfiles) {
 }
 ```
 
-# Polygon intersection
-
-```{r wildlings per polygon}
-species <- list.files(here("data","qc"))
-
-perNiN <- list()
-
-for (j in species) { # j <- species[1]
-  message(j)
-  localities <- list.files(here("data","qc",j))
-
-  for (i in localities) { # i <- localities[1]
-    nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
-      as_tibble %>% st_as_sf() %>% 
-      mutate(code = as.character(code), group = NULL) %>% 
-      left_join(grouping, by = "code")
-    wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
-    wildling.density <- calc_density_by_field(poly = nin, pts = wildlings, 
-                                              field = group)
-    perNiN[[j]][[i]] <- wildling.density
-  }
-}
-
-perNiN.agg <- lapply(perNiN, function(x) {
-  bind_rows(x) %>% 
-    group_by(group) %>% 
-    summarize(area = sum(area), n = sum(n)) %>% 
-    mutate(density = n/area) %>%
-    arrange(desc(density), desc(n), area) %>% 
-    mutate(area = round(area), density = round(density, digits = 1))
-})
-```
-
-Important note: the following tables count the number of wildlings by the polygons that they intersect. As a result, wildlings occurring in mosaics (overlapping polygons) are counted more than once!
-
-```{r wildlings per polygon aggregated}
-lapply(perNiN.agg, knitr::kable)
-```
-
 # Cell intersection
 
 WALD seed shadows produced separately because of long computation time. 
@@ -133,7 +94,7 @@ species <- list.files(here("data","qc"))
 
 percell <- list()
 
-for (j in species) { # j <- species[1]
+for (j in species[3:4]) { # j <- species[1]
   message(j)
   localities <- list.files(here("data","qc",j))
 
@@ -153,7 +114,8 @@ for (j in species) { # j <- species[1]
       select(-rsum) %>% 
       mutate_at(vars(-geometry), round, digits = 3) 
     
-    source <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) 
+    source <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) %>% 
+      st_zm(drop = TRUE, what = "ZM")
     source <- mutate(source, nsources = st_area(source) %>% 
                        `/`(10) %>% # 10 sources per 100m2 (gridres 10x10m)
                        drop_units() %>% 
@@ -209,8 +171,7 @@ localities <- read_csv(here("output", "localities-modified.csv")) # see 'localit
 
 locs <- localities %>% 
   select(locality, species, age.at.registration, utm33.easting, utm33.northing) %>% 
-  st_as_sf(coords=c("utm33.easting", "utm33.northing")) %>% 
-  st_set_crs(25833) %>% 
+  st_as_sf(coords=c("utm33.easting", "utm33.northing"), crs = 25833) %>% 
   as("Spatial")
 
 chelsa <- raster::stack(here("data","raw","CHELSA","CHELSA_bio_1.tif"),
