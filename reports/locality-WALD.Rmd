@@ -49,7 +49,9 @@ for (i in which(is.na(loc.tab$height.source))) {
 
 g <- ggplot(loc.tab, aes(x=age.at.registration, y=height.source, color=species))
 g + geom_point()
+```
 
+```{r, eval=FALSE}
 write_csv(loc.tab, here('output', 'localities-modified.csv'))
 ```
 
@@ -127,7 +129,7 @@ rlogging::SetLogFile(base.file="locality-WALD.log", folder=here('reports'))
 ```{r WALD seed shadows}
 species <- list.files(here("data","qc"))
 
-for (i in species) { # i <- species[1]
+for (i in species[1]) { # i <- species[1]
   message(i)
   terminal.velocity <- filter(traits, species == i) %>% 
     pull(terminal.velocity)
@@ -137,7 +139,7 @@ for (i in species) { # i <- species[1]
   
   localities <- list.files(here("data","qc",i))
   
-  for (j in localities) { # j <- localities[1]
+  for (j in localities[1]) { # j <- localities[1]
     message(j)
     nin <- st_read(here("data","qc",i,j,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf() %>% 
@@ -284,7 +286,7 @@ for (i in species) { # i <- species[1]
 
 ```
 
-```{r, include=FALSE}
+```{r, eval=FALSE, include=FALSE}
 slow <- raster::raster(here("data","qc","Larix","anisdal","wald10daa.tif"))
 fast <- raster::raster(here("data","qc","Larix","anisdal","wald.tif"))
 st <- raster::stack(slow, fast)
