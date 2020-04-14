@@ -1,5 +1,5 @@
 # setup #### 
-speciesi <- c("P.abies") # adjust for RStudio jobs partitioning
+speciesi <- c("P.sitchensis-lutzii") # adjust for RStudio jobs partitioning
 
 library(tidyverse)
 library(here)
@@ -187,12 +187,21 @@ for (i in species) { # i <- species[1]
             paste0(x," km away"),
             sep = ", ") %>% 
         rlogging::message()
-    } else if (st_distance(grdxy, norabc.near, by_element = TRUE) < set_units(10e3, "m")) {
+    } else if (st_distance(grdxy, norabc.near, by_element = TRUE) < set_units(2.5e3, "m")) {
       windobs <- filter(norabc, SITE == norabc.near$site)
       x <- st_distance(grdxy, norabc.near, by_element = TRUE) %>% 
         `/`(1e3) %>% 
         round() 
       paste(i, j, paste0("NORA10BC site ", norabc.near$site), 
+            paste0(x," km away"),
+            sep = ", ") %>% 
+        rlogging::message()
+    } else if (st_distance(grdxy, eklima.near, by_element = TRUE) < set_units(10e3, "m")) {
+      windobs <- filter(eklima, St.no == eklima.near$Stnr)
+      x <- st_distance(grdxy, eklima.near, by_element = TRUE) %>% 
+        `/`(1e3) %>% 
+        round() 
+      paste(i, j, paste0("eKlima station no. ", eklima.near$Stnr), 
             paste0(x," km away"),
             sep = ", ") %>% 
         rlogging::message()
