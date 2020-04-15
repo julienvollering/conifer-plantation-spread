@@ -177,6 +177,8 @@ Advantage to observational study (registering established individuals rather tha
 
 Spatial grain limitations: minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types.
 
+WALD model of seed deposition fit patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?
+
 # Appendix
 
 ## A1
