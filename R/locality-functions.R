@@ -145,7 +145,8 @@ add_seeds_WALD <- function(grid, raster) {
 add_relative_elevation <- function(grid, sourcepoly, dtm) {
   
   sourcepoly <- sf::st_transform(sourcepoly, crs = raster::projection(dtm))
-  elevref <- exactextractr::exact_extract(dtm, sourcepoly, fun = 'max')
+  elevref <- exactextractr::exact_extract(dtm, sourcepoly, fun = 'max') %>% 
+    max()
   
   grd.proj <- sf::st_transform(grid, crs = raster::projection(dtm)) 
   elev <- exactextractr::exact_extract(dtm, grd.proj, fun = 'mean', progress = FALSE)

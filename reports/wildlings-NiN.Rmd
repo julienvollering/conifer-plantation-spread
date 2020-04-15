@@ -94,7 +94,7 @@ species <- list.files(here("data","qc"))
 
 percell <- list()
 
-for (j in species[3:4]) { # j <- species[1]
+for (j in species) { # j <- species[1]
   message(j)
   localities <- list.files(here("data","qc",j))
 
