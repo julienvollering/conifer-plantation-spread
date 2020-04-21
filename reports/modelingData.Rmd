@@ -70,7 +70,7 @@ sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
 Ps_means <- Ps_dat[, locality.preds] %>% map_dbl(mean)
 Ps_sds <- Ps_dat[, locality.preds] %>% map_dbl(sd)
 for (i in locality.preds) {
-  Ps_dat <- modify_at(Ps_dat, .at = i, ~ (. - means[i])/sds[i])
+  Ps_dat <- modify_at(Ps_dat, .at = i, ~ (. - Ps_means[i]) / Ps_sds[i])
 }
 summary(Ps_dat)
 
@@ -81,18 +81,18 @@ paste(names(Ps_dat)[!(names(Ps_dat) %in% c(contrast, removed))], collapse = " + 
 
 ```{r}
 Ps_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T2 + 
-                 T40 + T1 + V10 + V2 + T27 + T17 + V3 + T6 + T31 + T16 + V13 + 
-                 T29 + T12 + T24 + T21 + T36 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T1 + 
+                 V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + T31 + V3 + 
+                 T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
 Ps_m1 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Ps_m1)
 ```
 
 ```{r}
 Ps_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T2 + 
-                 T40 + T1 + V10 + V2 + T27 + T17 + V3 + T6 + T31 + T16 + V13 + 
-                 T29 + T12 + T24 + T21 + T36 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T1 + 
+                 V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + T31 + V3 + 
+                 T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
 Ps_m2 <- glmmTMB(Ps_f2, Ps_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Ps_m2)
 ```
@@ -143,12 +143,8 @@ terms <- attributes(selmod$frame)$terms
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-`seeds.WALD:age`) %>% 
-  mutate(seeds.WALD = (Ps_means["seeds.WALD"] - Ps_means["seeds.WALD"]) / Ps_sds["seeds.WALD"],
-         age = (Ps_means["age"] - Ps_means["age"]) / Ps_sds["age"],
-         bio01 = (Ps_means["bio01"] - Ps_means["bio01"]) / Ps_sds["bio01"],
-         bio19 = (Ps_means["bio19"] - Ps_means["bio19"]) / Ps_sds["bio19"],
-         relelev = (Ps_means["relelev"] - Ps_means["relelev"]) / Ps_sds["relelev"],
-         locality = NA_character_) %>% 
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
+         locality = NA_character_) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -186,10 +182,10 @@ scaler <- filter(cond, nin == "T4") %>%
 cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
                          ~ `/`(., scaler))
 
-gg <- ggplot(cond.scaled, aes(nin, fit)) + 
+gg <- ggplot(cond.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(Ps_arith, nin %in% cond.scaled$nin), 
+  geom_point(data = filter(Ps_arith.scaled, nin %in% cond.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -203,6 +199,8 @@ resp.locality <- newdat.locality %>%
 scaler <- filter(resp.locality, nin == "T4" & is.na(locality)) %>% 
   pull(fit)
 resp.locality.scaled <- mutate_at(resp.locality, 'fit', ~ `/`(., scaler))
+
+Ps_localities <- filter(resp.locality, !is.na(locality))
 
 gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) + 
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
@@ -237,8 +235,8 @@ knitr::kable(L_arith.scaled, digits = 1)
 ```
 
 ```{r}
-perfectlyseparated <- c("T40", "T18", "T30", "T27", "T2", "V2", "T13", "T42", 
-                        "V12", "V10", "T41")
+perfectlyseparated <- c("T18", "T29", "T27", "T2", "T40", "T30", "T13", "T42", 
+                        "V12", "V10")
 removed <- c(perfectlyseparated, excluded)
 L_dat <- L_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
@@ -262,16 +260,16 @@ paste(names(L_dat)[!(names(L_dat) %in% c(contrast, removed))], collapse = " + ")
 
 ```{r}
 L_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                T45 + artificial + T44 + T32 + V9 + T34 + V1 + T1 + T17 + 
-                (1 | locality)")
+                T45 + artificial + T44 + T32 + V9 + T34 + V1 + T41 + T1 + V2 + 
+                T17 + (1 | locality)")
 L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ 0)
 summary(L_m1)
 ```
 
 ```{r}
 L_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                T45 + artificial + T44 + T32 + V9 + T34 + V1 + T1 + T17 + 
-                (1 | locality)")
+                T45 + artificial + T44 + T32 + V9 + T34 + V1 + T41 + T1 + V2 + 
+                T17 + (1 | locality)")
 L_m2 <- glmmTMB(L_f2, L_dat, family = "nbinom2", ziformula = ~ 0)
 summary(L_m2)
 ```
@@ -322,11 +320,7 @@ terms <- attributes(selmod$frame)$terms
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-`seeds.WALD:age`) %>% 
-  mutate(seeds.WALD = (Ps_means["seeds.WALD"] - L_means["seeds.WALD"]) / L_sds["seeds.WALD"],
-         age = (Ps_means["age"] - L_means["age"]) / L_sds["age"],
-         bio01 = (Ps_means["bio01"] - L_means["bio01"]) / L_sds["bio01"],
-         bio19 = (Ps_means["bio19"] - L_means["bio19"]) / L_sds["bio19"],
-         relelev = (Ps_means["relelev"] - L_means["relelev"]) / L_sds["relelev"],
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
          locality = NA_character_) %>% 
   distinct()
 newdat <- newdat %>% 
@@ -368,7 +362,7 @@ cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
 gg <- ggplot(cond.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(L_arith, nin %in% cond.scaled$nin), 
+  geom_point(data = filter(L_arith.scaled, nin %in% cond.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -382,6 +376,8 @@ resp.locality <- newdat.locality %>%
 scaler <- filter(resp.locality, nin == "T4" & is.na(locality)) %>% 
   pull(fit)
 resp.locality.scaled <- mutate_at(resp.locality, 'fit', ~ `/`(., scaler))
+
+L_localities <- filter(resp.locality, !is.na(locality))
 
 gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) + 
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
@@ -416,7 +412,7 @@ knitr::kable(Pa_arith.scaled, digits = 1)
 ```
 
 ```{r}
-perfectlyseparated <- c("T40", "T42", "T6", "T31")
+perfectlyseparated <- c("T40", "T42", "T6", "T30", "V8", "T16")
 removed <- c(perfectlyseparated, excluded)
 Pa_dat <- Pa_dat %>% 
   filter_at(removed, all_vars(. < 0.5)) %>% 
@@ -440,16 +436,16 @@ paste(names(Pa_dat)[!(names(Pa_dat) %in% c(contrast, removed))], collapse = " + 
 
 ```{r}
 Pa_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + V1 + T41 + T2 + T1 + V10 + 
-                 V2 + V4 + V3 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + V12 + V1 + T13 + T41 + T1 +
+                 V2 + T2 + V10 + T31 + V4 + V3 + (1 | locality)")
 Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pa_m1)
 ```
 
 ```{r}
 Pa_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + V1 + T41 + T2 + T1 + V10 + 
-                 V2 + V4 + V3 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + V12 + V1 + T13 + T41 + T1 +
+                 V2 + T2 + V10 + T31 + V4 + V3 + (1 | locality)")
 Pa_m2 <- glmmTMB(Pa_f2, Pa_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pa_m2)
 ```
@@ -490,7 +486,7 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Diagnostics look bad --- particularly dispersion test.
+Model residuals are underdispersed.
 
 ```{r}
 Pa_m6 <- glmmTMB(Pa_f1, Pa_dat, family = "genpois", ziformula = ~ age + (1 | locality))
@@ -504,7 +500,7 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Better diagnostics with generalized poisson --- including dispersion test.
+Diagnostics OK with generalized poisson --- including dispersion.
 
 ```{r}
 Pa_m7 <- glmmTMB(Pa_f1, Pa_dat, family = poisson, ziformula = ~ age + (1 | locality))
@@ -518,13 +514,13 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Better diagnostics with poisson --- including dispersion test.
+Diagnostics OK with poisson --- including dispersion.
 
 ```{r, echo=FALSE}
 bbmle::AICtab(Pa_m5, Pa_m6, Pa_m7)
 ```
 
-Continue with generalized poisson model: best AIC and OK diagnostics. 
+Continue with generalized poisson model: best AIC and diagnostics OK. 
 
 ### Interpret relative establishment probability
 
@@ -534,11 +530,7 @@ terms <- attributes(selmod$frame)$terms
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-`seeds.WALD:age`) %>% 
-  mutate(seeds.WALD = (Ps_means["seeds.WALD"] - Pa_means["seeds.WALD"]) / Pa_sds["seeds.WALD"],
-         age = (Ps_means["age"] - Pa_means["age"]) / Pa_sds["age"],
-         bio01 = (Ps_means["bio01"] - Pa_means["bio01"]) / Pa_sds["bio01"],
-         bio19 = (Ps_means["bio19"] - Pa_means["bio19"]) / Pa_sds["bio19"],
-         relelev = (Ps_means["relelev"] - Pa_means["relelev"]) / Pa_sds["relelev"],
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
          locality = NA_character_) %>% 
   distinct()
 newdat <- newdat %>% 
@@ -580,7 +572,7 @@ cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
 gg <- ggplot(cond.scaled, aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
   geom_point()  + 
-  geom_point(data = filter(Pa_arith, nin %in% cond.scaled$nin), 
+  geom_point(data = filter(Pa_arith.scaled, nin %in% cond.scaled$nin), 
              col = "grey", pch = 1)
 gg + scale_y_log10() + coord_flip()
 ```
@@ -594,6 +586,8 @@ resp.locality <- newdat.locality %>%
 scaler <- filter(resp.locality, nin == "T4" & is.na(locality)) %>% 
   pull(fit)
 resp.locality.scaled <- mutate_at(resp.locality, 'fit', ~ `/`(., scaler))
+
+Pa_localities <- filter(resp.locality, !is.na(locality))
 
 gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) + 
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
@@ -652,14 +646,14 @@ paste(names(Pc_dat)[!(names(Pc_dat) %in% c(contrast, removed))], collapse = " + 
 
 ```{r}
 Pc_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 artificial + T34 + V1 + T40 + T1 + T30 + V3 + V8 + (1 | locality)")
+                 artificial + T34 + V1 + T1 + T40 + T30 + V8 + V3 + (1 | locality)")
 Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pc_m1)
 ```
 
 ```{r}
 Pc_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 artificial + T34 + V1 + T40 + T1 + T30 + V3 + V8 + (1 | locality)")
+                 artificial + T34 + V1 + T1 + T40 + T30 + V8 + V3 + (1 | locality)")
 Pc_m2 <- glmmTMB(Pc_f2, Pc_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Pc_m2)
 ```
@@ -679,65 +673,49 @@ summary(Pc_m3)
 
 ```{r, eval=FALSE}
 Pc_m4 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age)
-# Warning messages:
-# 1: In fitTMB(TMBStruc) :
-# Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
+summary(Pc_m4)
 ```
 
 ```{r, eval=FALSE}
 Pc_m5 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+# Error in optimHess(par.fixed, obj$fn, obj$gr) : 
+#  gradient in optim evaluated to length 1 not 20
 # Warning messages:
-# 1: In fitTMB(TMBStruc) :
-# Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
-# 2: In fitTMB(TMBStruc) :
-# Model convergence problem; false convergence (8). See vignette('troubleshooting')
+# 1: In (function (start, objective, gradient = NULL, hessian = NULL,  ... :
+#   NA/NaN function evaluation
 ```
 
-Overparameterized models? bio01 and bio19 show largest coefficients (5-6) while insignificant for other species. Try dropping them.
-
-```{r, eval=FALSE}
-Pc_f6 <- update.formula(Pc_f1, ~ . - bio01 - bio19)
-Pc_m6 <- glmmTMB(Pc_f6, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
-# Warning messages:
-# 1: In fitTMB(TMBStruc) :
-# Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
-```
+From glmmTMB troubleshooting vignette: "Try rescaling predictor variables. Try a simpler model and build up."
 
 ```{r}
-Pc_m7 <- glmmTMB(Pc_f1, Pc_dat, family = "genpois", ziformula = ~ age + (1 | locality))
-summary(Pc_m7)
+Pc_m6 <- glmmTMB(Pc_f1, Pc_dat, family = "genpois", ziformula = ~ age + (1 | locality))
+summary(Pc_m6)
 ```
 
 Huge overdispersion parameter. Also huge coefficients for bio01 and bio19. 
 
 ```{r, echo=FALSE}
-bbmle::AICtab(Pc_m3, Pc_m7)
+bbmle::AICtab(Pc_m3, Pc_m4, Pc_m6)
 ```
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pc_m7)
+simulationOutput <- simulateResiduals(fittedModel = Pc_m6)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Diagnostics look OK.
-
-Continue with generalized poisson model: best AIC and OK diagnostics. 
+Continue with generalized poisson model: best AIC and diagnostics OK. 
 
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pc_m7
+selmod <- Pc_m6
 terms <- attributes(selmod$frame)$terms 
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-`seeds.WALD:age`) %>% 
-  mutate(seeds.WALD = (Ps_means["seeds.WALD"] - Pc_means["seeds.WALD"]) / Pc_sds["seeds.WALD"],
-         age = (Ps_means["age"] - Pc_means["age"]) / Pc_sds["age"],
-         bio01 = (Ps_means["bio01"] - Pc_means["bio01"]) / Pc_sds["bio01"],
-         bio19 = (Ps_means["bio19"] - Pc_means["bio19"]) / Pc_sds["bio19"],
-         relelev = (Ps_means["relelev"] - Pc_means["relelev"]) / Pc_sds["relelev"],
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0,
          locality = NA_character_) %>% 
   distinct()
 newdat <- newdat %>% 
@@ -794,6 +772,8 @@ scaler <- filter(resp.locality, nin == "T4" & is.na(locality)) %>%
   pull(fit)
 resp.locality.scaled <- mutate_at(resp.locality, 'fit', ~ `/`(., scaler))
 
+Pc_localities <- filter(resp.locality, !is.na(locality))
+
 gg <- ggplot(resp.locality.scaled, aes(reorder(nin, fit), fit)) + 
   geom_point(data = filter(resp.locality.scaled, !is.na(locality)), 
              mapping = aes(color = locality), cex = 0.5, show.legend = FALSE)  + 
@@ -807,51 +787,38 @@ gg + scale_y_log10() + coord_flip()
 
 ```{r}
 species <- c("P.sitchensis-lutzii", "Larix", "P.abies", "P.contorta")
+
+arith.list <- list(Ps_arith.scaled, L_arith.scaled, Pa_arith.scaled, Pc_arith.scaled)
+names(arith.list) <- species
+
 means <- rbind(Ps_means, L_means, Pa_means, Pc_means) %>% 
   as_tibble() %>% 
   add_column(species = species, .before = "age")
 sds <- rbind(Ps_sds, L_sds, Pa_sds, Pc_sds) %>% 
   as_tibble() %>% 
   add_column(species = species, .before = "age")
-models.list <- list(Ps_m5, L_m5, Pa_m6, Pc_m7)
+
+models.list <- list(Ps_m5, L_m5, Pa_m6, Pc_m6)
+names(models.list) <- species
+
+link.list <- list(Ps_link, L_link, Pa_link, Pc_link) %>% 
+  map(~ select(., locality, nin, fit, ci.l, ci.u))
+names(link.list) <- species
+
+locality.list <- list(Ps_localities, L_localities, Pa_localities, Pc_localities) %>% 
+  map(~ select(., locality, nin, fit))
+names(locality.list) <- species
+
 ```
 
 ```{r}
-link.list <- list(Ps_link, L_link, Pa_link, Pc_link)
-names(link.list) <- c('Picea sitchensis/lutzii', 'Larix', 'Picea abies', 'Pinus contorta')
-link <- bind_rows(link.list, .id = 'species')
-scaler <- filter(link, species == 'Picea sitchensis/lutzii', nin == "T4") %>% 
-  pull(fit)
-link.scaled <- mutate_at(link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
-```
-
-```{r}
-arith.list <- list(filter(Ps_arith, nin %in% Ps_link$nin), 
-                   filter(L_arith, nin %in% L_link$nin),
-                   filter(Pa_arith, nin %in% Pa_link$nin),
-                   filter(Pc_arith, nin %in% Pc_link$nin))
-names(arith.list) <- c('Picea sitchensis/lutzii', 'Larix', 'Picea abies', 'Pinus contorta')
-arith <- bind_rows(arith.list, .id = 'species')
-scaler <- filter(arith, species == 'Picea sitchensis/lutzii', nin == "T4") %>% 
-  pull(density)
-arith.scaled <- mutate(arith, fit = density/scaler)
-```
-
-```{r}
-link.scaled[,c('species','nin','fit','ci.l','ci.u')]
-gg <- ggplot(link.scaled, aes(fct_reorder(nin, fit, first), fit, color = species)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), 
-                 position = position_dodge(width = 0.5)) + 
-  geom_point(position = position_dodge(width = 0.5))  + 
-  geom_point(data = arith.scaled, pch = 1, position = position_dodge(width = 0.5))
-gg + scale_y_log10() + coord_flip() + 
-  labs(x = 'NiN type', y = 'relative establishment probability', title = 'Relative establishment across species and NiN types')
-```
-
-Filled points are model estimates with lines showing 95% confidence intervals. Open points are calculated directly from the number of wildlings per unit area.
-
-```{r}
-results <- list(arith.list, means, sds, models.list, link.list)
+results <- list(arithmetic = arith.list, 
+                predictor.means = means, 
+                predictor.sds = sds, 
+                models = models.list, 
+                model.preds = link.list, 
+                model.preds.localities = locality.list)
+str(results, 2)
 saveRDS(results, here("output","results.rds"))
 ```
 
