@@ -88,7 +88,7 @@ For example, lower elevations may trap more seeds.
 
 We compared the frequency with which four groups of alien conifer species establish in various ecosystem types, using observational data.
 Specifically, we used maps of wildlings and ecosystem types around the plantations from which the wildlings likely originated.
-The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) undetermined larches (*Larix* spp.), (3) Norway spruce (*Picea abies*), and (4) lodgepole pine (*Pinus contorta*).
+The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) Norway spruce (*Picea abies*), (3) undetermined larches (*Larix* spp.), and (4) lodgepole pine (*Pinus contorta*).
 We analysed the data in two ways, to answer distinct questions about patterns of wildling establishment.
 
 Our first analysis tallied of the number of wildlings of each species per unit area of each ecosystem type.
@@ -110,14 +110,14 @@ Plantation age was included in the model because the observed wildlings were not
 
 ## Field data
 
-We observed wildlings and ecosystem types around 63 plantations across Norway (fig. \@ref(fig:localities-map)).
-The sample comprised thirty-six localities with Sitka/Lutz spruce, twelve with larch, nine with Norway spruce, and six with lodgepole pine.
+We observed wildlings and ecosystem types around 82 plantations across Norway (fig. \@ref(fig:localities-map)).
+The sample comprised forty-two localities with Sitka/Lutz spruce, nineteen with Norway spruce, fifteen with larch, and six with lodgepole pine.
 Note that the plantations of Norway spruce were located in parts of Norway where it is not considered native [@aarrestadForeignNorwaySpruce2014].
 We selected and delineated plantations manually --- using aerial imagery --- aiming for plantations that were isolated from other plantations of the same species.
 Furthermore, only plantations with cone-bearing individuals were included in the sample.
-We collected the field data from each plantation in one of five field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019].
+We collected the field data from each plantation in one of six field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019; @sandvenKartleggingAvKortdistansespredning2019].
 
-```{r localities-map, fig.cap='Locations across Norway of the 63 plantations in the data set.'}
+```{r localities-map, fig.cap='Locations across Norway of the 82 plantations in the data set.'}
 knitr::include_graphics('figures/localities-map.pdf')
 ```
 
@@ -133,7 +133,7 @@ We mapped ecosystem types at a scale of 1:5000, which implies that all polygons 
 Some non-spatial data were also collected for each plantation. 
 We measured the height of a representative individual in the plantation by clinometer.
 We also estimated the age of the plantation at the time of the field campaign, either by contacting land owners or municipal officials, or by counting growth rings.
-A table of the 63 plantations and their accompanying non-spatial data is provided in Appendix [A1].
+A table of the 82 plantations and their accompanying non-spatial data is provided in Appendix [A1].
 
 ## Seed dispersal
 
@@ -143,7 +143,7 @@ We used two models of seed dispersal to derive two different estimates of seed p
 
 The first model was an empirical seed dispersal location kernel [@nathanDispersalKernels2012], with parameter estimates generalized from multiple data sets.
 Specifically, we selected from Bullock et al. [-@bullockSynthesisEmpiricalPlant2017] the kernel that performed best for wind-adapted seeds from 5-15 m tall trees (an Exponential Power function).
-Fifty-seven of the 63 plantations in our data set matched this height range better than a taller height range with a different empirical kernel.
+Seventy-two of the 82 plantations in our data set matched this height range better than a taller height range with a different empirical kernel.
 
 The second model was mechanistic, using local wind velocity and direction to parameterize the Wald Analytical Long-distance Dispersal [WALD, @katulMechanisticAnalyticalModels2005] model in different directions from seed sources [following @skarpaasDispersalPatternsDispersal2007].
 The WALD model takes the form of an inverse Gaussian distribution whose mean ($\mu$) and shape ($\lambda$) parameters are calculated from physical characteristics of the dispersal system:
@@ -158,12 +158,13 @@ The 100 resulting WALD kernels produced the seed probability density in the sect
 
 Both models of seed probability density were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
 Field-mapped polygons of seed sources were transformed into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
+Additional details about how data from different field campaigns were harmonized to model seed dispersal are explained in Appendix [A4]
 
 ## Establishment frequency
 
 (fig. \@ref(fig:locality-example))
 
-```{r locality-example, fig.cap='A illustration of data from one of the 63 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
+```{r locality-example, fig.cap='A illustration of data from one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
 knitr::include_graphics('figures/locality-example/locality-example.pdf')
 ```
 
@@ -310,6 +311,12 @@ kable(nin, escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
   footnote(alphabet = "approximate vegetation heights (meters) are used only to estimate wind turbulence")
 ```
+
+## A4
+
+Seed source polygons for which the species of interest only made up a fraction of the tree composition (Olsen et al. 2019, Appelgren 2018 ...) were used with their point source density adjusted accordingly. 'Mixed forest'
+Seed source polygons identified as logged (Appelgren 2018 ...) were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
+
 
 # References
 
