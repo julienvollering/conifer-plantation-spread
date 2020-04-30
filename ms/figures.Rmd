@@ -412,7 +412,6 @@ ggsave(g1234, filename= 'relative-establishment.pdf', path = here('ms', 'figures
   scale = 1, width = 34, height = 21, units = 'cm', dpi = 300)
 ```
 
-
 Using faceting. Can't specify ylim individually for each facet:
 
 ```{r}
