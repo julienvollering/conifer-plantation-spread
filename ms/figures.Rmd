@@ -41,8 +41,8 @@ locs <- read_csv(here("data", "localities.csv"), col_types = cols()) %>%
   st_as_sf(coords=c("utm33.easting", "utm33.northing"), crs = 25833)
 locs <- mutate(locs, species.latin = factor(species.latin, 
                                             levels = c("Picea sitchensis / lutzii",
-                                                       "Larix spp.",
                                                        "Picea abies",
+                                                       "Larix spp.",
                                                        "Pinus contorta")))
 st_bbox(locs)
 
@@ -80,7 +80,7 @@ g1 <- ggplot() +
   scale_shape_manual(values = c(15, 16, 17, 18)) +
   geom_sf(data = inset, fill = NA, linetype = "longdash", color = 'black') + 
   geom_sf(data = inset2, fill = NA, linetype = "longdash", color = 'black') + 
-  scale_color_brewer(palette="Dark2") +
+  scale_color_manual(values = c('#984ea3','#377eb8','#4daf4a','#e41a1c')) + #Set1
   coord_sf(xlim = c(-60e3,730e3), ylim = c(6.5e6,7.8e6)) +
   theme_minimal() +
   theme(legend.position = c(0.35,0.88), legend.title = element_blank(), 
@@ -96,7 +96,7 @@ g2 <- ggplot() +
           mapping = aes(color = species.latin, shape = species.latin), 
           show.legend = FALSE, size = 2, alpha = 0.7) + 
   scale_shape_manual(values = c(15, 16, 17, 18)) +
-  scale_color_brewer(palette="Dark2") +
+  scale_color_manual(values = c('#984ea3','#377eb8','#4daf4a','#e41a1c')) + #Set1
   coord_sf(xlim = xlimits, ylim = ylimits, datum = NA) +
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0),
@@ -110,7 +110,7 @@ g3 <- ggplot() +
           mapping = aes(color = species.latin, shape = species.latin), 
           show.legend = FALSE, size = 2, alpha = 0.7) + 
   scale_shape_manual(values = c(15, 16, 17, 18)) +
-  scale_color_brewer(palette="Dark2") +
+  scale_color_manual(values = c('#984ea3','#377eb8','#4daf4a','#e41a1c')) + #Set1
   coord_sf(xlim = xlimits2, ylim = ylimits2, datum = NA) +
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0),
@@ -199,10 +199,6 @@ results <- readRDS(here("output","results.rds"))
 types <- read_csv(here('data', 'typenames.csv')) %>% 
   rename(nin = type, type = name)
 reflvl <- "T4"
-
-results$arithmetic
-results$model.preds
-results$model.preds.localities
 
 arith <- bind_rows(results$arithmetic, .id = "species") %>% 
   filter(!(n == 0 & daa < 5)) %>% 
@@ -301,17 +297,18 @@ facekey <- tibble(type = typeorder) %>%
 
 ```{r}
 d <- filter(plot, species == "P.sitchensis-lutzii")
+col <- '#984ea3'
 g1 <- ggplot(data = d, mapping = aes(x = type)) + 
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = 'blue', size = 1) +
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = 'blue', size = 2) +
+             mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = 'blue', pch = 1, size = 2) +
+             color = col, pch = 1, size = 2) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -325,17 +322,18 @@ g1 <- ggplot(data = d, mapping = aes(x = type)) +
 #plot(g1)
 
 d <- filter(plot, species == "P.abies")
+col <- '#377eb8'
 g2 <- ggplot(data = d, mapping = aes(x = type)) + 
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = 'red', size = 1) +
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = 'red', size = 2) +
+             mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = 'red', pch = 1, size = 2) +
+             color = col, pch = 1, size = 2) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -351,17 +349,18 @@ g2 <- ggplot(data = d, mapping = aes(x = type)) +
 #plot(g2)
 
 d <- filter(plot, species == "Larix")
+col <- '#4daf4a'
 g3 <- ggplot(data = d, mapping = aes(x = type)) + 
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = 'purple', size = 1) +
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color =col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = 'purple', size = 2) +
+             mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = 'purple', pch = 1, size = 2) +
+             color = col, pch = 1, size = 2) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -377,17 +376,18 @@ g3 <- ggplot(data = d, mapping = aes(x = type)) +
 #plot(g3)
 
 d <- filter(plot, species == "P.contorta")
+col <- '#e41a1c'
 g4 <- ggplot(data = d, mapping = aes(x = type)) + 
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = 'darkgreen', size = 1) +
+  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = 'darkgreen', size = 2) +
+             mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = 'darkgreen', pch = 1, size = 2) +
+             color = col, pch = 1, size = 2) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
