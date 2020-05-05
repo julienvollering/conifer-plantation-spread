@@ -81,12 +81,12 @@ add_dummies_to_grid <- function(grid, poly, field) {
   
   groups <- pull(int, !!field.enq) %>% unique
   for (i in seq_along(groups)) {
-    type <- groups[i]
+    name <- groups[i]
     summ <- int %>% 
       st_set_geometry(NULL) %>% 
-      filter(!!field.enq == type) %>%
+      filter(!!field.enq == name) %>%
       group_by(ID) %>% 
-      summarize(!!type := sum(area))
+      summarize(!!name := sum(area))
     grid <- left_join(grid, summ, by = "ID")
   }
   

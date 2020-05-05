@@ -1,6 +1,12 @@
-# setup #### 
 speciesi <- c("P.sitchensis-lutzii") # adjust for RStudio jobs partitioning
 
+## ----jobs script, eval=FALSE-------------------------------------------------------------------------------
+## knitr::purl(input = here('reports','locality-WALD.Rmd'),
+##             output = here('reports','locality-WALD.R'))
+
+
+## ----setup, include=FALSE----------------------------------------------------------------------------------
+knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(sf)
@@ -9,7 +15,8 @@ source(here("R","locality-functions.R"))
 source(here("R","dispersal-functions.R"))
 source(here("R","SkarpaasShea_2007.R"))
 
-# species dispersal traits ####
+
+## ----species dispersal traits------------------------------------------------------------------------------
 traits <- tribble(
   ~species, ~terminal.velocity, ~dispersal.season,
   "Larix", 1.0, c(12,1:5), # After Sandvik 2012 (for L. decidua), and Sullivan 1994 (for L. decidua)
@@ -18,7 +25,8 @@ traits <- tribble(
   "P.sitchensis-lutzii", 0.94, c(10:12,1:2) # After Sandvik 2012 (but see Kaliniewicz et al. 2018), and Harris 1990
 )
 
-# localities table ####
+
+## ----localities table--------------------------------------------------------------------------------------
 loc.tab <- read_csv(here("data","localities.csv"))
 filter(loc.tab, is.na(age.at.registration))
 loc.tab$age.interpolated <- FALSE
@@ -42,9 +50,12 @@ for (i in which(is.na(loc.tab$height.source))) {
 g <- ggplot(loc.tab, aes(x=age.at.registration, y=height.source, color=species))
 g + geom_point()
 
-write_csv(loc.tab, here('output', 'localities-modified.csv'))
 
-# wind data ####
+## ---- eval=FALSE-------------------------------------------------------------------------------------------
+## write_csv(loc.tab, here('output', 'localities-modified.csv'))
+
+
+## ----wind data---------------------------------------------------------------------------------------------
 norabcxy <- st_read(here("data","raw","NORA10","NORA10BCsites.shp")) %>% 
   st_set_crs(25833)
 norabc <- read_csv(here("data","raw","NORA10","NORA10BCwind.csv"))
@@ -59,60 +70,36 @@ eklima <- read_csv(here("data","raw","eKlima","EKLIMAwind.csv"))
 
 sector.breaks <- seq(0, 360, by=20)
 
-# vegetation height ####
-grouping <- tribble(
-  ~code, ~group, ~vegheight,
-  "T1", "T1", 0,
-  "T2", "T2", 0.5,
-  "T3", "T3", 0.5,
-  "T4", "T4", 10,
-  "T6", "T6", 0,
-  "T12", "T12", 0.5,
-  "T13", "T13", 0,
-  "T16", "T16", 0.5,
-  "T17", "T17", 0,
-  "T18", "T18", 0,
-  "T21", "T21", 0,
-  "T24", "T24", 0.5,
-  "T27", "T27", 0,
-  "T29", "T29", 0,
-  "T30", "T30", 10,
-  "T31", "T31", 0.5,
-  "T32", "T32", 0.5,
-  "T33", "T33", 0.5,
-  "T34", "T34", 0.5,
-  "T35", "artificial", 0,
-  "T36", "T36", 0.5,
-  "T37", "artificial", 0,
-  "T38", "plantation forest", 10,
-  "T39", "artificial", 0,
-  "T40", "T40", 0,
-  "T41", "T41", 0.5,
-  "T42", "T42", 0,
-  "T43", "artificial", 0,
-  "T44", "T44", 0.5,
-  "T45", "T45", 0.5,
-  "T35.T37.T39.T43", "artificial", 0,
-  "T35.T37", "artificial", 0,
-  "V1", "V1", 0,
-  "V2", "V2", 10,
-  "V3", "V3", 0,
-  "V4", "V4", 0,
-  "V8", "V8", 10,
-  "V9", "V9", 0,
-  "V10", "V10", 0,
-  "V11", "V11", 0,
-  "V12", "V12", 0,
-  "V13", "V13", 0)  
 
-vegheights <- grouping %>% 
-  group_by(group) %>% 
+## ----unique types, eval=FALSE------------------------------------------------------------------------------
+## ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
+## codes <- map(ninfiles, ~ st_read(here("data","qc",.), quiet = TRUE) %>%
+##                pull(code) %>%
+##                as.character())
+## map(codes, ~ any(is.na(.))) %>%
+##   unlist() %>%
+##   which()
+## codes <- flatten_chr(codes) %>%
+##   unique()
+## codes[order(substring(codes, 1, 1), as.numeric(substring(codes, 2)))]
+
+
+## ----code-type pairing-------------------------------------------------------------------------------------
+pairing <- read_csv(here('data','codetype-pairing.csv'))
+
+
+## ----vegetation height-------------------------------------------------------------------------------------
+types <- read_csv(here('data','types.csv'))
+vegheights <- types %>% 
+  group_by(type) %>% 
   summarize(vegheight = mean(vegheight))
 
-# set log ####
+
+## ----------------------------------------------------------------------------------------------------------
 rlogging::SetLogFile(base.file="locality-WALD.log", folder=here('reports'))
 
-# WALD seed shadows ####
+
+## ----WALD seed shadows-------------------------------------------------------------------------------------
 species <- speciesi
 
 for (i in species) { # i <- species[1]
@@ -129,11 +116,11 @@ for (i in species) { # i <- species[1]
     message(j)
     nin <- st_read(here("data","qc",i,j,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf() %>% 
-      mutate(code = as.character(code), group = NULL) %>% 
-      left_join(grouping, by = "code") %>% 
-      filter(group != "plantation forest")
+      mutate(code = as.character(code), type = NULL) %>% 
+      left_join(pairing, by = "code") %>% 
+      filter(type != "plantation forest")
     grd <- make_grid(nin, gridres = 10)
-    grd <- add_dummies_to_grid(grd, nin, field = group) %>% 
+    grd <- add_dummies_to_grid(grd, nin, field = type) %>% 
       as_tibble() %>% st_as_sf()
     grd <- grd %>% 
       mutate(rsum = rowSums(st_set_geometry(grd, NULL), na.rm = TRUE)) %>% 
@@ -141,8 +128,8 @@ for (i in species) { # i <- species[1]
       select(-rsum) %>% 
       mutate_at(vars(-geometry), round, digits = 3) 
     vegheights.j <- vegheights %>% 
-      filter(group %in% colnames(grd)) %>% 
-      arrange(match(group, colnames(grd))) %>% 
+      filter(type %in% colnames(grd)) %>% 
+      arrange(match(type, colnames(grd))) %>% 
       pull(vegheight)
     grd <- grd %>%
       mutate(normalizer = st_set_geometry(., NULL) %>% rowSums(., na.rm = TRUE))
@@ -157,7 +144,7 @@ for (i in species) { # i <- species[1]
       mutate(vegheight = vegheight / normalizer) %>% 
       select(-normalizer)
     grd.pts <- st_centroid(st_geometry(grd))
-    
+
     source <- st_read(here("data","qc",i,j,"source_polygon.shp"), quiet = TRUE) 
     source <- mutate(source, nsources = st_area(source) %>% 
                        `/`(100) %>% # 1 source per 100m2 (gridres 10x10m)
@@ -214,13 +201,13 @@ for (i in species) { # i <- species[1]
             paste0(x," km away"),
             sep = ", ") %>% 
         rlogging::message()
-    }
+      }
     windobs <- windobs %>% 
       select(Mnth, DD, FF) %>% 
       filter(Mnth %in% dispersal.season) %>% 
       mutate(sector = cut(DD, sector.breaks, include.lowest = TRUE))
     # Assume probability of abscission is UNRELATED to wind speed (constant)
-    sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
+      sectors360 <- tibble(sector = unique(cut(0:360, sector.breaks, include.lowest = TRUE))) %>% 
       left_join(as.data.frame(prop.table(table(windobs$sector))), by=c('sector' = 'Var1'))
     set.seed(42)
     winds <- lapply(sectors360$sector, function(x) {
@@ -229,7 +216,7 @@ for (i in species) { # i <- species[1]
         pull(FF)
     })
     names(winds) <- sectors360$sector
-    
+  
     pb <- txtProgressBar(0, nrow(sources), style = 3)
     
     src.arr <- array(dim = c(nrow(grd), nrow(sources)))
@@ -238,7 +225,7 @@ for (i in species) { # i <- species[1]
                                    between = sector.breaks)
       distances.k <- as.numeric(st_distance(grd.pts, sources[k,]))
       sectors.k <- sectors360$sector[sectors360$sector %in% grd$sector]
-      
+  
       sec.arr <- array(dim = c(nrow(grd), length(sectors.k)))
       for (l in seq_along(sectors.k)) { # l <- 1
         vegheight <- grd %>% 
@@ -247,7 +234,7 @@ for (i in species) { # i <- species[1]
           mean()
         distances.l <- distances.k
         distances.l[grd$sector != sectors.k[l]] <- NA
-        
+    
         wind.arr <- array(data = NA, dim = c(nrow(grd), 100))
         for (m in 1:100) {
           WALD <- parameterize_WALD(H = height, 
@@ -278,4 +265,18 @@ for (i in species) { # i <- species[1]
     raster::writeRaster(ras, here("data","qc",i,j,"wald.tif"), overwrite = TRUE)
   }
 }
+
+
+
+## ---- eval=FALSE, include=FALSE----------------------------------------------------------------------------
+## slow <- raster::raster(here("data","qc","Larix","anisdal","wald10daa.tif"))
+## fast <- raster::raster(here("data","qc","Larix","anisdal","wald.tif"))
+## st <- raster::stack(slow, fast)
+## df <- raster::as.data.frame(st, na.rm=TRUE)
+## cor(df)
+## pairs(df)
+
+
+## ----sessionInfo-------------------------------------------------------------------------------------------
+sessionInfo()
 
