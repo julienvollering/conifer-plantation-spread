@@ -21,6 +21,12 @@ library(DHARMa)
 
 ```{r}
 datlist <- readRDS(here("output","data.rds"))
+types <- read_csv(here('data','types.csv'))
+
+datlist <- datlist %>% 
+  map(~ filter_at(., "plantation forest", all_vars(. < 0.5)) %>% 
+        select(-"plantation forest")
+  )
 
 locality.preds <- c('age','bio01','bio19','seeds.ExP','seeds.WALD','relelev')
 locality.preds.vals <- datlist %>% 
@@ -30,7 +36,7 @@ gmeans <- map_dbl(locality.preds.vals, mean, na.rm = TRUE)
 gsds <- map_dbl(locality.preds.vals, sd, na.rm = TRUE)
 
 contrast <- "T4"
-excluded <- "plantation forest"
+str(datlist, 1)
 ```
 
 # P.sitchensis-lutzii
@@ -41,7 +47,9 @@ Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutzii`)
 ```
 
 ```{r}
-Ps_arith <- pivot_longer(Ps_dat, 10:ncol(Ps_dat), names_to = "nin", values_to = "are") %>%
+typenames <- names(Ps_dat)[!names(Ps_dat) %in% c('species', 'locality', 
+                                                 'wildlings', locality.preds)]
+Ps_arith <- pivot_longer(Ps_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are)) %>% 
@@ -57,11 +65,10 @@ knitr::kable(Ps_arith.scaled, digits = 1)
 ```
 
 ```{r}
-perfectlyseparated <- c("T42", "T18", "T3", "T41", "T33", "V4")
-removed <- c(perfectlyseparated, excluded)
+perfectlyseparated <- c("T42", "T18", "T3", "T33", "V4")
 Ps_dat <- Ps_dat %>% 
-  filter_at(removed, all_vars(. < 0.5)) %>%
-  filter(!(is.na(seeds.ExP)), !(is.na(seeds.WALD))) %>% 
+  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
+  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
   select(-c('species'))
 sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
 ```
@@ -74,25 +81,26 @@ for (i in locality.preds) {
 }
 summary(Ps_dat)
 
-paste(names(Ps_dat)[!(names(Ps_dat) %in% c(contrast, removed))], collapse = " + ")
+paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
+      collapse = " + ")
 ```
 
 ### Compare WALD vs ExP
 
 ```{r}
 Ps_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T1 + 
-                 V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + T31 + V3 + 
-                 T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + 
+                 T41 + T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + 
+                 T31 + V3 + T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
 Ps_m1 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Ps_m1)
 ```
 
 ```{r}
 Ps_f2 <- formula("wildlings ~ seeds.ExP * age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + T1 + 
-                 V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + T31 + V3 + 
-                 T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
+                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + 
+                 T41 + T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + 
+                 T31 + V3 + T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
 Ps_m2 <- glmmTMB(Ps_f2, Ps_dat, family = "nbinom2", ziformula = ~ 0)
 summary(Ps_m2)
 ```
@@ -219,7 +227,9 @@ L_dat <- Filter(function(x)!all(is.na(x)), datlist$Larix)
 ```
 
 ```{r}
-L_arith <- pivot_longer(L_dat, 10:ncol(L_dat), names_to = "nin", values_to = "are") %>%
+typenames <- names(L_dat)[!names(L_dat) %in% c('species', 'locality', 
+                                               'wildlings', locality.preds)]
+L_arith <- pivot_longer(L_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are)) %>% 
@@ -237,10 +247,9 @@ knitr::kable(L_arith.scaled, digits = 1)
 ```{r}
 perfectlyseparated <- c("T18", "T29", "T27", "T2", "T40", "T30", "T13", "T42", 
                         "V12", "V10")
-removed <- c(perfectlyseparated, excluded)
 L_dat <- L_dat %>% 
-  filter_at(removed, all_vars(. < 0.5)) %>% 
-  filter(!(is.na(seeds.ExP)), !(is.na(seeds.WALD))) %>% 
+  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
+  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
   select(-c('species'))
 sum(complete.cases(L_dat)) == nrow(L_dat)
 ```
@@ -253,7 +262,8 @@ for (i in locality.preds) {
 }
 summary(L_dat)
 
-paste(names(L_dat)[!(names(L_dat) %in% c(contrast, removed))], collapse = " + ")
+paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
+      collapse = " + ")
 ```
 
 ### Compare WALD vs ExP
@@ -396,7 +406,9 @@ Pa_dat <- Filter(function(x)!all(is.na(x)), datlist$P.abies)
 ```
 
 ```{r}
-Pa_arith <- pivot_longer(Pa_dat, 10:ncol(Pa_dat), names_to = "nin", values_to = "are") %>%
+typenames <- names(Pa_dat)[!names(Pa_dat) %in% c('species', 'locality', 
+                                                 'wildlings', locality.preds)]
+Pa_arith <- pivot_longer(Pa_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are)) %>% 
@@ -413,10 +425,9 @@ knitr::kable(Pa_arith.scaled, digits = 1)
 
 ```{r}
 perfectlyseparated <- c("T40", "T42", "T6", "T30", "V8", "T16")
-removed <- c(perfectlyseparated, excluded)
 Pa_dat <- Pa_dat %>% 
-  filter_at(removed, all_vars(. < 0.5)) %>% 
-  filter(!(is.na(seeds.ExP)), !(is.na(seeds.WALD))) %>% 
+  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>% 
+  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
   select(-c('species'))
 sum(complete.cases(Pa_dat)) == nrow(Pa_dat)
 ```
@@ -429,7 +440,8 @@ for (i in locality.preds) {
 }
 summary(Pa_dat)
 
-paste(names(Pa_dat)[!(names(Pa_dat) %in% c(contrast, removed))], collapse = " + ")
+paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
+      collapse = " + ")
 ```
 
 ### Compare WALD vs ExP
@@ -606,7 +618,9 @@ Pc_dat <- Filter(function(x)!all(is.na(x)), datlist$P.contorta)
 ```
 
 ```{r}
-Pc_arith <- pivot_longer(Pc_dat, 10:ncol(Pc_dat), names_to = "nin", values_to = "are") %>%
+typenames <- names(Pc_dat)[!names(Pc_dat) %in% c('species', 'locality', 
+                                                 'wildlings', locality.preds)]
+Pc_arith <- pivot_longer(Pc_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are)) %>% 
@@ -623,10 +637,9 @@ knitr::kable(Pc_arith, digits = 1)
 
 ```{r}
 perfectlyseparated <- c("V10", "V11", "V2", "T45", "T27", "T32")
-removed <- c(perfectlyseparated, excluded)
 Pc_dat <- Pc_dat %>% 
-  filter_at(removed, all_vars(. < 0.5)) %>% 
-  filter(!(is.na(seeds.ExP) | is.na(seeds.WALD) | is.na(relelev))) %>% 
+  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
+  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>%  #TODO: relelev?
   select(-c('species'))
 sum(complete.cases(Pc_dat)) == nrow(Pc_dat)
 ```
@@ -639,7 +652,8 @@ for (i in locality.preds) {
 }
 summary(Pc_dat)
 
-paste(names(Pc_dat)[!(names(Pc_dat) %in% c(contrast, removed))], collapse = " + ")
+paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
+      collapse = " + ")
 ```
 
 ### Compare WALD vs ExP
@@ -821,6 +835,7 @@ results <- list(arithmetic = arith.list,
 str(results, 2)
 saveRDS(results, here("output","results.rds"))
 ```
+
 
 # sessionInfo
 
