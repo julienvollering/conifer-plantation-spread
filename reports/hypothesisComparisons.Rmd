@@ -1,0 +1,162 @@
+---
+title: "Compare groupings of ecosystem types hypothesized to differ"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(here)
+library(tidyverse)
+library(glmmTMB)
+```
+
+```{r}
+datlist <- readRDS(here("output","data.rds"))
+types <- read_csv(here('data','types.csv'))
+results <- readRDS(here("output","results.rds"))
+
+terrestrial <- filter(types, category == 'terrestrial') %>% pull(type)
+wetland <- filter(types, category == 'wetland') %>% pull(type)
+nodisturbance <- filter(types, is.na(structuring)) %>% pull(type)
+natdisturbance <- filter(types, structuring == 'natural disturbance') %>% pull(type)
+anthdisturbance <- filter(types, structuring == 'anthropogenic disturbance') %>% pull(type)
+
+datlist <- datlist %>% 
+  map(~ mutate(., 
+               terr = rowSums(select(., one_of(terrestrial)), na.rm = TRUE),
+               wetl = rowSums(select(., one_of(wetland)), na.rm = TRUE),
+               nodisturb = rowSums(select(., one_of(nodisturbance)), na.rm = TRUE),
+               nadisturb = rowSums(select(., one_of(natdisturbance)), na.rm = TRUE),
+               andisturb = rowSums(select(., one_of(anthdisturbance)), na.rm = TRUE)) %>%
+        filter_at("plantation forest", all_vars(. < 0.5)) %>% 
+        select(-"plantation forest")
+        )
+
+locality.preds <- c('age','bio01','bio19','seeds.ExP','seeds.WALD','relelev')
+str(datlist, 1)
+```
+
+# Loop through species
+
+```{r}
+results.wetland <- list()
+results.disturbance <- list()
+
+for (i in seq_along(datlist)) { # i <- 1
+  species <- names(datlist)[i]
+  
+  dat <- Filter(function(x)!all(is.na(x)), datlist[[i]]) 
+  dat <- dat %>% 
+  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
+  select(-c('species'))
+  stopifnot(sum(complete.cases(dat)) == nrow(dat))
+
+  means <- dat[, locality.preds] %>% map_dbl(mean)
+  sds <- dat[, locality.preds] %>% map_dbl(sd)
+  for (j in locality.preds) {
+    dat <- modify_at(dat, .at = j, ~ (. - means[j]) / sds[j])
+  }
+
+  # Wetland or not
+
+  arith.wetland <- pivot_longer(dat, c('terr', 'wetl'), 
+                                names_to = "category", values_to = "are") %>%
+    group_by(category) %>% 
+    summarize(daa = sum(are)/10, # units from are to decare
+              n = sum(wildlings*are)) %>% 
+    mutate(density = n/daa) %>%
+    arrange(desc(density), desc(n), daa)
+  scaler <- filter(arith.wetland, category == 'terr') %>% 
+    pull(density)
+  arith.wetland.scaled <- mutate(arith.wetland, fit = density/scaler) %>% 
+    select(category, fit) %>% 
+    mutate(modeled = FALSE)
+
+  selmod <- results$models[[species]]
+  
+  m.wetland <- glmmTMB(formula = wildlings ~ seeds.WALD * age + bio01 + bio19 + 
+    relelev + wetl + (1 | locality), data = dat, family = selmod$call$family, 
+    ziformula = selmod$call$ziformula)
+  
+  newdat <- tibble(locality = NA_character_, 
+                   seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0, 
+                   wetl = c(0,1))  
+  link.wetland <- tibble(category = c('terr','wetl')) %>%
+    bind_cols(predict(m.wetland, newdat, se.fit = TRUE, type = "link")) %>%
+    mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+    select(-se.fit) %>% 
+    mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.)) %>% 
+    mutate(modeled = TRUE)
+  scaler <- filter(link.wetland, category == "terr") %>% 
+    pull(fit)
+  link.wetland.scaled <- mutate_at(link.wetland, 
+                                   c('fit', 'ci.l', 'ci.u'), 
+                                   ~ `/`(., scaler))
+
+  wetland <- bind_rows(arith.wetland.scaled, link.wetland.scaled)
+  results.wetland[[i]] <- wetland
+
+  # Disturbance-structured or not
+
+  arith.disturb <- pivot_longer(dat, c('nodisturb', 'nadisturb', 'andisturb'), 
+                                names_to = "structuring", values_to = "are") %>%
+    group_by(structuring) %>% 
+    summarize(daa = sum(are)/10, # units from are to decare
+              n = sum(wildlings*are)) %>% 
+    mutate(density = n/daa) %>%
+    arrange(desc(density), desc(n), daa)
+  scaler <- filter(arith.disturb, structuring == 'nodisturb') %>% 
+    pull(density)
+  arith.disturb.scaled <- mutate(arith.disturb, fit = density/scaler) %>% 
+    select(structuring, fit) %>% 
+    mutate(modeled = FALSE)
+
+  m.disturb <- glmmTMB(formula = wildlings ~ seeds.WALD * age + bio01 + bio19 + 
+                         relelev + nadisturb + andisturb + (1 | locality), 
+                       data = dat, family = selmod$call$family, 
+                       ziformula = selmod$call$ziformula)
+  
+  newdat <- tibble(locality = NA_character_, 
+                   seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0, 
+                   nadisturb = c(0,1,0), andisturb = c(0,0,1))
+  link.disturb <- tibble(structuring = c('nodisturb','nadisturb','andisturb')) %>% 
+    bind_cols(predict(m.disturb, newdat, se.fit = TRUE, type = "link")) %>%
+    mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+    select(-se.fit) %>% 
+    mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.)) %>% 
+    mutate(modeled = TRUE)
+  scaler <- filter(link.disturb, structuring == "nodisturb") %>% 
+    pull(fit)
+  link.disturb.scaled <- mutate_at(link.disturb, 
+                                   c('fit', 'ci.l', 'ci.u'), 
+                                   ~ `/`(., scaler))
+  
+  disturb <- bind_rows(arith.disturb.scaled, link.disturb.scaled)
+  results.disturbance[[i]] <- disturb
+}
+
+names(results.wetland) <- names(datlist)
+names(results.disturbance) <- names(datlist)
+```
+
+# Save results
+
+```{r}
+saveRDS(results.wetland, here("output","results-wetland.rds"))
+saveRDS(results.dist, here("output","results-disturbance.rds"))
+```
+
+# sessionInfo
+
+```{r sessionInfo}
+sessionInfo()
+```
+
