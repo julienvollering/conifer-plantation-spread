@@ -19,6 +19,8 @@ library(glmmTMB)
 library(DHARMa)
 ```
 
+# Load data
+
 ```{r}
 datlist <- readRDS(here("output","data.rds"))
 types <- read_csv(here('data','types.csv'))
@@ -639,7 +641,7 @@ knitr::kable(Pc_arith, digits = 1)
 perfectlyseparated <- c("V10", "V11", "V2", "T45", "T27", "T32")
 Pc_dat <- Pc_dat %>% 
   filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
-  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>%  #TODO: relelev?
+  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>%
   select(-c('species'))
 sum(complete.cases(Pc_dat)) == nrow(Pc_dat)
 ```
