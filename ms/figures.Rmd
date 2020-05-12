@@ -9,6 +9,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(patchwork)
+library(ggtext)
 library(here)
 library(sf)
 library(rnaturalearth)
@@ -196,14 +197,21 @@ dev.off()
 
 ```{r}
 results <- readRDS(here("output","results.rds"))
-types <- read_csv(here('data', 'typenames.csv')) %>% 
-  rename(nin = type, type = name)
+types <- read_csv(here('data', 'types.csv')) %>% 
+  select(-vegheight) %>% 
+  mutate(name = case_when(
+    category == 'terrestrial' & is.na(structuring) ~ name,
+    category == 'terrestrial' & !is.na(structuring) ~ paste0(paste0('**',name),'**'),
+    category == 'wetland' & is.na(structuring) ~ paste0(paste0('*',name),'*'),
+    category == 'wetland' & !is.na(structuring) ~ paste0(paste0('***',name),'***'))
+  )
 reflvl <- "T4"
 
 arith <- bind_rows(results$arithmetic, .id = "species") %>% 
   filter(!(n == 0 & daa < 5)) %>% 
-  filter(nin != "plantation forest") %>% 
-  left_join(types) %>% 
+  filter(nin != "plantation forest") %>%  #TODO
+  rename(type = nin) %>% 
+  left_join(types, by = 'type') %>% 
   select(-daa, -n, -density) %>% 
   mutate(modeled = FALSE)
   
@@ -211,69 +219,24 @@ arith <- bind_rows(results$arithmetic, .id = "species") %>%
 scalers <- map_dbl(results$model.preds, ~ filter(.,  nin == reflvl) %>% pull(fit))
 est <- map2(results$model.preds, results$model.preds.localities, bind_rows)
 est.scaled <- map2(est, scalers, ~ mutate_at(.x, .vars = c('fit', 'ci.l', 'ci.u'),
-                                      magrittr::divide_by, .y))
+                                             magrittr::divide_by, .y))
 est.scaled <- bind_rows(est.scaled, .id = "species") %>% 
-  left_join(types, by = 'nin') %>% 
+  rename(type = nin) %>% 
+  left_join(types, by = 'type') %>% 
   mutate(modeled = TRUE)
 
 dat <- bind_rows(est.scaled, arith)
 dat
 tail(dat)
+print(filter(types, type %in% dat$type), n=32)
 ```
 
 ```{r}
-plot <- dat
-plot <- mutate(plot, species = fct_relevel(species, c('P.sitchensis-lutzii', 
-                                                      'P.abies', 
-                                                      'Larix', 
-                                                      'P.contorta')))
-
-print(filter(types, nin %in% dat$nin), n=32)
-typetab <- tribble(
-  ~nin, ~wetland, ~GrL, ~type,
-  'T1',         F,  NA, 'bare rock',                                                  
-  'T2',         F,  NA, 'open shallow-soil ground',                                    
-  'T4',         F,  NA, 'forest',                                                       
-  'T6',         F, 'S', 'rocky shore',                                                  
-  'T12',        F, 'S', 'tidal meadow',                                                 
-  'T13',        F, 'R', 'bare talus slope',                                             
-  'T16',        F, 'R', 'talus-slope heath and meadow',                                 
-  'T17',        F, 'D', 'open active landslide',                                        
-  'T21',        F, 'D', 'sand dune',                                                    
-  'T24',        F, 'D', 'coastal driftline',                                            
-  'T27',        F, 'R', 'boulder field',                                                
-  'T29',        F, 'R', 'coastal shingle beach',                                        
-  'T30',        F, 'D', 'alluvial forest',                                              
-  'T31',        F, 'M', 'boreal heath',                                                 
-  'T32',        F, 'M', 'semi-natural grassland',                                       
-  'T33',        F, 'M', 'semi-natural tidal and salt meadow',                           
-  'T34',        F, 'M', 'coastal heath',                                                
-  'artificial', F, 'N', 'artificial substrate',                                         
-  'T36',        F, 'N', 'drained wetland and terrestrialized freshwater sediment',      
-  'T40',        F, 'N', 'strongly altered ground with semi-natural grassland character',
-  'T41',        F, 'N', 'agriculturally improved grassland with semi-natural character',
-  'T44',        F, 'N', 'arable field',                                                 
-  'T45',        F, 'N', 'agriculturally improved grassland',                            
-  'V1',         T,  NA, 'open fen',                                                     
-  'V2',         T,  NA, 'mire and swamp forest',                                        
-  'V3',         T, 'S', 'bog',                                                          
-  'V4',         T, 'S', 'spring',                                                       
-  'V8',         T, 'S', 'tidal and alluvial swamp forest',                              
-  'V9',         T, 'M', 'semi-natural fen',                                             
-  'V10',        T, 'M', 'semi-natural wet meadow',                                      
-  'V12',        T, 'N', 'drained mire',                                                 
-  'V13',        T, 'N', 'artificial wetland' 
-) %>% 
-  mutate(disturbance = case_when(
-    GrL %in% c('R','D','M','N') ~ TRUE,
-    TRUE ~ FALSE
-  )) %>% 
-  mutate(facekey = case_when(
-    wetland & disturbance ~ 'bold.italic',
-    wetland & !disturbance ~ 'italic',
-    !wetland & disturbance ~ 'bold',
-    !wetland & !disturbance ~ 'plain'
-  ))
+plot <- dat %>% 
+  mutate(species = fct_relevel(species, c('P.sitchensis-lutzii', 
+                                          'P.abies', 
+                                          'Larix', 
+                                          'P.contorta')))
 
 typerank <- filter(est.scaled, is.na(locality)) %>% 
   mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
@@ -285,22 +248,20 @@ typerank <- filter(est.scaled, is.na(locality)) %>%
   summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
   arrange(rank)
 
-typeorder <- c(typetab$type[!(typetab$type %in% typerank$type)],
-               typerank$type)
-plot <- mutate(plot, type = factor(type, levels = typeorder))
-str(plot)
+plot <- plot %>% 
+  left_join(typerank, by = 'type') %>%
+  mutate(rank = if_else(is.na(rank), -1, rank)) %>%
+  mutate(name = fct_reorder(name, rank))
 
-facekey <- tibble(type = typeorder) %>% 
-  left_join(typetab) %>% 
-  pull(facekey)
+str(plot)
 ```
 
 ```{r}
 d <- filter(plot, species == "P.sitchensis-lutzii")
 col <- '#984ea3'
-g1 <- ggplot(data = d, mapping = aes(x = type)) + 
+g1 <- ggplot(data = d, mapping = aes(x = name)) + 
   scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
+  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
@@ -317,15 +278,15 @@ g1 <- ggplot(data = d, mapping = aes(x = type)) +
   labs(title = 'Picea sitchensis / lutzii', 
        x = 'ecosystem type', y = 'relative establishment probability') +
   theme_light() + 
-  theme(axis.text.y = element_text(face = facekey),
+  theme(axis.text.y = element_markdown(),
         plot.title = element_text(face = 'italic'))
 #plot(g1)
 
 d <- filter(plot, species == "P.abies")
 col <- '#377eb8'
-g2 <- ggplot(data = d, mapping = aes(x = type)) + 
+g2 <- ggplot(data = d, mapping = aes(x = name)) + 
   scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
+  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
@@ -350,9 +311,9 @@ g2 <- ggplot(data = d, mapping = aes(x = type)) +
 
 d <- filter(plot, species == "Larix")
 col <- '#4daf4a'
-g3 <- ggplot(data = d, mapping = aes(x = type)) + 
+g3 <- ggplot(data = d, mapping = aes(x = name)) + 
   scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
+  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
@@ -377,9 +338,9 @@ g3 <- ggplot(data = d, mapping = aes(x = type)) +
 
 d <- filter(plot, species == "P.contorta")
 col <- '#e41a1c'
-g4 <- ggplot(data = d, mapping = aes(x = type)) + 
+g4 <- ggplot(data = d, mapping = aes(x = name)) + 
   scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$type) == 'forest'), linetype = "dotted") +
+  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
              position = position_jitter(width = 0.1)) +
@@ -402,7 +363,6 @@ g4 <- ggplot(data = d, mapping = aes(x = type)) +
         plot.title = element_text(face = 'italic'))
 #plot(g4)
 
-
 g1234 <- g1 + g2 + g3 + g4 + 
   plot_layout(ncol = 4)
 ```
@@ -410,22 +370,6 @@ g1234 <- g1 + g2 + g3 + g4 +
 ```{r}
 ggsave(g1234, filename= 'relative-establishment.pdf', path = here('ms', 'figures'),
   scale = 1, width = 34, height = 21, units = 'cm', dpi = 300)
-```
-
-Using faceting. Can't specify ylim individually for each facet:
-
-```{r}
-ggplot(plot, mapping = aes(x = nin, color = species)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) +
-  facet_grid(cols = vars(species), scales = "free_x") +
-  scale_y_log10() +
-  coord_flip() +
-  scale_color_brewer(type = 'qual', palette='Dark2') +
-  labs(x = 'ecosystem type', 
-       y = 'relative establishment probability', 
-       title = 'Relative establishment across ecosystem types') +
-  theme(legend.position = "none")
-
 ```
 
 
