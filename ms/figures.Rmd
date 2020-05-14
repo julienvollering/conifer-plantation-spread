@@ -200,44 +200,37 @@ results <- readRDS(here("output","results.rds"))
 types <- read_csv(here('data', 'types.csv')) %>% 
   select(-vegheight) %>% 
   mutate(name = case_when(
-    category == 'terrestrial' & is.na(structuring) ~ name,
-    category == 'terrestrial' & !is.na(structuring) ~ paste0(paste0('**',name),'**'),
-    category == 'wetland' & is.na(structuring) ~ paste0(paste0('*',name),'*'),
-    category == 'wetland' & !is.na(structuring) ~ paste0(paste0('***',name),'***'))
+    category == 'terrestrial' & is.na(structuring) ~ 
+      name,
+    category == 'terrestrial' & !is.na(structuring) ~ 
+      paste0(paste0('**',name),'**'),
+    category == 'wetland' & is.na(structuring) ~ 
+      paste0(paste0('*',name),'*'),
+    category == 'wetland' & !is.na(structuring) ~ 
+      paste0(paste0('***',name),'***'))
   )
-reflvl <- "T4"
 
-arith <- bind_rows(results$arithmetic, .id = "species") %>% 
+arith <- results$arithmetic %>% 
+  bind_rows(.id = "species") %>% 
   filter(!(n == 0 & daa < 5)) %>% 
-  filter(nin != "plantation forest") %>%  #TODO
   rename(type = nin) %>% 
   left_join(types, by = 'type') %>% 
   select(-daa, -n, -density) %>% 
   mutate(modeled = FALSE)
   
-# Scaling model fit per species
-scalers <- map_dbl(results$model.preds, ~ filter(.,  nin == reflvl) %>% pull(fit))
-est <- map2(results$model.preds, results$model.preds.localities, bind_rows)
-est.scaled <- map2(est, scalers, ~ mutate_at(.x, .vars = c('fit', 'ci.l', 'ci.u'),
-                                             magrittr::divide_by, .y))
-est.scaled <- bind_rows(est.scaled, .id = "species") %>% 
+est <- results$model.preds %>% 
+  bind_rows(.id = "species") %>% 
   rename(type = nin) %>% 
   left_join(types, by = 'type') %>% 
   mutate(modeled = TRUE)
 
-dat <- bind_rows(est.scaled, arith)
+dat <- bind_rows(est, arith)
 dat
 tail(dat)
 print(filter(types, type %in% dat$type), n=32)
 ```
 
 ```{r}
-plot <- dat %>% 
-  mutate(species = fct_relevel(species, c('P.sitchensis-lutzii', 
-                                          'P.abies', 
-                                          'Larix', 
-                                          'P.contorta')))
-
 typerank <- filter(est.scaled, is.na(locality)) %>% 
   mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
   group_by(species) %>% 
@@ -248,7 +241,7 @@ typerank <- filter(est.scaled, is.na(locality)) %>%
   summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
   arrange(rank)
 
-plot <- plot %>% 
+plot <- dat %>% 
   left_join(typerank, by = 'type') %>%
   mutate(rank = if_else(is.na(rank), -1, rank)) %>%
   mutate(name = fct_reorder(name, rank))
@@ -280,7 +273,6 @@ g1 <- ggplot(data = d, mapping = aes(x = name)) +
   theme_light() + 
   theme(axis.text.y = element_markdown(),
         plot.title = element_text(face = 'italic'))
-#plot(g1)
 
 d <- filter(plot, species == "P.abies")
 col <- '#377eb8'
@@ -307,7 +299,6 @@ g2 <- ggplot(data = d, mapping = aes(x = name)) +
         axis.ticks.y=element_blank(),
         axis.title.x = element_blank(),
         plot.title = element_text(face = 'italic'))
-#plot(g2)
 
 d <- filter(plot, species == "Larix")
 col <- '#4daf4a'
@@ -334,7 +325,6 @@ g3 <- ggplot(data = d, mapping = aes(x = name)) +
         axis.ticks.y=element_blank(),
         axis.title.x = element_blank(),
         plot.title = element_text(face = 'italic'))
-#plot(g3)
 
 d <- filter(plot, species == "P.contorta")
 col <- '#e41a1c'
@@ -361,7 +351,6 @@ g4 <- ggplot(data = d, mapping = aes(x = name)) +
         axis.ticks.y=element_blank(),
         axis.title.x = element_blank(),
         plot.title = element_text(face = 'italic'))
-#plot(g4)
 
 g1234 <- g1 + g2 + g3 + g4 + 
   plot_layout(ncol = 4)
@@ -371,6 +360,291 @@ g1234 <- g1 + g2 + g3 + g4 +
 ggsave(g1234, filename= 'relative-establishment.pdf', path = here('ms', 'figures'),
   scale = 1, width = 34, height = 21, units = 'cm', dpi = 300)
 ```
+
+
+
+# Relative establishment hypotheses
+
+```{r}
+results.wetland <- readRDS(here("output","results-wetland.rds"))
+
+dwet <- results.wetland %>% 
+  bind_rows(.id = "species") %>% 
+  mutate(category = case_when(
+    category == 'terr' ~ 'terrestrial',
+    category == 'wetl' ~ '*wetland*'
+  ))
+
+typerank <- filter(dwet, modeled) %>% 
+  mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
+  group_by(species) %>% 
+  group_split() %>% 
+  map(~ mutate(., fit.rank = percent_rank(.data$fit))) %>% 
+  bind_rows() %>% 
+  group_by(category) %>% 
+  summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
+  arrange(rank)
+
+plotwet <- dwet %>% 
+  left_join(typerank, by = 'category') %>%
+  mutate(category = fct_reorder(category, rank))
+
+results.disturbance <- readRDS(here("output","results-disturbance.rds"))
+
+ddisturb <- results.disturbance %>% 
+  bind_rows(.id = "species") %>% 
+  mutate(structuring = case_when(
+    structuring == 'nodisturb' ~ 'no<br>disturbance',
+    structuring == 'nadisturb' ~ '**natural<br>disturbance**',
+    structuring == 'andisturb' ~ '**anthropogenic<br>disturbance**'
+  ))
+
+typerank <- filter(ddisturb, modeled) %>% 
+  mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
+  group_by(species) %>% 
+  group_split() %>% 
+  map(~ mutate(., fit.rank = percent_rank(.data$fit))) %>% 
+  bind_rows() %>% 
+  group_by(structuring) %>% 
+  summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
+  arrange(rank)
+
+plotdisturb <- ddisturb %>% 
+  left_join(typerank, by = 'structuring') %>%
+  mutate(structuring = fct_reorder(structuring, rank))
+
+ylimits <- bind_rows(plotwet, plotdisturb) %>%
+  pivot_longer(cols = c('ci.l', 'ci.u'), names_to = 'ci') %>%
+  group_by(species) %>% 
+  group_split() %>%
+  map(~ range(pull(., value), na.rm = TRUE))
+names(ylimits) <- bind_rows(plotwet, plotdisturb) %>% 
+  pull(species) %>% 
+  unique()
+```
+
+```{r}
+d <- filter(plotwet, species == "P.sitchensis-lutzii")
+col <- '#984ea3'
+g1 <- ggplot(data = d, mapping = aes(x = category)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$category) == 'terrestrial'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log2",
+    breaks = scales::breaks_log(base = 2),
+    labels = scales::trans_format("log2", scales::math_format(2^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$`P.sitchensis-lutzii`) +
+  labs(title = 'Picea sitchensis / lutzii',  x = 'ecosystem\ncategory') +
+  theme_light() + 
+  theme(axis.text.y = element_markdown(),
+        plot.title = element_text(face = 'italic'),
+        axis.title.x = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x = element_blank()) 
+
+d <- filter(plotwet, species == "P.abies")
+col <- '#377eb8'
+g2 <- ggplot(data = d, mapping = aes(x = category)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$category) == 'terrestrial'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log10",
+    breaks = scales::breaks_log(base = 10),
+    labels = scales::trans_format("log10", scales::math_format(10^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$P.abies) +
+  labs(title = 'Picea abies') +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x = element_blank(),
+        plot.title = element_text(face = 'italic'))
+
+d <- filter(plotwet, species == "Larix")
+col <- '#4daf4a'
+g3 <- ggplot(data = d, mapping = aes(x = category)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$category) == 'terrestrial'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log10",
+    breaks = scales::breaks_log(base = 10),
+    labels = scales::trans_format("log10", scales::math_format(10^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$Larix) +
+  labs(title = 'Larix') +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x = element_blank(),
+        plot.title = element_text(face = 'italic'))
+
+d <- filter(plotwet, species == "P.contorta")
+col <- '#e41a1c'
+g4 <- ggplot(data = d, mapping = aes(x = category)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$category) == 'terrestrial'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log10",
+    breaks = scales::breaks_log(base = 10),
+    labels = scales::trans_format("log10", scales::math_format(10^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$P.contorta) +
+  labs(title = 'Pinus contorta') +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x = element_blank(),
+        plot.title = element_text(face = 'italic'))
+
+d <- filter(plotdisturb, species == "P.sitchensis-lutzii")
+col <- '#984ea3'
+g5 <- ggplot(data = d, mapping = aes(x = structuring)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$structuring) == 'no<br>disturbance'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log2",
+    breaks = scales::breaks_log(base = 2),
+    labels = scales::trans_format("log2", scales::math_format(2^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$`P.sitchensis-lutzii`) +
+  labs(x = 'ecosystem\nstructuring', y = 'relative establishment probability') +
+  theme_light() + 
+  theme(axis.text.y = element_markdown(),
+        plot.title = element_blank())
+
+d <- filter(plotdisturb, species == "P.abies")
+col <- '#377eb8'
+g6 <- ggplot(data = d, mapping = aes(x = structuring)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$structuring) == 'no<br>disturbance'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log10",
+    breaks = scales::breaks_log(base = 10),
+    labels = scales::trans_format("log10", scales::math_format(10^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$P.abies) +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_blank(),
+        plot.title = element_blank())
+
+d <- filter(plotdisturb, species == "Larix")
+col <- '#4daf4a'
+g7 <- ggplot(data = d, mapping = aes(x = structuring)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$structuring) == 'no<br>disturbance'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log10",
+    breaks = scales::breaks_log(base = 10),
+    labels = scales::trans_format("log10", scales::math_format(10^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$Larix) +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_blank(),
+        plot.title = element_blank())
+
+d <- filter(plotdisturb, species == "P.contorta")
+col <- '#e41a1c'
+g8 <- ggplot(data = d, mapping = aes(x = structuring)) + 
+  scale_x_discrete(drop = FALSE) +
+  geom_vline(xintercept = which(levels(d$structuring) == 'no<br>disturbance'), 
+             linetype = "dotted") +
+  geom_linerange(data = filter(d, modeled == TRUE), 
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+  geom_point(data = filter(d, modeled == TRUE),
+             mapping = aes(y = fit), color = col, size = 2) +
+  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
+             color = col, pch = 1, size = 2) +
+  scale_y_continuous(
+    trans = "log10",
+    breaks = scales::breaks_log(base = 10),
+    labels = scales::trans_format("log10", scales::math_format(10^.x)),
+    minor_breaks = NULL) +
+  coord_flip(ylim = ylimits$P.contorta) +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_blank(),
+        plot.title = element_blank())
+
+
+g <- 
+  g1 + g2 + g3 + g4 + 
+  g5 + g6 + g7 + g8 +
+  plot_layout(ncol = 4)
+```
+
+```{r}
+ggsave(g, filename= 'relative-establishment-hypotheses.pdf', path = here('ms', 'figures'),
+  scale = 1, width = 28, height = 10, units = 'cm', dpi = 300)
+```
+
+
 
 
 # sessionInfo 

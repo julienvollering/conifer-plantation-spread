@@ -19,8 +19,8 @@ library(glmmTMB)
 ```
 
 ```{r}
-datlist <- readRDS(here("output","data.rds"))
 types <- read_csv(here('data','types.csv'))
+datlist <- readRDS(here("output","data.rds"))
 results <- readRDS(here("output","results.rds"))
 
 terrestrial <- filter(types, category == 'terrestrial') %>% pull(type)
@@ -151,7 +151,7 @@ names(results.disturbance) <- names(datlist)
 
 ```{r}
 saveRDS(results.wetland, here("output","results-wetland.rds"))
-saveRDS(results.dist, here("output","results-disturbance.rds"))
+saveRDS(results.disturbance, here("output","results-disturbance.rds"))
 ```
 
 # sessionInfo
