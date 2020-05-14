@@ -94,10 +94,9 @@ The groups of species (hereafter: "species") we examined were: (1) Sitka spruce 
 We analysed the data in two ways, to answer distinct questions about patterns of wildling establishment.
 
 Our first analysis tallied of the number of wildlings of each species per unit area of each ecosystem type.
-In this way, we summarized the state of wildling establishment from alien conifer plantations under prevailing conditions.
-In the tallying analysis, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
+The motivation for this approach was descriptive; we summarized the state of wildling establishment from alien conifer plantations under prevailing conditions.
+In the results from this analysis, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
 For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
-The motivation for this approach was descriptive: to break down the realized spread of wildlings from the specific plantations in the data set.
 
 Our second analysis was designed to isolate the influence of ecosystem types on the establishment probability of each species.
 To do so, we defined establishment probability (E) as the ratio of wildlings (W) to deposited seeds (S) in a given area, or:
@@ -178,9 +177,15 @@ knitr::include_graphics('figures/locality-example/locality-example.pdf')
 
 Advantage to observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
 
-Spatial grain limitations: minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types.
+Advantage: 
+Compared to tallying analysis, we see that the magnitudes of differences between ecosystem types is much larger. For management the difference between a ten-fold gap and a 1000-fold gap matters --- and may draw more attention to plantation surroundings.
 
-WALD model of seed deposition fit patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?
+Limitation:
+Spatial grain. Minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types.
+
+Limitation:
+WALD model of seed deposition fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
+- Negative density dependence, since the WALD model gave a more evenly spread probability distribution. If this is the case, it would mean that our results overestimate establishment probability near the seed sources and underestimate further away.  
 
 # Appendix
 
