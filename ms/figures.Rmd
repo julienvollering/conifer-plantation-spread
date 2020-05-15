@@ -212,8 +212,8 @@ types <- read_csv(here('data', 'types.csv')) %>%
   mutate(name = case_when(
     name == '**drained wetland and terrestrialized freshwater sediment**' ~
       '**drained wetland and<br>terrestrialized freshwater sediment**',
-    name == '**strongly altered ground with semi−natural grassland character**' ~
-      '**strongly altered ground with<br>semi−natural grassland character**',
+    name == '**strongly altered ground with semi-natural grassland character**' ~
+      '**strongly altered ground with<br>semi-natural grassland character**',
     name == '**agriculturally improved grassland with semi-natural character**' ~
       '**agriculturally improved grassland<br>with semi-natural character**',
     TRUE ~ name
