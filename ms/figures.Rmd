@@ -208,7 +208,16 @@ types <- read_csv(here('data', 'types.csv')) %>%
       paste0(paste0('*',name),'*'),
     category == 'wetland' & !is.na(structuring) ~ 
       paste0(paste0('***',name),'***'))
-  )
+  ) %>% 
+  mutate(name = case_when(
+    name == '**drained wetland and terrestrialized freshwater sediment**' ~
+      '**drained wetland and<br>terrestrialized freshwater sediment**',
+    name == '**strongly altered ground with semi−natural grassland character**' ~
+      '**strongly altered ground with<br>semi−natural grassland character**',
+    name == '**agriculturally improved grassland with semi-natural character**' ~
+      '**agriculturally improved grassland<br>with semi-natural character**',
+    TRUE ~ name
+  ))
 
 arith <- results$arithmetic %>% 
   bind_rows(.id = "species") %>% 
@@ -231,7 +240,7 @@ print(filter(types, type %in% dat$type), n=32)
 ```
 
 ```{r}
-typerank <- filter(est.scaled, is.na(locality)) %>% 
+typerank <- filter(est, is.na(locality)) %>% 
   mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
   group_by(species) %>% 
   group_split() %>% 
@@ -257,8 +266,9 @@ g1 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+             position = position_jitter(width = 0.2)) +
+  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
              mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
@@ -267,7 +277,7 @@ g1 <- ggplot(data = d, mapping = aes(x = name)) +
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
     minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-3, 1e2)) +
+  coord_flip(ylim = c(1e-4, 1e2)) +
   labs(title = 'Picea sitchensis / lutzii', 
        x = 'ecosystem type', y = 'relative establishment probability') +
   theme_light() + 
@@ -281,8 +291,9 @@ g2 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+             position = position_jitter(width = 0.2)) +
+  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
              mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
@@ -291,7 +302,7 @@ g2 <- ggplot(data = d, mapping = aes(x = name)) +
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
     minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-3, 1e2)) +
+  coord_flip(ylim = c(1e-4, 1e2)) +
   labs(title = 'Picea abies') +
   theme_light() +
   theme(axis.title.y=element_blank(),
@@ -307,8 +318,9 @@ g3 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color =col, size = 1) +
+             position = position_jitter(width = 0.2)) +
+  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color =col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
              mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
@@ -333,8 +345,9 @@ g4 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.1)) +
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
+             position = position_jitter(width = 0.2)) +
+  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
+                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
              mapping = aes(y = fit), color = col, size = 2) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
@@ -361,8 +374,6 @@ ggsave(g1234, filename= 'relative-establishment.pdf', path = here('ms', 'figures
   scale = 1, width = 34, height = 21, units = 'cm', dpi = 300)
 ```
 
-
-
 # Relative establishment hypotheses
 
 ```{r}
@@ -375,19 +386,22 @@ dwet <- results.wetland %>%
     category == 'wetl' ~ '*wetland*'
   ))
 
-typerank <- filter(dwet, modeled) %>% 
-  mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
-  group_by(species) %>% 
-  group_split() %>% 
-  map(~ mutate(., fit.rank = percent_rank(.data$fit))) %>% 
-  bind_rows() %>% 
-  group_by(category) %>% 
-  summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
-  arrange(rank)
-
 plotwet <- dwet %>% 
-  left_join(typerank, by = 'category') %>%
-  mutate(category = fct_reorder(category, rank))
+  mutate(category = fct_relevel(category, 'terrestrial', '*wetland*'))
+
+# typerank <- filter(dwet, modeled) %>% 
+#   mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
+#   group_by(species) %>% 
+#   group_split() %>% 
+#   map(~ mutate(., fit.rank = percent_rank(.data$fit))) %>% 
+#   bind_rows() %>% 
+#   group_by(category) %>% 
+#   summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
+#   arrange(rank)
+
+# plotwet <- dwet %>% 
+#   left_join(typerank, by = 'category') %>%
+#   mutate(category = fct_reorder(category, rank))
 
 results.disturbance <- readRDS(here("output","results-disturbance.rds"))
 
@@ -399,19 +413,24 @@ ddisturb <- results.disturbance %>%
     structuring == 'andisturb' ~ '**anthropogenic<br>disturbance**'
   ))
 
-typerank <- filter(ddisturb, modeled) %>% 
-  mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
-  group_by(species) %>% 
-  group_split() %>% 
-  map(~ mutate(., fit.rank = percent_rank(.data$fit))) %>% 
-  bind_rows() %>% 
-  group_by(structuring) %>% 
-  summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
-  arrange(rank)
-
 plotdisturb <- ddisturb %>% 
-  left_join(typerank, by = 'structuring') %>%
-  mutate(structuring = fct_reorder(structuring, rank))
+  mutate(structuring = fct_relevel(structuring, 'no<br>disturbance',
+                                   '**natural<br>disturbance**',
+                                   '**anthropogenic<br>disturbance**'))
+
+# typerank <- filter(ddisturb, modeled) %>% 
+#   mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
+#   group_by(species) %>% 
+#   group_split() %>% 
+#   map(~ mutate(., fit.rank = percent_rank(.data$fit))) %>% 
+#   bind_rows() %>% 
+#   group_by(structuring) %>% 
+#   summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
+#   arrange(rank)
+# 
+# plotdisturb <- ddisturb %>% 
+#   left_join(typerank, by = 'structuring') %>%
+#   mutate(structuring = fct_reorder(structuring, rank))
 
 ylimits <- bind_rows(plotwet, plotdisturb) %>%
   pivot_longer(cols = c('ci.l', 'ci.u'), names_to = 'ci') %>%
