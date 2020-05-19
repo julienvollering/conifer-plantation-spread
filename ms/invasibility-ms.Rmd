@@ -233,7 +233,7 @@ kable(locs, escape = FALSE, align = "lllrrrrrr") %>%
   column_spec(2, italic = TRUE) %>%
   footnote(general = "Easting and Northing are given for UTM zone 33N. Height is given in meters and age in years.",
            alphabet = c("mean annual temperature (°C)",
-                        "precipitation of coldest quarter (cm)"),
+                        "precipitation in coldest quarter (cm)"),
            symbol = c("interpolated as the mean height of other plantations of the same species, inversely weighted by difference in age",
                       "interpolated as the mean age of other plantations of the same species in the same region"))
 ```
@@ -262,7 +262,7 @@ kable(traits, escape = FALSE) %>%
 
 ## A3
 
-```{r types table, include=FALSE}
+```{r make types table, include=FALSE}
 pairing <- read_csv(here('data','codetype-pairing.csv'))
 types <- read_csv(here('data', 'types.csv'))
 typestab <- inner_join(types, pairing) %>%
@@ -272,7 +272,7 @@ typestab <- inner_join(types, pairing) %>%
 names(typestab)[5] <- paste0(names(typestab)[5], footnote_marker_alphabet(1))
 ```
 
-```{r nin-table}
+```{r types table}
 options(knitr.kable.NA = '')
 kable(typestab, escape = FALSE) %>% 
   collapse_rows(columns = 1) %>% 
@@ -285,6 +285,29 @@ kable(typestab, escape = FALSE) %>%
 Seed source polygons for which the species of interest only made up a fraction of the tree composition (Olsen et al. 2019, Appelgren 2018 ...) were used with their point source density adjusted accordingly. 'Mixed forest'
 Seed source polygons identified as logged (Appelgren 2018 ...) were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
 
+## A5
+
+```{r, message=FALSE}
+Pstab <- read_csv(here('ms', 'tables', 'Ps-modelsummary.csv'))
+Patab <- read_csv(here('ms', 'tables', 'Pa-modelsummary.csv'))
+
+```
+
+```{r}
+kable(Pstab, align = 'clrrrr', caption = 'Picea sitchensis / lutzii') %>%
+  kable_styling() %>% 
+  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  column_spec(1, bold = T) %>% 
+  collapse_rows(columns = 1, valign = "top")
+
+kable(Patab, align = 'clrrrr', caption = 'Picea abies') %>%
+  kable_styling() %>% 
+  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  column_spec(1, bold = T) %>% 
+  collapse_rows(columns = 1, valign = "top") %>%
+  footnote(general = "generalized Poisson family with overdispersion parameter 2.59")
+
+```
 
 # References
 
