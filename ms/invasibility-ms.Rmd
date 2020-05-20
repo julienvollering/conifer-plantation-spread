@@ -155,7 +155,7 @@ Additional details about how data from different field campaigns were harmonized
 
 (fig. \@ref(fig:locality-example))
 
-```{r locality-example, fig.cap='A illustration of data from one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
+```{r locality-example, fig.cap='An illustration of one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
 knitr::include_graphics('figures/locality-example/locality-example.pdf')
 ```
 
@@ -280,7 +280,8 @@ Seed source polygons identified as logged (Appelgren 2018 ...) were included as 
 ```{r, message=FALSE}
 Pstab <- read_csv(here('ms', 'tables', 'Ps-modelsummary.csv'))
 Patab <- read_csv(here('ms', 'tables', 'Pa-modelsummary.csv'))
-
+Ltab <- read_csv(here('ms', 'tables', 'L-modelsummary.csv'))
+Pctab <- read_csv(here('ms', 'tables', 'Pc-modelsummary.csv'))
 ```
 
 ```{r}
@@ -297,6 +298,17 @@ kable(Patab, align = 'clrrrr', caption = 'Picea abies') %>%
   collapse_rows(columns = 1, valign = "top") %>%
   footnote(general = "generalized Poisson family with overdispersion parameter 2.59")
 
+kable(Ltab, align = 'clrrrr', caption = 'Larix') %>%
+  kable_styling() %>% 
+  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  column_spec(1, bold = T) %>% 
+  collapse_rows(columns = 1, valign = "top")
+
+kable(Pctab, align = 'clrrrr', caption = 'Pinus contorta') %>%
+  kable_styling() %>% 
+  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  column_spec(1, bold = T) %>% 
+  collapse_rows(columns = 1, valign = "top")
 ```
 
 # References

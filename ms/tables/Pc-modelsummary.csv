@@ -1,0 +1,19 @@
+Mixture component,Term,Estimate,95% CI,SD (Intercept),N
+Conditional Model,(Intercept),-7.23,"-8.41, -6.05",NA,NA
+Conditional Model,seeds.WALD,1.13,"0.82, 1.43",NA,NA
+Conditional Model,age,0.43,"-0.1, 0.96",NA,NA
+Conditional Model,bio01,-9.83,"-12.53, -7.12",NA,NA
+Conditional Model,bio19,6.22,"3.48, 8.96",NA,NA
+Conditional Model,relelev,-0.17,"-0.53, 0.2",NA,NA
+Conditional Model,artificial,6.14,"4.52, 7.77",NA,NA
+Conditional Model,T34,8,"5.47, 10.52",NA,NA
+Conditional Model,V1,5.31,"2.71, 7.9",NA,NA
+Conditional Model,T1,8.55,"6.01, 11.08",NA,NA
+Conditional Model,T40,2.56,"1.91, 3.2",NA,NA
+Conditional Model,T30,1.23,"-1.92, 4.38",NA,NA
+Conditional Model,V8,-0.01,"-4.53, 4.51",NA,NA
+Conditional Model,V3,-3.56,"-5.13, -1.98",NA,NA
+Conditional Model,seeds.WALD * age,-0.56,"-0.8, -0.33",NA,NA
+Conditional Model,locality,NA,NA,0.34,6
+Zero-inflation model,(Intercept),-6.14,"-29.36, 17.08",NA,NA
+Zero-inflation model,age,3.38,"-9.82, 16.58",NA,NA
