@@ -130,7 +130,7 @@ A table of the 82 plantations and their accompanying non-spatial data is provide
 
 For our second analysis --- isolating the effect of ecosystem type on establishment probability --- we needed estimates of the spatial distribution of seed deposition within the 500x500 m field plots.
 Because conspecific plantations were sometimes located nearby the central plantation, we considered all plantations within a 1 km radius to be potential seed sources.
-We used two models of seed dispersal to derive two different estimates of seed probability density.
+We used two models of seed dispersal to derive two different estimates of seed deposition probability density.
 
 The first model was an empirical seed dispersal location kernel [@nathanDispersalKernels2012], with parameter estimates generalized from multiple data sets.
 Specifically, we selected from Bullock et al. [-@bullockSynthesisEmpiricalPlant2017] the kernel that performed best for wind-adapted seeds from 5-15 m tall trees (an Exponential Power function).
@@ -145,11 +145,11 @@ We set $H$ to the height of the central plantation, estimated $U$ from a compute
 We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional).
 In each sector we estimated vegetation height based on the composition of mapped ecosystem types (Appendix [A3]).
 Simulataneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season (Appendix [A2]), using data from a high resolution atmospheric reanalysis [@haakenstad15yearHighResolution2017] or from the nearest weather station (MET Norway).
-The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, restricting winds to the species' dispersal season).
+The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
 
 Both models of seed probability density were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
 Field-mapped polygons of seed sources were transformed into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
-Additional details about how data from different field campaigns were harmonized to model seed dispersal are explained in Appendix [A4]
+Additional details about how data from different field campaigns were harmonized to model seed dispersal are explained in Appendix [A4].
 
 ## Establishment frequency
 
@@ -158,6 +158,10 @@ Additional details about how data from different field campaigns were harmonized
 ```{r locality-example, fig.cap='An illustration of one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
 knitr::include_graphics('figures/locality-example/locality-example.pdf')
 ```
+
+We diagrammed causal relationships among factors influencing the number of wildlings per cell with a directed acyclical graph (Appendix [A5]).
+Its structure mandated that --- to estimate the effect of ecosystem type on wildlings --- our model adjust for climate, relative elevation, seed deposition density, and locality [ @textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
+
 
 # Results
 
@@ -276,6 +280,12 @@ Seed source polygons for which the species of interest only made up a fraction o
 Seed source polygons identified as logged (Appelgren 2018 ...) were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
 
 ## A5
+
+```{r DAG, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
+```
+
+## A6
 
 ```{r, message=FALSE}
 Pstab <- read_csv(here('ms', 'tables', 'Ps-modelsummary.csv'))
