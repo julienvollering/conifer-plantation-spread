@@ -120,11 +120,12 @@ Concurrently, we registered polygons for all terrestrial ecosystem types followi
 The Nature in Norway system is the national standard for land cover mapping and provides full spatial coverage (i.e. any location and any kind of land cover is assignable to an ecosystem type).
 It builds on the continuum concept in ecology, aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@austinContinuumConceptOrdination1985; @NatureTypesNorway2018; @whittakerGradientAnalysisVegetation1967].
 We mapped ecosystem types at a scale of 1:5000, which implies that all polygons with a size over 250 m^2^ were registered [@brynVeilederKartleggingAv2015].
+Regularly patterned occurrence of more than one ecosystem type in polygons smaller than the minimum size were registered as so-called mosaic polygons.
 
 Some non-spatial data were also collected for each plantation. 
 We measured the height of a representative individual in the plantation by clinometer.
 We also estimated the age of the plantation at the time of the field campaign, either by contacting land owners or municipal officials, or by counting growth rings.
-A table of the 82 plantations and their accompanying non-spatial data is provided in Appendix [A1].
+Details for all 82 plantations are provided in Appendix [A1].
 
 ## Seed dispersal
 
@@ -153,7 +154,11 @@ Additional details about how data from different field campaigns were harmonized
 
 ## Establishment frequency
 
-(fig. \@ref(fig:locality-example))
+For our analyses of establishment frequency, we rasterized wildling occurences and polygons of ecosystem types to the same 10 m grid as the seed dispersal models (fig. \@ref(fig:locality-example)). 
+Each ecosystem type was rendered separately, in rasters whose values represented the type's proportional area in a given cell.
+Area covered by mosaic polygons was evenly divided among the constituent types. 
+
+
 
 ```{r locality-example, fig.cap='An illustration of one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
 knitr::include_graphics('figures/locality-example/locality-example.pdf')
