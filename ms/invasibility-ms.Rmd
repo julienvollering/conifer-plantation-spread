@@ -154,10 +154,12 @@ Additional details about how data from different field campaigns were harmonized
 
 ## Establishment frequency
 
-For our analyses of establishment frequency, we rasterized wildling occurences and polygons of ecosystem types to the same 10 m grid as the seed dispersal models (fig. \@ref(fig:locality-example)). 
-Each ecosystem type was rendered separately, in rasters whose values represented the type's proportional area in a given cell.
-Area covered by mosaic polygons was evenly divided among the constituent types. 
+For our analyses of establishment frequency, we rasterized wildling occurences and ecosystem types to the same 10 m grid as the seed dispersal models (fig. \@ref(fig:locality-example)). 
+Rather than assigning a single ecosystem type to each grid cell, we applied fuzzy logic and assigned ecosystem types in proportion to their areal coverage of the cell.
+In other words, each ecosystem type was rendered as a separate raster variable with values in the range [0,1].
+Area covered by mosaic polygons was evenly divided among the constituent types.
 
+We excluded the "tree plantation" ecosystem type from our analyses because wildlings occurring within this type were not registered in all field campaigns.
 
 
 ```{r locality-example, fig.cap='An illustration of one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
