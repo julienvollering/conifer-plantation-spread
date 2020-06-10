@@ -80,24 +80,27 @@ For example, lower elevations may trap more seeds.
 
 We compared the frequency with which four groups of alien conifer species establish in various ecosystem types, using observational data.
 Specifically, we used maps of wildlings and ecosystem types around the plantations from which the wildlings likely originated.
-The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) Norway spruce (*Picea abies*), (3) undetermined larches (*Larix* spp.), and (4) lodgepole pine (*Pinus contorta*).
-We analysed the data in two ways, to answer distinct questions about patterns of wildling establishment.
+The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) Norway spruce (*Picea abies*), (3) undetermined larches (*Larix* spp.), and (4) lodgepole pine (*Pinus contorta*). 
 
-Our first analysis tallied of the number of wildlings of each species per unit area of each ecosystem type.
-The motivation for this approach was descriptive; we summarized the state of wildling establishment from alien conifer plantations under prevailing conditions.
-In the results from this analysis, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
-For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
+For each of the species, we analysed establishment frequency in two ways.
+Our first analysis simply tallied of the number of wildlings per unit area for each ecosystem type.
+The motivation for this naive approach was descriptive; we summarized the state of wildling establishment from the plantations in the sample.
+Our second analysis was designed to isolate the influence of ecosystem types on establishment probability.
+To do so, we defined establishment probability ($E$) as the ratio of wildlings ($W$) to deposited seeds ($S$) in a given area, or:
 
-Our second analysis was designed to isolate the influence of ecosystem types on the establishment probability of each species.
-To do so, we defined establishment probability (E) as the ratio of wildlings (W) to deposited seeds (S) in a given area, or:
+\begin{equation} 
+W_{xy} 	= S_{xy} * E_{xy}
+(\#eq:estmod)
+\end{equation}
 
-$$W_{xy} 	= S_{xy}\; * E_{xy}$$
+Also see Equation \@ref(eq:estmod).
+
+$$W_{xy} 	= S_{xy} * E_{xy}$$
 
 where xy denotes a unit area.
-Note that this simple conceptual model mirrors our basic mechanistic understanding of the spread process: a seed (S) disperses from its source to a new location, and then the conditions at that location (E) determine the likelihood that the seed establishes as a wildling (W).
-Guided by this equality, we specified a statistical model for the relationship between wildlings and ecosystem types:
-$S_{xy}$ was assumed to be a function of the plantation's age and its probability of dispersing seeds to that area, while $E_{xy}$ was assumed to be a function of climate and ecosystem type.
-Plantation age was included in the model because the observed wildlings were not an annual cohort but rather accrued over the lifetime of the plantation.
+This simple conceptual model mirrors our basic mechanistic understanding of the spread process: seeds disperse from their source to a given location ($S_{xy}$), and then the conditions at that location ($E_{xy}$) determine the likelihood that the seed establishes as a wildling ($W_{xy}$).
+Guided by this equality, we specified a statistical model for the relationship between wildlings and ecosystem types, conditioning on estimates of $S_{xy}$.
+
 
 ## Field data
 
@@ -152,22 +155,26 @@ Both models of seed probability density were expressed on a grid with a grain of
 Field-mapped polygons of seed sources were transformed into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
 Additional details about how data from different field campaigns were harmonized to model seed dispersal are explained in Appendix [A4].
 
-## Establishment frequency
+## Establishment
 
-For our analyses of establishment frequency, we rasterized wildling occurences and ecosystem types to the same 10 m grid as the seed dispersal models (fig. \@ref(fig:locality-example)). 
+For our analyses of establishment, we rasterized wildling occurences and ecosystem types to the same 10 m grid as the seed dispersal models (fig. \@ref(fig:locality-example)). 
 Rather than assigning a single ecosystem type to each grid cell, we applied fuzzy logic and assigned ecosystem types in proportion to their areal coverage of the cell.
 In other words, each ecosystem type was rendered as a separate raster variable with values in the range [0,1].
-Area covered by mosaic polygons was evenly divided among the constituent types.
-
-We excluded the "tree plantation" ecosystem type from our analyses because wildlings occurring within this type were not registered in all field campaigns.
-
+Area covered by mosaic polygons was divided evenly among the constituent types.
+We excluded the "tree plantation" ecosystem type from both analyses because some of the field campaigns did not register wildlings occurring within this type.
 
 ```{r locality-example, fig.cap='An illustration of one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
 knitr::include_graphics('figures/locality-example/locality-example.pdf')
 ```
 
+For our first analysis, we calculated wildling density per ecosystem type across all localities, by dividing the total number of wildings in that type by the total area of that type.
+Wildings in cells composed of multiple types were counted in proportion to cell's composition; for example, a cell with one wildling and half covered by a given type would tally 0.5 wildling for that type.
+
+For our second analysis, 
 We diagrammed causal relationships among factors influencing the number of wildlings per cell with a directed acyclical graph (Appendix [A5]).
-Its structure mandated that --- to estimate the effect of ecosystem type on wildlings --- our model adjust for climate, relative elevation, seed deposition density, and locality [ @textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
+Its structure mandated that --- to estimate how ecosystem type affects wildlings --- our model adjust for climate, relative elevation, seed deposition density, and locality [ @textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
+$S_{xy}$ was assumed to be a function of the plantation's age and its probability of dispersing seeds to that area, while $E_{xy}$ was assumed to be a function of climate and ecosystem type.
+Plantation age was included in the model because the observed wildlings were accrued over the lifetime of the plantation.
 
 
 # Results
@@ -175,6 +182,9 @@ Its structure mandated that --- to estimate the effect of ecosystem type on wild
 - Caution against drawing conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
 
 # Discussion
+
+In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
+For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
 
 Advantage to observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
 
