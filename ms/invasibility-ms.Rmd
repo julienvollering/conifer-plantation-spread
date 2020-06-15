@@ -86,7 +86,7 @@ For each of the species, we analysed establishment frequency in two ways.
 Our first analysis simply tallied of the number of wildlings per unit area for each ecosystem type.
 The motivation for this naive approach was descriptive; we summarized the state of wildling establishment from the plantations in the sample.
 Our second analysis was designed to isolate the influence of ecosystem types on establishment probability.
-To do so, we defined establishment probability ($E$) as the ratio of wildlings ($W$) to deposited seeds ($S$) in a given area, or:
+To do so, we defined establishment probability $E$ as the ratio of wildlings $W$ to deposited seeds $S$ in a given area, or:
 
 \begin{equation} 
 W_{xy} 	= S_{xy} * E_{xy}
@@ -147,9 +147,10 @@ $$\lambda = \left(\frac{H}{\sigma}\right)^2$$
 where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter.
 We set $H$ to the height of the central plantation, estimated $U$ from a computed vertical wind profile, obtained $F$ from literature (Appendix [A2]), and calculated $\sigma$ from an equation for turbulent flow as a function of vegetation height [@skarpaasDispersalPatternsDispersal2007, eq. A4].
 We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional).
-In each sector we estimated vegetation height based on the composition of mapped ecosystem types (Appendix [A3]).
-Simulataneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season (Appendix [A2]), using data from a high resolution atmospheric reanalysis [@haakenstad15yearHighResolution2017] or from the nearest weather station (MET Norway).
+In each sector we estimated mean vegetation height based on the composition of mapped ecosystem types (Appendix [A3]).
+Simulataneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season (Appendix [A2]).
 The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
+The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
 
 Both models of seed probability density were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
 Field-mapped polygons of seed sources were transformed into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
