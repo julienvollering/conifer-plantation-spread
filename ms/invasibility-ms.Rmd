@@ -93,10 +93,6 @@ W_{xy} 	= S_{xy} * E_{xy}
 (\#eq:estmod)
 \end{equation}
 
-Also see Equation \@ref(eq:estmod).
-
-$$W_{xy} 	= S_{xy} * E_{xy}$$
-
 where xy denotes a unit area.
 This simple conceptual model mirrors our basic mechanistic understanding of the spread process: seeds disperse from their source to a given location ($S_{xy}$), and then the conditions at that location ($E_{xy}$) determine the likelihood that the seed establishes as a wildling ($W_{xy}$).
 Guided by this equality, we specified a statistical model for the relationship between wildlings and ecosystem types, conditioning on estimates of $S_{xy}$.
@@ -152,7 +148,7 @@ Simulataneously, we randomly sampled 100 wind velocities in the direction of the
 The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
 The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
 
-Both models of seed probability density were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
+Both models of seed deposition density were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
 Field-mapped polygons of seed sources were transformed into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
 Additional details about how data from different field campaigns were harmonized to model seed dispersal are explained in Appendix [A4].
 
@@ -171,12 +167,17 @@ knitr::include_graphics('figures/locality-example/locality-example.pdf')
 For our first analysis, we calculated wildling density per ecosystem type across all localities, by dividing the total number of wildings in that type by the total area of that type.
 Wildings in cells composed of multiple types were counted in proportion to cell's composition; for example, a cell with one wildling and half covered by a given type would tally 0.5 wildling for that type.
 
-For our second analysis, 
-We diagrammed causal relationships among factors influencing the number of wildlings per cell with a directed acyclical graph (Appendix [A5]).
-Its structure mandated that --- to estimate how ecosystem type affects wildlings --- our model adjust for climate, relative elevation, seed deposition density, and locality [ @textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
-$S_{xy}$ was assumed to be a function of the plantation's age and its probability of dispersing seeds to that area, while $E_{xy}$ was assumed to be a function of climate and ecosystem type.
-Plantation age was included in the model because the observed wildlings were accrued over the lifetime of the plantation.
+For our second analysis, we diagrammed causal relationships among the factors we hypothesized to influence the number of wildlings per cell with a directed acyclical graph (fig. \@ref(fig:DAG)).
+In it, the unmeasured, proximate causes of wildling number (establishment probability and seed deposition, see eq. \@ref(eq:estmod)) are decendants of variables that we could observe or model. 
+To estimate how ecosystem type affects wildlings, the directed acyclical graph guided us to specify a statistical model with climate, relative elevation, seed deposition density, locality, and plantation age as covariates [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
+It was was not strictly necessary to adjust for plantation age (with locality in the model), but we included it because it could reduce the unexplained variance associated with locality, and because our causal structure would allow us to interpret its estimate as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
+We represented climate with variables for mean annual temperature (bio1) and precipitation of the coldest quarter (bio19) from the CHELSA data product [@kargerClimatologiesHighResolution2017].
+These two variables were chosen because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
+Relative elevation.
 
+```{r DAG, fig.cap="A directed acyclical graph showing the causal relationships that we use as our point of departure for a statistical model of ecosystem effect on wildling establishment. Red variables causally affect both the ecosystem type and wildling establishment, blue variables causally affect only wildling establishment, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
+knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
+```
 
 # Results
 
@@ -298,12 +299,6 @@ Seed source polygons for which the species of interest only made up a fraction o
 Seed source polygons identified as logged (Appelgren 2018 ...) were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
 
 ## A5
-
-```{r DAG, echo=FALSE, fig.cap="A caption", out.width = '100%'}
-knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
-```
-
-## A6
 
 ```{r, message=FALSE}
 Pstab <- read_csv(here('ms', 'tables', 'Ps-modelsummary.csv'))
