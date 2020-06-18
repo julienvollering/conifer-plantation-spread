@@ -49,7 +49,7 @@ ggplot(dat$Larix, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geo
 ```
 
 ```{r}
-hist(dat$Larix$wildlings, prob=TRUE, breaks=30)
+hist(dat$Larix$wildlings, prob=TRUE, breaks=50)
 fit <- MASS::fitdistr(dat$Larix$wildlings, "negative binomial"); fit
 points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
 ```
@@ -77,7 +77,7 @@ ggplot(dat$P.abies, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + g
 ```
 
 ```{r}
-hist(dat$P.abies$wildlings, prob=TRUE, breaks=15)
+hist(dat$P.abies$wildlings, prob=TRUE, breaks=25)
 fit <- MASS::fitdistr(dat$P.abies$wildlings, "negative binomial"); fit
 points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
 ```
@@ -133,7 +133,7 @@ ggplot(dat$P.sitchensis, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))
 ```
 
 ```{r}
-hist(dat$P.sitchensis$wildlings, prob=TRUE, breaks=200)
+hist(dat$P.sitchensis$wildlings, prob=TRUE, breaks=210)
 fit <- MASS::fitdistr(dat$P.sitchensis$wildlings, "negative binomial"); fit
 points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
 ```

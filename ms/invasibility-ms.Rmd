@@ -121,7 +121,7 @@ It builds on the continuum concept in ecology, aiming for reproducible and value
 We mapped ecosystem types at a scale of 1:5000, which implies that all polygons with a size over 250 m^2^ were registered [@brynVeilederKartleggingAv2015].
 Regularly patterned occurrence of more than one ecosystem type in polygons smaller than the minimum size were registered as so-called mosaic polygons.
 
-Some non-spatial data were also collected for each plantation. 
+Some non-spatial data were also collected for each of the central plantations. 
 We measured the height of a representative individual in the plantation by clinometer.
 We also estimated the age of the plantation at the time of the field campaign, either by contacting land owners or municipal officials, or by counting growth rings.
 Details for all 82 plantations are provided in Appendix [A1].
@@ -169,15 +169,19 @@ Wildings in cells composed of multiple types were counted in proportion to cell'
 
 For our second analysis, we diagrammed causal relationships among the factors we hypothesized to influence the number of wildlings per cell with a directed acyclical graph (fig. \@ref(fig:DAG)).
 In it, the unmeasured, proximate causes of wildling number (establishment probability and seed deposition, see eq. \@ref(eq:estmod)) are decendants of variables that we could observe or model. 
-To estimate how ecosystem type affects wildlings, the directed acyclical graph guided us to specify a statistical model with climate, relative elevation, seed deposition density, locality, and plantation age as covariates [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
+To estimate how ecosystem type affects wildlings, the directed acyclical graph guided us to specify statistical models with locality, climate, relative elevation, seed deposition density, and plantation age as covariates [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
 It was was not strictly necessary to adjust for plantation age (with locality in the model), but we included it because it could reduce the unexplained variance associated with locality, and because our causal structure would allow us to interpret its estimate as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
-We represented climate with variables for mean annual temperature (bio1) and precipitation of the coldest quarter (bio19) from the CHELSA data product [@kargerClimatologiesHighResolution2017].
+We represented climate as mean annual temperature (bio1) and precipitation of the coldest quarter (bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
 These two variables were chosen because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
-Relative elevation.
+A grid cell's relative elevation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
 
 ```{r DAG, fig.cap="A directed acyclical graph showing the causal relationships that we use as our point of departure for a statistical model of ecosystem effect on wildling establishment. Red variables causally affect both the ecosystem type and wildling establishment, blue variables causally affect only wildling establishment, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
+
+The response variable for our models --- number of wildlings --- showed a high frequency of zeros for all species.
+We found that the best fitting negative binomial distribution consistently underestimated the number of zeros observed.
+Accordingly, we applied zero-inflated generalized linear models, modeling zeros as the mixed product of a binomial process and a count process.
 
 # Results
 
