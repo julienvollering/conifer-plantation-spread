@@ -179,11 +179,29 @@ A grid cell's relative elevation was taken with respect to the highest point of 
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
 
-The response variable for our models --- number of wildlings --- showed a high frequency of zeros for all species.
-We found that the best fitting negative binomial distribution consistently underestimated the number of zeros observed.
-Accordingly, we applied zero-inflated generalized linear models, modeling zeros as the mixed product of a binomial process and a count process.
+For all species, the number of wildlings per cell showed a high frequency of zeros that was underestimated by the best fitting negative binomial distribution.
+Accordingly, we applied zero-inflated generalized linear models, which model zeros as the mixed product of a binomial process and a count process [@zuurZeroTruncatedZeroInflatedModels2009].
+We used standardized variables (except ecosystem types, which were [0,1]) and fitted models with the glmmTMB package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6, @rcoreteamLanguageEnvironmentStatistical2020].
+For each species we dropped ecosystem types that did not coincide with a single wildling (to avoid model convergence issues stemming from complete separation) and selected a model by the following procedure.
+First, we assessed which of our two variables of seed deposition density better accounted for numbers of wildlings (as judged by AIC of parallel models without zero inflation) and discarded the other.
+
+
+\begin{equation}
+wildings_{i} \sim ZINB(\pi_{i}, \mu_{i}, k) \\
+logit(\pi_{i}) = PlantationAge_{i} + Locality_{i} \\
+Locality_{i} \sim Normal(0, \sigma^2) \\
+(\#eq:statmod)
+\end{equation}
+
+
+where $\pi$ is the probability of a zero, while $\mu$ and $k$ are the mean and dispersion parameter of the negative binomial distribution respectively.  
+
 
 # Results
+
+```{r relative establishment, fig.cap="Ecosystem types without wildlings and covering less than 0.5 ha across the species data set are not displayed."}
+knitr::include_graphics(here('ms', 'figures', 'relative-establishment.pdf'))
+```
 
 - Caution against drawing conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
 
