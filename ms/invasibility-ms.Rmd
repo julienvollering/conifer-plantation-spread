@@ -186,14 +186,15 @@ For each species we dropped ecosystem types that did not coincide with a single 
 First, we assessed which of our two variables of seed deposition density better accounted for numbers of wildlings (as judged by AIC of parallel models without zero inflation) and discarded the other.
 
 \begin{equation}
-wildings_{i} \sim ZINB(\pi_{i}, \mu_{i}, k) \\
-logit(\pi_{i}) = PlantationAge_{i} + Locality_{i} \\
-log(\mu_{i}) = SeedDensity_{i} x PlantationAge_{i} + Bio1_{i} + Bio19_{i} + RelativeElevation_{i} + Locality_{i} + \sigma... \\
+wildings_{ij} \sim ZINB(\pi_{ij}, \mu_{ij}, \phi) \\
+logit(\pi_{ij}) = PlantationAge_{ij} + Locality_{ij} \\
+log(\mu_{ij}) = SeedDensity_{ij} \cdot PlantationAge_{ij} + Bio1_{ij} + Bio19_{ij} + RelativeElevation_{ij} + Locality_{i} + \sum\limits_{k=1}^K EcosystemType_{ijk} \\
 Locality_{i} \sim Normal(0, \sigma^2) \\
 (\#eq:statmod)
 \end{equation}
 
-where $\pi$ is the probability of a zero, while $\mu$ and $k$ are the mean and dispersion parameter of the negative binomial distribution, respectively [eq. 11.21 in @zuurZeroTruncatedZeroInflatedModels2009].  
+where $\pi$ is the probability of a zero from the binomial process, while $\mu$ and $\phi$ are the mean and dispersion of the negative binomial distribution, respectively [eq. 11.21 in @zuurZeroTruncatedZeroInflatedModels2009]. 
+$EcosystemType_{ijk}$ is the $k$th ecosystem type in the $j$th cell of the $i$th locality. 
 
 
 # Results
