@@ -171,7 +171,7 @@ For our second analysis, we diagrammed causal relationships among the factors we
 In it, the unmeasured, proximate causes of wildling number (establishment probability and seed deposition, see eq. \@ref(eq:estmod)) are decendants of variables that we could observe or model. 
 To estimate how ecosystem type affects wildlings, the directed acyclical graph guided us to specify statistical models with locality, climate, relative elevation, seed deposition density, and plantation age as covariates [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
 It was was not strictly necessary to adjust for plantation age (with locality in the model), but we included it because it could reduce the unexplained variance associated with locality, and because our causal structure would allow us to interpret its estimate as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
-We represented climate as mean annual temperature (bio1) and precipitation of the coldest quarter (bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
+We represented climate as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
 These two variables were chosen because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
 A grid cell's relative elevation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
 
@@ -185,16 +185,15 @@ We used standardized variables (except ecosystem types, which were [0,1]) and fi
 For each species we dropped ecosystem types that did not coincide with a single wildling (to avoid model convergence issues stemming from complete separation) and selected a model by the following procedure.
 First, we assessed which of our two variables of seed deposition density better accounted for numbers of wildlings (as judged by AIC of parallel models without zero inflation) and discarded the other.
 
-
 \begin{equation}
 wildings_{i} \sim ZINB(\pi_{i}, \mu_{i}, k) \\
 logit(\pi_{i}) = PlantationAge_{i} + Locality_{i} \\
+log(\mu_{i}) = SeedDensity_{i} x PlantationAge_{i} + Bio1_{i} + Bio19_{i} + RelativeElevation_{i} + Locality_{i} + \sigma... \\
 Locality_{i} \sim Normal(0, \sigma^2) \\
 (\#eq:statmod)
 \end{equation}
 
-
-where $\pi$ is the probability of a zero, while $\mu$ and $k$ are the mean and dispersion parameter of the negative binomial distribution respectively.  
+where $\pi$ is the probability of a zero, while $\mu$ and $k$ are the mean and dispersion parameter of the negative binomial distribution, respectively [eq. 11.21 in @zuurZeroTruncatedZeroInflatedModels2009].  
 
 
 # Results
