@@ -240,7 +240,7 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
 Pa_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
                  T45 + artificial + T44 + T32 + V9 + V12 + V1 + T13 + T41 + T1 +
                  V2 + T2 + V10 + T31 + V4 + V3 + (1 | locality)")
-Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ 0)
+Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
 summary(Pa_m1)
 ```
 
@@ -255,31 +255,10 @@ bbmle::AICtab(Pa_m1, Pa_m2)
 
 Continue with WALD.
 
-### Compare zero inflation effects
+### Residual diagnostics
 
 ```{r}
-Pa_m3 <- update(Pa_m1, ziformula = ~ 1)
-summary(Pa_m3)
-```
-
-```{r}
-Pa_m4 <- update(Pa_m1, ziformula = ~ age)
-summary(Pa_m4)
-```
-
-```{r}
-Pa_m5 <- update(Pa_m1, ziformula = ~ age + (1 | locality))
-summary(Pa_m5)
-```
-
-```{r, echo=FALSE}
-bbmle::AICtab(Pa_m1, Pa_m3, Pa_m4, Pa_m5)
-```
-
-m5 is better than m1, m3, and m4: much better AIC, zero-inflation effects
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m5)
+simulationOutput <- simulateResiduals(fittedModel = Pa_m1)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -288,12 +267,12 @@ testZeroInflation(simulationOutput)
 Model residuals are underdispersed.
 
 ```{r}
-Pa_m6 <- update(Pa_m5, family = "genpois")
-summary(Pa_m6)
+Pa_m1b <- update(Pa_m1, family = "genpois")
+summary(Pa_m1b)
 ```
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m6)
+simulationOutput <- simulateResiduals(fittedModel = Pa_m1b)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -302,12 +281,12 @@ testZeroInflation(simulationOutput)
 Diagnostics OK with generalized poisson --- including dispersion.
 
 ```{r}
-Pa_m7 <- update(Pa_m5, family = "poisson")
-summary(Pa_m7)
+Pa_m1c <- update(Pa_m1, family = "poisson")
+summary(Pa_m1c)
 ```
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m7)
+simulationOutput <- simulateResiduals(fittedModel = Pa_m1c)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -316,15 +295,15 @@ testZeroInflation(simulationOutput)
 Diagnostics OK with poisson --- including dispersion.
 
 ```{r, echo=FALSE}
-bbmle::AICtab(Pa_m5, Pa_m6, Pa_m7)
+bbmle::AICtab(Pa_m1b, Pa_m1c)
 ```
 
-Continue with generalized poisson model: best AIC and diagnostics OK. 
+Continue with generalized poisson model: diagnostics OK and best AIC. 
 
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pa_m6
+selmod <- Pa_m1b
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
@@ -440,7 +419,7 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
 L_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
                 T45 + artificial + T44 + T32 + V9 + T34 + V1 + T41 + T1 + V2 + 
                 T17 + (1 | locality)")
-L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ 0)
+L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
 summary(L_m1)
 ```
 
@@ -455,31 +434,10 @@ bbmle::AICtab(L_m1, L_m2)
 
 Continue with WALD.
 
-### Compare zero inflation effects
+### Residual diagnostics
 
 ```{r}
-L_m3 <- update(L_m1, ziformula = ~ 1)
-summary(L_m3)
-```
-
-```{r}
-L_m4 <- update(L_m1, ziformula = ~ age)
-summary(L_m4)
-```
-
-```{r}
-L_m5 <- update(L_m1, ziformula = ~ age + (1 | locality))
-summary(L_m5)
-```
-
-```{r, echo=FALSE}
-bbmle::AICtab(L_m1, L_m3, L_m4, L_m5)
-```
-
-m5 is better than m1, m3, and m4: much better AIC, clear zero-inflation effects
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = L_m5)
+simulationOutput <- simulateResiduals(fittedModel = L_m1)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -490,7 +448,7 @@ Diagnostics look OK.
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- L_m5
+selmod <- L_m1
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
@@ -604,41 +562,14 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
 ```{r}
 Pc_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
                  artificial + T34 + V1 + T1 + T40 + T30 + V8 + V3 + (1 | locality)")
-Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ 0)
-summary(Pc_m1)
-```
-
-```{r}
-Pc_m2 <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
-summary(Pc_m2)
-```
-
-```{r, echo=FALSE}
-bbmle::AICtab(Pc_m1, Pc_m2)
-```
-
-Continue with WALD.
-
-### Compare zero inflation effects
-
-```{r}
-Pc_m3 <- update(Pc_m1, ziformula = ~ 1)
-summary(Pc_m3)
-```
-
-```{r}
-Pc_m4 <- update(Pc_m1, ziformula = ~ age)
-summary(Pc_m4)
-```
-
-```{r}
-Pc_m5 <- update(Pc_m1, ziformula = ~ age + (1 | locality))
+Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
 # Warning messages:
 # 1: In fitTMB(TMBStruc) :
 #   Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
 # 2: In fitTMB(TMBStruc) :
 #   Model convergence problem; false convergence (8). See vignette('troubleshooting')
-summary(Pc_m5)
+
+summary(Pc_m1)
 ```
 
 From glmmTMB troubleshooting vignette: 
@@ -656,7 +587,7 @@ From glmmTMB troubleshooting vignette:
 The six P.contorta localities are in two small regional clusters, and we have two climatic predictors in the model. Coefficients also suggest this may be a source of overparameterization. Try dropping climatic predictors:
 
 ```{r, eval=FALSE}
-Pc_m6 <- update(Pc_m5, formula = update.formula(Pc_f1, ~ . - bio01 - bio19))
+Pc_m1b <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - bio01 - bio19))
 # Error in optimHess(par.fixed, obj$fn, obj$gr) : 
 #   gradient in optim evaluated to length 1 not 18
 ```
@@ -664,8 +595,8 @@ Pc_m6 <- update(Pc_m5, formula = update.formula(Pc_f1, ~ . - bio01 - bio19))
 The random effect variance of locality in the conditional model is estimated to be near zero. Try dropping:
 
 ```{r}
-ranef(Pc_m5)$cond
-Pc_m7 <- update(Pc_m5, formula = update.formula(Pc_f1, ~ . - (1 | locality)))
+ranef(Pc_m1)$cond
+Pc_m1c <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - (1 | locality)))
 # Warning messages:
 # 1: In fitTMB(TMBStruc) :
 #   Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
@@ -673,23 +604,37 @@ Pc_m7 <- update(Pc_m5, formula = update.formula(Pc_f1, ~ . - (1 | locality)))
 #   Model convergence problem; false convergence (8). See vignette('troubleshooting')
 ```
 
-```{r, echo=FALSE}
-bbmle::AICtab(Pc_m3, Pc_m4)
+```{r}
+Pc_m1d <- update(Pc_m1, ziformula = ~ age)
+summary(Pc_m1d)
 ```
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pc_m4)
+Pc_m2d <- update(Pc_m1d, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
+summary(Pc_m2d)
+```
+
+```{r, echo=FALSE}
+bbmle::AICtab(Pc_m1d, Pc_m2d)
+```
+
+Continue with WALD.
+
+### Residual diagnostics
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Pc_m1d)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Continue with m4 (ziformula = ~ age): best AIC and diagnostics OK. 
+Diagnostics look OK. 
 
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pc_m4
+selmod <- Pc_m1d
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
@@ -767,7 +712,7 @@ sds <- rbind(Ps_sds, Pa_sds, L_sds, Pc_sds) %>%
   as_tibble() %>% 
   add_column(species = species, .before = "age")
 
-models.list <- list(Ps_m1, Pa_m6, L_m5, Pc_m4)
+models.list <- list(Ps_m1, Pa_m1b, L_m1, Pc_m1d)
 names(models.list) <- species
 
 link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled, Pc_link.scaled)
