@@ -167,20 +167,24 @@ knitr::include_graphics('figures/locality-example/locality-example.pdf')
 For our first analysis, we calculated wildling density per ecosystem type across all localities, by dividing the total number of wildings in that type by the total area of that type.
 Wildings in cells composed of multiple types were counted in proportion to cell's composition; for example, a cell with one wildling and half covered by a given type would tally 0.5 wildling for that type.
 
-For our second analysis, we diagrammed causal relationships among the factors we hypothesized to influence the number of wildlings per cell with a directed acyclical graph (fig. \@ref(fig:DAG)).
-In it, the unmeasured, proximate causes of wildling number (establishment probability and seed deposition, see eq. \@ref(eq:estmod)) are decendants of variables that we could observe or model. 
-To estimate how ecosystem type affects wildlings, the directed acyclical graph guided us to specify statistical models with locality, climate, relative elevation, seed deposition density, and plantation age as covariates [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
-It was was not strictly necessary to adjust for plantation age (with locality in the model), but we included it because it could reduce the unexplained variance associated with locality, and because our causal structure would allow us to interpret its estimate as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
-We represented climate as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
+For our second analysis, we diagrammed causal relationships among the factors we hypothesized to influence the number of wildlings per cell in a directed acyclical graph (fig. \@ref(fig:DAG)).
+In it, the unmeasured, proximate causes of wildling number --- establishment probability and seed deposition, see eq. \@ref(eq:estmod) --- are decendants of variables that we could observe or model. 
+To estimate how ecosystem type affects wildlings, the directed acyclical graph mandated that we adjust for locality, climate, relative elevation, and seed deposition density in our regression model [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
+We did not need to adjust for plantation age (with locality in the model), but we included it as a covariate anyway because it could reduce the unexplained variance associated with locality, and because our causal structure would allow us to interpret its coefficient as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
+Climate entered the model as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
 These two variables were chosen because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
-A grid cell's relative elevation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
+Relative elevation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
 
 ```{r DAG, fig.cap="A directed acyclical graph showing the causal relationships that we use as our point of departure for a statistical model of ecosystem effect on wildling establishment. Red variables causally affect both the ecosystem type and wildling establishment, blue variables causally affect only wildling establishment, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
 
 For all species, the number of wildlings per cell showed a high frequency of zeros that was underestimated by the best fitting negative binomial distribution.
-Accordingly, we applied zero-inflated generalized linear models, which model zeros as the mixed product of a binomial process and a count process [@zuurZeroTruncatedZeroInflatedModels2009].
+Accordingly, we applied zero-inflated generalized linear models, which model zeros as the mixed product of a binomial process and a conditional count process [@zuurZeroTruncatedZeroInflatedModels2009].
+We modeled the binomial process as dependent on plantation age, hypothesizing that younger plantations exhibit more cells without wildlings than would be predicted under a constant rate of colonization due to the stochasticity of the colonization process.
+We also modeled the binomial process as dependent on locality, since...
+Structural zeros [MEE ref]
+Locality was specified as a varying effect.
 We used standardized variables (except ecosystem types, which were [0,1]) and fitted models with the glmmTMB package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6, @rcoreteamLanguageEnvironmentStatistical2020].
 For each species we dropped ecosystem types that did not coincide with a single wildling (to avoid model convergence issues stemming from complete separation) and selected a model by the following procedure.
 First, we assessed which of our two variables of seed deposition density better accounted for numbers of wildlings (as judged by AIC of parallel models without zero inflation) and discarded the other.
@@ -194,10 +198,11 @@ Locality_{i} \sim Normal(0, \sigma^2) \\
 \end{equation}
 
 where $\pi$ is the probability of a zero from the binomial process, while $\mu$ and $\phi$ are the mean and dispersion of the negative binomial distribution, respectively [eq. 11.21 in @zuurZeroTruncatedZeroInflatedModels2009]. 
-$EcosystemType_{ijk}$ is the $k$th ecosystem type in the $j$th cell of the $i$th locality. 
-
+Subscripts $i$, $j$, and $k$ index localities, cells, and ecosystem types.
 
 # Results
+
+The total, unstratified density of wildings was 28/ha for Sitka/Lutz spruce, 6/ha for Norway spruce, 13/ha for larch, and 34/ha for lodgepole pine.
 
 ```{r relative establishment, fig.cap="Ecosystem types without wildlings and covering less than 0.5 ha across the species data set are not displayed."}
 knitr::include_graphics(here('ms', 'figures', 'relative-establishment.pdf'))
@@ -221,6 +226,8 @@ Spatial grain. Minimum polygon area NiN, wildling group locations. A good reason
 Limitation:
 WALD model of seed deposition fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
 - Negative density dependence, since the WALD model gave a more evenly spread probability distribution. If this is the case, it would mean that our results overestimate establishment probability near the seed sources and underestimate further away.  
+
+Inland versus coastal P.contorta sites. Number of wildlings, climate...
 
 # Appendix
 

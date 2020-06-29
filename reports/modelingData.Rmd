@@ -39,6 +39,8 @@ gsds <- map_dbl(locality.preds.vals, sd, na.rm = TRUE)
 
 contrast <- "T4"
 str(datlist, 1)
+
+map(datlist, function(x) {sum(x$wildlings) / nrow(x) * 100}) # wildlings per hectare
 ```
 
 # P.sitchensis-lutzii
@@ -94,7 +96,7 @@ Ps_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev +
                  T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + 
                  T41 + T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + 
                  T31 + V3 + T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
-Ps_m1 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ 0)
+Ps_m1 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
 summary(Ps_m1)
 ```
 
@@ -109,31 +111,10 @@ bbmle::AICtab(Ps_m1, Ps_m2)
 
 Continue with WALD.
 
-### Compare zero inflation effects
+### Residual diagnostics
 
 ```{r}
-Ps_m3 <- update(Ps_m1, ziformula = ~ 1)
-summary(Ps_m3)
-```
-
-```{r}
-Ps_m4 <- update(Ps_m1, ziformula = ~ age)
-summary(Ps_m4)
-```
-
-```{r}
-Ps_m5 <- update(Ps_m1, ziformula = ~ age + (1 | locality))
-summary(Ps_m5)
-```
-
-```{r, echo=FALSE}
-bbmle::AICtab(Ps_m1, Ps_m3, Ps_m4, Ps_m5)
-```
-
-m5 is better than m1, m3, and m4: much better AIC, clear zero-inflation effects
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Ps_m5)
+simulationOutput <- simulateResiduals(fittedModel = Ps_m1)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -144,7 +125,7 @@ Diagnostics look OK.
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Ps_m5
+selmod <- Ps_m1
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
@@ -786,7 +767,7 @@ sds <- rbind(Ps_sds, Pa_sds, L_sds, Pc_sds) %>%
   as_tibble() %>% 
   add_column(species = species, .before = "age")
 
-models.list <- list(Ps_m5, Pa_m6, L_m5, Pc_m4)
+models.list <- list(Ps_m1, Pa_m6, L_m5, Pc_m4)
 names(models.list) <- species
 
 link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled, Pc_link.scaled)
