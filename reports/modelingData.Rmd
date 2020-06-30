@@ -584,19 +584,11 @@ From glmmTMB troubleshooting vignette:
 
 > In general models with non-positive definite Hessian matrices should be excluded from further consideration."
 
-The six P.contorta localities are in two small regional clusters, and we have two climatic predictors in the model. Coefficients also suggest this may be a source of overparameterization. Try dropping climatic predictors:
-
-```{r, eval=FALSE}
-Pc_m1b <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - bio01 - bio19))
-# Error in optimHess(par.fixed, obj$fn, obj$gr) : 
-#   gradient in optim evaluated to length 1 not 18
-```
-
 The random effect variance of locality in the conditional model is estimated to be near zero. Try dropping:
 
 ```{r}
 ranef(Pc_m1)$cond
-Pc_m1c <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - (1 | locality)))
+Pc_m1b <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - (1 | locality)))
 # Warning messages:
 # 1: In fitTMB(TMBStruc) :
 #   Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
@@ -604,18 +596,20 @@ Pc_m1c <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - (1 | locality)))
 #   Model convergence problem; false convergence (8). See vignette('troubleshooting')
 ```
 
+The random effect variance of locality in the zero-inflation (binomial) model is very large. With only six localities, perhaps there is not enough data to estimate this parameter. Try dropping:
+
 ```{r}
-Pc_m1d <- update(Pc_m1, ziformula = ~ age)
-summary(Pc_m1d)
+Pc_m1c <- update(Pc_m1, ziformula = ~ age)
+summary(Pc_m1c)
 ```
 
 ```{r}
-Pc_m2d <- update(Pc_m1d, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
-summary(Pc_m2d)
+Pc_m2c <- update(Pc_m1c, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
+summary(Pc_m2c)
 ```
 
 ```{r, echo=FALSE}
-bbmle::AICtab(Pc_m1d, Pc_m2d)
+bbmle::AICtab(Pc_m1c, Pc_m2c)
 ```
 
 Continue with WALD.
@@ -623,7 +617,7 @@ Continue with WALD.
 ### Residual diagnostics
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pc_m1d)
+simulationOutput <- simulateResiduals(fittedModel = Pc_m1c)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -634,7 +628,7 @@ Diagnostics look OK.
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pc_m1d
+selmod <- Pc_m1c
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
@@ -712,7 +706,7 @@ sds <- rbind(Ps_sds, Pa_sds, L_sds, Pc_sds) %>%
   as_tibble() %>% 
   add_column(species = species, .before = "age")
 
-models.list <- list(Ps_m1, Pa_m1b, L_m1, Pc_m1d)
+models.list <- list(Ps_m1, Pa_m1b, L_m1, Pc_m1c)
 names(models.list) <- species
 
 link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled, Pc_link.scaled)

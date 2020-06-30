@@ -115,7 +115,7 @@ In the field, wildlings and ecosystem types were mapped comprehensively within a
 Except in the 2016 field campaign, we also mapped as polygons any additional plantations of the same species within a larger 2x2 km plot.
 We used GPS to register the point-positions of all wildlings over 30 cm in height, recording a single position for groups of wildlings occurring with less than 5 m between them.
 A few exceptionally dense groups of wildlings were mapped by registering polygons instead of points and estimating the number of individuals by transect counts.
-Concurrently, we registered polygons for all terrestrial ecosystem types following the Nature in Norway classification system [version 2.0 or 2.1, @halvorsenNaturNorgeNiN2015].
+Concurrently, we registered polygons for all terrestrial ecosystem types, following the Nature in Norway classification system [version 2.0 or 2.1, @halvorsenNaturNorgeNiN2015].
 The Nature in Norway system is the national standard for land cover mapping and provides full spatial coverage (i.e. any location and any kind of land cover is assignable to an ecosystem type).
 It builds on the continuum concept in ecology, aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@austinContinuumConceptOrdination1985; @NatureTypesNorway2018; @whittakerGradientAnalysisVegetation1967].
 We mapped ecosystem types at a scale of 1:5000, which implies that all polygons with a size over 250 m^2^ were registered [@brynVeilederKartleggingAv2015].
@@ -167,12 +167,12 @@ knitr::include_graphics('figures/locality-example/locality-example.pdf')
 For our first analysis, we calculated wildling density per ecosystem type across all localities, by dividing the total number of wildings in that type by the total area of that type.
 Wildings in cells composed of multiple types were counted in proportion to cell's composition; for example, a cell with one wildling and half-covered by a given type would tally 0.5 wildling for that type.
 
-For our second analysis, we diagrammed causal relationships among the factors we hypothesized to influence the number of wildlings per cell in a directed acyclical graph (fig. \@ref(fig:DAG)).
+For our second analysis, we used a directed acyclical graph to diagram causal relationships among the factors we expected to influence the number of wildlings per cell (fig. \@ref(fig:DAG)).
 In it, the unmeasured, proximate causes of wildling number --- establishment probability and seed deposition, see eq. \@ref(eq:estmod) --- are decendants of variables that we could observe or model. 
 To estimate the causal influence of ecosystem type on wildlings, the directed acyclical graph dictated that we adjust for locality, climate, relative elevation, and seed deposition in our regression model [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
 We did not need to adjust for plantation age (with locality in the model), but we included it as a covariate anyway because it could reduce the unexplained variance associated with locality, and because our assumed causal structure would allow us to interpret its coefficient as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
 Climate entered the regression model as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
-These two variables were chosen because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
+We chose these two variables because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
 Relative elevation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
 Lastly, plantation surroundings are likely to experience large stochastic variation in annual seed depostion, because seed release will concide with different wind conditions from year to year.
 Therefore we also included in our model the first order interaction between seed deposition and plantation age.
@@ -182,7 +182,7 @@ knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
 
 For all species, the number of wildlings per cell showed a high frequency of zeros that was underestimated by the best fitting negative binomial distribution.
-Accordingly, we applied zero-inflated generalized linear models, which model zeros as the mixed product of a binomial process and a conditional count process.
+Accordingly, we applied zero-inflated generalized linear models, which regard zeros as the mixed product of a binomial process as well as a (conditional) count process.
 We modeled the binomial process as dependent on plantation age and locality. 
 We expected that younger plantations would exhibit more cells without wildlings than predicted under a constant rate of colonization, because of their infertile juvenile period.
 We also expected the frequency of zeros to vary with locality, because our field work documented that some land owners had occasionally made efforts to remove wildlings.
@@ -201,11 +201,12 @@ where $\pi$ is the probability of a zero from the binomial process, while $\mu$ 
 Subscripts $i$, $j$, and $k$ index localities, cells, and ecosystem types.
 
 We used standardized variables (except ecosystem types, which were [0,1]) and fitted models with the glmmTMB package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6, @rcoreteamLanguageEnvironmentStatistical2020].
-For each species we dropped ecosystem types that did not coincide with a single wildling (to avoid model convergence issues stemming from complete separation).
-We fitted two parallel models from our two seed deposition variables and selected the model with the better AIC.
-To catch problems with our model specification, we looked for...
-
-
+For each species we dropped ecosystem types that completely free of wildlings (to avoid model convergence issues stemming from complete separation).
+We fitted parallel models for our two seed deposition variables and selected the model with the better AIC.
+To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.2.7, @hartigDHARMaResidualDiagnostics2020].
+We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
+Relative establishment probabilities of ecosystem types were calculated as predictions from the conditional part of the zero-inflation model (holding covariates at their mean values), scaled by the predicted value for a reference ecosystem type.
+To help summarize patterns in establishment probability among ecosystem types, we aggregated ecosystem types by category (terrestrial or wetland) and structuring process (anthrogenic, natural or no disturbance) and obtained estimates for these strata from refitted models that were otherwise unchanged.
 
 # Results
 
@@ -331,8 +332,10 @@ kable(typestab, escape = FALSE) %>%
 
 ## A4
 
-Seed source polygons for which the species of interest only made up a fraction of the tree composition (Olsen et al. 2019, Appelgren 2018 ...) were used with their point source density adjusted accordingly. 'Mixed forest'
-Seed source polygons identified as logged (Appelgren 2018 ...) were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
+Seed source polygons for which the species of interest only made up a fraction of the plantation composition [e.g. in @olsenKartleggingAvKortdistansespredning2019] were used with their point source density adjusted accordingly.
+For example, a plantation identified as composed of Sitka spruce and Norway spruce was assigned a seed source point density half that of a pure Sitka spruce plantation.
+Likewise, 'mixed forest' plantations [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were assigned 0.1 times the seed source point density of a pure plantation.  
+Seed source polygons identified as logged [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
 
 ## A5
 
