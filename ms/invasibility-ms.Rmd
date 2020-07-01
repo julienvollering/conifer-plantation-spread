@@ -160,7 +160,7 @@ In other words, each ecosystem type was rendered as a separate raster variable w
 Area covered by mosaic polygons was divided evenly among the constituent types.
 We excluded the "tree plantation" ecosystem type from both analyses because some of the field campaigns did not register wildlings occurring within this type.
 
-```{r locality-example, fig.cap='An illustration of one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m).'}
+```{r locality-example, fig.cap='An illustration of one of the 82 plantation localities: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m). Grid cells without data are either seed sources (corresponding to the polygons shown) or tree plantations of other species (such as one along the road).'}
 knitr::include_graphics('figures/locality-example/locality-example.pdf')
 ```
 
@@ -216,9 +216,10 @@ To help summarize patterns in establishment probability among ecosystem types, w
 # Results
 
 The total, unstratified density of wildings in our data set was 28/ha for Sitka/Lutz spruce, 6/ha for Norway spruce, 13/ha for larch, and 34/ha for lodgepole pine.
+For all species, estimates of seed deposition derived from the WALD model of seed dispersal fit patterns of wildling establishment better than estimates derived from the generalized seed dispersal kernel we tested.  
 
-```{r relative establishment, fig.cap="Ecosystem types without wildlings and covering less than 0.5 ha across the species data set are not displayed."}
-knitr::include_graphics(here('ms', 'figures', 'relative-establishment.pdf'))
+```{r relative establishment, fig.cap="Ecosystem types without wildlings and covering less than 0.5 ha across the species data set are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
+knitr::include_graphics(here('ms', 'figures', 'relative-establishment', 'relative-establishment.pdf'))
 ```
 
 - Caution against drawing conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
@@ -228,7 +229,7 @@ knitr::include_graphics(here('ms', 'figures', 'relative-establishment.pdf'))
 In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
 For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
 
-Advantage to observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
+Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
 
 Advantage: 
 Compared to tallying analysis, we see that the magnitudes of differences between ecosystem types is much larger. For management the difference between a ten-fold gap and a 1000-fold gap matters --- and may draw more attention to plantation surroundings.
@@ -240,7 +241,17 @@ Limitation:
 WALD model of seed deposition fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
 - Negative density dependence, since the WALD model gave a more evenly spread probability distribution. If this is the case, it would mean that our results overestimate establishment probability near the seed sources and underestimate further away.  
 
+Limitation:
 Inland versus coastal P.contorta sites. Number of wildlings, climate...
+
+Note that our models do not estimate the *total* causal effect of climate or relative elevation on wildlings.
+The reason is that each has a causal relationship to wildling number that passes through ecosystem type, which we have adjusted for in our models [@westreichTableFallacyPresenting2013].
+Instead, our models estimate the *direct* effects of climate (through establishment probability alone) and of relative elevation (through seed deposition alone).   
+This distinction means that their estimates should not be used guide management directly.
+For example, using the climate coefficients (alone) to project risk of wildling establishment across Norway would assume a uniform distribution of ecosystem types everywhere.
+Rather, we can interpret their results with respect to specific mechanisms.
+Wet and warm conditions...
+Locations above plantations...
 
 # Appendix
 
