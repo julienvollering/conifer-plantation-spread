@@ -370,8 +370,9 @@ g1234 <- g1 + g2 + g3 + g4 +
 ```
 
 ```{r}
-ggsave(g1234, filename= 'relative-establishment.pdf', path = here('ms', 'figures'),
-  scale = 1, width = 34, height = 21, units = 'cm', dpi = 300)
+ggsave(g1234, filename= 'ggplot.pdf', 
+       path = here('ms', 'figures', 'relative-establishment'),
+       scale = 1, width = 34, height = 21, units = 'cm', dpi = 300)
 ```
 
 # Relative establishment hypotheses
