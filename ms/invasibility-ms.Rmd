@@ -182,7 +182,8 @@ knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
 
 For all species, the number of wildlings per cell showed a high frequency of zeros that was underestimated by the best fitting negative binomial distribution.
-Accordingly, we applied zero-inflated generalized linear models, which regard zeros as the mixed product of a binomial process as well as a (conditional) count process.
+Accordingly, we applied zero-inflated, negative binomial (ZINB) generalized linear models.
+These regard zeros as the mixed product of a binomial process as well as a (conditional) count process.
 We modeled the binomial process as dependent on plantation age and locality. 
 We expected that younger plantations would exhibit more cells without wildlings than predicted under a constant rate of colonization, because of their infertile juvenile period.
 We also expected the frequency of zeros to vary with locality, because our field work documented that some land owners had occasionally made efforts to remove wildlings.
@@ -200,11 +201,15 @@ Locality_{i} \sim Normal(0, \sigma^2) \\
 where $\pi$ is the probability of a zero from the binomial process, while $\mu$ and $\phi$ are the mean and dispersion of the negative binomial distribution, respectively [eq. 11.21 in @zuurZeroTruncatedZeroInflatedModels2009]. 
 Subscripts $i$, $j$, and $k$ index localities, cells, and ecosystem types.
 
-We used standardized variables (except ecosystem types, which were [0,1]) and fitted models with the glmmTMB package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6, @rcoreteamLanguageEnvironmentStatistical2020].
+We standardized variables (except ecosystem types, which were [0,1]) and fitted models with the glmmTMB package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6, @rcoreteamLanguageEnvironmentStatistical2020].
 For each species we dropped ecosystem types that completely free of wildlings (to avoid model convergence issues stemming from complete separation).
 We fitted parallel models for our two seed deposition variables and selected the model with the better AIC.
 To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.2.7, @hartigDHARMaResidualDiagnostics2020].
 We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
+The Norway spruce model showed residual underdispersion, so we replaced the negative binomial distribution with the generalized Poisson distribution, which solved the issue [@brooksStatisticalModelingPatterns2019].
+Futhermore, the lodgepole pine model did not converge as specified.
+To achieve convergence we dropped locality from the binomial model, as its variance was likely difficult to estimate from only six localities.
+
 Relative establishment probabilities of ecosystem types were calculated as predictions from the conditional part of the zero-inflation model (holding covariates at their mean values), scaled by the predicted value for a reference ecosystem type.
 To help summarize patterns in establishment probability among ecosystem types, we aggregated ecosystem types by category (terrestrial or wetland) and structuring process (anthrogenic, natural or no disturbance) and obtained estimates for these strata from refitted models that were otherwise unchanged.
 
