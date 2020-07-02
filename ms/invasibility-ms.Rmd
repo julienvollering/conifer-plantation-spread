@@ -216,18 +216,29 @@ To help summarize patterns in establishment probability among ecosystem types, w
 # Results
 
 The total, unstratified density of wildings in our data set was 28/ha for Sitka/Lutz spruce, 6/ha for Norway spruce, 13/ha for larch, and 34/ha for lodgepole pine.
-For all species, estimates of seed deposition derived from the WALD model of seed dispersal fit patterns of wildling establishment better than estimates derived from the generalized seed dispersal kernel we tested.  
+From our first analysis, observed wildlings densities in different ecosystem types (excluding ecosystem types covering less than 1 ha) ranged 1-60/ha for Sitka spruce, 0-49/ha for Norway spruce, 0-52/ha for larch, and 0-219/ha for lodgepole pine.
+The "open active landslide" type exceeded these densities around Sitka/Lutz spruce and larch plantations, but was restricted to very small areas.
 
-```{r relative establishment, fig.cap="Ecosystem types without wildlings and covering less than 0.5 ha across the species data set are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
+Among ecosystem types tallying at least one wildling and covering at least 1 ha, modeled establishment probabilities varied by up to five orders of magnitude (fig. \@ref(fig:relative-establishment)).
+
+
+```{r relative-establishment, fig.cap="Relative establishment probabilities among ecosystem types, using "forest" as the reference level, for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. In the case of zero wildlings, these points are placed at the lower limit of the x-axis. Filled points with line intervals show modeled estimates surrounded by their 95% confidence intervals. Grey points show modeled estimates for individual localities. Ecosystem types are ordered by a confidence-weighted mean of their percentile-ranked establishment probabilities within species, such that types with consistently high establishment probability are on top. Ecosystem types shown in italic font are wetlands, and ecosystem types shown in bold font are characterized by disturbance. Ecosystem types without wildlings and covering less than 0.5 ha across all localities for that species are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
 knitr::include_graphics(here('ms', 'figures', 'relative-establishment', 'relative-establishment.pdf'))
 ```
 
-- Caution against drawing conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
+For all species, estimates of seed deposition derived from the WALD model of seed dispersal fit patterns of wildling establishment better than estimates derived from the generalized seed dispersal kernel we tested.  
+
 
 # Discussion
 
+1. Obvious management recommendation: try to limit plantations to sites where they are surrounded by arable fields.  
+2. Beware that Sitka colonization varies enormously from site to site --- much more than other species --- so our ability to predict the magnitude of spread at a particular site are limited. More research needed.  
+3. The fact that disturbance events promote invasion does not map directly to ecosystems characterized by distubance being at higher risk than ecosystems not characterized by disturbance. Or, more broadly, invasion patterns of alien conifers frequently clash with our a priori expectations based on their autecology and general tenets of invasion ecology.
+
 In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
 For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
+
+- Caution against drawing conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
 
 Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
 

@@ -69,6 +69,14 @@ knitr::kable(Ps_arith.scaled, digits = 1)
 ```
 
 ```{r}
+Ps_arith.scaled %>% 
+  filter(daa > 10) %>% # exclude rare types for low sample size
+  mutate(density=density*10) %>% # density per ha
+  pull(density) %>% 
+  range()
+```
+
+```{r}
 perfectlyseparated <- c("T42", "T18", "T3", "T33", "V4")
 Ps_dat <- Ps_dat %>% 
   filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
@@ -153,6 +161,12 @@ Ps_link.scaled <- mutate_at(Ps_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 ```
 
 ```{r}
+Ps_link.scaled %>% 
+  filter(is.na(locality), nin %in% filter(Ps_arith.scaled, daa > 10, n > 1)$nin) %>% 
+  pull(fit) %>% range() %>% log10() %>% diff()
+```
+
+```{r}
 filter(Ps_link.scaled, is.na(locality)) %>% 
   ggplot(aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
@@ -211,6 +225,14 @@ Pa_arith.scaled <- mutate(Pa_arith, fit = density/scaler)
 
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(Pa_arith.scaled, digits = 1)
+```
+
+```{r}
+Pa_arith.scaled %>% 
+  filter(daa > 10) %>% # exclude rare types for low sample size
+  mutate(density=density*10) %>% # density per ha
+  pull(density) %>% 
+  range()
 ```
 
 ```{r}
@@ -331,6 +353,12 @@ Pa_link.scaled <- mutate_at(Pa_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 ```
 
 ```{r}
+Pa_link.scaled %>% 
+  filter(is.na(locality), nin %in% filter(Pa_arith.scaled, daa > 10, n > 1)$nin) %>% 
+  pull(fit) %>% range() %>% log10() %>% diff()
+```
+
+```{r}
 filter(Pa_link.scaled, is.na(locality)) %>% 
   ggplot(aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
@@ -389,6 +417,14 @@ L_arith.scaled <- mutate(L_arith, fit = density/scaler)
 
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(L_arith.scaled, digits = 1)
+```
+
+```{r}
+L_arith.scaled %>% 
+  filter(daa > 10) %>% # exclude rare types for low sample size
+  mutate(density=density*10) %>% # density per ha
+  pull(density) %>% 
+  range()
 ```
 
 ```{r}
@@ -476,6 +512,12 @@ L_link.scaled <- mutate_at(L_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
 ```
 
 ```{r}
+L_link.scaled %>% 
+  filter(is.na(locality), nin %in% filter(L_arith.scaled, daa > 10, n > 1)$nin) %>% 
+  pull(fit) %>% range() %>% log10() %>% diff()
+```
+
+```{r}
 filter(L_link.scaled, is.na(locality)) %>% 
   ggplot(aes(reorder(nin, fit), fit)) + 
   geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
@@ -534,6 +576,14 @@ Pc_arith.scaled <- mutate(Pc_arith, fit = density/scaler)
 
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(Pc_arith, digits = 1)
+```
+
+```{r}
+Pc_arith.scaled %>% 
+  filter(daa > 10) %>% # exclude rare types for low sample size
+  mutate(density=density*10) %>% # density per ha
+  pull(density) %>% 
+  range()
 ```
 
 ```{r}
@@ -653,6 +703,12 @@ Pc_link <- Pc_link %>%
 scaler <- filter(Pc_link, is.na(locality), nin == "T4") %>% 
   pull(fit)
 Pc_link.scaled <- mutate_at(Pc_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
+```
+
+```{r}
+Pc_link.scaled %>% 
+  filter(is.na(locality), nin %in% filter(Pc_arith.scaled, daa > 10, n > 1)$nin) %>% 
+  pull(fit) %>% range() %>% log10() %>% diff()
 ```
 
 ```{r}
