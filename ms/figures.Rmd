@@ -266,7 +266,7 @@ g1 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2)) +
+             position = position_jitter(width = 0.2, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
@@ -291,7 +291,7 @@ g2 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2)) +
+             position = position_jitter(width = 0.2, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
@@ -318,7 +318,7 @@ g3 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2)) +
+             position = position_jitter(width = 0.2, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color =col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
@@ -345,7 +345,7 @@ g4 <- ggplot(data = d, mapping = aes(x = name)) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
              mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2)) +
+             position = position_jitter(width = 0.2, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
