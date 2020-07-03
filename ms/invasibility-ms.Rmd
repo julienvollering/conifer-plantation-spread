@@ -216,14 +216,27 @@ To help summarize patterns in establishment probability among ecosystem types, w
 # Results
 
 The total, unstratified density of wildings in our data set was 28/ha for Sitka/Lutz spruce, 6/ha for Norway spruce, 13/ha for larch, and 34/ha for lodgepole pine.
-From our first analysis, observed wildlings densities in different ecosystem types (excluding ecosystem types covering less than 1 ha) ranged 1-60/ha for Sitka spruce, 0-49/ha for Norway spruce, 0-52/ha for larch, and 0-219/ha for lodgepole pine.
-The "open active landslide" type exceeded these densities around Sitka/Lutz spruce and larch plantations, but was restricted to very small areas.
+Observed wildlings densities in different ecosystem types --- excluding ecosystem types covering less than 1 ha --- ranged 1-60/ha for Sitka spruce, 0-49/ha for Norway spruce, 0-52/ha for larch, and 0-219/ha for lodgepole pine.
+The "open active landslide" type exceeded these densities around Sitka/Lutz spruce and larch plantations, but was very rare.
 
-Among ecosystem types tallying at least one wildling and covering at least 1 ha, modeled establishment probabilities varied by up to five orders of magnitude (fig. \@ref(fig:relative-establishment)).
+Modeled establishment probabilities among ecosystem types tallying at least one wildling and covering at least 1 ha varied by up to five orders of magnitude (fig. \@ref(fig:relative-establishment)).
+Within species, confidence intervals on establishment probability frequently overlapped, but many other ecosystem types could be distinguished with a high degree of confidence.   
+The pattern of establishment probability among ecosystem types was modestly similar between species, with positive rank correlations in four of six species pairs (tab. \@ref(tab:correlation-table)).
+Establishment probabilities varied strongly among Sitka/Lutz spruce localities, such that it swamped much of the variation between ecosystem types. 
+For example, the model predicts that "arable fields" at the locality with the highest overall establishment probability and "boreal heath" at the locality with the lowest overall establishment probability would be colonized at roughly equal rates, even though "boreal heath" is colonized more than 100 times faster on average.  
 
-
-```{r relative-establishment, fig.cap="Relative establishment probabilities among ecosystem types, using "forest" as the reference level, for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. In the case of zero wildlings, these points are placed at the lower limit of the x-axis. Filled points with line intervals show modeled estimates surrounded by their 95% confidence intervals. Grey points show modeled estimates for individual localities. Ecosystem types are ordered by a confidence-weighted mean of their percentile-ranked establishment probabilities within species, such that types with consistently high establishment probability are on top. Ecosystem types shown in italic font are wetlands, and ecosystem types shown in bold font are characterized by disturbance. Ecosystem types without wildlings and covering less than 0.5 ha across all localities for that species are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
+```{r relative-establishment, fig.cap="Relative establishment probabilities among ecosystem types, using 'forest' as the reference level, for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. In the case of zero wildlings, these points are placed at the lower limit of the x-axis. Filled points with line intervals show modeled estimates surrounded by their 95% confidence intervals. Grey points show modeled estimates for individual localities. Ecosystem types are ordered by a confidence-weighted mean of their percentile-ranked establishment probabilities within species, such that types with consistently high establishment probability are on top. Ecosystem types shown in italic font are wetlands, and ecosystem types shown in bold font are characterized by disturbance. Ecosystem types without wildlings and covering less than 0.5 ha across all localities for that species are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
 knitr::include_graphics(here('ms', 'figures', 'relative-establishment', 'relative-establishment.pdf'))
+```
+
+```{r correlation-table}
+cortab <- read.csv(here('ms', 'tables', 'spearman-corr.csv'), 
+                   row.names = 1, check.names = FALSE)
+cortab[lower.tri(cortab, diag = TRUE)] <- ""
+cortab <- cortab[-4,-1]
+knitr::kable(cortab, 
+             caption = "Rank correlations of relative establishment probabilities in ecosystem types, between pairs of species.") %>%
+  kable_styling(full_width = F)
 ```
 
 For all species, estimates of seed deposition derived from the WALD model of seed dispersal fit patterns of wildling establishment better than estimates derived from the generalized seed dispersal kernel we tested.  
@@ -232,7 +245,7 @@ For all species, estimates of seed deposition derived from the WALD model of see
 # Discussion
 
 1. Obvious management recommendation: try to limit plantations to sites where they are surrounded by arable fields.  
-2. Beware that Sitka colonization varies enormously from site to site --- much more than other species --- so our ability to predict the magnitude of spread at a particular site are limited. More research needed.  
+2. Beware that Sitka colonization varies enormously from site to site --- much more than other species --- so our ability to predict the magnitude of spread at a specific site is limited. More research is needed to probe this unexplained variance (human action?). But that does not mean we cannot or should not use the estimates to guide management! For example, imagine one locality consists entirely of coastal heath and another entirely of arable field. All things being equal, we expect the coastal heath locality to be colonized more than 100 times faster than the arable field locality. Simultaneusly we should not be surprised if they are colonized at equal rates.
 3. The fact that disturbance events promote invasion does not map directly to ecosystems characterized by distubance being at higher risk than ecosystems not characterized by disturbance. Or, more broadly, invasion patterns of alien conifers frequently clash with our a priori expectations based on their autecology and general tenets of invasion ecology.
 
 In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.

@@ -11,6 +11,22 @@ library(tidyverse)
 library(here)
 ```
 
+# Species correlations in establishment
+
+```{r}
+results <- readRDS(here('output', 'results.rds'))
+fit <- map2(results$model.preds, names(results$model.preds),  
+           ~ filter(.data = .x, is.na(locality)) %>% 
+             select(nin, !!.y := fit))
+fitdf <- reduce(fit, full_join, by = "nin") %>% 
+  select(-nin)
+colnames(fitdf) <- c("Picea sitchensis / lutzii", "Picea abies", "Larix", "Pinus contorta")
+table <- cor(fitdf, use= "pairwise.complete.obs", method = "spearman") %>% 
+  round(digits = 2)
+write.csv(table, here('ms', 'tables', 'spearman-corr.csv'), row.names = TRUE)
+```
+
+
 # Model summaries
 
 ```{r}
