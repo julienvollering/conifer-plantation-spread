@@ -71,7 +71,6 @@ Pa <- Pa.tidy %>%
   select(`Mixture component` = component, Term = term, Estimate = estimate, 
          `95% CI`, `SD (Intercept)`, N)
 write_csv(Pa, here('ms', 'tables', 'Pa-modelsummary.csv'))
-message("Overdispersion parameter ", round(summary(Pamod)$sigma, 2))
 
 Lmod <- results$models$Larix
 Nre <- Lmod$modelInfo$reStruc$condReStruc$`1 | locality`$blockReps

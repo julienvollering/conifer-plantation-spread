@@ -193,7 +193,8 @@ To summarize, we modeled:
 \begin{equation}
 wildings_{ij} \sim ZINB(\pi_{ij}, \mu_{ij}, \phi) \\
 logit(\pi_{ij}) = PlantationAge_{ij} + Locality_{ij} \\
-log(\mu_{ij}) = SeedDeposition_{ij} \cdot PlantationAge_{ij} + Bio1_{ij} + Bio19_{ij} + RelativeElevation_{ij} + Locality_{i} + \sum\limits_{k=1}^K EcosystemType_{ijk} \\
+log(\mu_{ij}) =  + \sum\limits_{k=1}^K EcosystemType_{ijk} + Locality_{i} + Bio1_{ij} + Bio19_{ij} + RelativeElevation_{ij} + \\
+SeedDeposition_{ij} + PlantationAge_{ij} + SeedDeposition_{ij} \cdot PlantationAge_{ij}  \\
 Locality_{i} \sim Normal(0, \sigma^2) \\
 (\#eq:statmod)
 \end{equation}
@@ -223,7 +224,8 @@ Modeled establishment probabilities among ecosystem types tallying at least one 
 Within species, confidence intervals on establishment probability frequently overlapped, but many other ecosystem types could be distinguished with a high degree of confidence.   
 The pattern of establishment probability among ecosystem types was modestly similar between species, with positive rank correlations in four of six species pairs (tab. \@ref(tab:correlation-table)).
 Establishment probabilities varied strongly among Sitka/Lutz spruce localities, such that it swamped much of the variation between ecosystem types. 
-For example, the model predicts that "arable fields" at the locality with the highest overall establishment probability and "boreal heath" at the locality with the lowest overall establishment probability would be colonized at roughly equal rates, even though "boreal heath" is colonized more than 100 times faster on average.  
+For example, the model predicts that "arable fields" at the locality with the highest overall establishment probability and "boreal heath" at the locality with the lowest overall establishment probability would be colonized at roughly equal rates, even though "boreal heath" is colonized more than 100 times faster on average.
+For the other species, especially for Norway spruce and lodgepole pine, there was much less variation in establishment probabilities among localities. 
 
 ```{r relative-establishment, fig.cap="Relative establishment probabilities among ecosystem types, using 'forest' as the reference level, for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. In the case of zero wildlings, these points are placed at the lower limit of the x-axis. Filled points with line intervals show modeled estimates surrounded by their 95% confidence intervals. Grey points show modeled estimates for individual localities. Ecosystem types are ordered by a confidence-weighted mean of their percentile-ranked establishment probabilities within species, such that types with consistently high establishment probability are on top. Ecosystem types shown in italic font are wetlands, and ecosystem types shown in bold font are characterized by disturbance. Ecosystem types without wildlings and covering less than 0.5 ha across all localities for that species are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
 knitr::include_graphics(here('ms', 'figures', 'relative-establishment', 'relative-establishment.pdf'))
@@ -387,26 +389,25 @@ Pctab <- read_csv(here('ms', 'tables', 'Pc-modelsummary.csv'))
 ```
 
 ```{r}
-kable(Pstab, align = 'clrrrr', caption = 'Picea sitchensis / lutzii') %>%
+kable(Pstab, align = 'clrrrr', caption = "Picea sitchensis / lutzii. Conditional model is glmmTMB's nbinom2 family with dispersion parameter phi = 0.253.") %>%
   kable_styling() %>% 
   add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
   column_spec(1, bold = T) %>% 
   collapse_rows(columns = 1, valign = "top")
 
-kable(Patab, align = 'clrrrr', caption = 'Picea abies') %>%
-  kable_styling() %>% 
-  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  column_spec(1, bold = T) %>% 
-  collapse_rows(columns = 1, valign = "top") %>%
-  footnote(general = "generalized Poisson family with overdispersion parameter 2.59")
-
-kable(Ltab, align = 'clrrrr', caption = 'Larix') %>%
+kable(Patab, align = 'clrrrr', caption = "Picea abies. Conditional model is glmmTMB's genpois family with dispersion parameter 2.59.") %>%
   kable_styling() %>% 
   add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
   column_spec(1, bold = T) %>% 
   collapse_rows(columns = 1, valign = "top")
 
-kable(Pctab, align = 'clrrrr', caption = 'Pinus contorta') %>%
+kable(Ltab, align = 'clrrrr', caption = "Larix. Conditional model is glmmTMB's nbinom2 family with dispersion parameter phi = 0.261.") %>%
+  kable_styling() %>% 
+  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  column_spec(1, bold = T) %>% 
+  collapse_rows(columns = 1, valign = "top")
+
+kable(Pctab[-nrow(Pctab), ], align = 'clrrrr', caption = "Pinus contorta. Conditional model is glmmTMB's nbinom2 family with dispersion parameter phi = 0.0329.") %>%
   kable_styling() %>% 
   add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
   column_spec(1, bold = T) %>% 
