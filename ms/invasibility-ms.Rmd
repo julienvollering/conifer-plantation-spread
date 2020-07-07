@@ -221,8 +221,11 @@ Observed wildlings densities in different ecosystem types --- excluding ecosyste
 The "open active landslide" type exceeded these densities around Sitka/Lutz spruce and larch plantations, but was very rare.
 
 Modeled establishment probabilities among ecosystem types tallying at least one wildling and covering at least 1 ha varied by up to five orders of magnitude (fig. \@ref(fig:relative-establishment)).
-Within species, confidence intervals on establishment probability frequently overlapped, but many other ecosystem types could be distinguished with a high degree of confidence.   
+Within species, confidence intervals on establishment probabilities in pairs of ecosystem types frequently overlapped.
+Nevertheless, establishment probability in many other ecosystem types could be distinguished with a high degree of confidence.
+For example, it is not clear whether the establishment probability of lodgepole pine is higher in the "coastal heath" or "bare rock" types, but it is obviously much higher in both of these than in "forest".
 The pattern of establishment probability among ecosystem types was modestly similar between species, with positive rank correlations in four of six species pairs (tab. \@ref(tab:correlation-table)).
+
 Establishment probabilities varied strongly among Sitka/Lutz spruce localities, such that it swamped much of the variation between ecosystem types. 
 For example, the model predicts that "arable fields" at the locality with the highest overall establishment probability and "boreal heath" at the locality with the lowest overall establishment probability would be colonized at roughly equal rates, even though "boreal heath" is colonized more than 100 times faster on average.
 For the other species, especially for Norway spruce and lodgepole pine, there was much less variation in establishment probabilities among localities. 
@@ -241,7 +244,14 @@ knitr::kable(cortab,
   kable_styling(full_width = F)
 ```
 
+Naturally, the variation in establishment probabilities shrank when we used category or structuring process to aggregate ecosystem types (fig. \@ref(fig:relative-establishment-hypotheses)).
+
+```{r relative-establishment-hypotheses, fig.cap="Relative establishment probabilities among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom), for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. Filled points with line intervals show modeled estimates surrounded by their 95% confidence intervals."}
+knitr::include_graphics(here('ms', 'figures', 'relative-establishment-hypotheses.pdf'))
+```
+
 For all species, estimates of seed deposition derived from the WALD model of seed dispersal fit patterns of wildling establishment better than estimates derived from the generalized seed dispersal kernel we tested.  
+Covariate results.
 
 
 # Discussion
