@@ -1,5 +1,5 @@
 ---
-title: 'Accounting for propagule pressure reveals that particular ecosystems are much more vulnerable to alien conifer establishment than others, without easily generalizable patterns'
+title: 'Accounting for seed rain reveals that particular ecosystems are much more vulnerable to alien conifer establishment than others, without easily generalizable patterns'
 author:
 - Julien Vollering^[julienvollering@gmail.com]
 - et al.
@@ -37,7 +37,7 @@ Ecosystem invasibility to alien conifers
 
 # Keywords
 
-invasibility, propagule pressure, disturbance, plantation, conifer
+invasibility, seed rain, disturbance, plantation, conifer
 
 # Introduction
 
@@ -45,32 +45,19 @@ Plantations of alien conifers are widespread in Norway, as they are in many coun
 In many instances these naturalized offspring --- or wildlings --- harm biodiversity and other values, so containing their spread is prudent.
 In particular, plantations contribute to the presence of alien conifers in protected areas, and generate substantial control costs as a result [@mcconnachieEstimatingEffectPlantations2015].
 Controlling wildlings protects plantation surroundings directly, and also prevents secondary and potentially invasive spread. 
-The European "Code of conduct on planted forest and invasive alien trees" stresses that containing alien species to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduPlantedForestsInvasive2016].
+Accordingly, the European "Code of conduct on planted forest and invasive alien trees" stresses that containing alien species to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduPlantedForestsInvasive2016].
+However, the number of wildlings that establish and their distances from the plantation vary a lot from site to site, even within species [@nygaardSpreadIntroducedSitka2017; @fernandesWhatDrivesEucalyptus2018], which makes it harder to manage wildling spread.
 
-The magnitude of wildling establishment often varies a lot from site to site [@fernandesWhatDrivesEucalyptus2018], which makes it difficult to manage.
-large observed variation: in abundance, spatial distribution, and growth
-  - process of spread: dispersal, germination, survival
-  - dispersal must be accounted for to estimate germination/survival (establishment) [catfordQuantifyingLevelsBiological2012], most plantation studies do not distinguish.
+The process that generates wildling spread --- and variation therein --- consists of dispersal and establishment (where establishment denotes both germination and survival).
+The number of wildlings observed in an area depends on how many seeds arrived there and how likely the seeds were to establish.
+Establishment likelihood is of great interest to managers because... 
+Seed rain must be accounted for to estimate germination/survival (establishment) [@catfordQuantifyingLevelsBiological2012] --- most plantation studies do not distinguish.
+Note that seed rain in this context is analogous to the concept of propagule pressure for invasions. Usually propagule pressure refers to levels of introduction at continental scales, but the idea is the same --- it is a normalizing quantity (an exposure) for an observed establishment rate.
 
-In Norway, for example, around some Sitka spruce plantations wildlings are abundant and distant from the plantation boundary.
-Around others there are few or none [@nygaardSpreadIntroducedSitka2017].
-
-Depending on how rapidly wildlings spread, their expansion beyond the plantation may be considered invasive. 
-
-Norway has only two native conifer species that cover large areas: Scots pine, *Pinus sylvestris* and Norway spruce, *Picea abies*).
-As a result, 20th century efforts to increase forest cover relied heavily on alien species [@oyenBiomassPotentialSelected2017]. 
-Fertile plantations produce highest propagule pressure on their immediate surroundings, because their seeds are (primarily?) wind-dispersed.
-Note that we use propagule pressure to mean the relative number of seeds deposited in areas around plantations. Usually it refers to levels of introduction at continental scales, but the idea is the same --- it is a normalizing quantity for an observed invasion rate.
-Extensive
-LDD less important
-
-The degree of naturalized spread observed surrounding plantations is highly variable.
-Specifically, the number of naturalized individuals, their location with respect to the plantation, and their rate of growth varies. 
 Many factors may be hypothesized to affect the degree of naturalized spread: the species in the plantation, the seed production of the plantation, the dispersal capacity of the the seeds, and the establishment rate of the seeds in the surroundings.  
 
 It is important to consider at what spatial scale variability in natural recruitment occurs. This may differ between species. If most variation occurs at the coarsest spatial scale, drivers that also vary at course scales, such as climate, are likely to be important. If variation between plantations is greater than variation between regions, climate and other coarse-scale factors are probably less important, and drivers that vary at the plantation scale are likely important. If more variation occurs around single plantations than between plantations, site characteristics (e.g. surrounding ecosystem types) are likely the most important governing factors. 
 
-Therefore, the key process that we examine is naturalized spread, which can be broken down into the processes of seed arrival and then germination, growth, and survival (assuming that the seed is viable when it arrives).
 Seed arrival depends on dispersal from source populations, and is a fundamentally spatial process. 
 Meanwhile, germination, growth, and survival (hereafter: "establishment") depend on the conditions at the arrival location.
 To better understand which factors govern naturalized spread, we need to know how seeds are dispersed from plantations, and which landing site conditions promote or inhibit establishment. 
@@ -81,10 +68,10 @@ For example, lower elevations may trap more seeds.
 
 Argument:
 Managers aim to limit wildling spread from plantations
-  - large observed variation: in abundance, spatial distribution, and growth
-  - process of spread: dispersal, germination, survival
+  - large observed variation: in abundance and spatial distribution
+Process of spread: dispersal, germination, survival
   - dispersal must be accounted for to estimate germination/survival (establishment), most plantation studies do not distinguish.
-Establishment will differ based on local ecological conditions: abiotic and biotic factors
+  - establishment will differ based on local ecological conditions: abiotic and biotic factors
   - expected from literature and observed in field
   - hydrology / climate
   - nursing / competition
@@ -95,8 +82,10 @@ Ecosystem types systematize local ecological conditions and are also a working u
   - useful to prioritize control and plan future plantations
   - in addition to ecosystem types, climate and topography are convenient and common considerations for managers to apply in their decision-making process. 
   
-Studying which habitats are most vulnerable so that intervantions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-Widespread plantations of wind-dispersed conifers present an opportunity to quantify ecosystem invasibility robustly, by accounting for propagule pressure directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
+Determining which ecosystems are most vulnerable so that intervantions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
+Widespread plantations of wind-dispersed conifers present an opportunity to quantify ecosystem invasibility robustly, by accounting for exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
+Extensive
+LDD less important
   
 RQs:  
 1. In which ecosystem types are wildlings from plantations of alien conifers most and least likely to establish?  
@@ -311,11 +300,10 @@ Caution: do not draw conclusions about the overall invasiveness of species from 
 
 Advantage: establishment patterns are likely to hold in other countries [@chytryHabitatInvasionsAlien2008]. Because the typification system we used is rule-based and aims to be observer-neutral, land managers in other countries can make educated inferences based on our results, even if a compatible or similar typication system does not exist. For example...
 
-Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management.
+Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management. For practical reasons, seeding studies observe only the youngest life-stages, and the factors controlling individual success likely differ at later life-stages [@dovciakSeedRainEnvironmental2008]. Therefore, their results are not directly applicable to spread on the longer time-scales of interest to managers.
 
 In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
 For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
-Another way of framing this is that the naive approach does not learn from failed invasions --- instances where propagule presure is high but establishment is low [@zenniElephantRoomRole2013].
 Advantage: compared to tallying analysis, we see that the magnitudes of differences between ecosystem types is much larger. For management the difference between a ten-fold gap and a 1000-fold gap matters --- and may draw more attention to plantation surroundings.
 
 Limitation: spatial grain. Minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types. Did our best to represent ecotones in the models and not use polygon boundaries overconfidently.
@@ -325,7 +313,7 @@ Limitation: WALD model of seed deposition fits patterns of *establishment* bette
 
 Limitation: inland versus coastal P.contorta sites. Number of wildlings, climate...
 
-Limitation: wildling establsihment varies not only in number but also in growth rate across ecosystem types. Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on management objectives.
+Limitation: wildling establsihment varies not only in number and distance but also in growth rate across ecosystem types. Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on management objectives.
 
 Caution: our models do not estimate the *total* causal effect of climate or relative elevation on wildlings.
 The reason is that each has a causal relationship to wildling number that passes through ecosystem type, which we have adjusted for in our models [@westreichTableFallacyPresenting2013].
