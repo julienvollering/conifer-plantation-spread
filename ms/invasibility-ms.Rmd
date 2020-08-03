@@ -37,29 +37,28 @@ Ecosystem invasibility to alien conifers
 
 # Keywords
 
-invasibility, seed rain, disturbance, plantation, conifer
+conifer, disturbance, invasibility, plantation, seed rain, Wald Analytical Long-distance Dispersal (WALD)
 
 # Introduction
 
 Plantations of alien conifers are widespread in Norway, as they are in many countries, and offspring from these plantations frequently establish in surrounding areas [@richardsonConifersInvasiveAliens2004].
-In many instances these naturalized offspring --- or wildlings --- harm biodiversity and other values, so containing their spread is prudent.
-In particular, plantations contribute to the presence of alien conifers in protected areas, and generate substantial control costs as a result [@mcconnachieEstimatingEffectPlantations2015].
-Controlling wildlings protects plantation surroundings directly, and also prevents secondary and potentially invasive spread. 
+In many instances these naturalized offspring --- or wildlings --- harm biodiversity and other values, so controlling their spread is prudent.
+In particular, plantations contribute to the presence of alien conifers in protected areas, and generate substantial costs as a result [@mcconnachieEstimatingEffectPlantations2015].
+Controlling wildlings protects plantation surroundings and prevents secondary, potentially invasive spread.
 Accordingly, the European "Code of conduct on planted forest and invasive alien trees" stresses that containing alien species to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduPlantedForestsInvasive2016].
-However, the number of wildlings that establish and their distances from the plantation vary a lot from site to site, even within species [@nygaardSpreadIntroducedSitka2017; @fernandesWhatDrivesEucalyptus2018], which makes it harder to manage wildling spread.
 
-The process that generates wildling spread --- and variation therein --- consists of dispersal and establishment (where establishment denotes both germination and survival).
-The number of wildlings observed in an area depends on how many seeds arrived there and how likely the seeds were to establish.
-Establishment likelihood is of great interest to managers because... 
+How many wildlings are present and how far they are from the plantation varies a lot from site to site, even among conspecific plantations of similar age [@nygaardSpreadIntroducedSitka2017], which makes it harder to predict and manage their spread.
+To understand the variation between sites, we need to consider both dispersal and establishment (where establishment denotes germination and survival), which jointly generate patterns of wildling spread.
+For example, an area of low establishment likelihood close to the plantation can be masked by high seed rain there [@rougetInferringProcessPattern2003].
+Site-level dispersal is affected by external factors governing a species' dispersal syndrome --- for instance wind exposure and site topography in the case of wind-dispersed species.
+Likewise, site-level establishment is affected by biotic and abiotic conditions where seeds arrive.
+Reducing establishment is of particular interest because it regulates wildling abundance directly (by comparison, reducing dispersal can only regulate wildling abundance through negative density dependence). 
+Establishment is also generally easier to manipulate than dispersal, either directly through intervention or indirectly through site selection [@calvino-cancelaInvasivePotentialEucalyptus2013]. 
 Seed rain must be accounted for to estimate germination/survival (establishment) [@catfordQuantifyingLevelsBiological2012] --- most plantation studies do not distinguish.
 Note that seed rain in this context is analogous to the concept of propagule pressure for invasions. Usually propagule pressure refers to levels of introduction at continental scales, but the idea is the same --- it is a normalizing quantity (an exposure) for an observed establishment rate.
 
-Many factors may be hypothesized to affect the degree of naturalized spread: the species in the plantation, the seed production of the plantation, the dispersal capacity of the the seeds, and the establishment rate of the seeds in the surroundings.  
-
 It is important to consider at what spatial scale variability in natural recruitment occurs. This may differ between species. If most variation occurs at the coarsest spatial scale, drivers that also vary at course scales, such as climate, are likely to be important. If variation between plantations is greater than variation between regions, climate and other coarse-scale factors are probably less important, and drivers that vary at the plantation scale are likely important. If more variation occurs around single plantations than between plantations, site characteristics (e.g. surrounding ecosystem types) are likely the most important governing factors. 
 
-Seed arrival depends on dispersal from source populations, and is a fundamentally spatial process. 
-Meanwhile, germination, growth, and survival (hereafter: "establishment") depend on the conditions at the arrival location.
 To better understand which factors govern naturalized spread, we need to know how seeds are dispersed from plantations, and which landing site conditions promote or inhibit establishment. 
 
 Therefore, the number of wildlings in the surroundings of a plantation is a function of the seed shadow from the plantation and the environmental characteristics of the proximal area.
@@ -185,8 +184,9 @@ knitr::include_graphics('figures/locality-example/locality-example.pdf')
 For our first analysis, we calculated wildling density per ecosystem type across all localities, by dividing the total number of wildings in that type by the total area of that type.
 Wildings in cells composed of multiple types were counted in proportion to cell's composition; for example, a cell with one wildling and half-covered by a given type would tally 0.5 wildling for that type.
 
-For our second analysis, we used a directed acyclical graph to diagram causal relationships among the factors we expected to influence the number of wildlings per cell (fig. \@ref(fig:DAG)).
-In it, the unmeasured, proximate causes of wildling number --- establishment probability and seed deposition, see eq. \@ref(eq:estmod) --- are decendants of variables that we could observe or model. 
+For our second analysis, we used a directed acyclical graph (DAG) to diagram causal relationships among the factors we expected to influence the number of wildlings per cell (fig. \@ref(fig:DAG)).
+We included an effect of relative elevation on seed deposition because our implementation of the WALD model does not capture potential parameter changes induced by uneven terrain [@katulEffectsGentleTopographic2012].   
+In the DAG, the unmeasured, proximate causes of wildling number --- establishment probability and seed deposition, see eq. \@ref(eq:estmod) --- are decendants of variables that we could observe or model.
 To estimate the causal influence of ecosystem type on wildlings, the directed acyclical graph dictated that we adjust for locality, climate, relative elevation, and seed deposition in our regression model [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
 We did not need to adjust for plantation age (with locality in the model), but we included it as a covariate anyway because it could reduce the unexplained variance associated with locality, and because our assumed causal structure would allow us to interpret its coefficient as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
 Climate entered the regression model as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
@@ -286,12 +286,12 @@ The interaction specified between seed deposition and plantation age was estimat
 
 # Discussion
 
-Compare results to other assessments of ecosystem invasibility to conifers [@fernandesNaturalRegenerationPinus2016] or to plants more broadly [@chytryHabitatInvasionsAlien2008; @calvino-cancelaInvasivePotentialEucalyptus2013].
+Compare results to other assessments of ecosystem invasibility to conifers [@richardsonPineInvasionsSouthern1994; @fernandesNaturalRegenerationPinus2016; @vanettenInvasionPatternsPinus2020] or to plants more broadly [@chytryHabitatInvasionsAlien2008; @calvino-cancelaInvasivePotentialEucalyptus2013].
 
 1. Two obvious management recommendations: 1) for site selection, try to limit plantations to sites where they are surrounded by arable fields. Where it is simultanueosly desireable to alter adjacent nature types (e.g. by grazing), that is also an option. 2) For early detection and rapid response, prioritize monitoring and control interventions in vulnerable ecosystem types like... 5500 km2 mapped for ecosystem types in Norway.
 
 2. The fact that disturbance events promote invasion does not map directly to ecosystems characterized by distubance being at higher risk than ecosystems not characterized by disturbance. Or, more broadly, invasion patterns of alien conifers frequently clash with our a priori expectations based on their autecology and general tenets of invasion ecology.
-Our disturbance results should not be interpreted to mean that an anthropogenic disturbance event decreases establishment probability relative to prior state (e.g. [@vikaneInvasionCallunaHeath2013] shows that burning in coastal heathland increases Sitka spruce establishment), but that alien conifers are not as likely to establish in anthropogenically disturbed ecosystems --- including ecosystems like arable fields --- as a group.
+Our disturbance results should not be interpreted to mean that an anthropogenic disturbance event decreases establishment probability relative to prior state (e.g. [@vikaneInvasionCallunaHeath2013] shows that burning in coastal heathland increases Sitka spruce establishment), but that alien conifers are not as likely to establish in anthropogenically disturbed ecosystems --- including ecosystems like arable fields --- as a group. An obvious explanation for this pattern is that these kinds of disturbance regimes kill as many or more wildlings than they recruit [@buckleyDisturbanceInvasionReinvasion2007].
 
 3. Beware that Sitka colonization varies enormously from site to site --- much more than other species --- so our ability to predict the magnitude of spread at a specific site is limited. More research is needed to probe this unexplained variance (human action?). But that does not mean we cannot or should not use the estimates to guide management! For example, imagine one locality consists entirely of coastal heath and another entirely of arable field. All things being equal, we expect the coastal heath locality to be colonized more than 100 times faster than the arable field locality. Simultaneusly we should not be surprised if they are colonized at equal rates.
 
@@ -313,7 +313,7 @@ Limitation: WALD model of seed deposition fits patterns of *establishment* bette
 
 Limitation: inland versus coastal P.contorta sites. Number of wildlings, climate...
 
-Limitation: wildling establsihment varies not only in number and distance but also in growth rate across ecosystem types. Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on management objectives.
+Limitation: wildling establishment varies not only in number and distance but also in growth rate across ecosystem types. Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on management objectives.
 
 Caution: our models do not estimate the *total* causal effect of climate or relative elevation on wildlings.
 The reason is that each has a causal relationship to wildling number that passes through ecosystem type, which we have adjusted for in our models [@westreichTableFallacyPresenting2013].
@@ -323,6 +323,9 @@ For example, using the climate coefficients (alone) to project risk of wildling 
 Rather, we can interpret their results with respect to specific mechanisms.
 Wet and warm conditions...
 Locations above plantations...
+
+Similar methods can be applied to non-conifer plantations that show large site-level variation [e.g. @fernandesWhatDrivesEucalyptus2018].
+Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and is likely to accelerate with recent pushes to increase tree planting worldwide. 
 
 # Appendix
 
