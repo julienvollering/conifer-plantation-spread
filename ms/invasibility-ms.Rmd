@@ -1,5 +1,5 @@
 ---
-title: 'Accounting for seed rain reveals that particular ecosystems are much more vulnerable to alien conifer establishment than others, without easily generalizable patterns'
+title: 'Accounting for seed rain reveals large and idiosyncratic differences between ecosystems in vulnerability to alien conifer establishment'
 author:
 - Julien Vollering^[julienvollering@gmail.com]
 - et al.
@@ -58,42 +58,21 @@ The conditions affecting establishment are also generally easier to manipulate t
 The question, then, becomes: how can we identify establishment-inhibiting conditions in a manner applicable to plantation management?
 
 In Norway --- and similarly in other countries --- there exists a national land mapping classification system that sorts variation in local ecological conditions [@NatureTypesNorway2018].
-It is a working tool for land management in Norway, with government backing.  
+It is a working tool for land management in Norway, with government backing.
 The system builds on the continuum concept [@austinContinuumConceptOrdination1985], aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@whittakerGradientAnalysisVegetation1967; @halvorsenNaturNorgeNiN2015].
-As a result, it encapsulates in its ecosystem types much of the variation that is most likely to regulate wildling germination and survival --- in competition, hydrology, disturbance, and the like [refs].
-Furthermore, it allows us to generalize establishment likelihood beyond specific, observed areas and to project it to unobserved areas.   
+As a result, it encapsulates in its ecosystem types much of the variation that is most likely to regulate wildling germination and survival --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
 
-
-Seed rain must be accounted for to estimate germination/survival (establishment) [@catfordQuantifyingLevelsBiological2012] --- most plantation studies do not distinguish.
-For example, low establishment likelihood in an area close to the plantation can be masked by high seed rain there [@rougetInferringProcessPattern2003].
-Note that seed rain in this context is analogous to the concept of propagule pressure for invasions. Usually propagule pressure refers to levels of introduction at continental scales, but the idea is the same --- it is a normalizing quantity (an exposure) for an observed establishment rate.
-
-Argument:
-Managers aim to limit wildling spread from plantations
-  - large observed variation: in abundance and spatial distribution
-Process of spread: dispersal, germination, survival
-  - dispersal must be accounted for to estimate germination/survival (establishment), most plantation studies do not distinguish.
-  - establishment will differ based on local ecological conditions: abiotic and biotic factors
-  - expected from literature and observed in field
-  - hydrology / climate
-  - nursing / competition
-  - disturbance
-Ecosystem types systematize local ecological conditions and are also a working unit of land management in Norway.
-  - a tool for generalization (because systematic) and projection (because objective / transferable)
-  - more similar types should show more similar establishment
-  - useful to prioritize control and plan future plantations
-  - in addition to ecosystem types, climate and topography are convenient and common considerations for managers to apply in their decision-making process. 
+We can use ecosystem types as transferable units, to generalize establishment likelihood beyond specific, observed sites.
+Importantly, that requires accounting for differences in the amount of seed rain received by the observed ecosystem types [@catfordQuantifyingLevelsBiological2012].
+For example, low establishment likelihood in an ecosystem type close to a plantation can be masked by copious seed rain [@rougetInferringProcessPattern2003].
+Having quantified establishment likelihood in this way, we can predict how vulnerable the surroundings of an unobserved plantation are, based on its composition of ecosystem types.
   
-Determining which ecosystems are most vulnerable so that intervantions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-Widespread plantations of wind-dispersed conifers present an opportunity to quantify ecosystem invasibility robustly, by accounting for exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
-Extensive
-LDD less important
-  
-RQs:  
+Determining which ecosystems are most vulnerable so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
+Plantations of wind-dispersed, alien conifers present a golden opportunity to assess the the invasibility of Norwegian ecosystems (to these species), because we can estimate ecosystem exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
+We ask:  
 1. In which ecosystem types are wildlings from plantations of alien conifers most and least likely to establish?  
-2. How do these estimates of establishment likelihood change when variation in seed rain is accounted for? 
+2. How do these estimates of establishment likelihood change when variation in seed rain is accounted for?  
 3. Can overarching characteristics of ecosystem types be used to generalize patterns of wildling establishment?  
-4. Beyond their influence on ecosystem type, how do climate and topography affect the likelihood of wildling establishment?
 
 # Methods
 
@@ -308,6 +287,7 @@ Advantage: observational study (registering established individuals rather than 
 
 In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
 For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
+Here, seed rain mirrors the concept of propagule pressure; "propagule pressure" often refers to levels of introduction at continental scales, but it also functions as a normalizing quantity (an exposure) for an observed establishment/invasion count [@chytrySeparatingHabitatInvasibility2008].
 Advantage: compared to tallying analysis, we see that the magnitudes of differences between ecosystem types is much larger. For management the difference between a ten-fold gap and a 1000-fold gap matters --- and may draw more attention to plantation surroundings.
 
 Limitation: relative rather than absolute establishment rate. Absolute numbers of wildlings matters for management, but estimating absolute magnitude of seed rain over the lifetime of the plantation would be foolhardy. At the same time, absolute seed rain is always likely to be a highly uncertain quantity, so absolute establsihment rates wouldnt have much value anyway. 
