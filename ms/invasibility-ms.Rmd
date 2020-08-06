@@ -68,7 +68,7 @@ For example, low establishment likelihood in an ecosystem type close to a planta
 Having quantified establishment likelihood in this way, we can predict how vulnerable the surroundings of an unobserved plantation are, based on its composition of ecosystem types.
   
 Determining which ecosystems are most vulnerable so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-Plantations of wind-dispersed, alien conifers present a golden opportunity to assess the the invasibility of Norwegian ecosystems (to these species), because we can estimate ecosystem exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
+Plantations of wind-dispersed, alien conifers present a golden opportunity to assess the the invasibility of Norwegian ecosystems (to these species, @hegerPredictingBiologicalInvasions2003), because we can estimate ecosystem exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
 We ask:  
 1. In which ecosystem types are wildlings from plantations of alien conifers most and least likely to establish?  
 2. How do these estimates of establishment likelihood change when variation in seed rain is accounted for?  
@@ -212,7 +212,8 @@ Futhermore, the lodgepole pine model did not converge as specified.
 To achieve convergence we dropped locality from the binomial submodel, reasoning that its variance was difficult to estimate from only six localities.
 
 Relative establishment probabilities of ecosystem types were calculated as predictions from the conditional part of the zero-inflation model (holding covariates at their mean values), scaled by the predicted value for a reference ecosystem type ("forest").
-To help summarize patterns in establishment probability among ecosystem types, we aggregated ecosystem types by category (terrestrial or wetland) and structuring process (anthrogenic, natural or no disturbance) and obtained estimates for these strata from refitted models that were otherwise unchanged.
+To help summarize patterns in establishment probability among ecosystem types, we aggregated ecosystem types by their category (terrestrial or wetland) or structuring process (anthrogenic, natural or no disturbance), as defined in the Nature in Norway system (Appendix [A3]).
+We then refitted our (otherwise unchanged) models twice, once with each of these stratifications replacing ecosystem types, and obtained estimates for each category and structuring process.
 
 # Results
 
@@ -249,7 +250,7 @@ Naturally, the variation in establishment probabilities shrank when we used cate
 No more than two orders of magnitude separated establishment probabilites of these different groupings.
 Despite larger sample sizes, many of the groupings were not distinguishable with high confidence.
 Sitka/Lutz spruce and Norway spruce established at higher rates in wetland ecosystem types than terrestial ecosystem types, while the opposite was true for larch and lodgepole pine.
-Sitka/Lutz spruce and Norway spruce also colonized ecosystem types without disturbance-structuring on par with or at a higher rate than disturbance-structured ecosystem types.
+Sitka/Lutz spruce and Norway spruce did not colonized disturbance-structured ecosystem types at a higher rate than ecosystem types without disturbance structuring.
 For larch and lodgepole pine, structuring by natural distubance and anthropogenic disturbance, respectively, were associated with the highest rates of colonization. 
 
 ```{r relative-establishment-hypotheses, fig.cap="Relative establishment probabilities among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom), for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. Filled points with line intervals show modeled estimates surrounded by their 95 % confidence intervals. The scale of the x-axis differs by species group and the horizontal dotted line marks the reference level for the comparison."}
@@ -268,36 +269,58 @@ The interaction specified between seed deposition and plantation age was estimat
 
 # Discussion
 
-Compare results to other assessments of ecosystem invasibility to conifers [@richardsonPineInvasionsSouthern1994; @fernandesNaturalRegenerationPinus2016; @vanettenInvasionPatternsPinus2020] or to plants more broadly [@chytryHabitatInvasionsAlien2008; @calvino-cancelaInvasivePotentialEucalyptus2013].
+## Ecosystem invasibility
 
-1. Two obvious management recommendations: 1) for site selection, try to limit plantations to sites where they are surrounded by arable fields. Where it is simultanueosly desireable to alter adjacent nature types (e.g. by grazing), that is also an option. 2) For early detection and rapid response, prioritize monitoring and control interventions in vulnerable ecosystem types like... 5500 km2 mapped for ecosystem types in Norway.
+1. Compare results to other assessments conifer recruitment in different ecosystems [@richardsonPineInvasionsSouthern1994; @petersonEcologyManagementSitka1997; @fernandesNaturalRegenerationPinus2016; @macekLifeDeathPicea2017; @vanettenInvasionPatternsPinus2020] or to plants more broadly [@chytryHabitatInvasionsAlien2008; @calvino-cancelaInvasivePotentialEucalyptus2013].
+Two obvious management recommendations: 1) for site selection, try to limit plantations to sites where they are surrounded by arable fields. Where it is simultanueosly desireable to alter adjacent nature types (e.g. by grazing), that is also an option. 2) For early detection and rapid response, prioritize monitoring and control interventions in vulnerable ecosystem types like... 5500 km2 mapped for ecosystem types in Norway.
 
-2. The fact that disturbance events promote invasion does not map directly to ecosystems characterized by distubance being at higher risk than ecosystems not characterized by disturbance. Or, more broadly, invasion patterns of alien conifers frequently clash with our a priori expectations based on their autecology and general tenets of invasion ecology.
-Our disturbance results should not be interpreted to mean that an anthropogenic disturbance event decreases establishment probability relative to prior state (e.g. [@vikaneInvasionCallunaHeath2013] shows that burning in coastal heathland increases Sitka spruce establishment), but that alien conifers are not as likely to establish in anthropogenically disturbed ecosystems --- including ecosystems like arable fields --- as a group. An obvious explanation for this pattern is that these kinds of disturbance regimes kill as many or more wildlings than they recruit [@buckleyDisturbanceInvasionReinvasion2007].
+Caution: Beware that Sitka colonization varies enormously from site to site --- much more than other species --- so our ability to predict the magnitude of spread at a specific site is limited. More research is needed to probe this unexplained variance (human action?). But that does not mean we cannot or should not use the estimates to guide management! For example, imagine one locality consists entirely of coastal heath and another entirely of arable field. All things being equal, we expect the coastal heath locality to be colonized more than 100 times faster than the arable field locality. Simultaneusly we should not be surprised if they are colonized at equal rates.
 
-3. Beware that Sitka colonization varies enormously from site to site --- much more than other species --- so our ability to predict the magnitude of spread at a specific site is limited. More research is needed to probe this unexplained variance (human action?). But that does not mean we cannot or should not use the estimates to guide management! For example, imagine one locality consists entirely of coastal heath and another entirely of arable field. All things being equal, we expect the coastal heath locality to be colonized more than 100 times faster than the arable field locality. Simultaneusly we should not be surprised if they are colonized at equal rates.
-
-It is useful to consider at what spatial scale variability in natural recruitment occurs. This may differ between species. If most variation occurs at the coarsest spatial scale, drivers that also vary at course scales, such as climate, are likely to be comparatively important. If variation between plantations is greater than variation between regions, climate and other coarse-scale factors are probably less important, and drivers that vary at the plantation scale are likely important. If more variation occurs around single plantations than between plantations, site characteristics (e.g. surrounding ecosystem types) are likely the most important governing factors. 
-
-Caution: do not draw conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
+Limitation: inland versus coastal P.contorta sites. Number of wildlings, climate...
+It is useful to consider at what spatial scale variability in natural recruitment occurs. This may differ between species. If most variation occurs at the coarsest spatial scale, drivers that also vary at course scales, such as climate, are likely to be comparatively important. If variation between plantations is greater than variation between regions, climate and other coarse-scale factors are probably less important, and drivers that vary at the plantation scale are likely important. If more variation occurs around single plantations than between plantations, site characteristics (e.g. surrounding ecosystem types) are likely the most important governing factors. With only six sites in two distinct groups, differences attributed to climate may have arisen by other mechanisms. Climate may have masked correlated drivers (e.g. sytematic differences in ecosystem composition) 
 
 Advantage: establishment patterns are likely to hold in other countries [@chytryHabitatInvasionsAlien2008]. Because the typification system we used is rule-based and aims to be observer-neutral, land managers in other countries can make educated inferences based on our results, even if a compatible or similar typication system does not exist. For example...
 
-Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management. For practical reasons, seeding studies observe only the youngest life-stages, and the factors controlling individual success likely differ at later life-stages [@dovciakSeedRainEnvironmental2008]. Therefore, their results are not directly applicable to spread on the longer time-scales of interest to managers.
+## Accounting for seed rain
 
-In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations.
+2. Accounting for seed rain (and other influences on establishment) amplifies the differences between ecosystem types. Suggests that differential seed rain "averages out" differences in establishment to some extent --- i.e. that, in our sample, vulnerable ecosystems recieved comparatively less seed rain.
+For management: do not underestimate the influence of plantation surroundings --- site selection matters! Direct observations of relative abundances misguide intuition about relative vulnerability. For example, the density of Sitka spruce wildlings was about equal in boreal heath and sand dunes, but our estimates suggest that establishment likelihood is actually about 100 times larger in boreal heath.  
+
+In the results from the naive approach, variation in the density of wildlings is partly attributable to differences between species and between ecosystem types, and partly to contingent properties of our sample, such as the spatial distribution of ecosystem types around plantations or the sites' climates).
 For example, if a particular ecosystem type tended to occur close to plantations, it would likely show higher wildling density than other ecosystem types even if the species were equally likely to establish there.
 Here, seed rain mirrors the concept of propagule pressure; "propagule pressure" often refers to levels of introduction at continental scales, but it also functions as a normalizing quantity (an exposure) for an observed establishment/invasion count [@chytrySeparatingHabitatInvasibility2008].
+
+We can attribute most of the difference between the naive and mod circles in fig. \@ref(fig:relative-establishment) to  
+
 Advantage: compared to tallying analysis, we see that the magnitudes of differences between ecosystem types is much larger. For management the difference between a ten-fold gap and a 1000-fold gap matters --- and may draw more attention to plantation surroundings.
 
-Limitation: relative rather than absolute establishment rate. Absolute numbers of wildlings matters for management, but estimating absolute magnitude of seed rain over the lifetime of the plantation would be foolhardy. At the same time, absolute seed rain is always likely to be a highly uncertain quantity, so absolute establsihment rates wouldnt have much value anyway. 
-
-Limitation: spatial grain. Minimum polygon area NiN, wildling group locations. A good reason to use a relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types. Did our best to represent ecotones in the models and not use polygon boundaries overconfidently.
+Limitation: relative rather than absolute establishment rate. Absolute numbers of wildlings matters for management, but estimating absolute magnitude of seed rain over the lifetime of the plantation would be foolhardy. At the same time, absolute seed rain is always likely to be a highly uncertain quantity, so absolute establishment rates wouldnt have much value anyway. 
 
 Limitation: WALD model of seed deposition fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
 - Negative density dependence, since the WALD model gave a more evenly spread probability distribution. If this is the case, it would mean that our results overestimate establishment probability near the seed sources and underestimate further away.  
 
-Limitation: inland versus coastal P.contorta sites. Number of wildlings, climate...
+
+## Patterns of invasibility
+
+3. The fact that disturbance events promote invasion does not map directly to ecosystems characterized by distubance being at higher risk than ecosystems not characterized by disturbance. Or, more broadly, invasion patterns of alien conifers frequently clash with our a priori expectations based on their autecology and general tenets of invasion ecology.
+Our disturbance results should not be interpreted to mean that an anthropogenic disturbance event decreases establishment probability relative to prior state (e.g. [@vikaneInvasionCallunaHeath2013] shows that burning in coastal heathland increases Sitka spruce establishment), but that alien conifers are not as likely to establish in anthropogenically disturbed ecosystems --- including ecosystems like arable fields --- as a group. An obvious explanation for this pattern is that these kinds of disturbance regimes kill as many or more wildlings than they recruit [@buckleyDisturbanceInvasionReinvasion2007].
+We refer to disturbance-structured ecosystems rather than disturbed ecosystems for the above reason.
+
+Ecosystem types structured by anthropogenic disturbance structuring includes areas in which conifer recruitment is almost certainly impossible, like paved surfaces and plowed fields. These deflate the establishment likelihood of this stratum, masking what might be high establishment probability along roadsides, for example.  
+
+In some cases, disturbed ecosystems may also be less favorable to establishment because high germination is outweighed by low survival at older life stages. E.g. Gregory 1956 (in Peterson 1997)
+
+Limitation: ecosystems with disturbance of very different frequencies and severities are lumped together in the classification of structuring processes. withing the groups of anthropgenic disturbance and natural disturbance, disturbance frequency and severity varies substantially. 
+
+## Overall
+
+Caution: do not draw conclusions about the overall invasiveness of species from the comparison of establishment probabilities. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
+More broadly: comparing invasiveness begs the question: "invasive where?" Differences in regional distribution makes it a bit apples and oranges. 
+That said, the total wildling density of the species in our sample is congruent with assessments of their invasion potential by the Norwegian impact assessment of alien species, which scored larches one level less invasive than lodgepole pine and Sitka spruce [@Fremmedartslista2018; @sandvikGenericEcologicalImpact2019].      
+
+Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management. For practical reasons, seeding studies observe only the youngest life-stages, and the factors controlling individual success likely differ at later life-stages [@dovciakSeedRainEnvironmental2008]. Therefore, their results are not directly applicable to spread on the longer time-scales of interest to managers.
+
+Limitation: spatial grain. Minimum polygon area NiN, wildling group locations. A good reason to use relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types. Did our best to represent ecotones in the models and not use polygon boundaries overconfidently.
 
 Limitation: wildling establishment varies not only in number and distance but also in growth rate across ecosystem types. Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on management objectives.
 
@@ -309,6 +332,7 @@ For example, using the climate coefficients (alone) to project risk of wildling 
 Rather, we can interpret their results with respect to specific mechanisms.
 Wet and warm conditions...
 Locations above plantations...
+[@tingstadTemperaturePrecipitationBiotic2015] found that, across Norwegian climatic gradient, effects of climate on Norway spruce recruitement were small (compared to competition). 
 
 Similar methods can be applied to non-conifer plantations that show large site-level variation [e.g. @fernandesWhatDrivesEucalyptus2018].
 Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and is likely to accelerate with recent pushes to increase tree planting worldwide. 
