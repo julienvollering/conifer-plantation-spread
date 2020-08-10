@@ -259,20 +259,22 @@ str(plot)
 ```
 
 ```{r}
+csize <- 3
+
 d <- filter(plot, species == "P.sitchensis-lutzii")
 col <- '#984ea3'
 g1 <- ggplot(data = d, mapping = aes(x = name)) + 
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2, height = 0)) +
+             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
+             position = position_jitter(width = 0.25, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = 2) +
+             mapping = aes(y = fit), color = col, size = csize) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = 2) +
+             color = col, pch = 1, size = csize) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -290,14 +292,14 @@ g2 <- ggplot(data = d, mapping = aes(x = name)) +
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2, height = 0)) +
+             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
+             position = position_jitter(width = 0.25, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = 2) +
+             mapping = aes(y = fit), color = col, size = csize) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = 2) +
+             color = col, pch = 1, size = csize) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -317,14 +319,14 @@ g3 <- ggplot(data = d, mapping = aes(x = name)) +
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2, height = 0)) +
+             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
+             position = position_jitter(width = 0.25, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color =col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = 2) +
+             mapping = aes(y = fit), color = col, size = csize) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = 2) +
+             color = col, pch = 1, size = csize) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -344,14 +346,14 @@ g4 <- ggplot(data = d, mapping = aes(x = name)) +
   scale_x_discrete(drop = FALSE) +
   geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5, pch = 20,
-             position = position_jitter(width = 0.2, height = 0)) +
+             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
+             position = position_jitter(width = 0.25, height = 0)) +
   geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
                  mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
   geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = 2) +
+             mapping = aes(y = fit), color = col, size = csize) +
   geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = 2) +
+             color = col, pch = 1, size = csize) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -370,9 +372,18 @@ g1234 <- g1 + g2 + g3 + g4 +
 ```
 
 ```{r}
-ggsave(g1234, filename= 'ggplot.pdf', 
+ggsave(g1234, filename= 'ggplot.svg', 
        path = here('ms', 'figures', 'relative-establishment'),
-       scale = 1, width = 34, height = 21, units = 'cm', dpi = 300)
+       scale = 1, width = 29.7, height = 21, units = 'cm', dpi = 300)
+```
+
+Spread in *arithmetically calculated* establishment density vs. spread in *modeled* establishment (among ecosystems for which both values are estimated):
+
+```{r}
+filter(dat, is.na(locality)) %>% 
+  filter(!(modeled == FALSE & fit == 0)) %>% 
+  group_by(species, modeled) %>% 
+  summarize(spread = sd(log10(fit)))
 ```
 
 # Relative establishment hypotheses
