@@ -1,1 +1,585 @@
-<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="1172" height="1172" style="font-family: Arial, sans-serif; width: 1172px; height: 832px;"><g class="path" style="cursor: move;"><path stroke="#4dac26" stroke-width="1.5" fill="none" d="M261.62,665.51L466.88,664.91"></path><path stroke="#4dac26" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(466.8822439625659,664.9071662255474) rotate(179.83202377481416)"></path></g><g class="path" style="cursor: move;"><path stroke="#4dac26" stroke-width="1.5" fill="none" d="M511.88,664.99L898.44,668.14"></path><path stroke="#4dac26" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(898.4371168984941,668.1392422919382) rotate(180.46738241353208)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M921.12,302.00L922.19,460.43"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(922.1915507878551,460.4325182446728) rotate(269.6136900153627)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M659.76,295.17L259.63,651.84"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(259.62635614197353,651.8376079532391) rotate(-41.71249131687534)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M673.71,299.48L672.98,455.94"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(672.9796724254625,455.93943736625147) rotate(-89.73367462285546)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M689.15,294.09L778.09,361.67"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(778.0935341349534,361.6671224165599) rotate(217.2254586077941)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M655.06,482.77L264.10,656.93"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(264.0971571385241,656.9335737549653) rotate(-24.011403783991405)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M692.86,476.26L897.36,480.04"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(897.3610595497474,480.0360860147971) rotate(181.05901084201255)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M811.94,384.46L904.08,466.94"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(904.0848339600801,466.93570767638204) rotate(221.8313429631694)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M922.46,495.43L923.30,648.32"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(923.3011869019723,648.3165442529365) rotate(269.6836706102365)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M240.59,302.14L241.55,645.56"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(241.5539221728551,645.5593190414017) rotate(269.8393526938152)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M250.59,300.11L478.76,647.92"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(478.76493468344495,647.9228683644054) rotate(236.73486193758802)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M559.70,135.80L253.83,648.20"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(253.82633334022336,648.1975402535224) rotate(-59.16502645023291)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M566.55,137.42L495.19,645.03"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(495.18682993718596,645.0269049728759) rotate(-81.99788635192208)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M586.60,129.70L898.79,277.95"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(898.7932695090585,277.9500063194189) rotate(205.40234876305124)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M578.87,135.59L660.94,267.43"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(660.9378711451974,267.4284278942812) rotate(238.09835749415817)"></path></g><g class="path" style="cursor: move;"><path stroke="black" stroke-width="1.5" fill="none" d="M551.74,130.08L262.41,277.59"></path><path stroke="black" stroke-width="1.5" fill="white" class="arrowfront" d="M-1,0L15,5L15,-5Z" transform="translate(262.40995467083115,277.5870184101251) rotate(-27.013222312383697)"></path></g><g style="cursor: move; touch-action: none;" transform="translate(241.62085308056876,665.5591556210114)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#bed403" stroke="#000000"></path><rect class="textbg" fill="#ffffff" width="111.18333435058594" height="17" x="-55.59166717529297" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">ecosystem type</text><path d="M-4,-6L7,0L-4,6Z" fill="#000000"></path></g><g style="cursor: move; touch-action: none;" transform="translate(921,287)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#00a2e0" stroke="#00a2e0"></path><rect class="textbg" fill="#ffffff" width="100.55000305175781" height="17" x="-50.275001525878906" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">plantation age</text></g><g style="cursor: move; touch-action: none;" transform="translate(673.7919957872565,284.4810996563574)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#ff7777" stroke="#ff7777"></path><rect class="textbg" fill="#ffffff" width="155.6666717529297" height="17" x="-77.83333587646484" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">proximity to plantation</text></g><g style="cursor: move; touch-action: none;" transform="translate(672.8662453923118,475.93912616593025)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#ff7777" stroke="#ff7777"></path><rect class="textbg" fill="#ffffff" width="211.73333740234375" height="17" x="-105.86666870117188" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">relative elevation to plantation</text></g><g style="cursor: move; touch-action: none;" transform="translate(797.6882569773564,373.9302896416299)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#00a2e0" stroke="#00a2e0"></path><rect class="textbg" fill="#ffffff" width="214.38333129882812" height="17" x="-107.19166564941406" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">relative seed rain in flat terrain</text></g><g style="cursor: move; touch-action: none;" transform="translate(922.3559768299104,480.4320078546883)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#dddddd" stroke="#aaaaaa"></path><rect class="textbg" fill="#ffffff" width="65.83333587646484" height="17" x="-32.91666793823242" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">seed rain</text></g><g style="cursor: move; touch-action: none;" transform="translate(240.54081095313325,287.1359842906235)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#ff7777" stroke="#ff7777"></path><rect class="textbg" fill="#ffffff" width="50.68333435058594" height="17" x="-25.34166717529297" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">climate</text></g><g style="cursor: move; touch-action: none;" transform="translate(569.0279094260137,122.53313696612668)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#ff7777" stroke="#ff7777"></path><rect class="textbg" fill="#ffffff" width="24.899999618530273" height="17" x="-12.449999809265137" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">site</text></g><g style="cursor: move; touch-action: none;" transform="translate(923.436018957346,668.3161512027492)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#00a2e0" stroke="#000000"></path><rect class="textbg" fill="#ffffff" width="60.45000076293945" height="17" x="-30.225000381469727" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">wildlings</text><path d="M-2,-6L2,-6L2,6L-2,6Z" fill="#000000"></path></g><g style="cursor: move; touch-action: none;" transform="translate(491.8820431806214,664.844378988709)"><path fill-opacity="0.7" stroke-width="2" z-index="1" d="M 0 0 m 20, 0 a 20,15 0 1,1 -40,0 a 20,15 0 1,1 40,0" fill="#dddddd" stroke="#aaaaaa"></path><rect class="textbg" fill="#ffffff" width="169.88333129882812" height="17" x="-84.94166564941406" y="21"></rect><text class="nodelabel" y="35" text-anchor="middle">establishment likelihood</text></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="22.776295cm"
+   height="17.869259cm"
+   style="font-family:Arial, sans-serif"
+   version="1.1"
+   id="svg188"
+   sodipodi:docname="dagitty-model.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata194">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs192" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     id="namedview190"
+     showgrid="false"
+     units="cm"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:zoom="1"
+     inkscape:cx="437.76609"
+     inkscape:cy="318.11142"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg188" />
+  <g
+     class="path"
+     id="g6"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 261.62,665.51 205.26,-0.6"
+       id="path2"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#4dac26;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(179.83202,232.95379,332.79578)"
+       id="path4"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#4dac26;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g12"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 511.88,664.99 386.56,3.15"
+       id="path8"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#4dac26;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-179.53262,450.58113,332.23739)"
+       id="path10"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#4dac26;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g18"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 921.12,302 1.07,158.43"
+       id="path14"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-90.38631,689.76504,-227.78107)"
+       id="path16"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g24"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="M 659.76,295.17 259.63,651.84"
+       id="path20"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-41.712491,985.26981,-14.808833)"
+       id="path22"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g30"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 673.71,299.48 -0.73,156.46"
+       id="path26"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-89.733675,565.52169,-110.08785)"
+       id="path28"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g36"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 689.15,294.09 88.94,67.58"
+       id="path32"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-142.77454,449.94871,49.808628)"
+       id="path34"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g42"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="M 655.06,482.77 264.1,656.93"
+       id="path38"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-24.011404,1676.6075,-292.46907)"
+       id="path40"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g48"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 692.86,476.26 204.5,3.78"
+       id="path44"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-178.94099,450.89875,235.87139)"
+       id="path46"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g54"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 811.94,384.46 92.14,82.48"
+       id="path50"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-138.16866,541.2683,60.707954)"
+       id="path52"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g60"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 922.46,495.43 0.84,152.89"
+       id="path56"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-90.316329,784.02411,-134.95056)"
+       id="path58"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g66"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 240.59,302.14 0.96,343.42"
+       id="path62"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-90.160647,442.65287,202.34086)"
+       id="path64"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g72"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="M 250.59,300.11 478.76,647.92"
+       id="path68"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-123.26514,414.30985,194.70362)"
+       id="path70"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g78"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="M 559.7,135.8 253.83,648.2"
+       id="path74"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-59.165026,697.83582,100.53235)"
+       id="path76"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g84"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="M 566.55,137.42 495.19,645.03"
+       id="path80"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-81.997886,618.61652,37.679199)"
+       id="path82"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g90"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="M 586.6,129.7 898.79,277.95"
+       id="path86"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-154.59765,480.719,37.689418)"
+       id="path88"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g96"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="m 578.87,135.59 82.07,131.84"
+       id="path92"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-121.90164,404.73804,-49.838691)"
+       id="path94"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     class="path"
+     id="g102"
+     transform="translate(-148.23391,-68.737871)">
+    <path
+       d="M 551.74,130.08 262.41,277.59"
+       id="path98"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.5" />
+    <path
+       class="arrowfront"
+       d="M -1,0 15,5 V -5 Z"
+       transform="rotate(-27.013222,709.02782,-407.43688)"
+       id="path100"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:1.5" />
+  </g>
+  <g
+     transform="translate(93.386943,596.82129)"
+     id="g112">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path104"
+       inkscape:connector-curvature="0"
+       style="fill:#bed403;fill-opacity:0.7;stroke:#000000;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="111.18333"
+       height="17"
+       x="-55.591667"
+       y="21"
+       id="rect106"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text108"
+       style="text-anchor:middle">ecosystem type</text>
+    <path
+       d="M -4,-6 7,0 -4,6 Z"
+       id="path110"
+       inkscape:connector-curvature="0"
+       style="fill:#000000" />
+  </g>
+  <g
+     transform="translate(772.76609,218.26213)"
+     id="g120">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path114"
+       inkscape:connector-curvature="0"
+       style="fill:#00a2e0;fill-opacity:0.7;stroke:#00a2e0;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="100.55"
+       height="17"
+       x="-50.275002"
+       y="21"
+       id="rect116"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text118"
+       style="text-anchor:middle">plantation age</text>
+  </g>
+  <g
+     transform="translate(525.55809,215.74323)"
+     id="g128">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path122"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="155.66667"
+       height="17"
+       x="-77.833336"
+       y="21"
+       id="rect124"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text126"
+       style="text-anchor:middle">proximity to plantation</text>
+  </g>
+  <g
+     transform="translate(524.63234,407.20126)"
+     id="g136">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path130"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="211.73334"
+       height="17"
+       x="-105.86667"
+       y="21"
+       id="rect132"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text134"
+       style="text-anchor:middle">relative elevation to plantation</text>
+  </g>
+  <g
+     transform="translate(649.45435,305.19242)"
+     id="g144">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path138"
+       inkscape:connector-curvature="0"
+       style="fill:#00a2e0;fill-opacity:0.7;stroke:#00a2e0;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="214.38333"
+       height="17"
+       x="-107.19167"
+       y="21"
+       id="rect140"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text142"
+       style="text-anchor:middle">relative seed rain in flat terrain</text>
+  </g>
+  <g
+     transform="translate(774.12207,411.69414)"
+     id="g152">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path146"
+       inkscape:connector-curvature="0"
+       style="fill:#dddddd;fill-opacity:0.7;stroke:#aaaaaa;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="65.833336"
+       height="17"
+       x="-32.916668"
+       y="21"
+       id="rect148"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text150"
+       style="text-anchor:middle">seed rain</text>
+  </g>
+  <g
+     transform="translate(92.306903,218.39811)"
+     id="g160">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path154"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="50.683334"
+       height="17"
+       x="-25.341667"
+       y="21"
+       id="rect156"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text158"
+       style="text-anchor:middle">climate</text>
+  </g>
+  <g
+     transform="translate(420.794,53.795269)"
+     id="g168">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path162"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="24.9"
+       height="17"
+       x="-12.45"
+       y="21"
+       id="rect164"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text166"
+       style="text-anchor:middle">site</text>
+  </g>
+  <g
+     transform="translate(775.20211,599.57828)"
+     id="g178">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path170"
+       inkscape:connector-curvature="0"
+       style="fill:#00a2e0;fill-opacity:0.7;stroke:#000000;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="60.450001"
+       height="17"
+       x="-30.225"
+       y="21"
+       id="rect172"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text174"
+       style="text-anchor:middle">wildlings</text>
+    <path
+       d="M -2,-6 H 2 V 6 h -4 z"
+       id="path176"
+       inkscape:connector-curvature="0"
+       style="fill:#000000" />
+  </g>
+  <g
+     transform="translate(343.64813,596.10651)"
+     id="g186">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path180"
+       inkscape:connector-curvature="0"
+       style="fill:#dddddd;fill-opacity:0.7;stroke:#aaaaaa;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="169.88333"
+       height="17"
+       x="-84.941666"
+       y="21"
+       id="rect182"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text184"
+       style="text-anchor:middle">establishment likelihood</text>
+  </g>
+</svg>

@@ -129,7 +129,7 @@ Details for all 82 plantations are provided in Appendix [A1].
 
 ## Seed dispersal
 
-For our second analysis --- isolating the effect of ecosystem type on establishment likelihood --- we needed estimates of the spatial distribution of seed deposition within the 500x500 m field plots.
+For our second analysis --- isolating the effect of ecosystem type on establishment likelihood --- we needed estimates of the spatial distribution of seed rain within the 500x500 m field plots.
 Because conspecific plantations were sometimes located nearby the central plantation, we considered all plantations within a 1 km radius to be potential seed sources.
 We used two models of seed dispersal to derive two different estimates of relative seed rain in space.
 
@@ -149,7 +149,7 @@ Simulataneously, we randomly sampled 100 wind velocities in the direction of the
 The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
 The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
 
-Both estimates of seed deposition were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
+Both estimates of relative seed rain were expressed on a grid with a grain of 10 m, so dispersal kernels were applied to the distance from seed source to grid cell center. 
 Field-mapped polygons of seed sources were transformed into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
 Additional details about how data from different field campaigns were harmonized to model seed dispersal are explained in Appendix [A4].
 
@@ -176,8 +176,8 @@ We did not need to adjust for plantation age (with site in the model), but we in
 Climate entered the regression model as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
 We chose these two variables because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
 Relative elevation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
-Lastly, plantation surroundings are likely to experience large stochastic variation in annual seed depostion, because seed release will concide with different wind conditions from year to year.
-Therefore we also included in our model the first order interaction between seed deposition and plantation age.
+Lastly, plantation surroundings are likely to experience large stochastic variation in annual seed rain, because seed release will concide with different wind conditions from year to year.
+Therefore we also included in our model the first order interaction between relative seed rain and plantation age.
 
 ```{r DAG, fig.cap="A directed acyclical graph showing the causal relationships that we use as our point of departure for a statistical model of ecosystem effect on wildling establishment. Red variables causally affect both the ecosystem type and wildling establishment, blue variables causally affect only wildling establishment, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.svg'))
@@ -206,7 +206,7 @@ Subscripts $i$, $j$, and $k$ index sites, cells, and ecosystem types.
 
 We standardized variables (except ecosystem types, which were [0,1]) and fitted models with the glmmTMB package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6, @rcoreteamLanguageEnvironmentStatistical2020].
 For each species we dropped ecosystem types that were completely free of wildlings (to avoid model convergence issues stemming from complete separation).
-We fitted parallel models for our two seed deposition variables and selected the model with the better AIC.
+We fitted parallel models for our two seed rain variables and selected the model with the better AIC.
 To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.2.7, @hartigDHARMaResidualDiagnostics2020].
 We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
 The Norway spruce model showed residual underdispersion, so we replaced the negative binomial distribution with the generalized Poisson distribution, which solved the issue [@brooksStatisticalModelingPatterns2019].
@@ -252,7 +252,7 @@ Naturally, the variation in establishment likelihoods shrank when we used catego
 No more than two orders of magnitude separated establishment likelihoods of these different groupings.
 Despite larger sample sizes, many of the groupings were not distinguishable with high confidence.
 Sitka/Lutz spruce and Norway spruce established at higher rates in wetland ecosystem types than terrestial ecosystem types, while the opposite was true for larch and lodgepole pine.
-Sitka/Lutz spruce and Norway spruce did not colonized disturbance-structured ecosystem types at a higher rate than ecosystem types without disturbance structuring.
+Sitka/Lutz spruce and Norway spruce did not colonize disturbance-structured ecosystem types at a higher rate than ecosystem types without disturbance structuring.
 For larch and lodgepole pine, structuring by natural distubance and anthropogenic disturbance, respectively, were associated with the highest rates of colonization. 
 
 ```{r establishment-hypotheses, fig.cap="Establishment likelihoods among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom), for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. Filled points with line intervals show modeled estimates surrounded by their 95 % confidence intervals. The scale of the x-axis differs by species group and the horizontal dotted line marks the reference level for the comparison."}
@@ -264,10 +264,10 @@ For larch there was a negative direct effect of precipitation (Bio19), with a 50
 From the six sites with lodgepole pine, the model estimated a very strong negative direct effect of annual temperature (Bio01), with a drop of 2.3 ºC decreasing establishment by five orders of magnitude.
 It also estimated a strong positive effect of precipitation (Bio19), with a 175 mm increase in coldest-quarter precipitation increasing establishment 500 times.
 The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystem types --- was modest and acted in different directions for different species.
-For all species, estimates of seed deposition derived from the WALD model of seed dispersal fit patterns of wildling establishment better than estimates derived from the generalized seed dispersal kernel that we tested.
+For all species, estimates of relative seed rain derived from the WALD model of seed dispersal fit patterns of wildling establishment better than estimates derived from the generalized seed dispersal kernel that we tested.
 There was a high degree of confidence that the effect of relative seed rain was positive for all species.
 The 95 % confidence intervals around plantation age effects included zero in all cases except in the binomial submodels for Sitka/Lutz spruce and larch (where older plantations showed fewer zeros).
-The interaction specified between seed deposition and plantation age was estimated to be positive for Sitka/Lutz spruce, nonexistent for Norway spruce, and negative for larch and lodgepole pine.
+The interaction specified between relative seed rain and plantation age was estimated to be positive for Sitka/Lutz spruce, nonexistent for Norway spruce, and negative for larch and lodgepole pine.
 
 # Discussion
 
@@ -299,7 +299,7 @@ Advantage: compared to tallying analysis, we see that the magnitudes of differen
 
 Limitation: relative rather than absolute establishment. Absolute numbers of wildlings matters for management, but estimating absolute magnitude of a seed shadow over the lifetime of the plantation would require knowing lifetime reproductive output, which varies with more than just age (density, site quality, provenance). At the same time, absolute seed rain is always likely to be a highly uncertain quantity, so absolute establishment rates wouldnt have much value anyway. 
 
-Limitation: WALD model of seed deposition fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. Survivorship bias. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
+Limitation: WALD model of seed rain fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. Survivorship bias. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
 - Negative density dependence, since the WALD model gave a more evenly spread probability distribution. Likely to exist? If it does exist, it would mean that our results overestimate establishment likelihoods near the seed sources and underestimate further away.  
 
 
@@ -317,7 +317,7 @@ Limitation: ecosystems with disturbance of very different frequencies and severi
 
 ## Overall
 
-Caution: do not draw conclusions about the overall invasiveness of species from the comparison of establishment likelihoods. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at an equal density of seed deposition.
+Caution: do not draw conclusions about the overall invasiveness of species from the comparison of establishment likelihoods. The comparison is done for a particular plantation age, under particular climatic conditions, with a particular amount of seed rain --- all of which may vary systematically between species. For example, most lodgepole pine plantations are planted inland but the comparison is under a more oceanic climate, which increases its predicted rate of establishment. Similarly, *Larix* seeds have a higher terminal velocity than *P. abies* and therefore are unlikely to travel as far, but our comparison is at equal seed rain probability density.
 More broadly: comparing invasiveness begs the question: "invasive where?" Differences in regional distribution makes it a bit apples and oranges. 
 That said, the total wildling density of the species in our sample is congruent with assessments of their invasion potential by the Norwegian impact assessment of alien species, which scored larches one level less invasive than lodgepole pine and Sitka spruce [@Fremmedartslista2018; @sandvikGenericEcologicalImpact2019].      
 
@@ -362,7 +362,7 @@ locs <- locs %>%
     species == "Larix" ~ "Larix spp.")) %>% 
   mutate(locality = paste(toupper(substring(locality, 1, 1)), 
                           substring(locality, 2), sep = ""),
-             .before = "easting") %>%
+             .before = utm33.easting) %>%
   mutate_at(c("utm33.easting","utm33.northing"), round) %>% 
   mutate_at(c("bio01","bio19"), ~ round(./10, digits = 2)) %>% 
   rename(`species group` = species, site = locality, easting = utm33.easting, 
