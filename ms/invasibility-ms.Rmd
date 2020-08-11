@@ -48,10 +48,11 @@ Controlling wildlings protects plantation surroundings and prevents secondary, p
 Accordingly, the European "Code of conduct on planted forest and invasive alien trees" stresses that containing alien species to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduPlantedForestsInvasive2016].
 
 How many wildlings are present and how far they are from the plantation varies a lot from site to site, even among conspecific plantations of similar age [@nygaardSpreadIntroducedSitka2017], which makes it harder to predict and manage their spread.
-To understand the variation between sites, we need to consider both dispersal and establishment (where establishment denotes germination and survival), which jointly generate patterns of wildling spread.
+To understand the variation between sites, we need to consider both dispersal and establishment (where establishment comprises germination and survival).
+These jointly generate patterns of wildlings in space.
 Dispersal at a given site is affected by external conditions governing a species' dispersal syndrome --- for instance wind exposure and site topography, in the case of a wind-dispersed species.
-Likewise, establishment at a given site is affected by biotic and abiotic conditions where seeds arrive.
-Differences in these conditions can be exploited to reduce or prevent wildling spread.
+Likewise, establishment is affected by biotic and abiotic conditions where seeds arrive.
+In theory, conditions inhibiting either process may be exploited to suppress wildling spread.
 
 Reducing establishment is of particular interest because it regulates wildling abundance directly (by comparison, reducing dispersal can only regulate wildling abundance through negative density dependence, all else being equal). 
 The conditions affecting establishment are also generally easier to manipulate than those affecting dispersal, either directly through intervention or indirectly through site selection [@calvino-cancelaInvasivePotentialEucalyptus2013].
@@ -68,9 +69,10 @@ For example, low establishment likelihood in an ecosystem type close to a planta
 Having quantified establishment likelihood in this way, we can predict how vulnerable the surroundings of an unobserved plantation are, based on its composition of ecosystem types.
   
 Determining which ecosystems are most vulnerable so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-Plantations of wind-dispersed, alien conifers present a golden opportunity to assess the the invasibility of Norwegian ecosystems (to these species, @hegerPredictingBiologicalInvasions2003), because we can estimate ecosystem exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
-We ask:  
-1. In which ecosystem types are wildlings from plantations of alien conifers most and least likely to establish?  
+Plantations of wind-dispersed, alien conifers present a golden opportunity to assess ecosystem invasibility (to these species, @hegerPredictingBiologicalInvasions2003), because we can estimate ecosystem exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
+We examine plantations in Norway to investigate the following questions:  
+
+1. In which ecosystem types are wildlings of alien conifers most and least likely to establish?  
 2. How do these estimates of establishment likelihood change when variation in seed rain is accounted for?  
 3. Can overarching characteristics of ecosystem types be used to generalize patterns of wildling establishment?  
 
@@ -78,7 +80,7 @@ We ask:
 
 ## Approach
 
-We compared the frequency with which four groups of alien conifer species establish in various ecosystem types, using observational data.
+We compared how frequently four groups of alien conifer species have established in various ecosystem types.
 Specifically, we used maps of wildlings and ecosystem types around the plantations from which the wildlings likely originated.
 The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) Norway spruce (*Picea abies*), (3) undetermined larches (*Larix* spp.), and (4) lodgepole pine (*Pinus contorta*). 
 
@@ -295,9 +297,9 @@ We can attribute most of the difference between the naive and mod circles in fig
 
 Advantage: compared to tallying analysis, we see that the magnitudes of differences between ecosystem types is much larger. For management the difference between a ten-fold gap and a 1000-fold gap matters --- and may draw more attention to plantation surroundings.
 
-Limitation: relative rather than absolute establishment rate. Absolute numbers of wildlings matters for management, but estimating absolute magnitude of seed rain over the lifetime of the plantation would be foolhardy. At the same time, absolute seed rain is always likely to be a highly uncertain quantity, so absolute establishment rates wouldnt have much value anyway. 
+Limitation: relative rather than absolute establishment rate. Absolute numbers of wildlings matters for management, but estimating absolute magnitude of a seed shadow over the lifetime of the plantation would require knowing lifetime reproductive output, which varies with more than just age (density, site quality, provenance). At the same time, absolute seed rain is always likely to be a highly uncertain quantity, so absolute establishment rates wouldnt have much value anyway. 
 
-Limitation: WALD model of seed deposition fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
+Limitation: WALD model of seed deposition fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. Survivorship bias. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
 - Negative density dependence, since the WALD model gave a more evenly spread probability distribution. If this is the case, it would mean that our results overestimate establishment probability near the seed sources and underestimate further away.  
 
 
