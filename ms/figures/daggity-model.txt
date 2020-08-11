@@ -1,37 +1,33 @@
 dag {
 bb="-3.748,-3.701,3.848,4.447"
 "ecosystem type" [exposure,pos="-2.182,2.817"]
-"elevation relative to plantation" [pos="0.613,0.960"]
-"establishment probability" [latent,pos="-0.560,2.810"]
-"plantation age" [pos="2.218,-0.932"]
+"establishment likelihood" [latent,pos="-0.560,2.810"]
+"plantation age" [pos="2.221,-0.890"]
 "proximity to plantation" [pos="0.619,-0.915"]
-"seed deposition density" [pos="1.422,-0.039"]
-"seed deposition" [latent,pos="2.230,1.004"]
+"relative elevation to plantation" [pos="0.613,0.960"]
+"relative seed rain in flat terrain" [pos="1.422,-0.039"]
+"seed rain" [latent,pos="2.230,1.004"]
 climate [pos="-2.189,-0.889"]
-locality [pos="-0.060,-2.501"]
+site [pos="-0.060,-2.501"]
 wildlings [outcome,pos="2.237,2.844"]
-"ecosystem type" -> "establishment probability"
-"elevation relative to plantation" -> "ecosystem type"
-"elevation relative to plantation" -> "seed deposition"
-"establishment probability" -> wildlings
-"plantation age" -> "seed deposition"
+"ecosystem type" -> "establishment likelihood"
+"establishment likelihood" -> wildlings
+"plantation age" -> "seed rain"
 "proximity to plantation" -> "ecosystem type"
-"proximity to plantation" -> "elevation relative to plantation"
-"proximity to plantation" -> "seed deposition density"
-"seed deposition density" -> "seed deposition"
-"seed deposition" -> wildlings
+"proximity to plantation" -> "relative elevation to plantation"
+"proximity to plantation" -> "relative seed rain in flat terrain"
+"relative elevation to plantation" -> "ecosystem type"
+"relative elevation to plantation" -> "seed rain"
+"relative seed rain in flat terrain" -> "seed rain"
+"seed rain" -> wildlings
 climate -> "ecosystem type"
-climate -> "establishment probability"
-locality -> "ecosystem type"
-locality -> "establishment probability"
-locality -> "plantation age"
-locality -> "proximity to plantation"
-locality -> climate
+climate -> "establishment likelihood"
+site -> "ecosystem type"
+site -> "establishment likelihood"
+site -> "plantation age"
+site -> "proximity to plantation"
+site -> climate
 }
 
-Minimal sufficient adjustment sets for estimating the total effect of ecosystem type on wildlings:
-
-    climate, locality, proximity to plantation, relative elevation
-    climate, locality, relative elevation, seed deposition density
 
 Table 2 Fallacy: Coefficient of plantation age can be interpreted as (unconfounded) total effects on wildlings. None of the covariates in the model mediate its effects. Other covariates (climate, relative elevation) cannot be interpreted as total effect on wildlings. See http://www.dagitty.net/learn/graphs/table2-fallacy.html

@@ -147,11 +147,11 @@ g123 <- g12 +
 ```
 
 ```{r}
-ggsave(g123, filename= 'localities-map.pdf', path = here('ms', 'figures'),
-  scale = 1, width = 7, height = 11, units = 'cm', dpi = 300)
+ggsave(g123, filename = 'localities-map.svg', path = here('ms', 'figures'),
+  scale = 1, width = 74, height = 105, units = 'mm', dpi = 300)
 ```
 
-# Locality example
+# Site example
 
 Criteria for selecting example location:
 
@@ -168,32 +168,32 @@ st_bbox(meaasen)
 ```
 
 ```{r}
-png(filename = here('ms', 'figures', 'locality-example', 'wildlings.png'),
+png(filename = here('ms', 'figures', 'site-example', 'wildlings.png'),
     width = 10, height = 10, units = 'cm', res = 300)
 plot(meaasen["wildlings"], main = 'wildlings', 
      key.pos = 1, key.width = lcm(1.4))
 dev.off()
 
-png(filename = here('ms', 'figures', 'locality-example', 'WALD.png'),
+png(filename = here('ms', 'figures', 'site-example', 'WALD.png'),
     width = 10, height = 10, units = 'cm', res = 300)
 plot(meaasen["seeds.WALD"], main = 'WALD seed probability density', 
      key.pos = 1, key.width = lcm(1.4), logz = TRUE, at = c(-5,-4,-3))
 dev.off()
 
-png(filename = here('ms', 'figures', 'locality-example', 'T2.png'),
+png(filename = here('ms', 'figures', 'site-example', 'T2.png'),
     width = 10, height = 10, units = 'cm', res = 300)
 plot(meaasen["T2"], main = 'open shallow-soil ground', 
      key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
 dev.off()
 
-png(filename = here('ms', 'figures', 'locality-example', 'T4.png'),
+png(filename = here('ms', 'figures', 'site-example', 'T4.png'),
     width = 10, height = 10, units = 'cm', res = 300)
 plot(meaasen["T4"], main = 'forest', 
      key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
 dev.off()
 ```
 
-# Relative establishment
+# Establishment
 
 ```{r}
 results <- readRDS(here("output","results.rds"))
@@ -281,7 +281,7 @@ g1 <- ggplot(data = d, mapping = aes(x = name)) +
     minor_breaks = NULL) +
   coord_flip(ylim = c(1e-4, 1e2)) +
   labs(title = 'Picea sitchensis / lutzii', 
-       x = 'ecosystem type', y = 'relative establishment probability') +
+       x = 'ecosystem type', y = 'establishment likelihood') +
   theme_light() + 
   theme(axis.text.y = element_markdown(),
         plot.title = element_text(face = 'italic'))
@@ -373,7 +373,7 @@ g1234 <- g1 + g2 + g3 + g4 +
 
 ```{r}
 ggsave(g1234, filename= 'ggplot.svg', 
-       path = here('ms', 'figures', 'relative-establishment'),
+       path = here('ms', 'figures', 'establishment'),
        scale = 1, width = 29.7, height = 21, units = 'cm', dpi = 300)
 ```
 
@@ -386,7 +386,7 @@ filter(dat, is.na(locality)) %>%
   summarize(spread = sd(log10(fit)))
 ```
 
-# Relative establishment hypotheses
+# Establishment hypotheses
 
 ```{r}
 results.wetland <- readRDS(here("output","results-wetland.rds"))
@@ -583,7 +583,7 @@ g5 <- ggplot(data = d, mapping = aes(x = structuring)) +
     labels = scales::trans_format("log2", scales::math_format(2^.x)),
     minor_breaks = NULL) +
   coord_flip(ylim = ylimits$`P.sitchensis-lutzii`) +
-  labs(x = 'ecosystem\nstructuring', y = 'relative establishment probability') +
+  labs(x = 'ecosystem\nstructuring', y = 'establishment likelihood') +
   theme_light() + 
   theme(axis.text.y = element_markdown(),
         plot.title = element_blank())
@@ -671,11 +671,9 @@ g <-
 ```
 
 ```{r}
-ggsave(g, filename= 'relative-establishment-hypotheses.pdf', path = here('ms', 'figures'),
-  scale = 1, width = 28, height = 10, units = 'cm', dpi = 300)
+ggsave(g, filename= 'establishment-hypotheses.svg', path = here('ms', 'figures'),
+  scale = 1.5, width = 210, height = 297/5, units = 'mm', dpi = 300)
 ```
-
-
 
 
 # sessionInfo 
