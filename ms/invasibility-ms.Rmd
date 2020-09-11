@@ -272,14 +272,12 @@ The interaction specified between relative seed rain and plantation age was esti
 
 ## Ecosystem invasibility
 
-Qualitatively, our estimates of ecosystem invasibility align with some of the findings from previous studies of recruitment patterns and diverge from others.
-In many cases it is difficult to map what is known about the autecology of a species directly to management units such as ecosystem types.
-For instance, Sitka spruce grows poorly under moisture stress and tolerates flooding well [@petersonEcologyManagementSitka1997], which might help explain why it is twice as likely to establish in wetland ecosystems as in terrestrial ecosystems.
+Our estimates of ecosystem invasibility align qualitatively with some findings from previous studies of recruitment patterns, and diverge from others.
+For instance, Sitka spruce grows poorly under moisture stress and tolerates flooding well [@petersonEcologyManagementSitka1997], which might help explain why it was twice as likely to establish in wetland ecosystems as in terrestrial ecosystems.
 Nevertheless, Sitka spruce also established in 'open shallow-soil ground' with very high likelihood, despite this ecosystem type's characteristically dry soil.  
-Sitka spruce 
-Sitka: [@petersonEcologyManagementSitka1997] 
-Norway: [@macekLifeDeathPicea2017] 
-LPine: [@richardsonPineInvasionsSouthern1994; @despainDispersalEcologyLodgepole2001; @langdonPinusContortaInvasion2010; @taylorDriversPlantInvasion2016; @vanettenInvasionPatternsPinus2020] 
+This illustrates the trouble with deriving predictions for management units such as ecosystem types from generalized statements about species autecology: should we expect low establishment in 'open shallow-soil ground' because it is dry, or high establishment because Sitka spruce seedlings need light and low competition [@petersonEcologyManagementSitka1997]?
+Among the species we examined, the establishment of lodgepole pine has been studied most because it is invasive in many countries, and our results seem consistent with this literature. 
+'Bare rock' harbors very few competitors and showed highest establishment of all ecosystem types [@despainDispersalEcologyLodgepole2001], 'coastal heath' (a short shrubland) facilitated establishment more than grassland-like ecosystems [@taylorDriversPlantInvasion2016], all ecosystem types with canopy cover were among those with lowest establishment [@langdonPinusContortaInvasion2010; @taylorDriversPlantInvasion2016], and ecosystem types with high establishment were frequently characterized anthropogenic disturbance structuring [@richardsonPineInvasionsSouthern1994].
 To plants more broadly [@chytryHabitatInvasionsAlien2008].
 
 Two obvious management recommendations: 1) for site selection, try to limit plantations to sites where they are surrounded by arable fields. Where it is simultanueosly desireable to alter adjacent nature types (e.g. by grazing), that is also an option. 2) For early detection and rapid response, prioritize monitoring and control interventions in vulnerable ecosystem types like... 5500 km2 mapped for ecosystem types in Norway. Ensuring that plantation surroundings are actively cultivated (e.g. mowed) is an effective way to keep wildlings in check, to the extent that seeds are unlikely to disperse beyond these ecosystem types [@albertLanduseChangeSubalpine2008].
@@ -333,7 +331,7 @@ That said, the total wildling density of the species in our sample is congruent 
 
 Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management. For practical reasons, seeding studies observe only the youngest life-stages, and the factors controlling individual success likely differ at later life-stages [@dovciakSeedRainEnvironmental2008]. Therefore, their results are not directly applicable to spread on the longer time-scales of interest to managers. Also, disturbance germination high but probably survival low [@petersonEcologyManagementSitka1997; @vikaneInvasionCallunaHeath2013]
 
-Limitation: spatial grain. Minimum polygon area NiN, wildling group locations. A good reason to use relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types. Did our best to represent ecotones in the models and not use polygon boundaries overconfidently. Microsites! (although not a limitation considering applicability to management)
+Limitation: spatial grain. Minimum polygon area NiN, wildling group locations. A good reason to use relatively course observation units (100 m2) and to perform fuzzy coding of ecosystem types. Did our best to represent ecotones in the models and not use polygon boundaries overconfidently. Microsites matter! [@macekLifeDeathPicea2017] (although not a limitation considering applicability to management) 
 
 Limitation: wildling establishment varies not only in number and distance but also in growth rate across ecosystem types. Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on management objectives.
 
