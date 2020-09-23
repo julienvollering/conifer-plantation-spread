@@ -293,9 +293,11 @@ Our results suggest that differences between ecosystem types deserve careful con
 This knowledge can be applied in at least two ways.
 First, as a preventative measure, we recommend that new plantations be sited where surrounded by high proportions of ecosystem types with low establishment likelihood.  
 In particular, 'arable fields' harbor very few wildlings of any species and are common near existing plantations, so picking sites hemmed in by this kind of agricultural land should be both effective and feasible.
+Long distance dispersal might preclude complete containment [@albertLanduseChangeSubalpine2008], but dramatic reductions in the number of wildlings are likely. 
 In some cases it may also be possible to alter ecosystem types adjacent to existing plantations to prevent (further) spread, for example by intensifying mowing to promote the appearance of 'agriculturally improved grassland'.
+Second, as a reactive measure, we recommend that monitoring and control be targeted to highly vulnerable ecosystem types.
+Applying this strategy to ecosystem types that are both vulnerable and rare --- like 'open active landslide' --- is especially likely to be cost-efficient. 
 
-Two obvious management recomendations: 1) for site selection, try to limit plantations to sites where they are surrounded by arable fields. Where it is simultanueosly desireable to alter adjacent nature types (e.g. by grazing, 'agriculturally improved grasslands'?), that is also an option. 2) For early detection and rapid response, prioritize monitoring and control interventions in vulnerable ecosystem types like... 5500 km2 mapped for ecosystem types in Norway. Ensuring that plantation surroundings are actively cultivated (e.g. mowed) is an effective way to keep wildlings in check, to the extent that seeds are unlikely to disperse beyond these ecosystem types [@albertLanduseChangeSubalpine2008].
 Advantage: establishment patterns are likely to hold in other countries [@chytryHabitatInvasionsAlien2008]. Because the typification system we used is rule-based and aims to be observer-neutral, land managers in other countries can make educated inferences based on our results, even if a compatible or similar typication system does not exist. For example...
 
 Advantage: observational study (registering established individuals rather than doing seeding plots) is that seeds experience only natural conditions, and it measures long-term survival --- the quantity of interest for management. For practical reasons, seeding studies observe only the youngest life-stages, and the factors controlling individual success likely differ at later life-stages [@dovciakSeedRainEnvironmental2008]. Therefore, their results are not directly applicable to spread on the longer time-scales of interest to managers. Also, disturbance germination high but probably survival low [@petersonEcologyManagementSitka1997; @vikaneInvasionCallunaHeath2013]
@@ -344,6 +346,7 @@ Ecosystem types structured by anthropogenic disturbance structuring includes are
 
 # Conclusion
 
+Remotely sensed and survey data are making detailed and accurate maps of ecosystem types increasingly available over large extents [@horvathDistributionModellingVegetation2019] 5500 km2 mapped for ecosystem types in Norway.
 Similar methods can be applied to non-conifer plantations that show large site-level variation [e.g. @fernandesWhatDrivesEucalyptus2018].
 Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and is likely to accelerate with recent pushes to increase tree planting worldwide. 
 
