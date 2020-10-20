@@ -283,9 +283,9 @@ The conifers we studied --- perhaps with the exception of lodgepole pine --- did
 However, our estimates of ecosystem invasibility do align with some findings from previous studies of species-specific recruitment patterns.
 For instance, Sitka spruce grows poorly under moisture stress and tolerates flooding well [@petersonEcologyManagementSitka1997], which might help explain why it was twice as likely to establish in wetland ecosystems as in terrestrial ecosystems.
 Nevertheless, Sitka/Lutz spruce also established in 'open shallow-soil ground' with very high likelihood, despite this ecosystem type's characteristically dry soil.  
-This illustrates the trouble with deriving predictions for management units such as ecosystem types from generalized statements about species autecology; should we expect few wildlings in 'open shallow-soil ground' because it is dry, or many because it provides ample light and reduced competition that Sitka spruce seedlings need [@petersonEcologyManagementSitka1997]?
-Moreover, microsites strongly regulate seedling mortality [@macekLifeDeathPicea2017], so ecosystem types that would seem inhospitible at first glance may actually contain many suitable microsites for establishment.
-From this perspective, our estimates of establishment probability measure the density of suitable microsites, which may be treated as constant even if their fine-scale spatial distribution is not.
+This apparent contradiction illustrates the trouble with deriving predictions for management units such as ecosystem types from generalized statements about species autecology; should we expect few wildlings in 'open shallow-soil ground' because it is dry, or many because it provides ample light and reduced competition that Sitka spruce seedlings need [@petersonEcologyManagementSitka1997]?
+Moreover, seedling mortality is strongly regulated by microsites  [@macekLifeDeathPicea2017], so ecosystem types that would seem inhospitible at first glance may actually contain many localized opportunities for establishment.
+From this perspective, our estimates of establishment probability measure the density of suitable microsites in a given ecosystem type, which may be treated as constant even if their fine-scale spatial distribution is not.
 Among the species we examined, the establishment of lodgepole pine has been studied most, and our results seem consistent with this literature. 
 'Bare rock' harbors very few competitors and showed highest lodgepole pine establishment of all ecosystem types [@despainDispersalEcologyLodgepole2001], 'coastal heath' (a short shrubland) facilitated more establishment than grassland-like ecosystems [@taylorDriversPlantInvasion2016], all ecosystem types with canopy cover were among those with lowest establishment [@langdonPinusContortaInvasion2010; @taylorDriversPlantInvasion2016], and ecosystem types with high establishment were frequently structured by anthropogenic disturbance [@richardsonPineInvasionsSouthern1994].
 
@@ -293,34 +293,31 @@ Our results suggest that differences between ecosystem types deserve careful con
 This knowledge can be applied in at least two ways.
 First, as a preventative measure, we recommend siting new plantations where surrounded by high proportions of ecosystem types with low establishment likelihood.  
 In particular, 'arable fields' harbor very few wildlings of any species and are common near existing plantations, so picking sites hemmed in by this kind of agricultural land should be both effective and feasible.
-Long distance dispersal might preclude complete containment [@albertLanduseChangeSubalpine2008], but reductions in the number of wildlings by orders of magnitude are likely. 
-In some cases it may also be desireable to alter ecosystem types adjacent to existing plantations to prevent (further) spread, for example by intensifying mowing to promote the appearance of 'agriculturally improved grassland'.
+This would likely reduce the rate of wildling establishment by orders of magnitude, even if long distance dispersal might preclude complete containment [@albertLanduseChangeSubalpine2008]. 
+In some cases it may also be desireable to alter ecosystem types adjacent to existing plantations to prevent (further) spread, for example by intensifying mowing regimes to promote the appearance of 'agriculturally improved grassland'.
 Second, as a reactive measure, we recommend targeting resources for monitoring and control towards highly vulnerable ecosystem types.
 Applying this strategy to ecosystem types that are rare as well as vulnerable, like 'open active landslide', is especially likely to be cost-efficient. 
 
-The establishment patterns we quantify for four species are likely to hold, more or less, in other countries [@chytryHabitatInvasionsAlien2008].
-From a manager's perspective, we expect that the ecosystem types we report may be successfully translated to equivalent types in similar classification systems, because Nature in Norway classification is rule-based and aims for observer neutrality. 
+Previous work on invasive species suggests that the establishment patterns we quantify for four species are likely to hold, more or less, in other countries [@chytryHabitatInvasionsAlien2008].
+From a manager's perspective, we expect that the ecosystem types we report may translate well to equivalent types in similar classification systems, because Nature in Norway classification is rule-based and aims for observer neutrality. 
 At the same time, we urge caution in extending our establishment estimates to ecosystems that are only broadly similar, because we found that similar types frequently showed markedly different invasibility (e.g. Norway spruce in 'agriculturally improved grassland with semi-natural character' vs. 'agriculturally improved grassland').
 
-An observational study like ours is most directly relevant for managing long-lived species like conifers, because its temporal scope can be longer than is typically practical for experimental studies.
-It measures long-term survival --- the quantity of interest for management --- under a wide range of natural conditions experienced by the wildlings.
+An observational study like ours informs management of long-lived, naturalized species more directly than experimental studies, because longer time frames are examined.
+It measures long-term survival --- often the quantity of interest --- under a wide range of natural conditions experienced by the wildlings.
 In contrast, seeding experiments generally observe only the youngest life stages, and the factors controlling individual success likely differ at later life stages [@dovciakSeedRainEnvironmental2008].
-For example, Sitka spruce may be more likely to germinate in disturbed soil [@vikaneInvasionCallunaHeath2013], but less likely to survive there [@petersonEcologyManagementSitka1997].
-The precision of invasibility estimates will also be higher for widely introduced species, like those used in plantations, because a more representative sample of wildling spread will be measurable.
-Additional insight could be gleaned from a study like ours if wildling growth rates were quantified.
-Field observations of interwhorl distances suggest that individuals in different locations grew taller at very different rates.  
-Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on management objectives.
+For example, Sitka spruce appears more likely to germinate in disturbed soil [@vikaneInvasionCallunaHeath2013], but less likely to survive there [@petersonEcologyManagementSitka1997].
+On the other hand, experiments might be more useful when observed wildling spread is not representative of patterns in the wider landscape (e.g. for species spreading from a single point of introduction).
+Additional insight could be gleaned from a study like ours if wildling growth rates were measured in the field.
+During field work we noticed that wildlings in different ecosystem types sometimes grew taller at very different rates, as evidenced by interwhorl distances, and additional management insight could be gleaned from a study like ours if (a sample of) growth rates were measured.  
+Abundant but slow colonization may be of lesser concern than sparse but fast colonization, depending on objectives.
 
-One conspicuous and curious feature of our results was that Sitka/Lutz spruce establishment likelihood varied greatly from site to site --- much more than for other species.
-This implies that our ability to predict the magnitude of Sitka/Lutz spruce spread at a specific site, relative to other sites, is limited. 
-Our ecosystem comparison can nevertheless guide managment.
+A curious feature of our results that needs more research to understand is the large variation in Sitka/Lutz spruce establishment likelihood between sites --- much larger than in the other species.
+Consequently, our ability to predict the magnitude of Sitka/Lutz spruce spread at a specific site, relative to other sites, is limited. 
+Ecosystem comparisons can nevertheless guide management.
 For example, a particular site with 'arable field' may well be colonized as quickly as another site with 'coastal heath', but knowing only their ecosystem composition, we expect the latter to be colonized more than 100 times faster.
-More research is needed to probe this unexplained site-level variation.
 Bianchi et al. [-@bianchiMethodsPredictingSitka2019] struggled to predict regeneration density within Sitka spruce plantations from bare ground cover, moss cover, plantation age, and plantation density.
-This suggests that the unexplained site-level variation we observed was not caused by differences in the densities of seed sources (which would violate our model assumptions).
-Possible there are demographic differences between sites for unknown reasons [@taylorDriversPlantInvasion2016]. (human action? provenance?) Shows the continued need for monitoring.  also struggle to predict regeneration density from: density of the seed source, the age of the seed source, moss cover, or bare ground cover. 
-
-
+The inadequacy of plantation density as a predictor in this context suggests that the unexplained site-level variation we observed was not caused by differences in the densities of seed sources (which we assumed to be constant).
+Alternative explanations could include: (1) property owners removing wildlings at some sites --- especially since Sitka/Lutz spruce spread has attracted public attention in recent years, or (2) differing demographic characteristics among plantations [@taylorDriversPlantInvasion2016] --- potentially as a result of provenance. 
 
 ## Q2
 
