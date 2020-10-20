@@ -1,5 +1,5 @@
 ---
-title: 'Accounting for seed rain reveals large and idiosyncratic differences between ecosystems in vulnerability to alien conifer establishment'
+title: 'Confounding factors obscure large and idiosyncratic differences between ecosystems in vulnerability to alien conifer establishment'
 author:
 - Julien Vollering^[julienvollering@gmail.com]
 - et al.
