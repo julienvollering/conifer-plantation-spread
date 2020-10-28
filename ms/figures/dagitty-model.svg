@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -47,8 +47,8 @@
      fit-margin-right="1"
      fit-margin-bottom="1"
      inkscape:zoom="1"
-     inkscape:cx="437.76609"
-     inkscape:cy="318.11142"
+     inkscape:cx="256.26609"
+     inkscape:cy="314.11142"
      inkscape:window-x="72"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -363,7 +363,11 @@
        class="nodelabel"
        y="35"
        id="text108"
-       style="text-anchor:middle">ecosystem type</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan916">ecosystem type</tspan>
+    </text>
     <path
        d="M -4,-6 7,0 -4,6 Z"
        id="path110"
@@ -391,7 +395,11 @@
        class="nodelabel"
        y="35"
        id="text118"
-       style="text-anchor:middle">plantation age</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan912">plantation age</tspan>
+    </text>
   </g>
   <g
      transform="translate(525.55809,215.74323)"
@@ -414,7 +422,11 @@
        class="nodelabel"
        y="35"
        id="text126"
-       style="text-anchor:middle">proximity to plantation</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan904">position from plantation</tspan>
+    </text>
   </g>
   <g
      transform="translate(524.63234,407.20126)"
@@ -437,7 +449,11 @@
        class="nodelabel"
        y="35"
        id="text134"
-       style="text-anchor:middle">relative elevation to plantation</text>
+       style="text-anchor:middle">
+      <tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Arial, sans-serif;-inkscape-font-specification:'Arial, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"
+         id="tspan906">elevation from plantation</tspan>
+    </text>
   </g>
   <g
      transform="translate(649.45435,305.19242)"
@@ -460,7 +476,11 @@
        class="nodelabel"
        y="35"
        id="text142"
-       style="text-anchor:middle">relative seed rain in flat terrain</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan908">relative seed rain in flat terrain</tspan>
+    </text>
   </g>
   <g
      transform="translate(774.12207,411.69414)"
@@ -483,7 +503,11 @@
        class="nodelabel"
        y="35"
        id="text150"
-       style="text-anchor:middle">seed rain</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan910">seed rain</tspan>
+    </text>
   </g>
   <g
      transform="translate(92.306903,218.39811)"
@@ -506,7 +530,11 @@
        class="nodelabel"
        y="35"
        id="text158"
-       style="text-anchor:middle">climate</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan922">climate</tspan>
+    </text>
   </g>
   <g
      transform="translate(420.794,53.795269)"
@@ -529,7 +557,11 @@
        class="nodelabel"
        y="35"
        id="text166"
-       style="text-anchor:middle">site</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan920">site</tspan>
+    </text>
   </g>
   <g
      transform="translate(775.20211,599.57828)"
@@ -552,7 +584,11 @@
        class="nodelabel"
        y="35"
        id="text174"
-       style="text-anchor:middle">wildlings</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan914">wildlings</tspan>
+    </text>
     <path
        d="M -2,-6 H 2 V 6 h -4 z"
        id="path176"
@@ -580,6 +616,10 @@
        class="nodelabel"
        y="35"
        id="text184"
-       style="text-anchor:middle">establishment likelihood</text>
+       style="text-anchor:middle">
+      <tspan
+         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
+         id="tspan918">establishment likelihood</tspan>
+    </text>
   </g>
 </svg>
