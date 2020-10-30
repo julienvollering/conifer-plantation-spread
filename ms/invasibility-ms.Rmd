@@ -1,5 +1,5 @@
 ---
-title: 'Confounding factors obscure large and idiosyncratic differences between ecosystems in vulnerability to alien conifer establishment'
+title: 'Confounders obscure large and idiosyncratic differences between ecosystems in vulnerability to alien conifer establishment'
 author:
 - Julien Vollering^[julienvollering@gmail.com]
 - et al.
@@ -48,8 +48,8 @@ Controlling wildlings protects plantation surroundings and prevents secondary, p
 Accordingly, the European "Code of conduct on planted forest and invasive alien trees" stresses that containing alien species to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduPlantedForestsInvasive2016].
 
 How many wildlings are present and how far they are from the plantation varies a lot from site to site, even among conspecific plantations of similar age [@nygaardSpreadIntroducedSitka2017], which makes it harder to predict and manage their spread.
-To understand the variation between sites, we need to consider both dispersal and establishment (where establishment comprises germination and survival).
-These jointly generate patterns of wildlings in space.
+To understand this variation, we need to consider both dispersal and establishment (where establishment comprises germination and survival).
+These jointly generate patterns of wildling abundance and spatial distribution.
 Dispersal at a given site is affected by external conditions governing a species' dispersal syndrome --- for instance wind exposure and site topography, in the case of a wind-dispersed species.
 Likewise, establishment is affected by biotic and abiotic conditions where seeds arrive.
 In theory, conditions inhibiting either process may be exploited to suppress wildling spread.
@@ -64,7 +64,8 @@ The system builds on the continuum concept [@austinContinuumConceptOrdination198
 As a result, it encapsulates in its ecosystem types much of the variation that is most likely to regulate wildling germination and survival --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
 
 To estimate how likely wildlings are to establish in particular ecosystem types from observations of their abundance in these types, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
-For example, low establishment likelihood in an ecosystem type close to a plantation can be masked by copious seed rain [@rougetInferringProcessPattern2003].
+For example, low establishment likelihood in an ecosystem type frequently located close to plantations can be masked by copious seed rain [@rougetInferringProcessPattern2003].
+Likewise, more wildlings may establish in the part of an ecosystem type's range where climate best supports germination. 
 Unconfounded establishment likelihoods can then be used to predict how vulnerable the surroundings of an unobserved plantation are, based on its composition of ecosystem types.
   
 Determining which ecosystems are most vulnerable so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
@@ -72,37 +73,15 @@ Plantations of wind-dispersed, alien conifers present a golden opportunity to as
 We examine plantations in Norway to investigate the following questions:  
 
 1. In which ecosystem types are wildlings of alien conifers most and least likely to establish?  
-2. How would these estimates of establishment likelihood differ, were seed rain and other potential confounders unaccounted for?
+2. How do estimates of establishment likelihood differ from observed wildling densities?
 3. Can overarching characteristics of ecosystem types be used to generalize patterns of wildling establishment?  
 
 # Methods
 
-## Approach
-
-We compared how frequently four groups of alien conifer species have established in various ecosystem types.
-Specifically, we used maps of wildlings and ecosystem types around the plantations from which the wildlings likely originated.
-The groups of species (hereafter: "species") we examined were: (1) Sitka spruce (*Picea sitchensis*) together with its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) Norway spruce (*Picea abies*), (3) undetermined larches (*Larix* spp.), and (4) lodgepole pine (*Pinus contorta*). 
-
-For each of the species, we analysed establishment likelihood in two ways.
-Our first analysis simply tallied of the number of wildlings per unit area for each ecosystem type.
-The motivation for this naive approach was descriptive; we summarized the state of wildling establishment from the plantations in the sample.
-Our second analysis was designed to isolate the influence of ecosystem types on establishment likelihood.
-To do so, we defined establishment likelihood $E$ as the ratio of wildlings $W$ to seed rain $S$ in a given area, or:
-
-\begin{equation} 
-W_{xy} 	= S_{xy} * E_{xy}
-(\#eq:estmod)
-\end{equation}
-
-where xy denotes a unit area.
-This simple conceptual model mirrors our basic mechanistic understanding of the spread process: seeds disperse from their source to a given location ($S_{xy}$), and then the conditions at that location ($E_{xy}$) determine the likelihood that the seed establishes as a wildling ($W_{xy}$).
-Guided by this equality, we specified a statistical model for the relationship between wildlings and ecosystem types, conditioning on estimates of $S_{xy}$.
-
-
 ## Field data
 
-We observed wildlings and ecosystem types around 82 plantations across Norway (fig. \@ref(fig:sites-map)).
-The sample comprised forty-two sites with Sitka/Lutz spruce, nineteen with Norway spruce, fifteen with larch, and six with lodgepole pine.
+We observed wildlings and ecosystem types around 82 plantations across Norway, comprising four groups of alien conifers (hereafter: "species"; fig. \@ref(fig:sites-map)).
+The sample contained (1) forty-two sites with Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) nineteen with Norway spruce (*Picea abies*), (3) fifteen with undetermined larches (*Larix* spp.), and (4) six with lodgepole pine (*Pinus contorta*).
 Note that the plantations of Norway spruce were located in parts of Norway where it is not considered native [@aarrestadForeignNorwaySpruce2014].
 We selected and delineated plantations manually --- using aerial imagery --- aiming for plantations that were isolated from other plantations of the same species.
 Only plantations with cone-bearing individuals were included in the sample.
@@ -171,17 +150,17 @@ For our first analysis, we calculated wildling density per ecosystem type across
 Wildings in cells composed of multiple types were counted in proportion to cell's composition; for example, a cell with one wildling and half its area covered by a given type would tally 0.5 wildling for that type.
 
 For our second analysis, we used a directed acyclical graph (DAG) to diagram causal relationships among the factors we expected to influence the number of wildlings per cell (fig. \@ref(fig:DAG)).
-We included an effect of relative elevation on seed rain because neither of our models of seed dispersal capture potential parameter changes induced by uneven terrain [@katulEffectsGentleTopographic2012].
-In the DAG, the unmeasured, proximate causes of wildling number --- establishment likelihood and seed rain, see eq. \@ref(eq:estmod) --- are decendants of variables that we could observe or model.
-To estimate the causal influence of ecosystem type on wildlings, the directed acyclical graph dictated that we adjust for site, climate, relative elevation, and relative seed rain in our regression model [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
+In the DAG, the unmeasured, proximate causes of wildling number --- establishment likelihood and seed rain --- are decendants of variables that we could observe or model.
+We included an effect of elevation from plantation on seed rain because neither of our models of seed dispersal capture potential parameter changes induced by uneven terrain [@katulEffectsGentleTopographic2012].
+To estimate the causal influence of ecosystem type on wildlings, the DAG dictated that we adjust for site, climate, elevation from plantation, and relative seed rain in our regression model [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020].
 We did not need to adjust for plantation age (with site in the model), but we included it as a covariate anyway because it could reduce the unexplained variance associated with the random effect of site, and because our assumed causal structure would allow us to interpret its coefficient as an (unconfounded) total effect on wildling number [@westreichTableFallacyPresenting2013].
 Climate entered the regression model as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30-arcsecond resolution, from the CHELSA data product [@kargerClimatologiesHighResolution2017].
 We chose these two variables because they showed the strongest correlations with Norwegian vegetation zones and sections [@bakkestuenSteplessModelsRegional2008].
-Relative elevation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
+Elevation from plantation was taken with respect to the highest point of the central plantation, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
 Lastly, plantation surroundings are likely to experience large stochastic variation in annual seed rain, because seed release will concide with different wind conditions from year to year.
 Therefore we also included in our model the first order interaction between relative seed rain and plantation age.
 
-```{r DAG, fig.cap="A directed acyclical graph showing the causal relationships that we use as our point of departure for a statistical model of ecosystem effect on wildling establishment. Red variables causally affect both the ecosystem type and wildling establishment, blue variables causally affect only wildling establishment, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
+```{r DAG, fig.cap="A directed acyclical graph showing the causal relationships motivating our statistical model of ecosystems' effects on wildling establishment. Red variables causally affect both the ecosystem type and wildling establishment, blue variables causally affect only wildling establishment, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.svg'))
 ```
 
@@ -225,7 +204,7 @@ The total, unstratified density of wildings in our data set was 28/ha for Sitka/
 Observed wildlings densities in different ecosystem types --- excluding ecosystem types covering less than 1 ha --- ranged 1-60/ha for Sitka spruce, 0-49/ha for Norway spruce, 0-52/ha for larch, and 0-219/ha for lodgepole pine.
 The "open active landslide" type exceeded these densities around Sitka/Lutz spruce and larch plantations, but was very rare.
 
-For all species, modeled establishment likelihoods varied more than the corresponding wildling densities calculated directly from the data (fig. \@ref(fig:establishment)).
+For all species, modeled establishment likelihoods varied more than the corresponding raw wildling densities (fig. \@ref(fig:establishment)).
 Modeled establishment likelihoods among ecosystem types tallying at least one wildling and covering at least 1 ha varied by up to five orders of magnitude.
 Within species, confidence intervals on modeled establishment likelihoods in pairs of ecosystem types frequently overlapped.
 Nevertheless, establishment likelihood in many other ecosystem types could be distinguished with a high degree of confidence.
@@ -261,15 +240,16 @@ For larch and lodgepole pine, structuring by natural distubance and anthropogeni
 knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.svg'))
 ```
 
+For all species, the WALD model of seed dispersal produced estimates of relative seed rain that fit patterns of wildling establishment better than estimates derived from the empirical seed dispersal kernel.
+There was a high degree of confidence that the effect of relative seed rain was positive for all species.
+The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystem types --- was modest and acted in different directions for different species.
+The 95 % confidence intervals around plantation age effects included zero in all cases except in the binomial submodels for Sitka/Lutz spruce and larch (where older plantations showed fewer zeros).
+The interaction specified between relative seed rain and plantation age was estimated to be positive for Sitka/Lutz spruce, nonexistent for Norway spruce, and negative for larch and lodgepole pine.
+
 The direct effect of climate on establishment --- not including its effect mediated by ecosystem types --- was negligible for Sitka/Lutz spruce and Norway spruce, with model estimates near zero (Appendix [A5]). 
 For larch there was a negative direct effect of precipitation (Bio19), with a 50 mm increase in coldest-quarter precipitation estimated to decrease establishment six-fold.
 From the six sites with lodgepole pine, the model estimated a very strong negative direct effect of annual temperature (Bio01), with a 2.3 ºC rise decreasing establishment by five orders of magnitude.
 It also estimated a strong positive effect of precipitation (Bio19), with a 175 mm increase in coldest-quarter precipitation increasing establishment 500 times.
-The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystem types --- was modest and acted in different directions for different species.
-For all species, the WALD model of seed dispersal produced estimates of relative seed rain that fit patterns of wildling establishment better than estimates derived from the empirical seed dispersal kernel.
-There was a high degree of confidence that the effect of relative seed rain was positive for all species.
-The 95 % confidence intervals around plantation age effects included zero in all cases except in the binomial submodels for Sitka/Lutz spruce and larch (where older plantations showed fewer zeros).
-The interaction specified between relative seed rain and plantation age was estimated to be positive for Sitka/Lutz spruce, nonexistent for Norway spruce, and negative for larch and lodgepole pine.
 
 # Discussion
 
@@ -282,27 +262,27 @@ Note that our ecosystem comparisons say nothing about species invasiveness, beca
 In a large database of vegetation plots across Europe, Chytrý et al.[-@chytryHabitatInvasionsAlien2008] found that alien plants as a group are consistently found at low rates in mires and heaths, and high rates in arable, man-made, and coastal ecosystem types.
 The conifer species we examined --- perhaps with the exception of lodgepole pine --- did not conform to these broader trends in ecosystem invasibility.
 Lodgepole pine establishment is relatively well studied, and our results seem consistent with this literature.
-'Bare rock' harbors very few competitors and showed highest lodgepole pine establishment of all ecosystem types [@despainDispersalEcologyLodgepole2001], 'coastal heath' (a short shrubland) facilitated more establishment than grassland-like ecosystems [@taylorDriversPlantInvasion2016], all ecosystem types with canopy cover were among those with lowest establishment [@langdonPinusContortaInvasion2010; @taylorDriversPlantInvasion2016], and ecosystem types with high establishment were frequently structured by anthropogenic disturbance [@richardsonPineInvasionsSouthern1994].
+"Bare rock" harbors very few competitors and showed highest lodgepole pine establishment of all ecosystem types [@despainDispersalEcologyLodgepole2001], "coastal heath" (a short shrubland) facilitated more establishment than grassland-like ecosystems [@taylorDriversPlantInvasion2016], all ecosystem types with canopy cover were among those with lowest establishment [@langdonPinusContortaInvasion2010; @taylorDriversPlantInvasion2016], and ecosystem types with high establishment were frequently structured by anthropogenic disturbance [@richardsonPineInvasionsSouthern1994].
 
 The described recruitment patterns of the three other species are difficult to evaluate ecosystem invasibility against.
 For instance, Sitka spruce grows poorly under moisture stress and tolerates flooding well [@petersonEcologyManagementSitka1997], which might account for why it was twice as likely to establish in wetland ecosystems as in terrestrial ecosystems
-Yet it also established in 'open shallow-soil ground' with very high likelihood, despite this ecosystem type's characteristically dry soil.  
-This illustrates the trouble with deriving predictions for management units such as ecosystem types from generalized statements about species autecology; should we expect few wildlings in 'open shallow-soil ground' because it is dry, or many because it provides ample light and reduced competition [@petersonEcologyManagementSitka1997]?
+Yet it also established in "open shallow-soil ground" with very high likelihood, despite this ecosystem type's characteristically dry soil.  
+This illustrates the trouble with deriving predictions for management units such as ecosystem types from generalized statements about species autecology; should we expect few wildlings in "open shallow-soil ground" because it is dry, or many because it provides ample light and reduced competition [@petersonEcologyManagementSitka1997]?
 Furthermore, ecosystem types that would seem inhospitible based on their overall characteristics may actually contain many localized opportunities for establishment, because seedling mortality is strongly regulated by microsites [@macekLifeDeathPicea2017].
 From this perspective, our estimates of establishment probability measure the density of suitable microsites in a given ecosystem type.
 
 The breadth of establishment likelihoods we found suggests that differences between ecosystem types deserve careful consideration when managing wildling spread.
 This knowledge can be applied in at least two ways.
 First, as a preventative measure, we recommend siting new plantations where surrounded by high proportions of ecosystem types with low establishment likelihood.  
-In particular, 'arable fields' harbor very few wildlings of any species and are common near existing plantations, so picking sites hemmed in by this kind of agricultural land should be both effective and feasible.
+In particular, "arable fields" harbor very few wildlings of any species and are common near existing plantations, so picking sites hemmed in by this kind of agricultural land should be both effective and feasible.
 This would likely reduce the rate of wildling establishment by orders of magnitude, even if long distance dispersal might preclude complete containment [@albertLanduseChangeSubalpine2008]. 
-In some cases it may also be desireable to alter ecosystem types adjacent to existing plantations to prevent (further) spread, for example by intensifying mowing regimes to promote the appearance of 'agriculturally improved grassland'.
+In some cases it may also be desireable to alter ecosystem types adjacent to existing plantations to prevent (further) spread, for example by intensifying mowing regimes to promote the appearance of "agriculturally improved grassland".
 Second, as a reactive measure, we recommend targeting resources for monitoring and control towards highly vulnerable ecosystem types.
-Applying this strategy to ecosystem types that are rare as well as vulnerable, like 'open active landslide', is especially likely to be cost-efficient. 
+Applying this strategy to ecosystem types that are rare as well as vulnerable, like "open active landslide", is especially likely to be cost-efficient. 
 
 The establishment patterns we quantify are likely to hold, more or less, beyond Norway [@chytryHabitatInvasionsAlien2008].
 From a manager's perspective, we expect that the ecosystem types we report may translate well to equivalent types in similar classification systems, because the Nature in Norway classification is rule-based and aims for observer neutrality. 
-At the same time, we urge caution in extending our establishment estimates to ecosystems that are only broadly similar, because we found that similar types frequently showed markedly different invasibility (e.g. Norway spruce in 'agriculturally improved grassland with semi-natural character' vs. 'agriculturally improved grassland').
+At the same time, we urge caution in extending our establishment estimates to ecosystems that are only broadly similar, because we found that similar types frequently showed markedly different invasibility (e.g. Norway spruce in "agriculturally improved grassland with semi-natural character" vs. "agriculturally improved grassland").
 
 An observational study like ours informs management of long-lived, naturalized species more directly than experimental studies, because longer time frames are examined.
 It measures long-term survival --- often the quantity of interest --- under a wide range of natural conditions experienced by the wildlings.
@@ -315,43 +295,36 @@ Sparse but fast colonization may be of greater concern than abundant but slow co
 A curious feature of our results that needs more research is the large amount of variation in Sitka/Lutz spruce establishment likelihood between sites that remains unexplained.
 Our ability to predict from this study the magnitude of Sitka/Lutz spruce spread at a specific site, relative to other sites, is still limited. 
 Ecosystem comparisons can nevertheless guide management.
-For example, a particular site with 'arable field' may well be colonized as quickly as another site with 'coastal heath', but knowing only their ecosystem composition, we expect the latter to be colonized more than 100 times faster.
+For example, a particular site with "arable field" may well be colonized as quickly as another site with "coastal heath", but knowing only their ecosystem composition, we expect the latter to be colonized more than 100 times faster.
 Bianchi et al. [-@bianchiMethodsPredictingSitka2019] struggled to predict regeneration density within Sitka spruce plantations from bare ground cover, moss cover, plantation age, and plantation density.
 The inadequacy of plantation density as a predictor in this context suggests that the unexplained site-level variation we observed was not caused by differences in the densities of seed sources (which we assumed to be constant).
 Alternative explanations could include: (1) property owners removing wildlings at some sites --- especially since Sitka/Lutz spruce spread has attracted public attention in recent years, or (2) differing demographic characteristics among plantations [@taylorDriversPlantInvasion2016] --- potentially as a result of provenance. 
 
 ## Estimating vulnerability
 
-In the results from our naive approach, differences in raw wildling density between ecosystem types are partly attributable to differences in their invasibility, and partly to contingent properties of our sample, including its composition of sites and the spatial arrangement of ecosystem types around seed sources at those sites.
-For example, if a particular ecosystem type tended to occur close to plantations in our sample, it would likely show higher wildling density than other ecosystem types, even if the species were equally likely to establish there.
-In our modeling approach, accounting for seed rain, climate, and site amplified the differences between ecosystem types. 
-This implies that, in our sample, confounding factors partly counteracted differences in ecosystem establishment --- e.g. vulnerable ecosystems may have been concentrated at sites otherwise predicted to show limited spread.
-Therefore, direct observations of relative abundances misguide intuition about relative vulnerability. 
-For example, the density of Sitka spruce wildlings was about equal in boreal heath and sand dunes, but our estimates suggest that establishment likelihood is actually about 100 times larger in boreal heath. 
-For management: do not underestimate the influence of plantation surroundings --- site selection matters!
+Confounders of the relationship between ecosystem type and wildling abundance caused differences between ecosystem types to be underestimated. 
+This implies that confounding variables counteracted differences in ecosystem establishment in our sample, for instance that vulnerable ecosystems were concentrated at sites predicted to show limited spread.
+We caution, therefore, that direct inference from observations of wildling abundance misguides intuition about relative ecosystem vulnerability.
+For example, the raw density of Sitka spruce wildlings was about equal in "boreal heath" and "sand dunes", but we estimate that establishment likelihood is actually about 100 times larger in "boreal heath".
 
-Seed rain mirrors the concept of propagule pressure; "propagule pressure" often refers to levels of introduction at continental scales, but it also functions as a normalizing quantity (an exposure) for an observed establishment/invasion count [@chytrySeparatingHabitatInvasibility2008].
-Many studies quantifying ecosystem invasibility have not been able adjust for propagule pressure, typically because it is impossible to reconstruct directly the underlying dispersal pattern [@catfordQuantifyingLevelsBiological2012].
+The effect size of WALD-modeled relative seed rain was estimated close to one for all species except Norway spruce, which indicates that spatial patterns of wildling abundance around plantations were captured satisfactorily by this variable.
+We take this as evidence that the WALD model describes seed dispersal well in our system, but recognize that survivorship bias prevents rigorous assessment of this relationship with our data.
+For example, the Exponential Power model we tested generally showed a steeper decline in seed rain away from seed sources than the WALD model, so negative density dependence in seedling survival could skew the spatial distribution of wildling abundance towards the WALD model, even if the Exponential Power model describes seed dispersal better.
+That this important covariate was modeled and not measured is a limitation of our method, and it makes the establishment likelihoods we estimate less certain.
+Nevertheless, the mechanistic nature of the WALD model makes us more confident in its estimates across species and sites than we would be in a purely phenomenological model [@bullockAllDispersalFunctions2018]. 
 
-Inconsistent effects of the plantation age-seed rain interaction in our models suggests that annual seed rain did not accumulate towards our modeled estimate of seed rain over the lifetime of the plantation. Negative effects of this interaction term (for larch and lodgepole pine) could theoretically be explained by secondary seed production, which changes the shape of the seed shadow as the plantation grows older, but in the field we observed little indication of significant seed production from wildings.
+Relative elevation's inconsistent effects on wildling abundance suggests that either terrain does not strongly affect seed dispersal or --- more likely --- vertical distance alone does a poor job of representing its effect.
+In any case, there is no rule of thumb for management that wildlings tend to move up or down slopes.
+Surprisingly, wildling abundance did not increase with plantation age, although areas around younger plantations were more likely to be free of wildlings.
+Explanations for this result could include lower survival rates in older wildlings, or a quick saturation of suitable microsites.
+Negative effects of the interaction between relative seed rain and plantation age (in larch and lodgepole pine) could theoretically be explained by secondary seed production, which changes the shape of the seed shadow as the plantation grows older, but in the field we observed little indication of significant seed production from wildings.
 
-Limitation: relative rather than absolute establishment. Absolute numbers of wildlings matters for management, but estimating absolute magnitude of a seed shadow over the lifetime of the plantation would require knowing lifetime reproductive output, which varies with more than just age (tree density, site quality, provenance). At the same time, absolute seed rain is always likely to be a highly uncertain quantity, so absolute establishment rates wouldnt have much value anyway. 
-
-Limitation: WALD model of seed rain fits patterns of *establishment* better than ExP, but we cannot strictly test if it was a better descriptor of seed dispersal specifically. Survivorship bias. See different definitions of seed dispersal kernel in Nathan. What processes other than dispersal could give WALD a better fit to establishment than ExP?   
-- Negative density dependence, since the WALD model gave a more evenly spread probability distribution. Likely to exist? If it does exist, it would mean that our results overestimate establishment likelihoods near the seed sources and underestimate further away.  
-
-No direct climate effect on Sitka spruce is consistent with this species having relatively wide climatic tolerance [@petersonEcologyManagementSitka1997]. 
-Limitation: inland versus coastal P.contorta sites. Number of wildlings, climate...
-With only six sites in two distinct groups, differences attributed to climate may have arisen by other mechanisms. Climate may have masked correlated drivers (e.g. systematic differences in ecosystem composition) 
-Caution: our models do not estimate the *total* causal effect of climate or relative elevation on wildlings.
-The reason is that each has a causal relationship to wildling number that passes through ecosystem type, which we have adjusted for in our models [@westreichTableFallacyPresenting2013].
-Instead, our models estimate the *direct* effects of climate (through establishment likelihood alone) and of relative elevation (through seed rain alone).   
-This distinction means that their estimates should not be used guide management directly.
-For example, using the climate coefficients (alone) to project risk of wildling establishment across Norway would assume a uniform distribution of ecosystem types everywhere.
-Rather, we can interpret their results with respect to specific mechanisms.
-Wet and warm conditions...
-Locations above plantations...
-[@tingstadTemperaturePrecipitationBiotic2015] found that, across Norwegian climatic gradient, effects of climate on Norway spruce recruitement were small (compared to competition). 
+We reiterate that our models do not estimate the total causal effect of climate on wildling abundance, because they set aside climate's influence on ecosystem types [@westreichTableFallacyPresenting2013].
+Therefore, we interpret the estimated climate effects with respect to physiological contraints within a given ecosystem type. 
+The lack of a direct climate effect on Sitka/Lutz spruce wildling abundance is consistent with Sitka spruce's wide climatic tolerance relative to climatic variation in Norway [@petersonEcologyManagementSitka1997; @volleringBunchingBackgroundBetters2019, Appendix F].
+Norway spruce seedling recruitment has previously been found to increase towards the wetter end of Norwegian climate [@tingstadTemperaturePrecipitationBiotic2015], but most of our Norway spruce sites circumscribed a narrow part of that range.
+Lodgepole pine was found to respond strongly to both temperature and precipitation, but our six sites provide too weak footing for estimating these effects.
+Specifically, the sites were geographically clustered with a Pearson correlation of 0.98 between climatic variables, and 93% of wildlings occurred at the inland sites.
 
 ## Generalizing vulnerability
 
@@ -362,7 +335,12 @@ Ecosystem types structured by anthropogenic disturbance structuring includes are
 
 # Conclusion
 
-invasive species management leveraging the concept of ecosystem invasibility should be careful making inferences from either described autecology or simple density surveys.  
+One of main novelties of our study is that we were able to mechanistically reconstruct seed rain estimates necessary for unbiased invasibility estimates.
+Seed rain mirrors the concept of propagule pressure; "propagule pressure" often refers to levels of introduction at continental scales, but it also functions as a normalizing quantity (an exposure) for an observed establishment/invasion count [@chytrySeparatingHabitatInvasibility2008].
+Many studies quantifying ecosystem invasibility have not been able adjust for propagule pressure, typically because it is impossible to reconstruct the underlying dispersal history [@catfordQuantifyingLevelsBiological2012].
+
+Invasive species management leveraging the concept of ecosystem invasibility should be careful making inferences from either described autecology or simple density surveys.  
+
 Remotely sensed and survey data are making detailed and accurate maps of ecosystem types increasingly available over large extents [@horvathDistributionModellingVegetation2019] 5500 km2 mapped for ecosystem types in Norway.
 Similar methods can be applied to non-conifer plantations that show large site-level variation [e.g. @fernandesWhatDrivesEucalyptus2018].
 Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and is likely to accelerate with recent pushes to increase tree planting worldwide. 
