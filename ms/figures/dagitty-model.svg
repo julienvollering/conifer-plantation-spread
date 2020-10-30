@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -47,12 +47,13 @@
      fit-margin-right="1"
      fit-margin-bottom="1"
      inkscape:zoom="1"
-     inkscape:cx="256.26609"
-     inkscape:cy="314.11142"
+     inkscape:cx="429.44231"
+     inkscape:cy="310.11142"
      inkscape:window-x="72"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg188" />
+     inkscape:current-layer="g144"
+     inkscape:pagecheckerboard="true" />
   <g
      class="path"
      id="g6"
@@ -412,12 +413,12 @@
        style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
     <rect
        class="textbg"
-       width="155.66667"
+       width="167.067"
        height="17"
-       x="-77.833336"
+       x="-83.833336"
        y="21"
        id="rect124"
-       style="fill:#ffffff" />
+       style="fill:#ffffff;stroke-width:1.03597105" />
     <text
        class="nodelabel"
        y="35"
@@ -439,12 +440,12 @@
        style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
     <rect
        class="textbg"
-       width="211.73334"
+       width="176.133"
        height="17"
-       x="-105.86667"
+       x="-87.866669"
        y="21"
        id="rect132"
-       style="fill:#ffffff" />
+       style="fill:#ffffff;stroke-width:0.91206479" />
     <text
        class="nodelabel"
        y="35"
@@ -466,20 +467,20 @@
        style="fill:#00a2e0;fill-opacity:0.7;stroke:#00a2e0;stroke-width:2" />
     <rect
        class="textbg"
-       width="214.38333"
+       width="225.88301"
        height="17"
-       x="-107.19167"
+       x="-113.19167"
        y="21"
        id="rect140"
-       style="fill:#ffffff" />
+       style="fill:#ffffff;stroke-width:1.02646947" />
     <text
        class="nodelabel"
        y="35"
        id="text142"
        style="text-anchor:middle">
       <tspan
-         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
-         id="tspan908">relative seed rain in flat terrain</tspan>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Arial, sans-serif;-inkscape-font-specification:'Arial, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"
+         id="tspan908">relative seed rain (in flat terrain)</tspan>
     </text>
   </g>
   <g

@@ -5,7 +5,7 @@ bb="-3.748,-3.701,3.848,4.447"
 "plantation age" [pos="2.221,-0.890"]
 "position from plantation" [pos="0.619,-0.915"]
 "elevation from plantation" [pos="0.613,0.960"]
-"relative seed rain in flat terrain" [pos="1.422,-0.039"]
+"relative seed rain (in flat terrain)" [pos="1.422,-0.039"]
 "seed rain" [latent,pos="2.230,1.004"]
 climate [pos="-2.189,-0.889"]
 site [pos="-0.060,-2.501"]
@@ -15,10 +15,10 @@ wildlings [outcome,pos="2.237,2.844"]
 "plantation age" -> "seed rain"
 "position from plantation" -> "ecosystem type"
 "position from plantation" -> "elevation from plantation"
-"position from plantation" -> "relative seed rain in flat terrain"
+"position from plantation" -> "relative seed rain (in flat terrain)"
 "elevation from plantation" -> "ecosystem type"
 "elevation from plantation" -> "seed rain"
-"relative seed rain in flat terrain" -> "seed rain"
+"relative seed rain (in flat terrain)" -> "seed rain"
 "seed rain" -> wildlings
 climate -> "ecosystem type"
 climate -> "establishment likelihood"
