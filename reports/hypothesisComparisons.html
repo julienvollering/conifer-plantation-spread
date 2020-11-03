@@ -1514,14 +1514,14 @@ div.tocify {
 
 
 <pre class="r"><code>library(here)</code></pre>
-<pre><code>## here() starts at Z:/chapter3/conifer-plantation-spread</code></pre>
+<pre><code>## here() starts at /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread</code></pre>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages -------------------------------------------------------------------------------- tidyverse 1.3.0 --</code></pre>
-<pre><code>## √ ggplot2 3.3.0     √ purrr   0.3.3
-## √ tibble  3.0.1     √ dplyr   0.8.5
-## √ tidyr   1.0.3     √ stringr 1.4.0
-## √ readr   1.3.1     √ forcats 0.5.0</code></pre>
-<pre><code>## -- Conflicts ----------------------------------------------------------------------------------- tidyverse_conflicts() --
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.3     ✓ dplyr   1.0.0
+## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(glmmTMB)</code></pre>
@@ -1557,10 +1557,10 @@ datlist &lt;- datlist %&gt;%
 locality.preds &lt;- c(&#39;age&#39;,&#39;bio01&#39;,&#39;bio19&#39;,&#39;seeds.ExP&#39;,&#39;seeds.WALD&#39;,&#39;relelev&#39;)
 str(datlist, 1)</code></pre>
 <pre><code>## List of 4
-##  $ Larix              : tibble [32,238 x 50] (S3: tbl_df/tbl/data.frame)
-##  $ P.abies            : tibble [40,170 x 50] (S3: tbl_df/tbl/data.frame)
-##  $ P.contorta         : tibble [13,151 x 50] (S3: tbl_df/tbl/data.frame)
-##  $ P.sitchensis-lutzii: tibble [86,923 x 50] (S3: tbl_df/tbl/data.frame)</code></pre>
+##  $ Larix              : tibble [32,238 × 50] (S3: tbl_df/tbl/data.frame)
+##  $ P.abies            : tibble [40,170 × 50] (S3: tbl_df/tbl/data.frame)
+##  $ P.contorta         : tibble [13,151 × 50] (S3: tbl_df/tbl/data.frame)
+##  $ P.sitchensis-lutzii: tibble [86,923 × 50] (S3: tbl_df/tbl/data.frame)</code></pre>
 <div id="loop-through-species" class="section level1">
 <h1>Loop through species</h1>
 <pre class="r"><code>results.wetland &lt;- list()
@@ -1597,11 +1597,15 @@ for (i in seq_along(datlist)) { # i &lt;- 1
     mutate(modeled = FALSE)
 
   selmod &lt;- results$models[[species]]
+  covars &lt;- intersect(c(&#39;seeds.WALD&#39;, &#39;age&#39;, &#39;bio01&#39;,&#39;bio19&#39;, &#39;relelev&#39;, &#39;seeds.WALD:age&#39;),
+                          attributes(attributes(selmod$frame)$terms)$term.labels)
+  form &lt;- as.formula(paste(&quot;wildlings ~ &quot;, 
+                           paste(covars, collapse= &quot;+&quot;), 
+                           &quot; + wetl + (1 | locality)&quot;))
   
-  m.wetland &lt;- glmmTMB(formula = wildlings ~ seeds.WALD * age + bio01 + bio19 + 
-    relelev + wetl + (1 | locality), data = dat, family = selmod$call$family, 
-    ziformula = selmod$call$ziformula)
-  
+  m.wetland &lt;- glmmTMB(formula = form, data = dat, family = selmod$call$family, 
+                       ziformula = selmod$call$ziformula)
+
   newdat &lt;- tibble(locality = NA_character_, 
                    seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0, 
                    wetl = c(0,1))  
@@ -1634,10 +1638,12 @@ for (i in seq_along(datlist)) { # i &lt;- 1
   arith.disturb.scaled &lt;- mutate(arith.disturb, fit = density/scaler) %&gt;% 
     select(structuring, fit) %&gt;% 
     mutate(modeled = FALSE)
-
-  m.disturb &lt;- glmmTMB(formula = wildlings ~ seeds.WALD * age + bio01 + bio19 + 
-                         relelev + nadisturb + andisturb + (1 | locality), 
-                       data = dat, family = selmod$call$family, 
+  
+  form &lt;- as.formula(paste(&quot;wildlings ~ &quot;, 
+                           paste(covars, collapse= &quot;+&quot;), 
+                           &quot; + nadisturb + andisturb + (1 | locality)&quot;))
+  
+  m.disturb &lt;- glmmTMB(formula = form, data = dat, family = selmod$call$family, 
                        ziformula = selmod$call$ziformula)
   
   newdat &lt;- tibble(locality = NA_character_, 
@@ -1657,9 +1663,16 @@ for (i in seq_along(datlist)) { # i &lt;- 1
   
   disturb &lt;- bind_rows(arith.disturb.scaled, link.disturb.scaled)
   results.disturbance[[i]] &lt;- disturb
-}
-
-names(results.wetland) &lt;- names(datlist)
+}</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)
+## `summarise()` ungrouping output (override with `.groups` argument)
+## `summarise()` ungrouping output (override with `.groups` argument)
+## `summarise()` ungrouping output (override with `.groups` argument)
+## `summarise()` ungrouping output (override with `.groups` argument)
+## `summarise()` ungrouping output (override with `.groups` argument)
+## `summarise()` ungrouping output (override with `.groups` argument)
+## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>names(results.wetland) &lt;- names(datlist)
 names(results.disturbance) &lt;- names(datlist)</code></pre>
 </div>
 <div id="save-results" class="section level1">
@@ -1671,44 +1684,46 @@ saveRDS(results.disturbance, here(&quot;output&quot;,&quot;results-disturbance.r
 <h1>sessionInfo</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 18363)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
 ## 
 ## locale:
-## [1] LC_COLLATE=Norwegian Bokmål_Norway.1252 
-## [2] LC_CTYPE=Norwegian Bokmål_Norway.1252   
-## [3] LC_MONETARY=Norwegian Bokmål_Norway.1252
-## [4] LC_NUMERIC=C                            
-## [5] LC_TIME=Norwegian Bokmål_Norway.1252    
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=nb_NO.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=nb_NO.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=nb_NO.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=nb_NO.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] glmmTMB_1.0.1   forcats_0.5.0   stringr_1.4.0   dplyr_0.8.5    
-##  [5] purrr_0.3.3     readr_1.3.1     tidyr_1.0.3     tibble_3.0.1   
-##  [9] ggplot2_3.3.0   tidyverse_1.3.0 here_0.1       
+##  [1] glmmTMB_1.0.2.1 forcats_0.5.0   stringr_1.4.0   dplyr_1.0.0    
+##  [5] purrr_0.3.4     readr_1.3.1     tidyr_1.1.0     tibble_3.0.3   
+##  [9] ggplot2_3.3.2   tidyverse_1.3.0 here_0.1       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.3       mvtnorm_1.0-11   lubridate_1.7.4  lattice_0.20-38 
-##  [5] assertthat_0.2.1 rprojroot_1.3-2  digest_0.6.23    R6_2.4.1        
-##  [9] cellranger_1.1.0 backports_1.1.5  reprex_0.3.0     coda_0.19-3     
-## [13] evaluate_0.14    httr_1.4.1       pillar_1.4.3     rlang_0.4.6     
-## [17] readxl_1.3.1     rstudioapi_0.11  minqa_1.2.4      nloptr_1.2.1    
-## [21] Matrix_1.2-18    rmarkdown_2.1    splines_3.6.3    lme4_1.1-21     
-## [25] TMB_1.7.16       munsell_0.5.0    broom_0.5.6      compiler_3.6.3  
-## [29] modelr_0.1.5     xfun_0.13        pkgconfig_2.0.3  htmltools_0.4.0 
-## [33] tidyselect_1.1.0 fansi_0.4.1      crayon_1.3.4     dbplyr_1.4.2    
-## [37] withr_2.2.0      MASS_7.3-51.5    grid_3.6.3       xtable_1.8-4    
-## [41] nlme_3.1-144     jsonlite_1.6     gtable_0.3.0     lifecycle_0.2.0 
-## [45] DBI_1.0.0        magrittr_1.5     scales_1.1.0     estimability_1.3
-## [49] cli_2.0.2        stringi_1.4.3    fs_1.4.1         xml2_1.2.2      
-## [53] ellipsis_0.3.0   generics_0.0.2   vctrs_0.2.4      boot_1.3-24     
-## [57] tools_3.6.3      glue_1.4.1       hms_0.5.3        emmeans_1.4.3.01
-## [61] yaml_2.2.0       colorspace_1.4-1 rvest_0.3.5      knitr_1.28      
-## [65] haven_2.2.0</code></pre>
+##  [1] Rcpp_1.0.5       lubridate_1.7.9  lattice_0.20-40  assertthat_0.2.1
+##  [5] rprojroot_1.3-2  digest_0.6.25    R6_2.4.1         cellranger_1.1.0
+##  [9] backports_1.1.8  reprex_0.3.0     evaluate_0.14    httr_1.4.2      
+## [13] pillar_1.4.6     rlang_0.4.7      readxl_1.3.1     rstudioapi_0.11 
+## [17] minqa_1.2.4      nloptr_1.2.2.2   blob_1.2.1       Matrix_1.2-18   
+## [21] rmarkdown_2.3    splines_3.6.3    lme4_1.1-23      statmod_1.4.34  
+## [25] TMB_1.7.18       munsell_0.5.0    broom_0.7.0      compiler_3.6.3  
+## [29] modelr_0.1.8     xfun_0.16        pkgconfig_2.0.3  htmltools_0.5.0 
+## [33] tidyselect_1.1.0 fansi_0.4.1      crayon_1.3.4     dbplyr_1.4.4    
+## [37] withr_2.2.0      MASS_7.3-51.5    grid_3.6.3       nlme_3.1-144    
+## [41] jsonlite_1.7.0   gtable_0.3.0     lifecycle_0.2.0  DBI_1.1.0       
+## [45] magrittr_1.5     scales_1.1.1     cli_2.0.2        stringi_1.4.6   
+## [49] fs_1.4.2         xml2_1.3.2       ellipsis_0.3.1   generics_0.0.2  
+## [53] vctrs_0.3.2      boot_1.3-24      tools_3.6.3      glue_1.4.1      
+## [57] hms_0.5.3        yaml_2.2.1       colorspace_1.4-1 rvest_0.3.6     
+## [61] knitr_1.29       haven_2.3.1</code></pre>
 </div>
 
 
@@ -1761,7 +1776,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

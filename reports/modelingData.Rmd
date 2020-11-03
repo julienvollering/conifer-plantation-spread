@@ -109,7 +109,7 @@ summary(Ps_m1)
 ```
 
 ```{r}
-Ps_m2 <- update(Ps_m1, formula = update.formula(Ps_f1, ~ . - seeds.WALD + seeds.ExP))
+Ps_m2 <- update(Ps_m1, formula = update.formula(Ps_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
 summary(Ps_m2)
 ```
 
@@ -267,7 +267,7 @@ summary(Pa_m1)
 ```
 
 ```{r}
-Pa_m2 <- update(Pa_m1, formula = update.formula(Pa_f1, ~ . - seeds.WALD + seeds.ExP))
+Pa_m2 <- update(Pa_m1, formula = update.formula(Pa_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
 summary(Pa_m2)
 ```
 
@@ -460,7 +460,7 @@ summary(L_m1)
 ```
 
 ```{r}
-L_m2 <- update(L_m1, formula = update.formula(L_f1, ~ . - seeds.WALD + seeds.ExP))
+L_m2 <- update(L_m1, formula = update.formula(L_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
 summary(L_m2)
 ```
 
@@ -607,10 +607,12 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
       collapse = " + ")
 ```
 
+Exclude bio01 due to very high correlation with bio19. 
+
 ### Compare WALD vs ExP
 
 ```{r}
-Pc_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
+Pc_f1 <- formula("wildlings ~ seeds.WALD * age + bio19 + relelev + 
                  artificial + T34 + V1 + T1 + T40 + T30 + V8 + V3 + (1 | locality)")
 Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
 # Warning messages:
@@ -654,7 +656,7 @@ summary(Pc_m1c)
 ```
 
 ```{r}
-Pc_m2c <- update(Pc_m1c, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
+Pc_m2c <- update(Pc_m1c, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
 summary(Pc_m2c)
 ```
 

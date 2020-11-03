@@ -81,11 +81,15 @@ for (i in seq_along(datlist)) { # i <- 1
     mutate(modeled = FALSE)
 
   selmod <- results$models[[species]]
+  covars <- intersect(c('seeds.WALD', 'age', 'bio01','bio19', 'relelev', 'seeds.WALD:age'),
+                          attributes(attributes(selmod$frame)$terms)$term.labels)
+  form <- as.formula(paste("wildlings ~ ", 
+                           paste(covars, collapse= "+"), 
+                           " + wetl + (1 | locality)"))
   
-  m.wetland <- glmmTMB(formula = wildlings ~ seeds.WALD * age + bio01 + bio19 + 
-    relelev + wetl + (1 | locality), data = dat, family = selmod$call$family, 
-    ziformula = selmod$call$ziformula)
-  
+  m.wetland <- glmmTMB(formula = form, data = dat, family = selmod$call$family, 
+                       ziformula = selmod$call$ziformula)
+
   newdat <- tibble(locality = NA_character_, 
                    seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0, 
                    wetl = c(0,1))  
@@ -118,10 +122,12 @@ for (i in seq_along(datlist)) { # i <- 1
   arith.disturb.scaled <- mutate(arith.disturb, fit = density/scaler) %>% 
     select(structuring, fit) %>% 
     mutate(modeled = FALSE)
-
-  m.disturb <- glmmTMB(formula = wildlings ~ seeds.WALD * age + bio01 + bio19 + 
-                         relelev + nadisturb + andisturb + (1 | locality), 
-                       data = dat, family = selmod$call$family, 
+  
+  form <- as.formula(paste("wildlings ~ ", 
+                           paste(covars, collapse= "+"), 
+                           " + nadisturb + andisturb + (1 | locality)"))
+  
+  m.disturb <- glmmTMB(formula = form, data = dat, family = selmod$call$family, 
                        ziformula = selmod$call$ziformula)
   
   newdat <- tibble(locality = NA_character_, 
