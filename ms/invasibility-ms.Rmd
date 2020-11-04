@@ -196,7 +196,7 @@ Furthermore, the lodgepole pine model did not converge as specified.
 To achieve convergence we dropped site from the binomial submodel, reasoning that its variance was difficult to estimate from only six sites.
 
 Establishment likelihoods for ecosystem types were calculated as predictions from the conditional part of the zero-inflation model (holding covariates at their mean values), scaled by the predicted value for a reference ecosystem type ("forest").
-To test whether higher-level characteristics of ecosystem types can be used to generalize patterns, we aggregated ecosystem types by their category (terrestrial or wetland) or structuring process (anthrogenic, natural or no disturbance), as defined in the Nature in Norway system (Appendix [A3]).
+To test whether higher-level characteristics of ecosystem types can be used to generalize patterns of vulnerability, we aggregated ecosystem types by their category (terrestrial or wetland) or structuring process (anthrogenic, natural or no disturbance), as defined in the Nature in Norway system (Appendix [A3]).
 We then refitted our (otherwise unchanged) models twice --- once with each of these stratifications replacing ecosystem types --- and obtained estimates of relative establishment likelihood for each category and structuring process.
 
 # Results
@@ -229,12 +229,12 @@ knitr::kable(cortab,
   kable_styling(full_width = F)
 ```
 
-Naturally, the variation in establishment likelihoods shrank when we aggregated ecosystem types (by category or structuring process; fig. \@ref(fig:establishment-hypotheses)).
-No more than two orders of magnitude separated establishment likelihoods of these different groupings.
-Despite larger sample sizes, many of the groupings were not distinguishable with high confidence.
+Naturally, variation in establishment likelihoods shrank when ecosystem types were aggregated (by category or structuring process; fig. \@ref(fig:establishment-hypotheses)).
+No more than two orders of magnitude separated the different groups.
 Sitka/Lutz spruce and Norway spruce established at higher rates in wetland ecosystem types than terrestial ecosystem types, while the opposite was true for larch and lodgepole pine.
 Sitka/Lutz spruce and Norway spruce did not colonize disturbance-structured ecosystem types at a higher rate than ecosystem types without disturbance structuring.
 For larch and lodgepole pine, structuring by natural distubance and anthropogenic disturbance, respectively, were associated with the highest rates of colonization. 
+Yet despite larger sample sizes, the mean establishment likelihood in a given group was rarely clearly distinguishable from that in other groups.
 
 ```{r establishment-hypotheses, fig.cap="Establishment likelihoods among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom), for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. Filled points with line intervals show modeled estimates surrounded by their 95 % confidence intervals. The scale of the x-axis differs by species group and the horizontal dotted line marks the reference level for the comparison."}
 knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.svg'))
@@ -326,11 +326,17 @@ We are not confident that lodgepole pine responds strongly to precipitation, as 
 
 ## Generalizing vulnerability
 
-Important! Differences between species partly reflect the composition of ecosystem types in the samples! E.g. open active landslide pulls natural disturbance up, but is not present for all species.
-The fact that disturbance events promote invasion does not map directly to ecosystems characterized by disturbance being at higher risk than ecosystems not characterized by disturbance. Or, more broadly, invasion patterns of alien conifers frequently clash with our a priori expectations based on their autecology and general tenets of invasion ecology.
-Our disturbance results should not be interpreted to mean that an anthropogenic disturbance event decreases establishment likelihood relative to prior state (e.g. [@vikaneInvasionCallunaHeath2013] shows that burning in coastal heathland increases Sitka spruce establishment), but that alien conifers are not as likely to establish in anthropogenically disturbed ecosystems --- including ecosystems like arable fields --- as a group. An obvious explanation for this pattern is that these kinds of disturbance regimes kill as many or more wildlings than they recruit [@buckleyDisturbanceInvasionReinvasion2007]. In some cases, disturbed ecosystems may also be less favorable to establishment because high germination is outweighed by low survival at older life stages. E.g. Gregory 1956 (in Peterson 1997)
-We refer to disturbance-structured ecosystems rather than disturbed ecosystems for the above reason.
-Ecosystem types structured by anthropogenic disturbance structuring includes areas in which conifer recruitment is almost certainly impossible, like paved surfaces and plowed fields. These deflate the establishment likelihood of this stratum, masking high establishment likelihood in "boreal heaths" or  "strongly altered ground with semi−natural grassland character", for example. Within the groups of anthropogenic disturbance structuring and natural disturbance structuring, disturbance frequency and severity varies substantially. 
+The overarching characteristics that we used to aggregate ecosystem types did a poor job of generalizing differences in vulnerability.
+That is, groups of ecosystems belonging to the same hydrological category, or structured by the same form of disturbance, showed heterogeneous establishment likelihoods.
+We note that the set of ecosystem types comprising a group differed between species, depending on their presence in the data set.
+These differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
+For example, Sitka/Lutz spruce and larch show high establishment under natural disturbance structuring partly because they establish well in "open active landslide", but this ecosystem type was not present around the other species. 
+This constraint hinders species comparisons but underlines our main takeaway from these results --- that the vulnerability of an individual ecosystem type frequently diverges from those it is classified with.
+
+Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
+Many areas where conifer establishment is nearly impossible, like paved surfaces and annually plowed fields, count as terrestrial and anthropogenically disturbed, which lowers the relative establishment likelihood of these two groups.
+Our results do not imply, for example, that any anthropogenic disturbance will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state (indeed, Vikane et al. [-@vikaneInvasionCallunaHeath2013] show that burning in coastal heathland increases Sitka spruce establishment).
+Rather, we find that anthropogenically disturbed ecosystems, as a whole, are no more vulnerable to Sitka/Lutz spruce wildlings than other ecosystems. 
 
 # Conclusion
 
