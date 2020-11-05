@@ -34,6 +34,12 @@ Ecosystem invasibility to alien conifers
 
 # Abstract
 
+1. Context and need
+2. Approach and methods
+3. Main result
+4. Main result
+(5. Main result)
+6. *Synthesis and applications* Wider implications and relevance to management, synthesis of the paper's key messages, generic, seminal and accessible to non-specialists
 
 # Keywords
 
@@ -47,7 +53,7 @@ In particular, plantations contribute to the presence of alien conifers in prote
 Controlling wildlings protects plantation surroundings and prevents secondary, potentially invasive spread.
 Accordingly, guidelines for sustainable use of alien trees stress that containing them to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduGlobalGuidelinesSustainable2020].
 
-How many wildlings are present and how far they are from the plantation varies a lot from site to site, even among conspecific plantations of similar age [@fernandesNaturalRegenerationPinus2016; @nygaardSpreadIntroducedSitka2017], which makes it harder to predict and manage their spread.
+How many wildlings are present and how far they are from the plantation varies a lot from site to site, even among conspecific plantations of similar age [@fernandesWhatDrivesEucalyptus2018; @nygaardSpreadIntroducedSitka2017], which makes it harder to predict and manage their spread.
 To begin to understand this variation, we need to consider both dispersal and establishment (where establishment comprises germination and survival).
 These jointly generate patterns of wildling abundance and spatial distribution.
 Dispersal at a given site is affected by conditions governing a species' dispersal syndrome --- for instance wind exposure and site topography, in the case of a wind-dispersed species.
@@ -62,6 +68,7 @@ In Norway --- and similarly in other countries --- there exists a national land 
 It is a working tool for land management in Norway, with government backing.
 The system builds on the continuum concept [@austinContinuumConceptOrdination1985], aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@whittakerGradientAnalysisVegetation1967; @halvorsenNaturNorgeNiN2015].
 As a result, it encapsulates in its ecosystem types much of the variation that is most likely to regulate wildling germination and survival --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
+It also identifies broad similarities between ecosystem types, which might be used to tease out generic trends in establishment likelihood.
 
 To estimate how likely wildlings are to establish in particular ecosystem types based on observations of their abundance around a sample of plantations, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
 For example, low establishment likelihood in an ecosystem type frequently located close to plantations can be masked by copious seed rain [@rougetInferringProcessPattern2003].
@@ -142,7 +149,7 @@ By allowing cell composition to be mixed, we tried to capture ecotones in the mo
 Area covered by mosaic polygons was divided evenly among the constituent types.
 We excluded the "tree plantation" ecosystem type because some of the field campaigns did not register wildlings when they occurred within this ecosystem type.
 
-```{r site-example, fig.cap='An illustration of one of the 82 plantation sites: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (NiN polygons not shown). The top and bottom rows of panels represent selected variables as they enter the regression model (with a spatial grain of 10 m). Grid cells without data are either seed sources (corresponding to the polygons shown) or tree plantations of other species (such as one along the road).'}
+```{r site-example, fig.cap='An illustration of one of the 82 plantation sites: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (nature type polygons not shown). The top and bottom rows of panels represent selected variables for the 500x500 m plot, as used in the regression model (with a spatial grain of 10 m). Grid cells without data are either seed sources (corresponding to the polygons shown) or tree plantations of other species (such as one along the road).'}
 knitr::include_graphics('figures/site-example/site-example.svg')
 ```
 
@@ -330,24 +337,25 @@ We note that the set of ecosystem types comprising a group differed between spec
 These differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
 For example, Sitka/Lutz spruce and larch show high establishment under natural disturbance structuring partly because they establish well in "open active landslide", but this ecosystem type was not present around the other species. 
 This constraint hinders species comparisons but underlines our main takeaway from these results --- that the vulnerability of an individual ecosystem type frequently diverges from those it is classified with.
-Thus, we did not find any broad commonalities between vulnerable ecosystems that might help guide wildling management. 
+Thus, we did not find any broad commonalities between vulnerable ecosystems that could help guide wildling management. 
 
 Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
 Many areas where conifer establishment is nearly impossible, like paved surfaces and annually plowed fields, count as terrestrial and anthropogenically disturbed, which lowers the relative establishment likelihood of these two groups.
 Our results do not imply, for example, that any particular anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state (indeed, Vikane et al. [-@vikaneInvasionCallunaHeath2013] show that burning in coastal heathland increases Sitka spruce establishment).
 Rather, we find that ecosystems structured by anthropogenic distubance, on the whole, are no more vulnerable to Sitka/Lutz spruce wildlings than other ecosystems.
 
-# Conclusion
+# Conclusions
 
-One of main novelties of our study is that we were able to mechanistically reconstruct seed rain estimates necessary for unbiased invasibility estimates.
-Seed rain mirrors the concept of propagule pressure; "propagule pressure" often refers to levels of introduction at continental scales, but it also functions as a normalizing quantity (an exposure) for an observed establishment/invasion count [@chytrySeparatingHabitatInvasibility2008].
-Many studies quantifying ecosystem invasibility have not been able adjust for propagule pressure, typically because it is impossible to reconstruct the underlying dispersal history [@catfordQuantifyingLevelsBiological2012].
+Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and is likely to accelerate with recent pushes to increase tree planting worldwide [@brunduGlobalGuidelinesSustainable2020]. 
+Meanwhile, remotely sensed and survey data are making detailed and accurate maps of ecosystem types increasingly available over large extents [@horvathDistributionModellingVegetation2019], which presents opportunities to manage wildling spread more efficiently [@buckleySlowingPineInvasion2005].
+Specifically, differences in ecosystem invasibility can be leveraged to 
+reduce the rate of wildling establishment (potentially by orders of magnitude) through deliberate site selection for new plantations or targeted interventions around existing plantations.
+However, managers should be cautious judging ecosystem invasibility based on descriptions of the species' autecology, observed wildling densities, or generalizations about invasibility across ecosystem types.
 
-Invasive species management leveraging the concept of ecosystem invasibility should be careful making inferences from either described autecology or simple density surveys.  
-
-Remotely sensed and survey data are making detailed and accurate maps of ecosystem types increasingly available over large extents [@horvathDistributionModellingVegetation2019] 5500 km2 mapped for ecosystem types in Norway.
-Similar methods can be applied to non-conifer plantations that show large site-level variation [e.g. @fernandesWhatDrivesEucalyptus2018].
-Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and is likely to accelerate with recent pushes to increase tree planting worldwide. 
+One of main novelties of this study is that we inferred invasibility using mechanistically reconstructed, spatial estimates of seed rain.
+Scientists studying invasibility at national and continental scales have already recognized the importance of normalizing observed levels of invasion by a spatially explicit estimate of exposure (i.e. propagule pressure) [@chytrySeparatingHabitatInvasibility2008]. 
+However, many studies quantifying ecosystem invasibility have not been able adjust for propagule pressure, typically because it is impossible to reconstruct the underlying dispersal history [@catfordQuantifyingLevelsBiological2012].
+We found that accounting for seed rain and other confounders of the relationship between ecosystem types and wildling abundance underlined variation in ecosystem type invasibility.
 
 # Appendix
 
