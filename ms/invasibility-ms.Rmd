@@ -28,18 +28,13 @@ library(kableExtra)
 
 Julien Vollering: <https://orcid.org/0000-0002-7409-2898>
 
-# Running head
-
-Ecosystem invasibility to alien conifers
-
 # Abstract
 
-1. Context and need
-2. Approach and methods
-3. Main result
-4. Main result
-(5. Main result)
-6. *Synthesis and applications* Wider implications and relevance to management, synthesis of the paper's key messages, generic, seminal and accessible to non-specialists
+1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. The rate at which their offspring colonize surroundings varies among similar plantations, and the reasons for this variation are often unclear. To curb the spread of so-called "wildlings" and minimize the burden of valued conifer plantations on native ecosystems, managers need to know which places and ecosystems are most and least vulnerable.
+2. We compare how likely conifer wildlings are to establish across a wide range of ecosystem types, focusing on four groups of alien species planted in Norway. We use data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain, climate, and other sources of variation between sites. Further, we check whether differences in vulnerabilty between individual ecosystem types can be generalized, based on broad-brush characteristics used to classify ecosystem types.
+3. We found that conifer wildlings were several orders of magnitude more likely to establish in the most vulnerable ecosystem types than in the least vulnerable ecosystem types. This range of variation from our models was larger than the range of variation in the raw densities of wildlings across ecosystem types. Accounting for seed rain, climate, and site variation also changed the rank vulnerabilities of ecosystem types. 
+4. The four groups of conifer species showed modestly similar patterns of establishment likelihood across ecosystem types, with some agricultural ecosystem types repeatedly among the least vulnerable. However, broad hydrological and disturbance characteristics of ecosystem types did not summarize patterns of vulnerability well. 
+6. *Synthesis and applications* Wider implications and relevance to management, synthesis of the paper's key messages, generic, seminal and accessible to non-specialists. Our results... Managers should be careful not to conflate an ecosystem type's density of alien species with its vulnerability to these species, relative to other ecosystem types. Managers should not assume that ostensibly similar ecosystems are equally or even similarly vulnerable.  ...restrict new plantations to low-risk sites, design efficient monitoring, and target interventions.
 
 # Keywords
 
@@ -293,8 +288,8 @@ It measures long-term survival --- often the quantity of interest --- under a wi
 In contrast, seeding experiments generally observe only the youngest life stages, and the factors controlling individual success likely differ at later life stages [@dovciakSeedRainEnvironmental2008].
 For example, Sitka spruce appears more likely to germinate in disturbed soil [@vikaneInvasionCallunaHeath2013], but less likely to survive there [@petersonEcologyManagementSitka1997].
 On the other hand, experiments might be more useful when observed wildling spread is not representative of patterns in the wider landscape (e.g. for species spreading from a single point of introduction).
-During field work we noticed that wildlings in different ecosystem types sometimes grew taller at very different rates, as evidenced by interwhorl distances, and additional management insight could be gleaned from a study like ours if (a sample of) growth rates were measured.
-Sparse but fast colonization may be of greater concern than abundant but slow colonization, depending on objectives.
+During field work we noticed that wildlings in different ecosystem types sometimes grew taller at very different rates, as evidenced by interwhorl distances, and additional insight could be gleaned from a study like ours if (a sample of) growth rates were measured.
+Sparse but fast colonization may be of greater concern than abundant but slow colonization, depending on management objectives.
 
 ## Estimating vulnerability
 
@@ -313,7 +308,7 @@ Relative elevation's inconsistent effects on wildling abundance suggests that ei
 In any case, there is no rule of thumb for management that wildlings tend to move up or down slopes.
 Surprisingly, wildling abundance did not increase with plantation age, although areas around younger plantations were generally more likely to be free of wildlings.
 Potential explanations include lower survival rates in older wildlings, or a quick saturation of suitable microsites.
-Meanwhile, negative interactions between relative seed rain and plantation age (in larch and lodgepole pine) could theoretically be explained by secondary seed production, which changes the shape of the seed shadow as the plantation grows older, but in the field we observed little indication of significant seed production from wildings.
+Meanwhile, negative interactions between relative seed rain and plantation age (in larch and lodgepole pine) could theoretically be explained by secondary seed production, which changes the shape of the seed shadow as the plantation grows older, but we observed little indication of significant seed production from wildings in the field.
 
 We reiterate that our models do not estimate the total causal effect of climate on wildling abundance, because they set aside climate's influence on ecosystem types [@westreichTableFallacyPresenting2013].
 Therefore, we interpret the estimated climate effects with respect to physiological contraints within a given ecosystem type. 
