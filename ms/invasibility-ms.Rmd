@@ -33,7 +33,7 @@ Julien Vollering: <https://orcid.org/0000-0002-7409-2898>
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. The rate at which their offspring colonize surroundings varies among similar plantations, and the reasons for this variation are often unclear. To curb the spread of so-called "wildlings" and minimize the burden of valued conifer plantations on native ecosystems, managers need to know which places and ecosystems are most and least vulnerable.
 2. We compare how likely wildlings are to establish across a wide range of ecosystem types, focusing on four groups of alien conifer species planted in Norway. We use data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain, climate, and other sources of variation between sites. Further, we check whether differences in vulnerability between individual ecosystem types can be generalized based on broad, shared characteristics.
 3. We found that the four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystem types repeatedly among the least vulnerable. However, broad hydrological and disturbance characteristics of ecosystem types did not summarize patterns of vulnerability well. 
-4. Wildlings were several orders of magnitude more likely to establish in the most vulnerable ecosystem types than in the least vulnerable ecosystem types. This range of variation was larger than that of wildling densities across ecosystem types. Accounting for seed rain, climate, and site variation also changed the rank vulnerabilities of ecosystem types. 
+4. Wildlings were several orders of magnitude more likely to establish in the most vulnerable ecosystem types than in the least vulnerable ecosystem types. This range of variation was larger than that of observed wildling densities across ecosystem types. Accounting for seed rain, climate, and site variation also changed the rank vulnerabilities of ecosystem types. 
 6. *Synthesis and applications* Efforts to keep alien conifers within plantation boundaries have the opportunity to exploit large differences in wildling establishment between ecosystem types. To do so effectively, managers need to be aware that the relative density of wildlings observed in a given ecosystem type (or other management unit) does not generally reflect that ecosystem's relative vulnerability, since confounders obscure this relationship. Nor should managers assume that ostensibly similar ecosystems are similarly vulnerable. A careful accounting of variation in wildling spread gives us the knowledge to restrict new plantations to low-risk sites and to make monitoring and intervention more efficient.
 
 # Keywords
@@ -234,12 +234,12 @@ For Sitka/Lutz spruce and lodgepole pine, establishment likelihood varied strong
 For example, the model predicts Sitka/Lutz spruce to colonize "arable fields" at the site with the highest overall establishment likelihood and "boreal heath" at the site with the lowest overall establishment likelihood at roughly equal rates, even though "boreal heath" is colonized more than 100 times faster on average.
 
 For all species, the WALD model of seed dispersal produced estimates of relative seed rain that fit patterns of wildling establishment better than estimates derived from the empirical seed dispersal kernel.
-There was a high degree of confidence that the effect of relative seed rain was positive for all species.
+There was a high degree of confidence that the effect of relative seed rain was positive for all species (Appendix [A5]).
 The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystem types --- was modest and acted in different directions for different species.
 The 95 % confidence intervals around plantation age effects included zero in all cases except in the binomial submodels for Sitka/Lutz spruce and larch (where older plantations showed fewer zeros).
 The interaction specified between relative seed rain and plantation age was estimated to be positive for Sitka/Lutz spruce, nonexistent for Norway spruce, and negative for larch and lodgepole pine.
 
-The direct effect of climate on establishment --- not including its effect mediated by ecosystem types --- was negligible for Sitka/Lutz spruce and Norway spruce, with model estimates near zero (Appendix [A5]). 
+The direct effect of climate on establishment --- not including its effect mediated by ecosystem types --- was negligible for Sitka/Lutz spruce and Norway spruce, with model estimates near zero. 
 For larch there was a negative direct effect of precipitation (Bio19), with a 50 mm increase in coldest-quarter precipitation estimated to decrease establishment six-fold.
 Likewise for lodgepole pine, the model estimated a 175 mm increase in coldest-quarter precipitation to decrease establishment by a factor of 50.
 
@@ -276,8 +276,8 @@ First, as a preventative measure, we recommend siting new plantations where surr
 In particular, "arable fields" harbor very few wildlings of any species and are common near existing plantations, so picking sites hemmed in by this kind of agricultural land should be both effective and feasible.
 This would likely reduce the rate of wildling establishment by orders of magnitude, even if long distance dispersal might preclude complete containment [@albertLanduseChangeSubalpine2008]. 
 In some cases it may also be desireable to alter ecosystem types adjacent to existing plantations to prevent (further) spread, for example by intensifying mowing regimes to promote the appearance of "agriculturally improved grassland".
-Second, as a reactive measure, we recommend distributing resources for monitoring and control in proportion to relative ecosystem vulnerability.
-Prioritizing ecosystem types that are highly vulnerable and also rare, like "open active landslide", is especially likely to be cost-efficient. 
+Second, as a reactive measure, we recommend allocating resources for monitoring and control in proportion to relative ecosystem vulnerability.
+Prioritizing ecosystem types that are highly vulnerable and also rare (e.g. "open active landslide") is especially likely to be cost-efficient. 
 
 The establishment patterns we quantify are likely to hold, more or less, beyond Norway [@chytryHabitatInvasionsAlien2008].
 From a manager's perspective, we expect that the ecosystem types we report may translate well to equivalent types in similar classification systems, because the Nature in Norway classification is rule-based and aims for observer neutrality. 
@@ -322,17 +322,17 @@ Ecosystem comparisons can nevertheless guide management.
 For example, a particular site with "arable field" may well be colonized by Sitka/Lutz spruce as quickly as another site with "coastal heath", but knowing only their ecosystem composition, we expect the latter to be colonized more than 100 times faster.
 Bianchi et al. [-@bianchiMethodsPredictingSitka2019] struggled to predict regeneration density within Sitka spruce plantations from bare ground cover, moss cover, plantation age, and plantation density.
 The inadequacy of plantation density as a predictor in this context suggests that the unexplained site-level variation we observed was not caused by differences in the densities of seed sources (which we assumed to be constant).
-Alternative explanations could include: (1) property owners removing wildlings at some sites (2) differing demographic characteristics among plantations [@taylorDriversPlantInvasion2016] --- potentially as a result of provenance. 
+Alternative explanations could include: property owners removing wildlings at some sites or differing demographic characteristics among plantations [@taylorDriversPlantInvasion2016], potentially as a result of provenance. 
 
 ## Generalizing vulnerability
 
 The overarching characteristics that we used to aggregate ecosystem types did a poor job of generalizing differences in vulnerability.
 That is, groups of ecosystems belonging to the same hydrological category, or structured by the same form of disturbance, showed heterogeneous establishment likelihoods.
-We note that the set of ecosystem types comprising a group differed between species, depending on their presence in the data set.
+We note that slightly different sets of ecosystem types comprised the groups for each species, depending on their presence in the data.
 These differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
-For example, Sitka/Lutz spruce and larch show high establishment under natural disturbance structuring partly because they establish well in "open active landslide", but this ecosystem type was not present around the other species. 
+For example, Sitka/Lutz spruce and larch show high establishment under natural disturbance structuring partly because they establish well in "open active landslide", but this ecosystem type was not present for the other species. 
 This constraint hinders species comparisons but underlines our main takeaway from these results --- that the vulnerability of an individual ecosystem type frequently diverges from those it is classified with.
-Thus, we did not find any broad commonalities between vulnerable ecosystems that could help guide wildling management. 
+Thus, we did not find any broad commonalities between vulnerable ecosystems that could help guide wildling management where data are scarce. 
 
 Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
 Many areas where conifer establishment is nearly impossible, like paved surfaces and annually plowed fields, count as terrestrial and anthropogenically disturbed, which lowers the relative establishment likelihood of these two groups.
