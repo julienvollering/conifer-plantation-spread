@@ -204,19 +204,10 @@ We then refitted our (otherwise unchanged) models twice --- once with each of th
 
 # Results
 
-The total, unstratified density of wildings in our data set was 28/ha for Sitka/Lutz spruce, 6/ha for Norway spruce, 13/ha for larch, and 34/ha for lodgepole pine.
-Observed wildlings densities in different ecosystem types --- excluding ecosystem types covering less than 1 ha --- ranged 1-60/ha for Sitka spruce, 0-49/ha for Norway spruce, 0-52/ha for larch, and 0-219/ha for lodgepole pine.
-The "open active landslide" type exceeded these densities around Sitka/Lutz spruce and larch plantations, but was very rare.
-
-For all species, modeled establishment likelihoods varied more than the corresponding raw wildling densities (fig. \@ref(fig:establishment)).
-Modeled establishment likelihoods among ecosystem types tallying at least one wildling and covering at least 1 ha varied by up to five orders of magnitude.
-Within species, confidence intervals on modeled establishment likelihoods in pairs of ecosystem types frequently overlapped.
-Nevertheless, establishment likelihood in many other ecosystem types could be distinguished with a high degree of confidence.
-For example, it is not clear whether the establishment likelihood of lodgepole pine was higher in the "coastal heath" or "bare rock" types, but it was clearly much higher in both of these than in "forest".
+Modeled establishment likelihoods varied by up to five orders of magnitude (fig. \@ref(fig:establishment)).
 The pattern of establishment likelihood among ecosystem types was modestly similar between species, with positive rank correlations in four of six species pairs (tab. \@ref(tab:correlation-table)).
-Note that our ecosystem comparisons say nothing about species invasiveness, because we estimate *relative* establishment likelihoods *within* species. 
 
-```{r establishment, fig.cap="Establishment likelihoods among ecosystem types, using 'forest' as the reference level, for four alien conifer species groups. Unfilled points show scaled wildling densities calculated directly from the data. In the case of zero wildlings, these points are placed at the lower limit of the x-axis. Filled points with line intervals show modeled estimates surrounded by their 95 % confidence intervals. Grey point clouds show modeled estimates for individual sites in our data set. Ecosystem types are ordered by a confidence-weighted mean of their percentile-ranked establishment likelihoods within species, such that types with consistently high establishment likelihood across species are at the top of the y-axis. Ecosystem types shown in italic font are wetlands, and ecosystem types shown in bold font are structured by disturbance. Ecosystem types without wildlings and covering less than 0.5 ha across all sites for that species are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
+```{r establishment, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups in various ecosystem types, using 'forest' as the reference level. Zero density is plotted at the lower limit of the x-axis. Estimates of relative establishment likelihood are shown with 95 % confidence intervals. Grey point clouds depict relative establishment likelihoods for individual sites in our data set. The order of ecosystem types along the y-axis is determined by a confidence-weighted mean of their percentile-ranked establishment likelihoods within species, such that types with consistently high establishment likelihood across species are at the top. Ecosystem types in italic font are wetlands, and ecosystem types in bold font are structured by disturbance. Ecosystem types without wildlings and covering less than 0.5 ha across all sites for that species are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
 knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.svg'))
 ```
 
@@ -230,18 +221,16 @@ knitr::kable(cortab,
   kable_styling(full_width = F)
 ```
 
-For Sitka/Lutz spruce and lodgepole pine, establishment likelihood varied strongly between sites, such that it swamped much of the variation between ecosystem types. 
-For example, the model predicts Sitka/Lutz spruce to colonize "arable fields" at the site with the highest overall establishment likelihood and "boreal heath" at the site with the lowest overall establishment likelihood at roughly equal rates, even though "boreal heath" is colonized more than 100 times faster on average.
-
-For all species, the WALD model of seed dispersal produced estimates of relative seed rain that fit patterns of wildling establishment better than estimates derived from the empirical seed dispersal kernel.
-There was a high degree of confidence that the effect of relative seed rain was positive for all species (Appendix [A5]).
+Relative establishment likelihoods varied more than the corresponding set of raw densities, in all species (fig. \@ref(fig:establishment)).
+Raw densities across all ecosystem types ranged 0-211/ha for Sitka spruce, 0-49/ha for Norway spruce, 0-1045/ha for larch, and 0-219/ha for lodgepole pine.
+For all species, the WALD seed dispersal model produced seed rain values that predicted wildling establishment better than the values derived from the empirical seed dispersal kernel (Appendix [A5]).
 The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystem types --- was modest and acted in different directions for different species.
-The 95 % confidence intervals around plantation age effects included zero in all cases except in the binomial submodels for Sitka/Lutz spruce and larch (where older plantations showed fewer zeros).
-The interaction specified between relative seed rain and plantation age was estimated to be positive for Sitka/Lutz spruce, nonexistent for Norway spruce, and negative for larch and lodgepole pine.
-
-The direct effect of climate on establishment --- not including its effect mediated by ecosystem types --- was negligible for Sitka/Lutz spruce and Norway spruce, with model estimates near zero. 
+Plantation age effects were estimated near zero in all cases except in the binomial submodels for Sitka/Lutz spruce and larch (where older plantations showed fewer zeros).
+The interaction specified between relative seed rain and plantation age showed inconsistent effects.
+The direct effect of climate on establishment --- not including its effect mediated by ecosystem types --- was negligible for Sitka/Lutz spruce and Norway spruce. 
 For larch there was a negative direct effect of precipitation (Bio19), with a 50 mm increase in coldest-quarter precipitation estimated to decrease establishment six-fold.
 Likewise for lodgepole pine, the model estimated a 175 mm increase in coldest-quarter precipitation to decrease establishment by a factor of 50.
+For Sitka/Lutz spruce and lodgepole pine, establishment likelihood varied strongly between sites, such that it swamped much of the variation between ecosystem types.
 
 Variation in establishment likelihoods shrank when ecosystem types were aggregated (by category or structuring process; fig. \@ref(fig:establishment-hypotheses)).
 No more than two orders of magnitude separated the different groups.
