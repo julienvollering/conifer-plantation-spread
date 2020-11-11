@@ -34,11 +34,11 @@ Julien Vollering: <https://orcid.org/0000-0002-7409-2898>
 2. We compare how likely wildlings are to establish across a wide range of ecosystem types, focusing on four groups of alien conifer species planted in Norway. We use data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain, climate, and other sources of variation between sites. Further, we check whether differences in vulnerability between individual ecosystem types can be generalized based on broad, shared characteristics.
 3. We found that the four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystem types repeatedly among the least vulnerable. However, broad hydrological and disturbance characteristics of ecosystem types did not summarize patterns of vulnerability well. 
 4. Wildlings were several orders of magnitude more likely to establish in the most vulnerable ecosystem types than in the least vulnerable ecosystem types. This range of variation was larger than that of observed wildling densities across ecosystem types. Accounting for seed rain, climate, and site variation also changed the rank vulnerabilities of ecosystem types. 
-6. *Synthesis and applications* Efforts to keep alien conifers within plantation boundaries have the opportunity to exploit large differences in wildling establishment between ecosystem types. To do so effectively, managers need to be aware that the relative density of wildlings observed in a given ecosystem type (or other management unit) does not generally reflect that ecosystem's relative vulnerability, since confounders obscure this relationship. Nor should managers assume that ostensibly similar ecosystems are similarly vulnerable. A careful accounting of variation in wildling spread gives us the knowledge to restrict new plantations to low-risk sites and to make monitoring and intervention more efficient.
+6. *Synthesis and applications* Efforts to keep alien conifers within plantation boundaries have the opportunity to exploit large differences in wildling establishment between ecosystem types. To do so effectively, managers need to be aware that the relative density of wildlings observed in a given ecosystem type may not reflect that ecosystem's relative vulnerability, since confounders obscure this relationship. Nor should managers assume that ostensibly similar ecosystems are similarly vulnerable. A careful accounting of reasons for variation in wildling spread gives us knowledge to restrict new plantations to low-risk sites and to make monitoring and intervention more efficient.
 
 # Keywords
 
-conifer, disturbance, invasibility, plantation, seed rain, Wald Analytical Long-distance Dispersal (WALD)
+conifer, establishment likelihood, disturbance, invasibility, plantation, recruitment, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
 
 # Introduction
 
@@ -331,6 +331,10 @@ Scientists studying invasibility at national and continental scales have already
 However, many studies quantifying ecosystem invasibility have not been able adjust for propagule pressure, typically because it is impossible to reconstruct the underlying dispersal history [@catfordQuantifyingLevelsBiological2012].
 We found that accounting for seed rain and other confounders of the relationship between ecosystem types and wildling abundance underlined variation in ecosystem type invasibility.
 
+# Authors' contributions
+
+AB and CD conceived the ideas and designed methodology; CD and EF collected the data; EF and GH analysed the data; AB and CD led the writing of the manuscript. All authors contributed critically to the drafts and gave final approval for publication.
+
 # Appendix
 
 ## A1
@@ -394,7 +398,7 @@ We parameterized separate WALD models for 20º sectors around each seed source, 
 In each sector we estimated mean vegetation height based on the composition of mapped ecosystem types (Appendix [A3]).
 Simulataneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season.
 The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
-The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
+The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional2020]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
 
 ```{r recreate traits-table, include=FALSE}
 traits <- tribble(
