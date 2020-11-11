@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -47,12 +47,12 @@
      fit-margin-right="1"
      fit-margin-bottom="1"
      inkscape:zoom="1"
-     inkscape:cx="429.44231"
-     inkscape:cy="310.11142"
+     inkscape:cx="247.94231"
+     inkscape:cy="306.11142"
      inkscape:window-x="72"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g144"
+     inkscape:current-layer="g178"
      inkscape:pagecheckerboard="true" />
   <g
      class="path"
@@ -575,20 +575,20 @@
        style="fill:#00a2e0;fill-opacity:0.7;stroke:#000000;stroke-width:2" />
     <rect
        class="textbg"
-       width="60.450001"
+       width="138.75003"
        height="17"
-       x="-30.225"
+       x="-70.224998"
        y="21"
        id="rect172"
-       style="fill:#ffffff" />
+       style="fill:#ffffff;stroke-width:1.51501966" />
     <text
        class="nodelabel"
        y="35"
        id="text174"
        style="text-anchor:middle">
       <tspan
-         style="-inkscape-font-specification:'Arial, sans-serif, Normal';font-family:Arial, sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:16px;text-anchor:middle;text-align:center;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"
-         id="tspan914">wildlings</tspan>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Arial, sans-serif;-inkscape-font-specification:'Arial, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"
+         id="tspan914">wildling abundance</tspan>
     </text>
     <path
        d="M -2,-6 H 2 V 6 h -4 z"

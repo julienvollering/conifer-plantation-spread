@@ -9,9 +9,9 @@ bb="-3.748,-3.701,3.848,4.447"
 "seed rain" [latent,pos="2.230,1.004"]
 climate [pos="-2.189,-0.889"]
 site [pos="-0.060,-2.501"]
-wildlings [outcome,pos="2.237,2.844"]
+wildling abundance [outcome,pos="2.237,2.844"]
 "ecosystem type" -> "establishment likelihood"
-"establishment likelihood" -> wildlings
+"establishment likelihood" -> wildling abundance
 "plantation age" -> "seed rain"
 "position from plantation" -> "ecosystem type"
 "position from plantation" -> "elevation from plantation"
@@ -19,7 +19,7 @@ wildlings [outcome,pos="2.237,2.844"]
 "elevation from plantation" -> "ecosystem type"
 "elevation from plantation" -> "seed rain"
 "relative seed rain (in flat terrain)" -> "seed rain"
-"seed rain" -> wildlings
+"seed rain" -> wildling abundance
 climate -> "ecosystem type"
 climate -> "establishment likelihood"
 site -> "ecosystem type"
@@ -30,4 +30,4 @@ site -> climate
 }
 
 
-Table 2 Fallacy: Coefficient of plantation age can be interpreted as (unconfounded) total effects on wildlings. None of the covariates in the model mediate its effects. Other covariates (climate, relative elevation) cannot be interpreted as total effect on wildlings. See http://www.dagitty.net/learn/graphs/table2-fallacy.html
+Table 2 Fallacy: Coefficient of plantation age can be interpreted as (unconfounded) total effects on wildling abundance. None of the covariates in the model mediate its effects. Other covariates (climate, relative elevation) cannot be interpreted as total effect on wildling abundance. See http://www.dagitty.net/learn/graphs/table2-fallacy.html
