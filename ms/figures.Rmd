@@ -15,7 +15,7 @@ library(sf)
 library(rnaturalearth)
 ```
 
-# Localities map
+# Sites map
 
 ```{r, eval=FALSE}
 ne_download(scale = 50, type = 'populated_places', category = 'cultural', 
@@ -147,7 +147,7 @@ g123 <- g12 +
 ```
 
 ```{r}
-ggsave(g123, filename = 'localities-map.svg', path = here('ms', 'figures'),
+ggsave(g123, filename = 'sites-map.svg', path = here('ms', 'figures'),
   scale = 1, width = 74, height = 105, units = 'mm', dpi = 300)
 ```
 

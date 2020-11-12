@@ -2,16 +2,20 @@
 title: 'Confounders obscure large and idiosyncratic differences between ecosystems in vulnerability to alien conifer establishment'
 author:
 - Julien Vollering^[julienvollering@gmail.com]
-- et al.
+- Leif Appelgren
+- Magni Olsen Kyrkjeeide
+- Anders Often
+- Siri Lie Olsen
+- Jakob Sandven
+- Olav Skarpaas
+- Odd Stabbetorp
+- Øyvind Sørhuus
+- Solbjørg Engen Torvik
 bibliography: invasibility-ms.bib
-output: 
-  bookdown::html_document2:
-    toc: true
-    toc_float: true
-always_allow_html: true
-editor_options:
-  chunk_output_type: console
-link-citations: yes
+link-citations: true
+output:
+  bookdown::pdf_document2
+documentclass: article
 csl: ecology.csl
 ---
 
@@ -59,9 +63,9 @@ Reducing establishment is of particular interest because it directly regulates w
 The conditions affecting establishment are also generally easier to manipulate than those affecting dispersal, either directly through intervention or indirectly through site selection.
 The question, then, becomes: how can we identify establishment-inhibiting conditions in a manner applicable to plantation management?
 
-In Norway --- and similarly in other countries --- there exists a national land mapping classification system that sorts variation in local ecological conditions [@NatureTypesNorway2018].
+In Norway --- and similarly in other countries --- there exists a national land mapping classification system that sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
 It is a working tool for land management in Norway, with government backing.
-The system builds on the continuum concept [@austinContinuumConceptOrdination1985], aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenNaturNorgeNiN2015].
+The system builds on the continuum concept [@austinContinuumConceptOrdination1985], aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
 As a result, it encapsulates in its ecosystem types (hereafter: "ecosystems") much of the variation that is most likely to regulate wildling germination and survival --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
 It also identifies broad similarities between ecosystems, which might be used to tease out generic trends in establishment likelihood.
 
@@ -74,9 +78,9 @@ Determining which ecosystems are most vulnerable so that interventions can be pr
 Plantations of wind-dispersed, alien conifers present an opportunity to assess ecosystem invasibility (to these species), because we can estimate ecosystem exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
 We examine plantations in Norway to investigate the following questions:  
 
-1. In which ecosystems are wildlings of alien conifers most and least likely to establish?  
+1. In which ecosystems are wildlings of alien conifers most and least likely to establish?
 2. How do estimates of establishment likelihood differ from observed wildling densities?
-3. Can overarching characteristics of ecosystems be used to generalize patterns of wildling establishment?  
+3. Can overarching characteristics of ecosystems be used to generalize patterns of wildling establishment?
 
 # Methods
 
@@ -90,7 +94,7 @@ Only plantations with cone-bearing individuals were included in the sample.
 We collected field data from each plantation in one of six field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019; @sandvenKartleggingAvKortdistansespredning2019].
 
 ```{r sites-map, fig.cap='Locations of the 82 plantations in the data set.'}
-knitr::include_graphics('figures/sites-map.svg')
+knitr::include_graphics('figures/sites-map.pdf')
 ```
 
 In the field, wildlings and ecosystems were mapped comprehensively within a 500x500 m plot centered around the plantation of interest.
@@ -105,7 +109,7 @@ Regularly patterned occurrence of more than one ecosystem in polygons smaller th
 Some non-spatial data were also collected for each of the central plantations. 
 We measured the height of a representative individual in the plantation by clinometer.
 We also estimated the age of the plantation at the time of the field campaign, either by contacting land owners or municipal officials, or by counting growth rings.
-Details for all 82 plantations are provided in Appendix [A1].
+Details for all 82 plantations are provided in the Appendix (table \@ref(tab:sites-table)).
 
 ## Seed dispersal
 
@@ -124,7 +128,7 @@ We transformed field-mapped polygons of seed sources into hexagonally gridded po
 Then we applied our two dispersal models to estimate the distribution of seed rain from all point sources in a grid of 10 m cells.
 We chose this cell size to be similar to the smallest allowed ecosystem polygon.
 
-A full description of our implementation of the WALD model and additional details about seed source polygons are given in Appendix [A2].
+A full description of our implementation of the WALD model and additional details about seed source polygons are given in the [Appendix].
 
 ## Establishment likelihood
 
@@ -135,8 +139,8 @@ By allowing cell composition to be mixed, we tried to capture ecotones in the mo
 Area covered by mosaic polygons was divided evenly among the constituent types.
 We excluded the "tree plantation" ecosystem because some of the field campaigns did not register wildlings when they occurred in this ecosystem.
 
-```{r site-example, fig.cap='An illustration of one of the 82 plantation sites: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (nature type polygons not shown). The top and bottom rows of panels represent selected variables for the 500x500 m plot, as used in the regression model (with a spatial grain of 10 m). Grid cells without data are either seed sources (corresponding to the polygons shown) or tree plantations of other species (such as one along the road).'}
-knitr::include_graphics('figures/site-example/site-example.svg')
+```{r site-example, out.width='90%', fig.cap='An illustration of one of the 82 plantation sites: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels represents the data as registered in the field (nature type polygons not shown). The top and bottom rows of panels represent selected variables for the 500x500 m plot, as used in the regression model (with a spatial grain of 10 m). Grid cells without data are either seed sources (corresponding to the polygons shown) or tree plantations of other species (such as one along the road).'}
+knitr::include_graphics('figures/site-example/site-example.pdf')
 ```
 
 We used a directed acyclic graph (DAG) to diagram causal relationships among the factors we expected to influence the number of wildlings per cell (fig. \@ref(fig:DAG)).
@@ -152,7 +156,7 @@ Lastly, plantation surroundings are likely to experience large stochastic variat
 Therefore we also included in our model the first order interaction between relative seed rain and plantation age.
 
 ```{r DAG, fig.cap="A directed acyclical graph showing the causal relationships motivating our statistical model of ecosystems' effects on wildling establishment. Red variables causally affect both the ecosystem type and wildling establishment, blue variables causally affect only wildling establishment, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
-knitr::include_graphics(here('ms', 'figures', 'dagitty-model.svg'))
+knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
 
 For all species, wildling abundance showed a high frequency of zeros that was underestimated by the best fitting negative binomial distribution.
@@ -165,12 +169,14 @@ Excess zeros that arose in these ways would therefore not bias our estimates of 
 To summarize, we modeled:
 
 \begin{equation}
-wildlings_{ij} \sim ZINB(\pi_{ij}, \mu_{ij}, \phi) \\
-logit(\pi_{ij}) = PlantationAge_{ij} + Site_{ij} \\
-log(\mu_{ij}) =  + \sum\limits_{k=1}^K EcosystemType_{ijk} + Site_{i} + Bio1_{ij} + Bio19_{ij} + RelativeElevation_{ij} + \\
-RelativeSeedRain_{ij} + PlantationAge_{ij} + RelativeSeedRain_{ij} \cdot PlantationAge_{ij}  \\
-Site_{i} \sim Normal(0, \sigma^2) \\
-(\#eq:statmod)
+\begin{aligned}
+wildlings_{ij} &\sim ZINB(\pi_{ij}, \mu_{ij}, \phi) \\
+logit(\pi_{ij}) &= PlantationAge_{ij} + Site_{ij} \\
+log(\mu_{ij}) &= \sum\limits_{k=1}^K EcosystemType_{ijk} + Site_{i} + Bio1_{ij} + Bio19_{ij} + \\
+&RelativeElevation_{ij} + RelativeSeedRain_{ij} + PlantationAge_{ij} + \\
+&RelativeSeedRain_{ij} \cdot PlantationAge_{ij}  \\
+Site_{i} &\sim Normal(0, \sigma^2) \\
+\end{aligned}
 \end{equation}
 
 where $\pi$ is the probability of a zero from the binomial process, while $\mu$ and $\phi$ are the mean and dispersion of the negative binomial distribution, respectively [eq. 11.21 in @zuurZeroTruncatedZeroInflatedModels2009]. 
@@ -190,7 +196,7 @@ To check how the covariates in our models swayed estimates of establishment like
 To facilitate comparison, we derived these densities from the same gridded data set used to train the models, tallying wildlings in proportion to the ecosystem composition of the grid cells they occupied. 
 For example, a cell occupied by one wildling and half its area covered by a given ecosystem would tally 0.5 wildling for that ecosystem.
 
-To test whether higher-level characteristics of ecosystems can be used to generalize patterns of vulnerability, we aggregated ecosystems by their category (terrestrial or wetland) or structuring process (anthropogenic, natural or no disturbance), as defined in the Nature in Norway system (Appendix [A3]).
+To test whether higher-level characteristics of ecosystems can be used to generalize patterns of vulnerability, we aggregated ecosystems by their category (terrestrial or wetland) or structuring process (anthropogenic, natural or no disturbance), as defined in the Nature in Norway system (Appendix, table \@ref(tab:types-table)).
 We then refitted our (otherwise unchanged) models twice --- once with each of these stratifications replacing ecosystems --- and obtained estimates of relative establishment likelihood for each category and structuring process.
 
 # Results
@@ -199,7 +205,7 @@ Estimated establishment likelihoods varied by up to five orders of magnitude (fi
 The pattern of establishment likelihood among ecosystems was modestly similar between species, with positive rank correlations in four of six species pairs (tab. \@ref(tab:correlation-table)).
 
 ```{r establishment, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups in various ecosystem types, using 'forest' as the reference level. Zero density is plotted at the lower limit of the x-axis. Estimates of relative establishment likelihood are shown with 95 % confidence intervals. Grey point clouds depict relative establishment likelihoods for individual sites in our data set. The order of ecosystem types along the y-axis is determined by a confidence-weighted mean of their percentile-ranked establishment likelihoods within species, such that types with consistently high establishment likelihood across species are at the top. Ecosystem types in italic font are wetlands, and ecosystem types in bold font are structured by disturbance. Ecosystem types without wildlings and covering less than 0.5 ha across all sites for that species are not displayed. Photos licensed CC BY 4.0 Rune Halvorsen."}
-knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.svg'))
+knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.pdf'))
 ```
 
 ```{r correlation-table}
@@ -207,8 +213,8 @@ cortab <- read.csv(here('ms', 'tables', 'spearman-corr.csv'),
                    row.names = 1, check.names = FALSE)
 cortab[lower.tri(cortab, diag = TRUE)] <- ""
 cortab <- cortab[-4,-1]
-knitr::kable(cortab, 
-             caption = "Rank correlations of relative establishment likelihoods in ecosystem types, between pairs of species.") %>%
+kbl(cortab, booktabs = TRUE,
+    caption = "Rank correlations of relative establishment likelihoods in ecosystem types, between pairs of species.") %>%
   kable_styling(full_width = F)
 ```
 
@@ -217,7 +223,7 @@ Observed densities across all ecosystems ranged 0-211/ha for Sitka spruce, 0-49/
 The ranking of ecosystems by establishment likelihood also differed from  their ranking by observed density.
 For instance, Sitka/Lutz spruce was observed at higher densities in "artificial substrate" than "boreal heath", but was more likely to establish in "boreal heath".
 
-For all species, the WALD seed dispersal model produced seed rain values that predicted wildling establishment better than the values derived from the empirical seed dispersal kernel (Appendix [A4]).
+For all species, the WALD seed dispersal model produced seed rain values that predicted wildling establishment better than the values derived from the empirical seed dispersal kernel (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)).
 The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystems --- was modest and acted in different directions for different species.
 The direct effect of climate on establishment --- not including its effect mediated by ecosystems --- was negligible for Sitka/Lutz spruce and Norway spruce. 
 For larch there was a negative direct effect of precipitation (Bio19), with a 50 mm increase in coldest-quarter precipitation estimated to decrease establishment six-fold.
@@ -232,7 +238,7 @@ For larch and lodgepole pine, structuring by natural disturbance and anthropogen
 Yet despite larger sample sizes, the mean establishment likelihood in any particular group was rarely clearly distinguishable from that in other groups.
 
 ```{r establishment-hypotheses, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups in among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom), for four alien conifer species groups. Estimates of relative establishment likelihood are shown with 95 % confidence intervals. The scale of the x-axis differs by species group and the horizontal dotted line marks the reference level for the scaling."}
-knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.svg'))
+knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.pdf'))
 ```
 
 # Discussion
@@ -327,11 +333,62 @@ We found that accounting for seed rain and other confounders of the relationship
 
 # Authors' contributions
 
-AB and CD conceived the ideas and designed methodology; CD and EF collected the data; EF and GH analysed the data; AB and CD led the writing of the manuscript. All authors contributed critically to the drafts and gave final approval for publication.
+JV, SLO, and OSk conceived the ideas and designed methodology; LA, MOK, AO, SLO, JS, OSk(?), OSt, ØS, and SET collected the data; JV analysed the data and led the writing of the manuscript. All authors contributed critically to the drafts and gave final approval for publication.
+
+# Acknowledgements
+
+We thank Honorata Gajda, Knut Børge Strøm, Heidi Elin Myklebost, Jon Hagelin, Monica Ruano, Vigdis Frivoll, Matteo De Stefano, Sina Thu Randulff, Roy Mangersnes, Bjarne Homnes Oddane, Rune Søyland, Toralf Tysse, Craig Jackson
+Miene-Marie Gastinger, Ola Westby Aamodt, and Anders Ringstad for collecting field data.
 
 # Appendix
 
-## A1
+```{r table-setup, include = FALSE}
+options(knitr.table.format = "latex")
+```
+
+The WALD model takes the form of an inverse Gaussian distribution whose mean ($\mu$) and shape ($\lambda$) parameters are calculated from physical characteristics of the dispersal system:
+
+\begin{equation}
+\mu  = \frac{HU}{F}
+\end{equation}
+\begin{equation}
+\lambda = \left(\frac{H}{\sigma}\right)^2
+\end{equation}
+
+where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter.
+We set $H$ to the height of the central plantation, estimated $U$ from a computed vertical wind profile, obtained $F$ from literature, and calculated $\sigma$ from an equation for turbulent flow as a function of vegetation height [eq. A4 in @skarpaasDispersalPatternsDispersal2007].
+We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional).
+In each sector we estimated mean vegetation height based on the composition of mapped ecosystem types (Appendix, table \@ref(tab:types-table)).
+Simultaneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season.
+The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
+The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional2020]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
+
+```{r recreate traits-table, include=FALSE}
+traits <- tribble(
+  ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
+  "Larix spp.", "1.0 m/s", "Dec - May", "2, 3",
+  "Picea abies", "0.58 m/s", "Nov - May", "2, 4",
+  "Pinus contorta", "0.82 m/s", "Sep - Dec", "2",
+  "Picea sitchensis / lutzii", "0.94 m/s", "Oct - Feb", "1, 2")
+```
+
+```{r traits-table}
+kable(traits, longtable = TRUE, booktabs = TRUE, escape = FALSE, 
+      caption = "Dispersal traits") %>% 
+  column_spec(1, italic = TRUE) %>%
+  footnote(general = c("1. Harris, A. S. Sitka spruce. in Silvics of North America: 1. Conifers (eds. Burns, R. M. & Honkala, B. H.) vol. 2 513–529 (U.S. Department of Agriculture, Forest Service, 1990).",
+                       "2. Sandvik, H. Kunnskapsstatus for spredning og effekter av fremmede bartrær på biologisk mangfold. (2012).",
+                       "3. Sullivan, J. Larix decidua. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/lardec/all.html (1994).",
+                       "4. Sullivan, J. Picea abies. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/picabi/all.html (1994)."), 
+            general_title = "References: ",
+           threeparttable = TRUE)
+```
+
+Some of the seed source polygons we registered in the field had distinctive features that we accounted for as follows.
+Seed source polygons for which the species of interest only made up a fraction of the plantation composition [e.g. in @olsenKartleggingAvKortdistansespredning2019] were used with their point source density adjusted accordingly.
+For example, a plantation identified as composed of Sitka spruce and Norway spruce was assigned a seed source point density half that of a pure Sitka spruce plantation.
+Likewise, 'mixed forest' plantations [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were assigned 0.1 times the seed source point density of a pure plantation.  
+Seed source polygons identified as logged [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
 
 ```{r load sites-table, include=FALSE}
 locs <- read_csv(here('output', 'localities-modified.csv')) # see 'wildlings-NiN.Rmd'
@@ -371,56 +428,17 @@ locs <- locs %>%
 ```
 
 ```{r sites-table}
-kable(locs, escape = FALSE, align = "lllrrrrrr") %>% 
-  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
+kbl(locs, longtable = TRUE, align = "l", booktabs = TRUE, escape = FALSE, 
+    caption = "\\label{tab:sites-table}Plantations") %>% 
+  kable_styling(latex_options =c("repeat_header")) %>% 
   column_spec(2, italic = TRUE) %>%
   footnote(general = "Easting and Northing are given for UTM zone 33N. Height is given in meters and age in years.",
            alphabet = c("mean annual temperature (°C)",
                         "precipitation in coldest quarter (cm)"),
            symbol = c("interpolated as the mean height of other plantations of the same species, inversely weighted by difference in age",
-                      "interpolated as the mean age of other plantations of the same species in the same region"))
+                      "interpolated as the mean age of other plantations of the same species in the same region")) %>% 
+  landscape()
 ```
-
-## A2
-
-The WALD model takes the form of an inverse Gaussian distribution whose mean ($\mu$) and shape ($\lambda$) parameters are calculated from physical characteristics of the dispersal system:
-$$\mu  = \frac{HU}{F}$$
-$$\lambda = \left(\frac{H}{\sigma}\right)^2$$
-where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter.
-We set $H$ to the height of the central plantation, estimated $U$ from a computed vertical wind profile, obtained $F$ from literature, and calculated $\sigma$ from an equation for turbulent flow as a function of vegetation height [eq. A4 in @skarpaasDispersalPatternsDispersal2007].
-We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional).
-In each sector we estimated mean vegetation height based on the composition of mapped ecosystem types (Appendix [A3]).
-Simultaneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season.
-The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
-The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional2020]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
-
-```{r recreate traits-table, include=FALSE}
-traits <- tribble(
-  ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
-  "Larix spp.", "1.0 m/s", "Dec - May", "2, 3",
-  "Picea abies", "0.58 m/s", "Nov - May", "2, 4",
-  "Pinus contorta", "0.82 m/s", "Sep - Dec", "2",
-  "Picea sitchensis / lutzii", "0.94 m/s", "Oct - Feb", "1, 2")
-```
-
-```{r traits-table}
-kable(traits, escape = FALSE) %>% 
-  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
-  column_spec(1, italic = TRUE) %>%
-  footnote(general = c("1. Harris, A. S. Sitka spruce. in Silvics of North America: 1. Conifers (eds. Burns, R. M. & Honkala, B. H.) vol. 2 513–529 (U.S. Department of Agriculture, Forest Service, 1990).",
-                       "2. Sandvik, H. Kunnskapsstatus for spredning og effekter av fremmede bartrær på biologisk mangfold. (2012).",
-                       "3. Sullivan, J. Larix decidua. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/lardec/all.html (1994).",
-                       "4. Sullivan, J. Picea abies. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/picabi/all.html (1994)."), 
-            general_title = "References: ")
-```
-
-Some of the seed source polygons we registered in the field had distinctive features that we accounted for as follows.
-Seed source polygons for which the species of interest only made up a fraction of the plantation composition [e.g. in @olsenKartleggingAvKortdistansespredning2019] were used with their point source density adjusted accordingly.
-For example, a plantation identified as composed of Sitka spruce and Norway spruce was assigned a seed source point density half that of a pure Sitka spruce plantation.
-Likewise, 'mixed forest' plantations [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were assigned 0.1 times the seed source point density of a pure plantation.  
-Seed source polygons identified as logged [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
-
-## A3
 
 ```{r make types table, include=FALSE}
 pairing <- read_csv(here('data','codetype-pairing.csv'))
@@ -432,44 +450,44 @@ typestab <- inner_join(types, pairing) %>%
 names(typestab)[5] <- paste0(names(typestab)[5], footnote_marker_alphabet(1))
 ```
 
-```{r types table}
+```{r types-table}
 options(knitr.kable.NA = '')
-kable(typestab, escape = FALSE) %>% 
-  collapse_rows(columns = 1) %>% 
-  kable_styling(bootstrap_options = c("striped", "condensed")) %>% 
-  footnote(alphabet = "approximate vegetation heights (meters) are used only to estimate wind turbulence")
+kbl(typestab, longtable = TRUE, booktabs = TRUE, escape = FALSE, 
+    caption = "\\label{tab:types-table}Ecosystem types") %>% 
+  kable_styling(latex_options =c("repeat_header", "striped")) %>% 
+  footnote(alphabet = "approximate vegetation heights (meters) are used only to estimate wind turbulence") %>% 
+  landscape()
 ```
 
-## A4
-
-```{r, message=FALSE}
+```{r load model summaries, message=FALSE}
 msumms <- list.files(here('ms', 'tables'), pattern = "summary", full.names = TRUE) %>% 
   set_names(~ tools::file_path_sans_ext(basename(.))) %>% 
   map(read_csv) %>% 
   map(~ mutate(., Term = if_else(Term == "locality", "site", Term)))
 ```
 
-```{r}
-kable(msumms$`Ps-modelsummary`, align = 'clrrrr', caption = "Picea sitchensis / lutzii. Conditional model is glmmTMB's nbinom2 family with dispersion parameter phi = 0.253.") %>%
-  kable_styling() %>% 
+```{r summaries-tables}
+kbl(msumms$`Ps-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', 
+    caption = "\\label{tab:Ps}Model summary for Picea sitchensis / lutzii. The conditional submodel is glmmTMB's nbinom2 family with dispersion parameter phi = 0.253.") %>%
+  kable_styling(font_size = 6) %>% 
   add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
   column_spec(1, bold = T) %>% 
   collapse_rows(columns = 1, valign = "top")
 
-kable(msumms$`Pa-modelsummary`, align = 'clrrrr', caption = "Picea abies. Conditional model is glmmTMB's genpois family with dispersion parameter 2.59.") %>%
-  kable_styling() %>% 
+kable(msumms$`Pa-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', caption = "\\label{tab:Pa}Model summary for Picea abies. The conditional submodel is glmmTMB's genpois family with dispersion parameter phi = 2.59.") %>%
+  kable_styling(font_size = 6) %>% 
   add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
   column_spec(1, bold = T) %>% 
   collapse_rows(columns = 1, valign = "top")
 
-kable(msumms$`L-modelsummary`, align = 'clrrrr', caption = "Larix. Conditional model is glmmTMB's nbinom2 family with dispersion parameter phi = 0.261.") %>%
-  kable_styling() %>% 
+kable(msumms$`L-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', caption = "\\label{tab:L}Model summary for Larix. The conditional submodel is glmmTMB's nbinom2 family with dispersion parameter phi = 0.261.") %>%
+  kable_styling(font_size = 6) %>% 
   add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
   column_spec(1, bold = T) %>% 
   collapse_rows(columns = 1, valign = "top")
 
-kable(msumms$`Pc-modelsummary`, align = 'clrrrr', caption = "Pinus contorta. Conditional model is glmmTMB's nbinom2 family with dispersion parameter phi = 0.0269.") %>%
-  kable_styling() %>% 
+kable(msumms$`Pc-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', caption = "\\label{tab:Pc}Model summary for Pinus contorta. The conditional submodel is glmmTMB's nbinom2 family with dispersion parameter phi = 0.0269.") %>%
+  kable_styling(font_size = 6) %>% 
   add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
   column_spec(1, bold = T) %>% 
   collapse_rows(columns = 1, valign = "top")
