@@ -1,16 +1,15 @@
 ---
-title: 'Confounders obscure large and idiosyncratic differences between ecosystems in vulnerability to alien conifer establishment'
+title: 'Accounting for confounders reveals that ecosystems vary considerably in susceptibility to alien conifer establishment'
 author:
 - Julien Vollering^[julienvollering@gmail.com]
+- Siri Lie Olsen
+- Olav Skarpaas
 - Leif Appelgren
 - Magni Olsen Kyrkjeeide
 - Anders Often
-- Siri Lie Olsen
 - Jakob Sandven
-- Olav Skarpaas
 - Odd Stabbetorp
 - Øyvind Sørhuus
-- Solbjørg Engen Torvik
 bibliography: invasibility-ms.bib
 link-citations: true
 output:
@@ -32,13 +31,19 @@ library(kableExtra)
 
 Julien Vollering: <https://orcid.org/0000-0002-7409-2898>
 
+Siri Lie Olsen: <https://orcid.org/0000-0002-4443-8261>
+
+Olav Skarpaas: <https://orcid.org/0000-0001-9727-1672>
+
+Magni Olsen Kyrkjeeide: <https://orcid.org/0000-0002-7454-3652> 
+
 # Abstract
 
-1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. The rate at which their offspring colonize surroundings varies among similar plantations, and the reasons for this variation are often unclear. To curb the spread of so-called "wildlings" and minimize the burden of valued conifer plantations on native ecosystems, managers need to know which places and ecosystems are most and least vulnerable.
-2. We compared how likely wildlings are to establish across a wide range of ecosystem types, focusing on four groups of alien conifer species planted in Norway. We used data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain, climate, and other sources of variation between sites. Further, we checked whether differences in vulnerability between individual ecosystem types could be generalized based on broad, shared characteristics.
-3. We found that the four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystem types repeatedly among the least vulnerable. However, broad hydrological and disturbance characteristics of ecosystem types did not summarize patterns of vulnerability well. 
-4. Wildlings were several orders of magnitude more likely to establish in the most vulnerable ecosystem types than in the least vulnerable ecosystem types. This range of variation was larger than that of observed wildling densities across ecosystem types. Accounting for seed rain, climate, and site variation also changed the rank vulnerabilities of ecosystem types. 
-6. *Synthesis and applications* Efforts to keep alien conifers within plantation boundaries have the opportunity to exploit large differences in wildling establishment between ecosystem types. To do so effectively, managers need to be aware that the relative density of wildlings observed in a given ecosystem type may not reflect that ecosystem's relative vulnerability, since confounders obscure this relationship. Nor should managers assume that ostensibly similar ecosystems are similarly vulnerable. A careful accounting of reasons for variation in wildling spread gives us knowledge to restrict new plantations to low-risk sites and to make monitoring and intervention more efficient.
+1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. The rate at which their offspring colonize surroundings varies among plantations, and the reasons for this variation are often unclear. To curb the spread of so-called "wildlings" and minimize the burden of valued conifer plantations on native ecosystems, managers need to know which places and ecosystems are most and least susceptible.
+2. We compared how likely wildlings are to establish across a wide range of ecosystem types, focusing on four groups of alien conifer species planted in Norway. We used data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain, climate, and other sources of variation between sites. Further, we tested whether differences in vulnerability between individual ecosystem types could be generalized based on broad, shared characteristics.
+3. We found that wildling densities among ecosystem types varied less than the relative establishment likelihoods estimated for these ecosystem types. The latter spanned several orders of magnitude between the most and least susceptible ecosystem types. Accounting for seed rain, climate, and site variation also changed ecosystem types' rank susceptibility, compared to inference from wildling densities alone.
+4. The four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystem types repeatedly among the least susceptible. However, broad hydrological and disturbance characteristics of ecosystem types did not summarize patterns of vulnerability well. 
+6. *Synthesis and applications* Efforts to keep alien conifers within plantation boundaries have the opportunity to exploit large differences in wildling establishment between ecosystem types. To do so effectively, managers need to be aware that the relative density of wildlings observed in a given ecosystem type may not reflect that ecosystem's relative vulnerability, since confounders obscure this relationship. Nor should managers assume that ostensibly similar ecosystems are similarly susceptible. A careful accounting of reasons for variation in wildling spread gives us knowledge to restrict new plantations to low-risk sites and to make monitoring and intervention more efficient.
 
 # Keywords
 
@@ -333,12 +338,11 @@ We found that accounting for seed rain and other confounders of the relationship
 
 # Authors' contributions
 
-JV, SLO, and OSk conceived the ideas and designed methodology; LA, MOK, AO, SLO, JS, OSk(?), OSt, ØS, and SET collected the data; JV analysed the data and led the writing of the manuscript. All authors contributed critically to the drafts and gave final approval for publication.
+JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analysed the data and led the writing of the manuscript. All authors contributed critically to the drafts and gave final approval for publication.
 
 # Acknowledgements
 
-We thank Honorata Gajda, Knut Børge Strøm, Heidi Elin Myklebost, Jon Hagelin, Monica Ruano, Vigdis Frivoll, Matteo De Stefano, Sina Thu Randulff, Roy Mangersnes, Bjarne Homnes Oddane, Rune Søyland, Toralf Tysse, Craig Jackson
-Miene-Marie Gastinger, Ola Westby Aamodt, and Anders Ringstad for collecting field data.
+We thank Honorata Gajda, Knut Børge Strøm, Heidi Elin Myklebost, Jon Hagelin, Vigdis Frivoll, Sina Thu Randulff, Roy Mangersnes, Bjarne Homnes Oddane, Rune Søyland, Solbjørg Engen Torvik, Toralf Tysse, Craig Jackson, Miene-Marie Gastinger, Ola Westby Aamodt, and Anders Ringstad for their help in collecting and/or collating the field data.
 
 # Appendix
 
@@ -430,7 +434,7 @@ locs <- locs %>%
 ```{r sites-table}
 kbl(locs, longtable = TRUE, align = "l", booktabs = TRUE, escape = FALSE, 
     caption = "\\label{tab:sites-table}Plantations") %>% 
-  kable_styling(latex_options =c("repeat_header")) %>% 
+  kable_styling(latex_options =c("repeat_header","striped")) %>% 
   column_spec(2, italic = TRUE) %>%
   footnote(general = "Easting and Northing are given for UTM zone 33N. Height is given in meters and age in years.",
            alphabet = c("mean annual temperature (°C)",
