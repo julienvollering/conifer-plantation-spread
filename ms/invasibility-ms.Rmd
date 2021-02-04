@@ -41,7 +41,7 @@ Magni Olsen Kyrkjeeide: <https://orcid.org/0000-0002-7454-3652>
 
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. The rate at which their offspring colonize surroundings varies among plantations, and the reasons for this variation are often unclear. To curb the spread of so-called "wildlings" and minimize the burden of valued conifer plantations on native ecosystems, managers need to know which places and ecosystems are most and least susceptible.
 2. We compared how likely wildlings are to establish across a wide range of ecosystem types, focusing on four groups of alien conifer species planted in Norway. We used data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain, climate, and other sources of variation between sites. Further, we tested whether differences in vulnerability between individual ecosystem types could be generalized based on broad, shared characteristics.
-3. We found that wildling densities among ecosystem types varied less than the relative establishment likelihoods estimated for these ecosystem types. The latter spanned several orders of magnitude between the most and least susceptible ecosystem types. Accounting for seed rain, climate, and site variation also changed ecosystem types' rank susceptibility, compared to inference from wildling densities alone.
+3. We found that wildling densities among ecosystem types varied less than the relative establishment likelihoods estimated for these ecosystem types. Relative establishment likelihoods spanned several orders of magnitude between the most and least susceptible ecosystem types. Accounting for seed rain, climate, and site variation also changed ecosystem types' rank susceptibility, compared to inference from wildling densities alone.
 4. The four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystem types repeatedly among the least susceptible. However, broad hydrological and disturbance characteristics of ecosystem types did not summarize patterns of vulnerability well. 
 6. *Synthesis and applications* Efforts to keep alien conifers within plantation boundaries have the opportunity to exploit large differences in wildling establishment between ecosystem types. To do so effectively, managers need to be aware that the relative density of wildlings observed in a given ecosystem type may not reflect that ecosystem's relative vulnerability, since confounders obscure this relationship. Nor should managers assume that ostensibly similar ecosystems are similarly susceptible. A careful accounting of reasons for variation in wildling spread gives us knowledge to restrict new plantations to low-risk sites and to make monitoring and intervention more efficient.
 
@@ -228,8 +228,8 @@ Observed densities across all ecosystems ranged 0-211/ha for Sitka spruce, 0-49/
 The ranking of ecosystems by establishment likelihood also differed from  their ranking by observed density.
 For instance, Sitka/Lutz spruce was observed at higher densities in "artificial substrate" than "boreal heath", but was more likely to establish in "boreal heath".
 
-For all species, the WALD seed dispersal model produced seed rain values that predicted wildling establishment better than the values derived from the empirical seed dispersal kernel (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)).
-The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystems --- was modest and acted in different directions for different species.
+For all species, the WALD seed dispersal model produced seed rain values that predicted wildling establishment better than the values derived from the empirical seed dispersal kernel (Appendix, table \@ref(tab:model-comparison-table)).
+The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystems --- was modest and acted in different directions for different species (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)).
 The direct effect of climate on establishment --- not including its effect mediated by ecosystems --- was negligible for Sitka/Lutz spruce and Norway spruce. 
 For larch there was a negative direct effect of precipitation (Bio19), with a 50 mm increase in coldest-quarter precipitation estimated to decrease establishment six-fold.
 Likewise for lodgepole pine, the model estimated a 175 mm increase in coldest-quarter precipitation to decrease establishment by a factor of 50.
@@ -461,6 +461,15 @@ kbl(typestab, longtable = TRUE, booktabs = TRUE, escape = FALSE,
   kable_styling(latex_options =c("repeat_header", "striped")) %>% 
   footnote(alphabet = "approximate vegetation heights (meters) are used only to estimate wind turbulence") %>% 
   landscape()
+```
+
+```{r model-comparison-table}
+options(knitr.kable.NA = 'NA')
+mcomptab <- read.csv(here('ms', 'tables', 'modelcomp.csv'), check.names = FALSE)
+kbl(mcomptab, booktabs = TRUE,
+    caption = "Comparison of models with different seed dispersal estimates") %>%
+  kable_styling(full_width = F) %>% 
+  collapse_rows(columns = 1, latex_hline = "major", valign = "middle")
 ```
 
 ```{r load model summaries, message=FALSE}

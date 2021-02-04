@@ -1,0 +1,13 @@
+"species group","seed dispersal estimate","AIC","dAIC","df"
+"Picea sitchensis / lutzii","WALD",53221.3572300817,0,39
+"Picea sitchensis / lutzii","Exponential Power",54607.7067450828,1386.34951500114,39
+"Picea sitchensis / lutzii","none",54984.9384412667,1763.58121118502,38
+"Picea abies","WALD",9573.25844214877,0,27
+"Picea abies","Exponential Power",9774.78233843908,201.523896290317,27
+"Picea abies","none",9781.12725122987,207.868809081099,26
+"Larix","WALD",9986.40476141165,0,22
+"Larix","Exponential Power",10308.0550361357,321.650274724019,22
+"Larix","none",10380.6884426923,394.28368128062,21
+"Pinus contorta","WALD",3421.61956983885,0,18
+"Pinus contorta","Exponential Power",NA,NA,18
+"Pinus contorta","none",NA,NA,17

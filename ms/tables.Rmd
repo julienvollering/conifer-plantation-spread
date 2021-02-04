@@ -26,12 +26,21 @@ table <- cor(fitdf, use= "pairwise.complete.obs", method = "spearman") %>%
 write.csv(table, here('ms', 'tables', 'spearman-corr.csv'), row.names = TRUE)
 ```
 
+# Model comparisons
+
+```{r}
+modelcomp <- results$model.comp %>% 
+  set_names(c("Picea sitchensis / lutzii", "Picea abies", "Larix", "Pinus contorta")) %>% 
+  bind_rows(.id = "species group") %>% 
+  mutate(`seed dispersal estimate` = ifelse(`seed dispersal estimate` == "ExP",
+                                            "Exponential Power",
+                                            `seed dispersal estimate`))
+write.csv(modelcomp, here('ms', 'tables', 'modelcomp.csv'), row.names = FALSE)
+```
 
 # Model summaries
 
 ```{r}
-results <- readRDS(here('output', 'results.rds'))
-
 Psmod <- results$models$`P.sitchensis-lutzii`
 Nre <- Psmod$modelInfo$reStruc$condReStruc$`1 | locality`$blockReps
 Ps.tidy <- broom.mixed::tidy(Psmod)

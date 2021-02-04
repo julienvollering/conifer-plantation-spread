@@ -97,10 +97,10 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
       collapse = " + ")
 ```
 
-### Compare WALD vs ExP
+### Compare WALD vs ExP vs null
 
 ```{r}
-Ps_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
+Ps_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + 
                  T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + 
                  T41 + T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + 
                  T31 + V3 + T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
@@ -109,12 +109,19 @@ summary(Ps_m1)
 ```
 
 ```{r}
-Ps_m2 <- update(Ps_m1, formula = update.formula(Ps_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
+Ps_m2 <- update(Ps_m1, formula = update.formula(Ps_f1, ~ . - seeds.WALD + seeds.ExP))
 summary(Ps_m2)
 ```
 
+```{r}
+Ps_m3 <- update(Ps_m1, formula = update.formula(Ps_f1, ~ . - seeds.WALD))
+summary(Ps_m3)
+```
+
 ```{r, echo=FALSE}
-bbmle::AICtab(Ps_m1, Ps_m2)
+Ps_modelcomp <- bbmle::ICtab(Ps_m1, Ps_m2, Ps_m3, base = TRUE, delta = TRUE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
 
 Continue with WALD.
@@ -139,7 +146,7 @@ terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
-  select(-`seeds.WALD:age`, -locality) %>% 
+  select(-locality) %>% 
   mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
@@ -256,10 +263,10 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
       collapse = " + ")
 ```
 
-### Compare WALD vs ExP
+### Compare WALD vs ExP vs null
 
 ```{r}
-Pa_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
+Pa_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + 
                  T45 + artificial + T44 + T32 + V9 + V12 + V1 + T13 + T41 + T1 +
                  V2 + T2 + V10 + T31 + V4 + V3 + (1 | locality)")
 Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
@@ -267,12 +274,19 @@ summary(Pa_m1)
 ```
 
 ```{r}
-Pa_m2 <- update(Pa_m1, formula = update.formula(Pa_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
+Pa_m2 <- update(Pa_m1, formula = update.formula(Pa_f1, ~ . - seeds.WALD + seeds.ExP))
 summary(Pa_m2)
 ```
 
+```{r}
+Pa_m3 <- update(Pa_m1, formula = update.formula(Pa_f1, ~ . - seeds.WALD))
+summary(Pa_m3)
+```
+
 ```{r, echo=FALSE}
-bbmle::AICtab(Pa_m1, Pa_m2)
+Pa_modelcomp <- bbmle::ICtab(Pa_m1, Pa_m2, Pa_m3, base = TRUE, delta = TRUE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
 
 Continue with WALD.
@@ -322,6 +336,14 @@ bbmle::AICtab(Pa_m1b, Pa_m1c)
 
 Continue with generalized poisson model: diagnostics OK and best AIC. 
 
+```{r}
+Pa_m2b <- update(Pa_m2, family = "genpois")
+Pa_m3b <- update(Pa_m3, family = "genpois")
+Pa_modelcomp <- bbmle::ICtab(Pa_m1b, Pa_m2b, Pa_m3b, base = TRUE, delta = TRUE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
+```
+
 ### Interpret relative establishment probability
 
 ```{r}
@@ -331,7 +353,7 @@ terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
-  select(-`seeds.WALD:age`, -locality) %>% 
+  select(-locality) %>% 
   mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
@@ -449,10 +471,10 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
       collapse = " + ")
 ```
 
-### Compare WALD vs ExP
+### Compare WALD vs ExP vs null
 
 ```{r}
-L_f1 <- formula("wildlings ~ seeds.WALD * age + bio01 + bio19 + relelev + 
+L_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + 
                 T45 + artificial + T44 + T32 + V9 + T34 + V1 + T41 + T1 + V2 + 
                 T17 + (1 | locality)")
 L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
@@ -460,12 +482,19 @@ summary(L_m1)
 ```
 
 ```{r}
-L_m2 <- update(L_m1, formula = update.formula(L_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
+L_m2 <- update(L_m1, formula = update.formula(L_f1, ~ . - seeds.WALD + seeds.ExP))
 summary(L_m2)
 ```
 
+```{r}
+L_m3 <- update(L_m1, formula = update.formula(L_f1, ~ . - seeds.WALD))
+summary(L_m3)
+```
+
 ```{r, echo=FALSE}
-bbmle::AICtab(L_m1, L_m2)
+L_modelcomp <- bbmle::ICtab(L_m1, L_m2, L_m3, base = TRUE, delta = TRUE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
 
 Continue with WALD.
@@ -490,7 +519,7 @@ terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
-  select(-`seeds.WALD:age`, -locality) %>% 
+  select(-locality) %>% 
   mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
@@ -609,59 +638,29 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
 
 Exclude bio01 due to very high correlation with bio19. 
 
-### Compare WALD vs ExP
+### Compare WALD vs ExP vs null
 
 ```{r}
-Pc_f1 <- formula("wildlings ~ seeds.WALD * age + bio19 + relelev + 
+Pc_f1 <- formula("wildlings ~ seeds.WALD + age + bio19 + relelev + 
                  artificial + T34 + V1 + T1 + T40 + T30 + V8 + V3 + (1 | locality)")
 Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
-# Warning messages:
-# 1: In fitTMB(TMBStruc) :
-#   Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
-# 2: In fitTMB(TMBStruc) :
-#   Model convergence problem; false convergence (8). See vignette('troubleshooting')
-
 summary(Pc_m1)
 ```
 
-From glmmTMB troubleshooting vignette: 
-
-> "This warning (Model convergence problem; non-positive-definite Hessian matrix) states that at glmmTMB’s maximum-likelihood estimate, the curvature of the negative log-likelihood surface is inconsistent with glmmTMB really having found the best fit (minimum): instead, the surface is downward-curving, or flat, in some direction(s). 
->
-> These problems are most likely:  
-> - when a model is overparameterized (i.e. the data does not contain enough information to estimate the parameters reliably)  
-> - when a random-effect variance is estimated to be zero, or random-effect terms are estimated to be perfectly correlated (“singular fit”: often caused by having too few levels of the random-effect grouping variable)  
-> - when zero-inflation is estimated to be near zero (a strongly negative zero-inflation parameter)  
-> - when dispersion is estimated to be near zero  
-
-> In general models with non-positive definite Hessian matrices should be excluded from further consideration."
-
-The random effect variance of locality in the conditional model is estimated to be near zero. Try dropping:
-
 ```{r}
-ranef(Pc_m1)$cond
-Pc_m1b <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - (1 | locality)))
-# Warning messages:
-# 1: In fitTMB(TMBStruc) :
-#   Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
-# 2: In fitTMB(TMBStruc) :
-#   Model convergence problem; false convergence (8). See vignette('troubleshooting')
-```
-
-The random effect variance of locality in the zero-inflation (binomial) model is very large. With only six localities, perhaps there is not enough data to estimate this parameter. Try dropping:
-
-```{r}
-Pc_m1c <- update(Pc_m1, ziformula = ~ age)
-summary(Pc_m1c)
+Pc_m2 <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
+summary(Pc_m2)
 ```
 
 ```{r}
-Pc_m2c <- update(Pc_m1c, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP - seeds.WALD:age + seeds.ExP:age))
-summary(Pc_m2c)
+Pc_m3 <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - seeds.WALD))
+summary(Pc_m3)
 ```
 
 ```{r, echo=FALSE}
-bbmle::AICtab(Pc_m1c, Pc_m2c)
+Pc_modelcomp <- bbmle::ICtab(Pc_m1, Pc_m2, Pc_m3, base = TRUE, delta = TRUE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
 
 Continue with WALD.
@@ -669,7 +668,7 @@ Continue with WALD.
 ### Residual diagnostics
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pc_m1c)
+simulationOutput <- simulateResiduals(fittedModel = Pc_m1)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -680,13 +679,13 @@ Diagnostics look OK.
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pc_m1c
+selmod <- Pc_m1
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
-  select(-`seeds.WALD:age`, -locality) %>% 
+  select(-locality) %>% 
   mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
@@ -764,7 +763,10 @@ sds <- rbind(Ps_sds, Pa_sds, L_sds, Pc_sds) %>%
   as_tibble() %>% 
   add_column(species = species, .before = "age")
 
-models.list <- list(Ps_m1, Pa_m1b, L_m1, Pc_m1c)
+modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp, Pc_modelcomp)
+names(modelcomp.list) <- species
+
+models.list <- list(Ps_m1, Pa_m1b, L_m1, Pc_m1)
 names(models.list) <- species
 
 link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled, Pc_link.scaled)
@@ -772,7 +774,8 @@ names(link.list) <- species
 
 results <- list(arithmetic = arith.list, 
                 predictor.means = means, 
-                predictor.sds = sds, 
+                predictor.sds = sds,
+                model.comp = modelcomp.list,
                 models = models.list, 
                 model.preds = link.list)
 str(results, 2)
