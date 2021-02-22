@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  4 FEB 2021 10:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  22 FEB 2021 14:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -655,7 +655,7 @@ l.269
        </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/
 ms/figures/dagitty-model.pdf>] [10]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment/establishment.pdf, id=2077, 779.3579pt x 449.028pt>
+res/establishment/establishment.pdf, id=2077, 785.15329pt x 448.93977pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment/establishment.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
@@ -663,7 +663,7 @@ figures/establishment/establishment.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
 lantation-spread/ms/figures/establishment/establishment.pdf  used on input line
  309.
-(pdftex.def)             Requested size: 344.99963pt x 198.77196pt.
+(pdftex.def)             Requested size: 345.00127pt x 197.26694pt.
 [11pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
 has been already used, duplicate ignored
 
@@ -679,7 +679,7 @@ l.339
        </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/
 ms/figures/establishment/establishment.pdf>]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-hypotheses.pdf, id=9284, 672.1938pt x 190.13786pt>
+res/establishment-hypotheses.pdf, id=9230, 672.1938pt x 190.13786pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-hypotheses.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
@@ -812,11 +812,11 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  14330 strings out of 483183
  210667 string characters out of 5966293
- 530438 words of memory out of 5000000
+ 530397 words of memory out of 5000000
  28792 multiletter control sequences out of 15000+600000
  600123 words of font info for 126 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 41i,12n,42p,1118b,476s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,12n,42p,1059b,476s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
 ips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/te
 xmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ma
@@ -830,10 +830,10 @@ e/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm
 /lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fo
 nts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb
 ></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on invasibility-ms.pdf (33 pages, 7069023 bytes).
+Output written on invasibility-ms.pdf (33 pages, 7043397 bytes).
 PDF statistics:
- 10265 PDF objects out of 10688 (max. 8388607)
- 6921 compressed objects within 70 object streams
+ 10280 PDF objects out of 10688 (max. 8388607)
+ 6931 compressed objects within 70 object streams
  150 named destinations out of 1000 (max. 500000)
  14506 words of extra memory for PDF output out of 17280 (max. 10000000)
 
