@@ -652,10 +652,22 @@ Pc_m2 <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.
 summary(Pc_m2)
 ```
 
+Warning messages:
+1: In fitTMB(TMBStruc) :
+  Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
+2: In fitTMB(TMBStruc) :
+  Model convergence problem; false convergence (8). See vignette('troubleshooting')
+
 ```{r}
 Pc_m3 <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - seeds.WALD))
 summary(Pc_m3)
 ```
+
+Warning messages:
+1: In fitTMB(TMBStruc) :
+  Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
+2: In fitTMB(TMBStruc) :
+  Model convergence problem; false convergence (8). See vignette('troubleshooting')
 
 ```{r, echo=FALSE}
 Pc_modelcomp <- bbmle::ICtab(Pc_m1, Pc_m2, Pc_m3, base = TRUE, delta = TRUE) %>% 

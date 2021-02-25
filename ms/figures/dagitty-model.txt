@@ -1,25 +1,25 @@
 dag {
-bb="-3.748,-3.701,3.848,4.447"
-"ecosystem type" [exposure,pos="-2.182,2.817"]
-"establishment likelihood" [latent,pos="-0.560,2.810"]
-"plantation age" [pos="2.221,-0.890"]
-"position from plantation" [pos="0.619,-0.915"]
-"elevation from plantation" [pos="0.613,0.960"]
-"relative seed rain (in flat terrain)" [pos="1.422,-0.039"]
-"seed rain" [latent,pos="2.230,1.004"]
-climate [pos="-2.189,-0.889"]
-site [pos="-0.060,-2.501"]
-wildling abundance [outcome,pos="2.237,2.844"]
+bb="-6.627,-3.552,5.654,3.649"
+"ecosystem type" [exposure,pos="-5.347,2.760"]
+"elevation from plantation" [pos="0.019,0.309"]
+"establishment likelihood" [latent,pos="-1.800,2.760"]
+"plantation age" [pos="3.742,-2.594"]
+"position from plantation" [pos="-0.318,-1.578"]
+"relative seed rain (in flat terrain)" [pos="2.803,-0.949"]
+"seed rain" [latent,pos="3.813,0.916"]
+"wildling abundance" [outcome,pos="3.858,2.760"]
+climate [pos="-5.415,-2.598"]
+site [pos="-2.586,-2.598"]
 "ecosystem type" -> "establishment likelihood"
-"establishment likelihood" -> wildling abundance
+"elevation from plantation" -> "ecosystem type"
+"elevation from plantation" -> "seed rain"
+"establishment likelihood" -> "wildling abundance"
 "plantation age" -> "seed rain"
 "position from plantation" -> "ecosystem type"
 "position from plantation" -> "elevation from plantation"
 "position from plantation" -> "relative seed rain (in flat terrain)"
-"elevation from plantation" -> "ecosystem type"
-"elevation from plantation" -> "seed rain"
 "relative seed rain (in flat terrain)" -> "seed rain"
-"seed rain" -> wildling abundance
+"seed rain" -> "wildling abundance"
 climate -> "ecosystem type"
 climate -> "establishment likelihood"
 site -> "ecosystem type"
