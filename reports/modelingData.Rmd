@@ -30,12 +30,8 @@ datlist <- datlist %>%
         select(-"plantation forest")
   )
 
-locality.preds <- c('age','bio01','bio19','seeds.ExP','seeds.WALD','relelev')
-locality.preds.vals <- datlist %>% 
-  map(~ select(., !!!syms(locality.preds))) %>% 
-  bind_rows() 
-gmeans <- map_dbl(locality.preds.vals, mean, na.rm = TRUE)
-gsds <- map_dbl(locality.preds.vals, sd, na.rm = TRUE)
+nottypes <- c('species', 'locality','wildlings','age','bio01','bio19',
+              'seeds.ExP','seeds.WALD','relelev')
 
 contrast <- "T4"
 str(datlist, 1)
@@ -51,8 +47,7 @@ Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutzii`)
 ```
 
 ```{r}
-typenames <- names(Ps_dat)[!names(Ps_dat) %in% c('species', 'locality', 
-                                                 'wildlings', locality.preds)]
+typenames <- names(Ps_dat)[!names(Ps_dat) %in% nottypes]
 Ps_arith <- pivot_longer(Ps_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
@@ -86,11 +81,12 @@ sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
 ```
 
 ```{r}
-Ps_means <- Ps_dat[, locality.preds] %>% map_dbl(mean)
-Ps_sds <- Ps_dat[, locality.preds] %>% map_dbl(sd)
-for (i in locality.preds) {
+Ps_means <- Ps_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
+Ps_sds <- Ps_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
+for (i in c('age','bio01','bio19','relelev')) {
   Ps_dat <- modify_at(Ps_dat, .at = i, ~ (. - Ps_means[i]) / Ps_sds[i])
 }
+Ps_dat <- mutate(Ps_dat, across(starts_with("seeds"), log))
 summary(Ps_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
@@ -109,17 +105,18 @@ summary(Ps_m1)
 ```
 
 ```{r}
-Ps_m2 <- update(Ps_m1, formula = update.formula(Ps_f1, ~ . - seeds.WALD + seeds.ExP))
+Ps_m2 <- update(Ps_m1, update.formula(Ps_f1, ~ . - seeds.WALD + seeds.ExP))
 summary(Ps_m2)
 ```
 
 ```{r}
-Ps_m3 <- update(Ps_m1, formula = update.formula(Ps_f1, ~ . - seeds.WALD))
+Ps_m3 <- update(Ps_m1, update.formula(Ps_f1, ~ . - seeds.WALD))
 summary(Ps_m3)
 ```
 
-```{r, echo=FALSE}
-Ps_modelcomp <- bbmle::ICtab(Ps_m1, Ps_m2, Ps_m3, base = TRUE, delta = TRUE) %>% 
+```{r, include=FALSE}
+Ps_modelcomp <- bbmle::ICtab(Ps_m1, Ps_m2, Ps_m3, base = TRUE, delta = TRUE, 
+                             sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
@@ -135,19 +132,77 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Diagnostics look OK.
+Model residuals are underdispersed.
+
+```{r}
+Ps_m1b <- update(Ps_m1, family = "genpois")
+summary(Ps_m1b)
+```
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Ps_m1b)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+Diagnostics OK with generalized poisson --- including dispersion.
+
+```{r}
+Ps_m1c <- update(Ps_m1, family = "poisson")
+summary(Ps_m1c)
+```
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = Ps_m1c)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+Diagnostics OK with poisson --- including dispersion.
+
+```{r, echo=FALSE}
+bbmle::AICtab(Ps_m1b, Ps_m1c)
+```
+
+Continue with generalized poisson model: diagnostics OK and best AIC. 
+
+```{r, include=FALSE}
+simulationOutput <- simulateResiduals(fittedModel = Ps_m2)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+
+simulationOutput <- simulateResiduals(fittedModel = Ps_m3)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+
+Ps_m3b <- update(Ps_m3, family = "genpois")
+simulationOutput <- simulateResiduals(fittedModel = Ps_m3b)
+plot(simulationOutput)
+testDispersion(simulationOutput)
+testZeroInflation(simulationOutput)
+
+Ps_modelcomp <- bbmle::ICtab(Ps_m1b, Ps_m2, Ps_m3b, base = TRUE, delta = TRUE, 
+                             sort = FALSE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
+```
 
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Ps_m1
+selmod <- Ps_m1b
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.WALD = mean(selmod$frame$seeds.WALD), 
+         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -217,8 +272,7 @@ Pa_dat <- Filter(function(x)!all(is.na(x)), datlist$P.abies)
 ```
 
 ```{r}
-typenames <- names(Pa_dat)[!names(Pa_dat) %in% c('species', 'locality', 
-                                                 'wildlings', locality.preds)]
+typenames <- names(Pa_dat)[!names(Pa_dat) %in% nottypes]
 Pa_arith <- pivot_longer(Pa_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
@@ -252,11 +306,12 @@ sum(complete.cases(Pa_dat)) == nrow(Pa_dat)
 ```
 
 ```{r}
-Pa_means <- Pa_dat[, locality.preds] %>% map_dbl(mean)
-Pa_sds <- Pa_dat[, locality.preds] %>% map_dbl(sd)
-for (i in locality.preds) {
-  Pa_dat <- modify_at(Pa_dat, .at = i, ~ (. - Pa_means[i])/Pa_sds[i])
+Pa_means <- Pa_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
+Pa_sds <- Pa_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
+for (i in c('age','bio01','bio19','relelev')) {
+  Pa_dat <- modify_at(Pa_dat, .at = i, ~ (. - Pa_means[i]) / Pa_sds[i])
 }
+Pa_dat <- mutate(Pa_dat, across(starts_with("seeds"), log))
 summary(Pa_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
@@ -274,17 +329,18 @@ summary(Pa_m1)
 ```
 
 ```{r}
-Pa_m2 <- update(Pa_m1, formula = update.formula(Pa_f1, ~ . - seeds.WALD + seeds.ExP))
+Pa_m2 <- update(Pa_m1, update.formula(Pa_f1, ~ . - seeds.WALD + seeds.ExP))
 summary(Pa_m2)
 ```
 
 ```{r}
-Pa_m3 <- update(Pa_m1, formula = update.formula(Pa_f1, ~ . - seeds.WALD))
+Pa_m3 <- update(Pa_m1, update.formula(Pa_f1, ~ . - seeds.WALD))
 summary(Pa_m3)
 ```
 
 ```{r, echo=FALSE}
-Pa_modelcomp <- bbmle::ICtab(Pa_m1, Pa_m2, Pa_m3, base = TRUE, delta = TRUE) %>% 
+Pa_modelcomp <- bbmle::ICtab(Pa_m1, Pa_m2, Pa_m3, base = TRUE, delta = TRUE, 
+                             sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
@@ -300,61 +356,20 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Model residuals are underdispersed.
-
-```{r}
-Pa_m1b <- update(Pa_m1, family = "genpois")
-summary(Pa_m1b)
-```
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m1b)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics OK with generalized poisson --- including dispersion.
-
-```{r}
-Pa_m1c <- update(Pa_m1, family = "poisson")
-summary(Pa_m1c)
-```
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m1c)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics OK with poisson --- including dispersion.
-
-```{r, echo=FALSE}
-bbmle::AICtab(Pa_m1b, Pa_m1c)
-```
-
-Continue with generalized poisson model: diagnostics OK and best AIC. 
-
-```{r}
-Pa_m2b <- update(Pa_m2, family = "genpois")
-Pa_m3b <- update(Pa_m3, family = "genpois")
-Pa_modelcomp <- bbmle::ICtab(Pa_m1b, Pa_m2b, Pa_m3b, base = TRUE, delta = TRUE) %>% 
-  as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
-```
+Diagnostics look OK.
 
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pa_m1b
+selmod <- Pa_m1
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.WALD = mean(selmod$frame$seeds.WALD), 
+         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -424,8 +439,7 @@ L_dat <- Filter(function(x)!all(is.na(x)), datlist$Larix)
 ```
 
 ```{r}
-typenames <- names(L_dat)[!names(L_dat) %in% c('species', 'locality', 
-                                               'wildlings', locality.preds)]
+typenames <- names(L_dat)[!names(L_dat) %in% nottypes]
 L_arith <- pivot_longer(L_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
@@ -460,11 +474,12 @@ sum(complete.cases(L_dat)) == nrow(L_dat)
 ```
 
 ```{r}
-L_means <- L_dat[, locality.preds] %>% map_dbl(mean)
-L_sds <- L_dat[, locality.preds] %>% map_dbl(sd)
-for (i in locality.preds) {
-  L_dat <- modify_at(L_dat, .at = i, ~ (. - L_means[i])/L_sds[i])
+L_means <- L_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
+L_sds <- L_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
+for (i in c('age','bio01','bio19','relelev')) {
+  L_dat <- modify_at(L_dat, .at = i, ~ (. - L_means[i]) / L_sds[i])
 }
+L_dat <- mutate(L_dat, across(starts_with("seeds"), log))
 summary(L_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
@@ -482,17 +497,18 @@ summary(L_m1)
 ```
 
 ```{r}
-L_m2 <- update(L_m1, formula = update.formula(L_f1, ~ . - seeds.WALD + seeds.ExP))
+L_m2 <- update(L_m1, update.formula(L_f1, ~ . - seeds.WALD + seeds.ExP))
 summary(L_m2)
 ```
 
 ```{r}
-L_m3 <- update(L_m1, formula = update.formula(L_f1, ~ . - seeds.WALD))
+L_m3 <- update(L_m1, update.formula(L_f1, ~ . - seeds.WALD))
 summary(L_m3)
 ```
 
-```{r, echo=FALSE}
-L_modelcomp <- bbmle::ICtab(L_m1, L_m2, L_m3, base = TRUE, delta = TRUE) %>% 
+```{r, include=FALSE}
+L_modelcomp <- bbmle::ICtab(L_m1, L_m2, L_m3, base = TRUE, delta = TRUE, 
+                            sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
@@ -520,7 +536,8 @@ localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.WALD = mean(selmod$frame$seeds.WALD), 
+         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -590,8 +607,7 @@ Pc_dat <- Filter(function(x)!all(is.na(x)), datlist$P.contorta)
 ```
 
 ```{r}
-typenames <- names(Pc_dat)[!names(Pc_dat) %in% c('species', 'locality', 
-                                                 'wildlings', locality.preds)]
+typenames <- names(Pc_dat)[!names(Pc_dat) %in% nottypes]
 Pc_arith <- pivot_longer(Pc_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
@@ -625,11 +641,12 @@ sum(complete.cases(Pc_dat)) == nrow(Pc_dat)
 ```
 
 ```{r}
-Pc_means <- Pc_dat[, locality.preds] %>% map_dbl(mean)
-Pc_sds <- Pc_dat[, locality.preds] %>% map_dbl(sd)
-for (i in locality.preds) {
-  Pc_dat <- modify_at(Pc_dat, .at = i, ~ (. - Pc_means[i])/Pc_sds[i])
+Pc_means <- Pc_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
+Pc_sds <- Pc_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
+for (i in c('age','bio01','bio19','relelev')) {
+  Pc_dat <- modify_at(Pc_dat, .at = i, ~ (. - Pc_means[i]) / Pc_sds[i])
 }
+Pc_dat <- mutate(Pc_dat, across(starts_with("seeds"), log))
 summary(Pc_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
@@ -648,18 +665,12 @@ summary(Pc_m1)
 ```
 
 ```{r}
-Pc_m2 <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
+Pc_m2 <- update(Pc_m1, update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
 summary(Pc_m2)
 ```
 
-Warning messages:
-1: In fitTMB(TMBStruc) :
-  Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
-2: In fitTMB(TMBStruc) :
-  Model convergence problem; false convergence (8). See vignette('troubleshooting')
-
 ```{r}
-Pc_m3 <- update(Pc_m1, formula = update.formula(Pc_f1, ~ . - seeds.WALD))
+Pc_m3 <- update(Pc_m1, update.formula(Pc_f1, ~ . - seeds.WALD))
 summary(Pc_m3)
 ```
 
@@ -669,18 +680,19 @@ Warning messages:
 2: In fitTMB(TMBStruc) :
   Model convergence problem; false convergence (8). See vignette('troubleshooting')
 
-```{r, echo=FALSE}
-Pc_modelcomp <- bbmle::ICtab(Pc_m1, Pc_m2, Pc_m3, base = TRUE, delta = TRUE) %>% 
+```{r, include=FALSE}
+Pc_modelcomp <- bbmle::ICtab(Pc_m1, Pc_m2, Pc_m3, base = TRUE, delta = TRUE, 
+                             sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
 
-Continue with WALD.
+Continue with ExP.
 
 ### Residual diagnostics
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pc_m1)
+simulationOutput <- simulateResiduals(fittedModel = Pc_m2)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -691,14 +703,15 @@ Diagnostics look OK.
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pc_m1
+selmod <- Pc_m2
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.ExP = mean(selmod$frame$seeds.ExP), 
+         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -778,7 +791,7 @@ sds <- rbind(Ps_sds, Pa_sds, L_sds, Pc_sds) %>%
 modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp, Pc_modelcomp)
 names(modelcomp.list) <- species
 
-models.list <- list(Ps_m1, Pa_m1b, L_m1, Pc_m1)
+models.list <- list(Ps_m1b, Pa_m1, L_m1, Pc_m2)
 names(models.list) <- species
 
 link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled, Pc_link.scaled)
