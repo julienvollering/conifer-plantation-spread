@@ -81,12 +81,13 @@ sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
 ```
 
 ```{r}
+Ps_dat <- mutate(Ps_dat, across(starts_with("seeds"), log))
+Ps_dat <- mutate(Ps_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
 Ps_means <- Ps_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
 Ps_sds <- Ps_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
 for (i in c('age','bio01','bio19','relelev')) {
   Ps_dat <- modify_at(Ps_dat, .at = i, ~ (. - Ps_means[i]) / Ps_sds[i])
 }
-Ps_dat <- mutate(Ps_dat, across(starts_with("seeds"), log))
 summary(Ps_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
@@ -96,21 +97,22 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
 ### Compare WALD vs ExP vs null
 
 ```{r}
-Ps_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + 
+Ps_f <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
                  T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + 
                  T41 + T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + 
                  T31 + V3 + T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
-Ps_m1 <- glmmTMB(Ps_f1, Ps_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+Ps_m1 <- glmmTMB(Ps_f, Ps_dat, offset = seeds.WALD, family = "genpois", 
+                 ziformula = ~ age + (1 | locality))
 summary(Ps_m1)
 ```
 
 ```{r}
-Ps_m2 <- update(Ps_m1, update.formula(Ps_f1, ~ . - seeds.WALD + seeds.ExP))
+Ps_m2 <- update(Ps_m1, offset = seeds.ExP)
 summary(Ps_m2)
 ```
 
 ```{r}
-Ps_m3 <- update(Ps_m1, update.formula(Ps_f1, ~ . - seeds.WALD))
+Ps_m3 <- update(Ps_m1, offset = NULL)
 summary(Ps_m3)
 ```
 
@@ -132,77 +134,19 @@ testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
 
-Model residuals are underdispersed.
-
-```{r}
-Ps_m1b <- update(Ps_m1, family = "genpois")
-summary(Ps_m1b)
-```
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Ps_m1b)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics OK with generalized poisson --- including dispersion.
-
-```{r}
-Ps_m1c <- update(Ps_m1, family = "poisson")
-summary(Ps_m1c)
-```
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Ps_m1c)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics OK with poisson --- including dispersion.
-
-```{r, echo=FALSE}
-bbmle::AICtab(Ps_m1b, Ps_m1c)
-```
-
-Continue with generalized poisson model: diagnostics OK and best AIC. 
-
-```{r, include=FALSE}
-simulationOutput <- simulateResiduals(fittedModel = Ps_m2)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-
-simulationOutput <- simulateResiduals(fittedModel = Ps_m3)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-
-Ps_m3b <- update(Ps_m3, family = "genpois")
-simulationOutput <- simulateResiduals(fittedModel = Ps_m3b)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-
-Ps_modelcomp <- bbmle::ICtab(Ps_m1b, Ps_m2, Ps_m3b, base = TRUE, delta = TRUE, 
-                             sort = FALSE) %>% 
-  as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
-```
+Diagnostics look OK.
 
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Ps_m1b
+selmod <- Ps_m1
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.WALD = mean(selmod$frame$seeds.WALD), 
-         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -306,12 +250,14 @@ sum(complete.cases(Pa_dat)) == nrow(Pa_dat)
 ```
 
 ```{r}
-Pa_means <- Pa_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
+Pa_dat <- mutate(Pa_dat, across(starts_with("seeds"), log))
+Pa_dat <- mutate(Pa_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
+Pa_means <- Pa_dat[, c('age','bio01','bio19','relelev')] %>% 
+  map_dbl(mean)
 Pa_sds <- Pa_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
 for (i in c('age','bio01','bio19','relelev')) {
   Pa_dat <- modify_at(Pa_dat, .at = i, ~ (. - Pa_means[i]) / Pa_sds[i])
 }
-Pa_dat <- mutate(Pa_dat, across(starts_with("seeds"), log))
 summary(Pa_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
@@ -321,24 +267,25 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
 ### Compare WALD vs ExP vs null
 
 ```{r}
-Pa_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + 
+Pa_f <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
                  T45 + artificial + T44 + T32 + V9 + V12 + V1 + T13 + T41 + T1 +
                  V2 + T2 + V10 + T31 + V4 + V3 + (1 | locality)")
-Pa_m1 <- glmmTMB(Pa_f1, Pa_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+Pa_m1 <- glmmTMB(Pa_f, Pa_dat, offset = seeds.WALD, family = "genpois", 
+                 ziformula = ~ age + (1 | locality))
 summary(Pa_m1)
 ```
 
 ```{r}
-Pa_m2 <- update(Pa_m1, update.formula(Pa_f1, ~ . - seeds.WALD + seeds.ExP))
+Pa_m2 <- update(Pa_m1, offset = seeds.ExP)
 summary(Pa_m2)
 ```
 
 ```{r}
-Pa_m3 <- update(Pa_m1, update.formula(Pa_f1, ~ . - seeds.WALD))
+Pa_m3 <- update(Pa_m1, offset = NULL)
 summary(Pa_m3)
 ```
 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 Pa_modelcomp <- bbmle::ICtab(Pa_m1, Pa_m2, Pa_m3, base = TRUE, delta = TRUE, 
                              sort = FALSE) %>% 
   as_tibble() %>% 
@@ -368,8 +315,7 @@ localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.WALD = mean(selmod$frame$seeds.WALD), 
-         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -474,12 +420,13 @@ sum(complete.cases(L_dat)) == nrow(L_dat)
 ```
 
 ```{r}
+L_dat <- mutate(L_dat, across(starts_with("seeds"), log))
+L_dat <- mutate(L_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
 L_means <- L_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
 L_sds <- L_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
 for (i in c('age','bio01','bio19','relelev')) {
   L_dat <- modify_at(L_dat, .at = i, ~ (. - L_means[i]) / L_sds[i])
 }
-L_dat <- mutate(L_dat, across(starts_with("seeds"), log))
 summary(L_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
@@ -489,28 +436,32 @@ paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))],
 ### Compare WALD vs ExP vs null
 
 ```{r}
-L_f1 <- formula("wildlings ~ seeds.WALD + age + bio01 + bio19 + relelev + 
+L_f <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
                 T45 + artificial + T44 + T32 + V9 + T34 + V1 + T41 + T1 + V2 + 
                 T17 + (1 | locality)")
-L_m1 <- glmmTMB(L_f1, L_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+L_m1 <- glmmTMB(L_f, L_dat, offset = seeds.WALD, family = "genpois", 
+                ziformula = ~ age + (1 | locality))
 summary(L_m1)
 ```
 
 ```{r}
-L_m2 <- update(L_m1, update.formula(L_f1, ~ . - seeds.WALD + seeds.ExP))
+L_m2 <- update(L_m1, offset = seeds.ExP)
 summary(L_m2)
 ```
 
-```{r}
-L_m3 <- update(L_m1, update.formula(L_f1, ~ . - seeds.WALD))
+```{r, error=TRUE}
+L_m3 <- update(L_m1, offset = NULL)
 summary(L_m3)
 ```
 
+Error in optimHess(par.fixed, obj$fn, obj$gr) : 
+  gradient in optim evaluated to length 1 not 21
+
 ```{r, include=FALSE}
-L_modelcomp <- bbmle::ICtab(L_m1, L_m2, L_m3, base = TRUE, delta = TRUE, 
+L_modelcomp <- bbmle::ICtab(L_m1, L_m2, base = TRUE, delta = TRUE, 
                             sort = FALSE) %>% 
   as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP'), .before = 1)
 ```
 
 Continue with WALD.
@@ -536,8 +487,7 @@ localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.WALD = mean(selmod$frame$seeds.WALD), 
-         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -641,16 +591,21 @@ sum(complete.cases(Pc_dat)) == nrow(Pc_dat)
 ```
 
 ```{r}
+Pc_dat <- mutate(Pc_dat, across(starts_with("seeds"), log))
+Pc_dat <- mutate(Pc_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
 Pc_means <- Pc_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
 Pc_sds <- Pc_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
 for (i in c('age','bio01','bio19','relelev')) {
   Pc_dat <- modify_at(Pc_dat, .at = i, ~ (. - Pc_means[i]) / Pc_sds[i])
 }
-Pc_dat <- mutate(Pc_dat, across(starts_with("seeds"), log))
 summary(Pc_dat)
 
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
       collapse = " + ")
+```
+
+```{r, include=FALSE}
+cor(Pc_dat$bio01, Pc_dat$bio19)
 ```
 
 Exclude bio01 due to very high correlation with bio19. 
@@ -658,20 +613,16 @@ Exclude bio01 due to very high correlation with bio19.
 ### Compare WALD vs ExP vs null
 
 ```{r}
-Pc_f1 <- formula("wildlings ~ seeds.WALD + age + bio19 + relelev + 
+Pc_f <- formula("wildlings ~ age + bio19 + relelev + 
                  artificial + T34 + V1 + T1 + T40 + T30 + V8 + V3 + (1 | locality)")
-Pc_m1 <- glmmTMB(Pc_f1, Pc_dat, family = "nbinom2", ziformula = ~ age + (1 | locality))
+Pc_m1 <- glmmTMB(Pc_f, Pc_dat, offset = seeds.WALD, family = "genpois", 
+                 ziformula = ~ age + (1 | locality))
 summary(Pc_m1)
 ```
 
 ```{r}
-Pc_m2 <- update(Pc_m1, update.formula(Pc_f1, ~ . - seeds.WALD + seeds.ExP))
+Pc_m2 <- update(Pc_m1, offset = seeds.ExP)
 summary(Pc_m2)
-```
-
-```{r}
-Pc_m3 <- update(Pc_m1, update.formula(Pc_f1, ~ . - seeds.WALD))
-summary(Pc_m3)
 ```
 
 Warning messages:
@@ -679,6 +630,11 @@ Warning messages:
   Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
 2: In fitTMB(TMBStruc) :
   Model convergence problem; false convergence (8). See vignette('troubleshooting')
+  
+```{r}
+Pc_m3 <- update(Pc_m1, offset = NULL)
+summary(Pc_m3)
+```
 
 ```{r, include=FALSE}
 Pc_modelcomp <- bbmle::ICtab(Pc_m1, Pc_m2, Pc_m3, base = TRUE, delta = TRUE, 
@@ -687,12 +643,12 @@ Pc_modelcomp <- bbmle::ICtab(Pc_m1, Pc_m2, Pc_m3, base = TRUE, delta = TRUE,
   add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
 ```
 
-Continue with ExP.
+Continue with WALD.
 
 ### Residual diagnostics
 
 ```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pc_m2)
+simulationOutput <- simulateResiduals(fittedModel = Pc_m1)
 plot(simulationOutput)
 testDispersion(simulationOutput)
 testZeroInflation(simulationOutput)
@@ -703,15 +659,14 @@ Diagnostics look OK.
 ### Interpret relative establishment probability
 
 ```{r}
-selmod <- Pc_m2
+selmod <- Pc_m1
 
 terms <- attributes(selmod$frame)$terms
 localities <- c(NA, unique(selmod$frame$locality))
 newdat <- attributes(terms)$factors %>% 
   as_tibble() %>% 
   select(-locality) %>% 
-  mutate(seeds.ExP = mean(selmod$frame$seeds.ExP), 
-         age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
+  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
   distinct()
 newdat <- newdat %>% 
   mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
@@ -791,7 +746,7 @@ sds <- rbind(Ps_sds, Pa_sds, L_sds, Pc_sds) %>%
 modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp, Pc_modelcomp)
 names(modelcomp.list) <- species
 
-models.list <- list(Ps_m1b, Pa_m1, L_m1, Pc_m2)
+models.list <- list(Ps_m1, Pa_m1, L_m1, Pc_m1)
 names(models.list) <- species
 
 link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled, Pc_link.scaled)

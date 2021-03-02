@@ -62,9 +62,11 @@ for (i in seq_along(datlist)) { # i <- 1
   dat <- datlist[[i]]
   stopifnot(sum(complete.cases(dat)) == nrow(dat))
 
-  means <- dat[, locality.preds] %>% map_dbl(mean)
-  sds <- dat[, locality.preds] %>% map_dbl(sd)
-  for (j in locality.preds) {
+  dat <- mutate(dat, across(starts_with("seeds"), log))
+  dat <- mutate(dat, across(starts_with("seeds"), ~ .x - mean(.x)))
+  means <- dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
+  sds <- dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
+  for (j in c('age','bio01','bio19','relelev')) {
     dat <- modify_at(dat, .at = j, ~ (. - means[j]) / sds[j])
   }
 
@@ -90,7 +92,7 @@ for (i in seq_along(datlist)) { # i <- 1
   structuring <- filter(arith, n > 0) %>% pull(structuring) %>% unique()
   
   selmod <- results$models[[species]]
-  covars <- intersect(c('seeds.WALD', 'age', 'bio01','bio19', 'relelev'),
+  covars <- intersect(c('age', 'bio01','bio19', 'relelev'),
                       attributes(attributes(selmod$frame)$terms)$term.labels)
   # dd <- data.frame(a = gl(2,6), b = gl(6,1,12))
   # model.matrix(~ a + b, dd)
@@ -99,10 +101,11 @@ for (i in seq_along(datlist)) { # i <- 1
                            paste(category[!category == "terr"], collapse= "+"), "+",
                            paste(structuring[!structuring == "nodist"], collapse= "+"), "+",
                            "(1 | locality)"))
-  
-  m <- glmmTMB(formula = form, data = dat, family = selmod$call$family, 
-               ziformula = selmod$call$ziformula)
-  
+  eval(bquote(
+    m <- glmmTMB(formula = form, data = dat, offset = .(selmod$call$offset), 
+                 family = selmod$call$family, ziformula = selmod$call$ziformula)
+  ))
+
   newdat <- expand_grid(category, structuring) %>%
     sjmisc::to_dummy() %>%
     setNames(c(category[order(category)], structuring[order(structuring)])) %>% 

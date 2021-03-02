@@ -178,8 +178,8 @@ To summarize, we modeled:
 wildlings_{ij} &\sim ZINB(\pi_{ij}, \mu_{ij}, \phi) \\
 logit(\pi_{ij}) &= PlantationAge_{ij} + Site_{ij} \\
 log(\mu_{ij}) &= \sum\limits_{k=1}^K EcosystemType_{ijk} + Site_{i} + Bio1_{ij} + Bio19_{ij} + \\
-&RelativeElevation_{ij} + RelativeSeedRain_{ij} + PlantationAge_{ij} + \\
-&RelativeSeedRain_{ij} \cdot PlantationAge_{ij}  \\
+&RelativeElevation_{ij} + PlantationAge_{ij} + \\
+&offset(log(RelativeSeedRain_{ij})) \\
 Site_{i} &\sim Normal(0, \sigma^2) \\
 \end{aligned}
 \end{equation}
@@ -214,12 +214,12 @@ cortab <- read.csv(here('ms', 'tables', 'spearman-corr.csv'),
 cortab[lower.tri(cortab, diag = TRUE)] <- ""
 cortab <- cortab[-4,-1]
 kbl(cortab, booktabs = TRUE,
-    caption = "Rank correlations of relative establishment likelihoods in ecosystem types, between pairs of species.") %>%
+    caption = "Rank correlations of relative establishment likelihoods in ecosystem types, between pairs of species groups.") %>%
   kable_styling(full_width = F)
 ```
 
-Wildling densities across all ecosystems ranged 0-211/ha for Sitka spruce, 0-49/ha for Norway spruce, 0-1045/ha for larches, and 0-219/ha for lodgepole pine.
-Relative establishment likelihoods varied more than the corresponding set of densities, in all species (fig. \@ref(fig:establishment)).
+Wildling densities across all ecosystems ranged 0-211/ha for Sitka spruce (unstratified mean: 28), 0-49/ha for Norway spruce (unstratified mean: 6), 0-1045/ha for larches (unstratified mean: 13), and 0-219/ha for lodgepole pine (unstratified mean: 34).
+Relative establishment likelihoods varied more than the corresponding set of densities, in all species (fig. \@ref(fig:establishment), Appendix table \@ref(tab:dispersion-table)).
 The ranking of ecosystems by establishment likelihood also differed from their ranking by wildling density.
 For instance, Sitka/Lutz spruce showed higher densities in "artificial substrate" than "boreal heath", but was more likely to establish in "boreal heath".
 
@@ -472,36 +472,51 @@ kbl(mcomptab, booktabs = TRUE,
 msumms <- list.files(here('ms', 'tables'), pattern = "summary", full.names = TRUE) %>% 
   set_names(~ tools::file_path_sans_ext(basename(.))) %>% 
   map(read_csv) %>% 
-  map(~ mutate(., Term = if_else(Term == "locality", "site", Term)))
+  map(~ mutate(., Term = if_else(Term == "locality", "site", Term))) %>% 
+  map(~ mutate(., Term = if_else(Term == "(Intercept)", "Intercept", Term)))
 ```
 
 ```{r summaries-tables}
 options(knitr.kable.NA = '')
 
-kbl(msumms$`Ps-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', 
-    caption = "\\label{tab:Ps}Model summary for Picea sitchensis / lutzii. The conditional submodel is glmmTMB's nbinom2 family with dispersion parameter phi = 0.244.") %>%
-  kable_styling(font_size = 6) %>% 
-  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  column_spec(1, bold = T) %>% 
-  collapse_rows(columns = 1, valign = "top")
+kable(msumms$`Ps-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+    caption = "\\label{tab:Ps}Model summary for Picea sitchensis / lutzii. The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 7.745472") %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  kable_styling(latex_options = "striped") %>% 
+  pack_rows(index = c("Conditional model" = sum(msumms$`Ps-modelsummary`[,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$`Ps-modelsummary`[,1]=="Zero-inflation model")))
+  
 
-kable(msumms$`Pa-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', caption = "\\label{tab:Pa}Model summary for Picea abies. The conditional submodel is glmmTMB's genpois family with dispersion parameter phi = 2.6.") %>%
-  kable_styling(font_size = 6) %>% 
-  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  column_spec(1, bold = T) %>% 
-  collapse_rows(columns = 1, valign = "top")
+kable(msumms$`Pa-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = "\\label{tab:Pa}Model summary for Picea abies. The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 2.495544") %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  kable_styling(latex_options = "striped") %>% 
+  pack_rows(index = c("Conditional model" = sum(msumms$`Pa-modelsummary`[,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$`Pa-modelsummary`[,1]=="Zero-inflation model")))
 
-kable(msumms$`L-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', caption = "\\label{tab:L}Model summary for Larix. The conditional submodel is glmmTMB's nbinom2 family with dispersion parameter phi = 0.203.") %>%
-  kable_styling(font_size = 6) %>% 
-  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  column_spec(1, bold = T) %>% 
-  collapse_rows(columns = 1, valign = "top")
+kable(msumms$`L-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = "\\label{tab:L}Model summary for Larix spp. The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 6.713045") %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  kable_styling(latex_options = "striped") %>% 
+  pack_rows(index = c("Conditional model" = sum(msumms$`L-modelsummary`[,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$`L-modelsummary`[,1]=="Zero-inflation model")))
 
-kable(msumms$`Pc-modelsummary`, longtable = TRUE, booktabs = TRUE, align = 'clrrrr', caption = "\\label{tab:Pc}Model summary for Pinus contorta. The conditional submodel is glmmTMB's nbinom2 family with dispersion parameter phi = 0.031.") %>%
-  kable_styling(font_size = 6) %>% 
-  add_header_above(c(" " = 2, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  column_spec(1, bold = T) %>% 
-  collapse_rows(columns = 1, valign = "top")
+kable(msumms$`Pc-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = "\\label{tab:Pc}Model summary for Pinus contorta. The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 68.49936") %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+  kable_styling(latex_options = "striped") %>% 
+  pack_rows(index = c("Conditional model" = sum(msumms$`Pc-modelsummary`[,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$`Pc-modelsummary`[,1]=="Zero-inflation model")))
+```
+
+```{r dispersion-table}
+disptab <- read.csv(here('ms', 'tables', 'dispersion.csv'), 
+                    row.names = 1, check.names = FALSE)
+kbl(disptab, longtable = TRUE, booktabs = TRUE, escape = FALSE,
+    caption = "Proportional variability in wildling densities among ecosystems compared to proportional variability in establishment likelihoods among ecosystems.") %>%
+  footnote(general = c("Heath, Joel P., and Peter Borowski. 2013. “Quantifying Proportional Variability.” PLoS ONE 8 (12): e84074. https://doi.org/10.1371/journal.pone.0084074."), 
+            general_title = "References: ",
+           threeparttable = TRUE)
 ```
 
 # References

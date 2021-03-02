@@ -1,22 +1,21 @@
 Mixture component,Term,Estimate,95% CI,SD (Intercept),N
-Conditional Model,(Intercept),-2.08,"-2.81, -1.36",NA,NA
-Conditional Model,seeds.WALD,0.82,"0.73, 0.92",NA,NA
-Conditional Model,age,-0.96,"-2.04, 0.12",NA,NA
-Conditional Model,bio01,-0.87,"-1.69, -0.06",NA,NA
-Conditional Model,bio19,-1.82,"-2.96, -0.67",NA,NA
-Conditional Model,relelev,0.22,"0.1, 0.34",NA,NA
-Conditional Model,T45,-1.95,"-2.46, -1.43",NA,NA
-Conditional Model,artificial,-0.12,"-0.56, 0.33",NA,NA
-Conditional Model,T44,-3.79,"-5.47, -2.11",NA,NA
-Conditional Model,T32,-1.02,"-1.36, -0.69",NA,NA
-Conditional Model,V9,-2.83,"-4.4, -1.27",NA,NA
-Conditional Model,T34,0.26,"-0.29, 0.82",NA,NA
-Conditional Model,V1,-1.62,"-3.35, 0.12",NA,NA
-Conditional Model,T41,-3.85,"-5.07, -2.62",NA,NA
-Conditional Model,T1,-1.16,"-2.49, 0.17",NA,NA
-Conditional Model,V2,-8.42,"-26.75, 9.91",NA,NA
-Conditional Model,T17,5.64,"4.4, 6.87",NA,NA
-Conditional Model,locality,NA,NA,0.97,15
-Zero-inflation model,(Intercept),1.03,"0.14, 1.93",NA,NA
-Zero-inflation model,age,-1.07,"-1.81, -0.33",NA,NA
-Zero-inflation model,locality,NA,NA,1.19,15
+Conditional Model,(Intercept),-4.78,"-5.44, -4.12",NA,NA
+Conditional Model,age,-0.53,"-1.56, 0.5",NA,NA
+Conditional Model,bio01,-1.9,"-2.67, -1.13",NA,NA
+Conditional Model,bio19,-1.93,"-3.02, -0.83",NA,NA
+Conditional Model,relelev,0.48,"0.39, 0.57",NA,NA
+Conditional Model,T45,-0.72,"-1.22, -0.23",NA,NA
+Conditional Model,artificial,2.3,"2, 2.6",NA,NA
+Conditional Model,T44,-1.56,"-3.16, 0.05",NA,NA
+Conditional Model,T32,0.56,"0.22, 0.89",NA,NA
+Conditional Model,V9,-0.84,"-2.25, 0.57",NA,NA
+Conditional Model,T34,1.06,"0.62, 1.5",NA,NA
+Conditional Model,V1,-0.25,"-1.54, 1.04",NA,NA
+Conditional Model,T41,-3.11,"-4.35, -1.88",NA,NA
+Conditional Model,T1,-0.73,"-2.23, 0.77",NA,NA
+Conditional Model,V2,-0.91,"-5.31, 3.5",NA,NA
+Conditional Model,T17,6.09,"5.47, 6.71",NA,NA
+Conditional Model,locality,NA,NA,0.86,15
+Zero-inflation model,(Intercept),-0.36,"-1.62, 0.9",NA,NA
+Zero-inflation model,age,0.29,"-0.83, 1.41",NA,NA
+Zero-inflation model,locality,NA,NA,1.24,15

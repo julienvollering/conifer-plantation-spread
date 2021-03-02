@@ -9,18 +9,78 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
+results <- readRDS(here("output","results.rds"))
+```
+
+# Dispersion
+
+Dispersion in establishment *density* vs. dispersion in *modeled establishment* (among ecosystems for which both values are estimated).
+
+```{r}
+arith <- results$arithmetic %>% 
+  bind_rows(.id = "species") %>% 
+  filter(n > 0) %>% 
+  select(species, nin, fit) %>% 
+  mutate(modeled = FALSE)
+  
+est <- results$model.preds %>% 
+  bind_rows(.id = "species") %>% 
+  filter(is.na(locality)) %>% 
+  select(species, nin, fit) %>% 
+  mutate(modeled = TRUE)
+
+stopifnot(nrow(arith) == nrow(est))
+
+dat <- bind_rows(est, arith)
+```
+
+Proportional Variability from:
+Heath, Joel P., and Peter Borowski. 2013. “Quantifying Proportional Variability.” PLoS ONE 8 (12): e84074. https://doi.org/10.1371/journal.pone.0084074.
+
+```{r}
+PV <- function(x) { 
+  pairs <- combn(x, 2)
+  D <- apply(pairs, 2, function(z) {1 - (min(z)/max(z))})
+  return(sum(D)/ncol(pairs))
+}
+propvar <- dat %>% 
+  group_by(species, modeled) %>% 
+  summarize(PV = round(PV(fit), digits = 3))
+```
+
+```{r}
+dispersion <- propvar %>%
+  ungroup() %>% 
+  mutate(modeled = ifelse(modeled, "establishment likelihood", "density")) %>% 
+  pivot_wider(names_from = modeled, values_from = PV) %>% 
+  slice(4,2,1,3) %>% 
+  mutate(`species group` = c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta")) %>% 
+  select(4,2,3)
+write.csv(dispersion, here('ms', 'tables', 'dispersion.csv'), row.names = FALSE)
+```
+
+A simpler metric but more affected by outliers:
+
+```{r}
+sumofratios <- function(x) {
+  pairs <- combn(x, 2)
+  rat <- apply(pairs, 2, function(z) {max(z)/min(z)})
+  return(sum(rat))
+}
+dat %>% 
+  group_by(species, modeled) %>% 
+  summarize(`sum of pairwise ratios` = sumofratios(fit))
 ```
 
 # Species correlations in establishment
 
 ```{r}
-results <- readRDS(here('output', 'results.rds'))
 fit <- map2(results$model.preds, names(results$model.preds),  
            ~ filter(.data = .x, is.na(locality)) %>% 
              select(nin, !!.y := fit))
 fitdf <- reduce(fit, full_join, by = "nin") %>% 
   select(-nin)
-colnames(fitdf) <- c("Picea sitchensis / lutzii", "Picea abies", "Larix", "Pinus contorta")
+colnames(fitdf) <- c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta")
 table <- cor(fitdf, use= "pairwise.complete.obs", method = "spearman") %>% 
   round(digits = 2)
 write.csv(table, here('ms', 'tables', 'spearman-corr.csv'), row.names = TRUE)
@@ -51,8 +111,8 @@ Ps <- Ps.tidy %>%
                              'Zero-inflation model')) %>% 
   mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
   mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, paste0(ci.l, ', ', ci.u)),
-         term = if_else(term == 'seeds.WALD:age', 'seeds.WALD * age', term)) %>% 
+  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
+                            paste0(ci.l, ', ', ci.u))) %>% 
   mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
          estimate = if_else(effect == 'fixed', estimate, NA_real_),
          N = if_else(effect == 'fixed', NA_real_, Nre),
@@ -71,8 +131,8 @@ Pa <- Pa.tidy %>%
                              'Zero-inflation model')) %>% 
   mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
   mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, paste0(ci.l, ', ', ci.u)),
-         term = if_else(term == 'seeds.WALD:age', 'seeds.WALD * age', term)) %>% 
+  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
+                            paste0(ci.l, ', ', ci.u))) %>% 
   mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
          estimate = if_else(effect == 'fixed', estimate, NA_real_),
          N = if_else(effect == 'fixed', NA_real_, Nre),
@@ -91,8 +151,8 @@ L <- L.tidy %>%
                              'Zero-inflation model')) %>% 
   mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
   mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, paste0(ci.l, ', ', ci.u)),
-         term = if_else(term == 'seeds.WALD:age', 'seeds.WALD * age', term)) %>% 
+  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
+                            paste0(ci.l, ', ', ci.u))) %>% 
   mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
          estimate = if_else(effect == 'fixed', estimate, NA_real_),
          N = if_else(effect == 'fixed', NA_real_, Nre),
@@ -111,8 +171,8 @@ Pc <- Pc.tidy %>%
                              'Zero-inflation model')) %>% 
   mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
   mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, paste0(ci.l, ', ', ci.u)),
-         term = if_else(term == 'seeds.WALD:age', 'seeds.WALD * age', term)) %>% 
+  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
+                            paste0(ci.l, ', ', ci.u))) %>% 
   mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
          estimate = if_else(effect == 'fixed', estimate, NA_real_),
          N = if_else(effect == 'fixed', NA_real_, Nre),

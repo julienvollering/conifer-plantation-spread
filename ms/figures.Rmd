@@ -227,7 +227,7 @@ est <- results$model.preds %>%
 dat <- bind_rows(est, arith)
 dat
 tail(dat)
-print(filter(types, type %in% dat$type), n=32)
+print(filter(types, type %in% dat$type), n=31)
 ```
 
 ```{r}
@@ -368,19 +368,11 @@ ggsave(g1234, filename= 'ggplot.svg',
        scale = 1, width = 29.7, height = 21, units = 'cm', dpi = 300)
 ```
 
-Spread in *arithmetically calculated* establishment density vs. spread in *modeled* establishment (among ecosystems for which both values are estimated):
-
-```{r}
-filter(dat, is.na(locality)) %>% 
-  filter(!(modeled == FALSE & fit == 0)) %>% 
-  group_by(species, modeled) %>% 
-  summarize(spread = sd(log10(fit)))
-```
-
 # Establishment hypotheses
 
 ```{r}
 results.hypothesis <- readRDS(here("output","results-hypothesis.rds"))
+results.hypothesis <- map(results.hypothesis, bind_rows)
 
 d <- map(results.hypothesis, function(x) {
   display <- filter(x, !modeled) %>% 

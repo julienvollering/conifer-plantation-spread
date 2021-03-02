@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  26 FEB 2021 11:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  2 MAR 2021 14:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -669,116 +669,117 @@ lantation-spread/ms/figures/establishment/establishment.pdf  used on input line
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.336 
-       </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/
-ms/figures/establishment/establishment.pdf>]
+l.328 A
+       cross species, the most consistently important covariates in the rela...
+ </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/fig
+ures/establishment/establishment.pdf>]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-hypotheses.pdf, id=9226, 672.1938pt x 190.13786pt>
+res/establishment-hypotheses.pdf, id=9228, 672.1938pt x 190.13786pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-hypotheses.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
 figures/establishment-hypotheses.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
 lantation-spread/ms/figures/establishment-hypotheses.pdf  used on input line 34
-6.
+5.
 (pdftex.def)             Requested size: 344.99901pt x 97.58699pt.
 [12pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.360 
+l.359 
       ] [13pdfTeX warning (ext4): destination with the same identifier (name{fi
 gure.5}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.376 
+l.375 
        </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/
 ms/figures/establishment-hypotheses.pdf>] [14] [15] [16] [17]
-Overfull \hbox (12.49498pt too wide) in alignment at lines 483--494
+Overfull \hbox (12.49498pt too wide) in alignment at lines 482--493
  [] [] [] [] 
  []
 
 [18] [19]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 504--509
+Overfull \hbox (30.91093pt too wide) in alignment at lines 503--508
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 509--514
+Overfull \hbox (30.91093pt too wide) in alignment at lines 508--513
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 514--516
+Overfull \hbox (30.91093pt too wide) in alignment at lines 513--515
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 516--524
+Overfull \hbox (30.91093pt too wide) in alignment at lines 515--523
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 524--548
+Overfull \hbox (30.91093pt too wide) in alignment at lines 523--547
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 548--572
+Overfull \hbox (30.91093pt too wide) in alignment at lines 547--571
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 572--596
+Overfull \hbox (30.91093pt too wide) in alignment at lines 571--595
  [] [] [] [] [] [] [] [] [] 
  []
 
 [20
 
 ]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 596--620
+Overfull \hbox (30.91093pt too wide) in alignment at lines 595--619
  [] [] [] [] [] [] [] [] [] 
  []
 
 [21]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 620--623
+Overfull \hbox (30.91093pt too wide) in alignment at lines 619--622
  [] [] [] [] [] [] [] [] [] 
  []
 
 [22] [23]
-Overfull \hbox (83.23676pt too wide) in alignment at lines 627--632
+Overfull \hbox (83.23676pt too wide) in alignment at lines 626--631
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 632--637
+Overfull \hbox (83.23676pt too wide) in alignment at lines 631--636
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 637--639
+Overfull \hbox (83.23676pt too wide) in alignment at lines 636--638
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 639--642
+Overfull \hbox (83.23676pt too wide) in alignment at lines 638--641
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 642--666
+Overfull \hbox (83.23676pt too wide) in alignment at lines 641--665
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 666--690
+Overfull \hbox (83.23676pt too wide) in alignment at lines 665--689
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 690--690
+Overfull \hbox (83.23676pt too wide) in alignment at lines 689--689
  [] [] [] [] [] 
  []
 
@@ -786,7 +787,7 @@ Overfull \hbox (83.23676pt too wide) in alignment at lines 690--690
 
 
 ] [25]
-Overfull \hbox (12.22258pt too wide) in paragraph at lines 697--726
+Overfull \hbox (22.22258pt too wide) in paragraph at lines 696--723
  [][] 
  []
 
@@ -795,45 +796,45 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.813 \end{longtable}
+l.774 \end{longtable}
                      
 
-] [27] [28] [29] [30] [31] [32]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1147.
-[33]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1147.
+] [27] [28] [29] [30] [31] [32] [33]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1065.
+[34]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1065.
 (./invasibility-ms.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1147.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1147.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1065.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1065.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14329 strings out of 483183
- 210677 string characters out of 5966293
- 530395 words of memory out of 5000000
- 28792 multiletter control sequences out of 15000+600000
- 599993 words of font info for 125 fonts, out of 8000000 for 9000
+ 14331 strings out of 483183
+ 210696 string characters out of 5966293
+ 530402 words of memory out of 5000000
+ 28793 multiletter control sequences out of 15000+600000
+ 597002 words of font info for 124 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  41i,12n,42p,1064b,476s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
-ips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/te
-xmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ma
-thsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}</usr/share/texmf/f
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/d
+vips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/shar
+e/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/l
+m-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texmf/f
 onts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.
-pfb></usr/share/texmf/fonts/type1/public/lm/lmbx6.pfb></usr/share/texmf/fonts/t
-ype1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></
-usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/p
-ublic/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/shar
-e/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm
-/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fo
-nts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb
-></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on invasibility-ms.pdf (33 pages, 7042868 bytes).
+pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/
+type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></
+usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/p
+ublic/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/shar
+e/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/
+lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fon
+ts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pf
+b>
+Output written on invasibility-ms.pdf (34 pages, 6998754 bytes).
 PDF statistics:
- 10285 PDF objects out of 10688 (max. 8388607)
- 6936 compressed objects within 70 object streams
- 151 named destinations out of 1000 (max. 500000)
+ 10345 PDF objects out of 10688 (max. 8388607)
+ 6976 compressed objects within 70 object streams
+ 153 named destinations out of 1000 (max. 500000)
  14506 words of extra memory for PDF output out of 17280 (max. 10000000)
 
