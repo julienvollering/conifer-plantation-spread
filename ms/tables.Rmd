@@ -72,7 +72,26 @@ dat %>%
   summarize(`sum of pairwise ratios` = sumofratios(fit))
 ```
 
-# Species correlations in establishment
+# Correlations between density and establishment likelihood
+
+```{r}
+data <- transpose(results[c("arithmetic", "model.preds")])
+table <- map(data, function(x) {
+  joined <- left_join(x$arithmetic, x$model.preds, by = "nin") %>% 
+    filter(is.na(locality)) 
+  vct <- c(cor(joined$fit.x, joined$fit.y, use = "complete.obs", method = c("pearson")),
+           cor(joined$fit.x, joined$fit.y, use = "complete.obs", method = c("spearman")))
+  return(round(vct, 2))
+})
+table <- transpose(table) %>% 
+  map(unlist) %>%
+  set_names(c("Pearson", "Spearman")) %>% 
+  as_tibble() %>% 
+  add_column(`species group` = c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta"), .before = 1) 
+write_csv(table, here('ms', 'tables', 'corr-between-estimates.csv'))
+```
+
+# Correlations between species in establishment
 
 ```{r}
 fit <- map2(results$model.preds, names(results$model.preds),  
@@ -83,7 +102,7 @@ fitdf <- reduce(fit, full_join, by = "nin") %>%
 colnames(fitdf) <- c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta")
 table <- cor(fitdf, use= "pairwise.complete.obs", method = "spearman") %>% 
   round(digits = 2)
-write.csv(table, here('ms', 'tables', 'spearman-corr.csv'), row.names = TRUE)
+write.csv(table, here('ms', 'tables', 'corr-between-species.csv'), row.names = TRUE)
 ```
 
 # Model comparisons

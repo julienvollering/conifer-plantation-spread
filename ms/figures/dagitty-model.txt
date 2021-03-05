@@ -6,20 +6,20 @@ bb="-6.627,-3.552,5.654,3.649"
 "plantation age" [pos="3.742,-2.594"]
 "position from plantation" [pos="-0.318,-1.578"]
 "relative seed rain (in flat terrain)" [pos="2.803,-0.949"]
-"seed rain" [latent,pos="3.813,0.916"]
+"total seed rain" [latent,pos="3.813,0.916"]
 "wildling abundance" [outcome,pos="3.858,2.760"]
 climate [pos="-5.415,-2.598"]
 site [pos="-2.586,-2.598"]
 "ecosystem type" -> "establishment likelihood"
 "elevation from plantation" -> "ecosystem type"
-"elevation from plantation" -> "seed rain"
+"elevation from plantation" -> "total seed rain"
 "establishment likelihood" -> "wildling abundance"
-"plantation age" -> "seed rain"
+"plantation age" -> "total seed rain"
 "position from plantation" -> "ecosystem type"
 "position from plantation" -> "elevation from plantation"
 "position from plantation" -> "relative seed rain (in flat terrain)"
-"relative seed rain (in flat terrain)" -> "seed rain"
-"seed rain" -> "wildling abundance"
+"relative seed rain (in flat terrain)" -> "total seed rain"
+"total seed rain" -> "wildling abundance"
 climate -> "ecosystem type"
 climate -> "establishment likelihood"
 site -> "ecosystem type"
