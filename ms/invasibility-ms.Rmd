@@ -202,7 +202,7 @@ Subscripts $i$, $j$, and $k$ index sites, cells, and ecosystems.
 
 For each species, ecosystems where wildlings were totally absent were dropped as predictors (to avoid model convergence issues stemming from complete separation), along with the cells that were comprised mostly (> 0.5) of these ecosystems.
 We standardized the values of Bio1, Bio19, elevation from plantation, and plantation age, and centered the natural log of relative seed rain.
-We fitted three parallel models for each species: (1) with relative seed rain derived from the empirical dispersal kernal, (2) with relative seed rain derived from the WALD dispersal kernal, and (3) without relative seed rain.
+We fitted three parallel models for each species: (1) with relative seed rain derived from the empirical dispersal kernel, (2) with relative seed rain derived from the WALD dispersal kernel, and (3) without relative seed rain.
 From these three we selected that with the best AIC. 
 Two models (larches without seed rain and lodgepole pine with empirical dispersal kernel) did not converge and were excluded from selection.
 To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.2.7, @hartigDHARMaResidualDiagnostics2020].
@@ -215,7 +215,7 @@ We then refitted our four selected models with these eight strata replacing ecos
 # Results
 
 Wildling densities across ecosystems ranged 0-211/ha for Sitka spruce (unstratified mean: 28), 0-49/ha for Norway spruce (unstratified mean: 6), 0-1045/ha for larches (unstratified mean: 13), and 0-219/ha for lodgepole pine (unstratified mean: 34).
-Except for in larches, relative establishment likelihoods differed considerably from relative wildling densities (table \@ref(tab:estimate-correlation-table)).
+Relative establishment likelihoods differed considerably from relative wildling densities, except in larches (table \@ref(tab:estimate-correlation-table)).
 For instance, our model estimated that Sitka/Lutz spruce is three times more likely to establish in "boreal heath" than in "artificial substrate", despite wildling density being three times lower in "boreal heath" (fig. \@ref(fig:establishment)).
 The magnitude of variation in relative establishment likelihoods generally matched or exceeded the magnitude of variation in corresponding wildling densities (Appendix table \@ref(tab:dispersion-table)).
 
@@ -227,13 +227,14 @@ kbl(cortab, booktabs = TRUE,
   column_spec(1, italic = TRUE)
 ```
 
-Across species, the most consistently important covariates in the relationship between ecosytems and wildling abundance (by effect size) were: relative seed rain, precipitation, and site.
-For all species, seed rain estimates from the WALD seed dispersal model predicted wildling abundance better than estimates derived from the empirical seed dispersal kernel (Appendix, table \@ref(tab:model-comparison-table)).
-Omitting seed rain altogether produced the worst model fits. 
-The direct effect of relative elevation on establishment --- not including its effect mediated by ecosystems --- was modest and acted in different directions for different species (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)).
-The direct effects of climate on establishment --- not including its effect mediated by ecosystems --- varied by species and was strongest for larches. 
-For larches there was a negative direct effect of precipitation (Bio19), with a 50 mm increase in coldest-quarter precipitation estimated to decrease establishment six-fold.
-For Sitka/Lutz spruce and lodgepole pine, establishment likelihood varied strongly between sites, such that it swamped much of the variation between ecosystems.
+For all species, models using relative seed rain estimates from the WALD dispersal kernel predicted wildling abundance best (Appendix, table \@ref(tab:model-comparison-table)).
+Omitting seed rain altogether produced better model fits than using an offset of seed rain derived from the empirical dispersal kernel.
+Site had a strong influence on wildling abundance, especially for Sitka/Lutz spruce and lodgepole pine, such that for these species site variation swamped much of the variation between ecosystems.
+The direct effects of climate on establishment likelihood --- not including its effect mediated by ecosystems --- varied by species and was strongest for larches (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)). 
+For larches there were negative effects of both precipitation and temperature (50 mm increase in coldest-quarter precipitation and 0.9 °C increase in mean annual temperature both estimated to decrease establishment seven-fold).
+For Sitka/Lutz spruce there was a smaller positive effect of temperature, for Norway spruce a smaller positive effect of precipitation, and for lodgepole pine a smaller negative effect of precipitation.
+The direct effects of elevation from plantation on wildling abundance (through seed rain) were comparatively modest and acted in different directions for different species.
+Plantation age did not significantly affect wildling abundance in any species.
 
 \newpage
 \blandscape
@@ -246,7 +247,9 @@ knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.pd
 \newpage
 
 Among ecosystems with at least one wildling, estimated establishment likelihoods varied by 3--5 orders of magnitude for the different species.
-Patterns of relative establishment likelihood were modestly similar between species, with positive rank correlations in four of six species pairs (tab. \@ref(tab:species-correlation-table)).
+Patterns of relative establishment likelihood were modestly similar between species, with positive rank correlations in four of six species pairs (table \@ref(tab:species-correlation-table)).
+"Arable fields" showed some of the lowest establishment likelihoods of any ecosystem for all species where it appeared.
+Meanwhile, ecosystems with relatively high establishment likelihoods tended to be rarer types (e.g. "open active landslides") but also included "boreal heath" and "coastal heath". 
 
 ```{r species-correlation-table}
 cortab <- read.csv(here('ms', 'tables', 'corr-between-species.csv'), 
@@ -254,7 +257,7 @@ cortab <- read.csv(here('ms', 'tables', 'corr-between-species.csv'),
 cortab[lower.tri(cortab, diag = TRUE)] <- ""
 cortab <- cortab[-4,-1]
 kbl(cortab, booktabs = TRUE,
-    caption = "Rank correlations of relative establishment likelihoods in ecosystem types, between pairs of species groups.") %>%
+    caption = "Spearman correlations of relative establishment likelihoods in ecosystem types, between pairs of species groups.") %>%
   kable_styling(full_width = F) %>% 
   row_spec(0, italic = TRUE) %>%
   column_spec(1, italic = TRUE)
