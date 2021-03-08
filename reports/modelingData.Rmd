@@ -207,6 +207,16 @@ filter(cond.scaled, is.na(locality)) %>%
   coord_flip()
 ```
 
+```{r, include=FALSE}
+sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
+newdat <- filter(newdat, is.na(locality))
+Ps_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
+scaler <- filter(Ps_link_sens, nin == "T4") %>% 
+  pull(fit)
+Ps_link_sens <- mutate(Ps_link_sens, fit = fit/scaler) %>% 
+  select(nin, fit)
+```
+
 
 # P.abies
 
@@ -374,6 +384,16 @@ filter(cond.scaled, is.na(locality)) %>%
              col = "grey", pch = 1) + 
   scale_y_log10() + 
   coord_flip()
+```
+
+```{r, include=FALSE}
+sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
+newdat <- filter(newdat, is.na(locality))
+Pa_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
+scaler <- filter(Pa_link_sens, nin == "T4") %>% 
+  pull(fit)
+Pa_link_sens <- mutate(Pa_link_sens, fit = fit/scaler) %>% 
+  select(nin, fit)
 ```
 
 
@@ -546,6 +566,16 @@ filter(cond.scaled, is.na(locality)) %>%
              col = "grey", pch = 1) + 
   scale_y_log10() + 
   coord_flip()
+```
+
+```{r, include=FALSE}
+sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
+newdat <- filter(newdat, is.na(locality))
+L_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
+scaler <- filter(L_link_sens, nin == "T4") %>% 
+  pull(fit)
+L_link_sens <- mutate(L_link_sens, fit = fit/scaler) %>% 
+  select(nin, fit)
 ```
 
 
@@ -727,6 +757,16 @@ filter(cond.scaled, is.na(locality)) %>%
   coord_flip()
 ```
 
+```{r, include=FALSE}
+sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
+newdat <- filter(newdat, is.na(locality))
+Pc_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
+scaler <- filter(Pc_link_sens, nin == "T4") %>% 
+  pull(fit)
+Pc_link_sens <- mutate(Pc_link_sens, fit = fit/scaler) %>% 
+  select(nin, fit)
+```
+
 
 # All species
 
@@ -760,6 +800,12 @@ results <- list(arithmetic = arith.list,
                 model.preds = link.list)
 str(results, 2)
 saveRDS(results, here("output","results.rds"))
+```
+
+```{r, include=FALSE}
+link_sens.list <- list(Ps_link_sens, Pa_link_sens, L_link_sens, Pc_link_sens)
+names(link_sens.list) <- species
+saveRDS(link_sens.list, here("output","results-sensitivity.rds"))
 ```
 
 # sessionInfo
