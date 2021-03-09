@@ -321,6 +321,8 @@ Alternative explanations could include: (1) property owners removing wildlings a
 
 In a large database of vegetation plots across Europe, Chytrý et al.[-@chytryHabitatInvasionsAlien2008] found that alien plants as a group are consistently found at low rates in mires and heaths, and high rates in arable, man-made, and coastal ecosystems.
 The conifer species we examined do not conform closely to these broader trends in ecosystem invasibility, showing relatively high rates of establishment in heaths and very low rates of establishment in arable ecosystems.
+To the extent that there is any discernable pattern across these species, they appear to establish more easily in ecosystems infrequently hit by intense disturbances (e.g. debris flows in "open active landslides", rock fall in "bare talus slope", or fire in "coastal heath") than in ecosystems frequently experiencing less intense disturbances (e.g. erosion in "sand dunes" or flooding in "semi-natural wet meadow")
+This pattern could be a function of the balance between disturbance-induced mortality and opportunities for establishment. 
 
 Of the species in this study, lodgepole pine's establishment is best studied, and our results are consistent with this literature.
 "Bare rock" harbors very few competitors and showed highest lodgepole pine establishment of all ecosystems [@despainDispersalEcologyLodgepole2001], ecosystems with canopy cover generally showed low establishment [@langdonPinusContortaInvasion2010; @taylorDriversPlantInvasion2016], and ecosystems with high establishment were frequently structured by storng anthropogenic disturbance [@richardsonPineInvasionsSouthern1994].
@@ -353,9 +355,9 @@ On the other hand, experiments might be more useful when observed wildling sprea
 ## Generalizing susceptibility
 
 The overarching characteristics that we used to aggregate ecosystems did not generalize differences in susceptibility very well, especially across species.
-That is, groups of ecosystems belonging to the same hydrological category, or structured by the same processes, showed heterogeneous establishment likelihoods.
+That is, strata of ecosystems belonging to the same hydrological category, or structured by the same processes, showed heterogeneous establishment likelihoods.
 Thus, we did not find strong similarities between susceptible ecosystems that could be applied broadly to guide wildling management where data are scarce.
-We note that slightly different sets of ecosystems comprised the groups for each species, depending on their presence in the data, and these differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
+We note that slightly different sets of ecosystems comprised the strata for each species, depending on their presence in the data, and these differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
 This constraint hinders species comparisons but underlines our main takeaway from these results --- that the susceptibility of an individual ecosystem frequently diverges from those it is classified with.
 
 Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
