@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  9 MAR 2021 14:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  10 MAR 2021 14:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -714,89 +714,89 @@ l.387 \end{landscape}
 ntation-spread/ms/figures/establishment-hypotheses.pdf>] [16
 
 ] [17] [18] [19] [20]
-Overfull \hbox (12.49498pt too wide) in alignment at lines 531--542
+Overfull \hbox (12.49498pt too wide) in alignment at lines 534--545
  [] [] [] [] 
  []
 
 [21] [22]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 552--557
+Overfull \hbox (30.91093pt too wide) in alignment at lines 555--560
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 557--562
+Overfull \hbox (30.91093pt too wide) in alignment at lines 560--565
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 562--564
+Overfull \hbox (30.91093pt too wide) in alignment at lines 565--567
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 564--572
+Overfull \hbox (30.91093pt too wide) in alignment at lines 567--575
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 572--596
+Overfull \hbox (30.91093pt too wide) in alignment at lines 575--599
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 596--620
+Overfull \hbox (30.91093pt too wide) in alignment at lines 599--623
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 620--644
+Overfull \hbox (30.91093pt too wide) in alignment at lines 623--647
  [] [] [] [] [] [] [] [] [] 
  []
 
 [23
 
 ]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 644--668
+Overfull \hbox (30.91093pt too wide) in alignment at lines 647--671
  [] [] [] [] [] [] [] [] [] 
  []
 
 [24]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 668--671
+Overfull \hbox (30.91093pt too wide) in alignment at lines 671--674
  [] [] [] [] [] [] [] [] [] 
  []
 
 [25] [26]
-Overfull \hbox (83.23676pt too wide) in alignment at lines 675--680
+Overfull \hbox (83.23676pt too wide) in alignment at lines 678--683
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 680--685
+Overfull \hbox (83.23676pt too wide) in alignment at lines 683--688
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 685--687
+Overfull \hbox (83.23676pt too wide) in alignment at lines 688--690
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 687--690
+Overfull \hbox (83.23676pt too wide) in alignment at lines 690--693
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 690--714
+Overfull \hbox (83.23676pt too wide) in alignment at lines 693--717
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 714--738
+Overfull \hbox (83.23676pt too wide) in alignment at lines 717--741
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 738--738
+Overfull \hbox (83.23676pt too wide) in alignment at lines 741--741
  [] [] [] [] [] 
  []
 
@@ -804,7 +804,7 @@ Overfull \hbox (83.23676pt too wide) in alignment at lines 738--738
 
 
 ] [28]
-Overfull \hbox (22.22258pt too wide) in paragraph at lines 745--772
+Overfull \hbox (22.22258pt too wide) in paragraph at lines 748--775
  [][] 
  []
 
@@ -813,29 +813,29 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.823 \end{longtable}
+l.826 \end{longtable}
                      
 
 ] [30] [31] [32]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-sensitivity.pdf, id=10197, 633.78535pt x 448.13425pt>
+res/establishment-sensitivity.pdf, id=10195, 633.78535pt x 448.13425pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-sensitivity.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
 figures/establishment-sensitivity.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
 lantation-spread/ms/figures/establishment-sensitivity.pdf  used on input line 9
-52.
+55.
 (pdftex.def)             Requested size: 487.92918pt x 345.00288pt.
 
-LaTeX Warning: Float too large for page by 46.00288pt on input line 954.
+LaTeX Warning: Float too large for page by 46.00288pt on input line 957.
 
 [33pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.956 \end{landscape}
+l.959 \end{landscape}
                       </home/julien/Documents/dissertation/chapter3/conifer-pla
 ntation-spread/ms/figures/establishment-sensitivity.pdf>] [34
 
@@ -853,9 +853,9 @@ LaTeX Warning: There were multiply-defined labels.
  ) 
 Here is how much of TeX's memory you used:
  14348 strings out of 483183
- 211486 string characters out of 5966293
- 530890 words of memory out of 5000000
- 28802 multiletter control sequences out of 15000+600000
+ 211588 string characters out of 5966293
+ 530956 words of memory out of 5000000
+ 28803 multiletter control sequences out of 15000+600000
  597002 words of font info for 124 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  41i,12n,42p,1064b,476s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -872,10 +872,10 @@ e/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fon
 ts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pf
 b>
-Output written on invasibility-ms.pdf (38 pages, 7179033 bytes).
+Output written on invasibility-ms.pdf (38 pages, 7180254 bytes).
 PDF statistics:
- 11908 PDF objects out of 12825 (max. 8388607)
- 8015 compressed objects within 81 object streams
- 160 named destinations out of 1000 (max. 500000)
+ 11906 PDF objects out of 12825 (max. 8388607)
+ 8013 compressed objects within 81 object streams
+ 159 named destinations out of 1000 (max. 500000)
  14511 words of extra memory for PDF output out of 17280 (max. 10000000)
 
