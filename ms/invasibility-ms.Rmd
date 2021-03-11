@@ -45,7 +45,7 @@ Magni Olsen Kyrkjeeide: <https://orcid.org/0000-0002-7454-3652>
 # Abstract
 
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. The rate at which their offspring colonize surroundings varies among plantations, and the reasons for this variation are often unclear. To minimize the spread of so-called "wildlings" and the burden of conifer plantations on native ecosystems, managers need to know which ecosystems are most and least susceptible.
-2. We compared how likely wildlings are to establish across a wide range of ecosystems, focusing on four groups of alien conifer species planted in Norway. We used data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain, climate, and other sources of variation between sites. We also tested whether differences in susceptibility between individual ecosystem types could be generalized based on broad, shared characteristics.
+2. We compared how likely wildlings are to establish across a wide range of ecosystems, focusing on four groups of alien conifer species planted in Norway. We used data from detailed surveys around 82 plantations to model the relationship between ecosystem type and wildling abundance --- accounting for seed rain (estimated), climate, and other sources of variation between sites. We also tested whether differences in susceptibility between individual ecosystem types could be generalized based on broad, shared characteristics.
 3. We found that the rank order of ecosystems by susceptibility (modeled as relative establishment likelihood) differed from their rank order by wildling density, and that susceptibility generally varied as much or more than wildling density. For all species groups, relative establishment likelihoods spanned several orders of magnitude between the most and least susceptible ecosystems.
 4. The four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystems repeatedly among the least susceptible. We found that ecosystems characterized by destabilizing disturbance tended to be most susceptible, but broad ecosystem characteristics did not clarify patterns of susceptibility much, neither within nor across species groups. 
 5. *Synthesis and applications* Differences in wildling establishment between ecosystems can be exploited to keep alien conifers within plantation boundaries. Plantations hemmed in by agriculture or other unsusceptible ecosystems will result in relatively few wildlings, while plantations near landslides and other susceptible ecosystems will need monitoring and control. Managers should be aware that the density of wildlings in a given ecosystem may not reflect its relative susceptibility, because variation in seed rain, climate, and site characteristics obscures the relationship between ecosystem type and wildling establishment.
@@ -58,24 +58,24 @@ alien species, conifer, establishment likelihood, disturbance, invasibility, pla
 
 Plantations of alien conifers are widespread globally, and offspring from these plantations frequently establish in surrounding areas [@richardsonConifersInvasiveAliens2004].
 In many instances these naturalized offspring, or wildlings, harm biodiversity and other values, so controlling their spread is prudent.
-In particular, plantations contribute to the presence of alien conifers in protected areas, and generate substantial control costs as a result [@mcconnachieEstimatingEffectPlantations2015].
+In particular, plantations that contribute to the presence of alien conifers in protected areas may generate substantial control costs as a result [@mcconnachieEstimatingEffectPlantations2015].
 Controlling wildlings protects plantation surroundings and prevents secondary, potentially invasive spread.
 Accordingly, guidelines for sustainable use of alien trees stress that containing them to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduGlobalGuidelinesSustainable2020].
 
-How many wildlings are present and how far they are from the plantation varies a lot from site to site, even among conspecific plantations of similar age [@fernandesWhatDrivesEucalyptus2018; @nygaardSpreadIntroducedSitka2017], which makes it harder to predict and manage their spread.
-To begin to understand this variation, we need to consider both dispersal and establishment (where establishment comprises germination and survival).
+The number of wildlings present and their distance from the plantation varies a lot from site to site, even among conspecific plantations of similar age [@fernandesWhatDrivesEucalyptus2018; @nygaardSpreadIntroducedSitka2017], which makes it hard to predict and manage their spread.
+To better understand this variation, we need to consider both dispersal and establishment.
 These jointly generate patterns of wildling abundance and spatial distribution.
-Dispersal at a given site is affected by conditions related to a species' dispersal syndrome --- for instance wind exposure and site topography, in the case of a wind-dispersed species.
-Likewise, establishment is affected by biotic and abiotic conditions where seeds arrive.
-In theory, conditions inhibiting either process may be exploited to suppress wildling spread.
+Dispersal at a given site is affected by conditions related to the species' dispersal syndrome --- for instance wind exposure and topography, in the case of a wind-dispersed species.
+Establishment is affected by biotic and abiotic conditions where seeds arrive.
+Inhibiting either process reduces wildling spread.
 
-Reducing establishment is of particular interest because it directly regulates wildling abundance. 
+Inhibiting establishment is of particular interest because it directly regulates wildling abundance. 
 The conditions affecting establishment are also generally easier to manipulate than those affecting dispersal, either directly through intervention or indirectly through site selection.
-The question, then, becomes: how can we identify establishment-inhibiting conditions in a manner applicable to plantation management?
+The question, then, is: how can we identify establishment-inhibiting conditions in a manner applicable to plantation management?
 
 In Norway --- and similarly in other countries --- the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
 It builds on the continuum concept [@austinContinuumConceptOrdination1985], aiming for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
-As a result, it encapsulates in its ecosystem types (hereafter: "ecosystems") much of the variation that is most likely to regulate wildling germination and survival --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
+As a result, it encapsulates in its ecosystem types (hereafter: "ecosystems") much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
 It also identifies broad similarities between ecosystems, which might be used to tease out generic trends in establishment likelihood.
 
 To estimate how likely wildlings are to establish in particular ecosystems based on observations of their abundance around plantations, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
@@ -107,7 +107,7 @@ knitr::include_graphics('figures/sites-map.pdf')
 ```
 
 In the field, wildlings and ecosystems were mapped comprehensively within a 500x500 m plot framing the plantation of interest.
-Except in the 2016 field campaign, we also mapped as polygons any additional plantations of the same species within a larger 2x2 km plot.
+Except in the 2016 field campaign, we also mapped as polygons any additional plantations of the same species within an enclosing 2x2 km plot.
 We used GPS to register the point-positions of all wildlings over 30 cm in height, recording a single position for groups of wildlings occurring with less than 5 m between them.
 A few exceptionally dense groups of wildlings were mapped by registering polygons instead of points and estimating the number of individuals by transect counts.
 Concurrently, we registered polygons for all terrestrial ecosystems, following the Nature in Norway classification system [version 2.0 or 2.1, @halvorsenNaturNorgeNiN2015; based on the principles summarized in @halvorsenSystematicsEcodiversityEcoSyst2020].
@@ -295,7 +295,7 @@ This result is consistent with the assumption that our WALD-derived estimates of
 Although survivorship bias in our data prevents rigorous comparison of seed dispersal models, the superior fits of models with WALD-derived seed rain offsets, compared to models with empirically-derived seed rain offsets, also suggests that the WALD model described seed dispersal well.
 Lastly, the mechanistic nature of the WALD model also makes us more confident in its estimates across species and sites than we would be in a purely phenomenological model [@bullockAllDispersalFunctions2018]. 
 Nevertheless, that seed rain was was modeled and not measured is a limitation of our method, and it makes the establishment likelihoods we estimate less certain.
-For example, changes in the spatial distribution of seed rain as a plantation grows older and taller were not accounted for. 
+For example, changes in the distribution of seed rain as a plantation matures were not accounted for, nor was secondary seed dispersal from the few reproductive wildlings we observed. 
 
 The inconsistent effects of elevation from plantation on wildling abundance suggests that terrain does not affect seed dispersal much or that vertical distance alone misses its effect.
 In any case, there is no rule of thumb for management that wildlings tend to move up or down slopes.
@@ -314,8 +314,8 @@ This means that our ability to predict the spread of these species at a specific
 Nevertheless, ecosystem comparisons can and should guide management.
 Bianchi et al. [-@bianchiMethodsPredictingSitka2019] struggled to predict regeneration density within Sitka spruce plantations from bare ground cover, moss cover, plantation age, and plantation density.
 The inadequacy of plantation density as a predictor in this context suggests that the unexplained site-level variation in our models was not caused by differences in the densities of seed sources (which we assumed to be constant).
-Alternative explanations could include: (1) property owners removing wildlings, (2) disturbance legacies not captured in the delineation of ecosystem types [@millerHowDisturbanceHistory2021], or (3) differing demographic characteristics among plantations [@taylorDriversPlantInvasion2016], potentially as a result of provenance.
-It is also possible that ecological differences between Lutz and Sitka spruce explain some of the site variation in that case.
+Alternative explanations could include: (1) property owners removing wildlings, (2) disturbance legacies not captured in the delineation of ecosystem types [especially in grazing pressure; @millerHowDisturbanceHistory2021], or (3) differing demographic characteristics among plantations [especially in cone production; @taylorDriversPlantInvasion2016], potentially as a result of provenance.
+Ecological differences between Lutz and Sitka spruce might also explain some of the site variation in that case.
 
 
 ## Which ecosystems are susceptible?
@@ -356,14 +356,13 @@ On the other hand, experiments might be more useful when observed wildling sprea
 ## What do susceptible ecosystems have in common?
 
 The overarching characteristics that we used to aggregate ecosystems did not generalize differences in susceptibility well, especially not across species.
-Ecosystems belonging to the same hydrological category, or structured by the same processes, showed heterogeneous establishment likelihoods.
 Thus, we did not find strong similarities between susceptible ecosystems to guide wildling management irrespective of species.
-Note that slightly different sets of ecosystems comprised the strata for each species, depending on their presence in the data, and these differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
+Note that different sets of ecosystems comprised the strata for each species, depending on their presence in the data, and these differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
 This constraint hinders species comparisons but underlines our main takeaway from these results --- that the susceptibility of an individual ecosystem frequently diverges from those it is classified with.
 
 Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
 Many areas where conifer establishment is nearly impossible, like paved surfaces and annually plowed fields, count as terrestrial and strongly anthropogenically disturbed, which lowers the relative establishment likelihood of these two strata.
-Our results do not imply, for example, that a strong anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state Indeed, Vikane et al. [-@vikaneInvasionCallunaHeath2013] show that burning in coastal heathland increases Sitka spruce establishment.
+Our results do not imply, for example, that a strong anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state Indeed, Vikane et al. [-@vikaneInvasionCallunaHeath2013] show, for example, that burning in coastal heathland increases Sitka spruce establishment.
 Rather, we find that ecosystems structured by strong anthropogenic disturbance, on the whole, are less susceptible to Sitka/Lutz spruce wildlings than other ecosystems.
 
 # Conclusions
@@ -374,7 +373,7 @@ Specifically, differences in ecosystem susceptibility can be leveraged to
 reduce the rate of wildling establishment (potentially by orders of magnitude) through deliberate site selection for new plantations or targeted interventions around existing plantations.
 However, managers should be cautious judging ecosystem susceptibility based on descriptions of the species' autecology, observed wildling densities, or generalizations about susceptibility across ecosystems.
 
-One of main novelties of this study is that we inferred susceptibility/invasibility using mechanistically reconstructed, spatial estimates of seed rain.
+One of the main novelties of this study is that we inferred susceptibility/invasibility using mechanistically reconstructed, spatial estimates of seed rain.
 Scientists studying invasibility at national and continental scales have already recognized the importance of normalizing observed levels of invasion by a spatially explicit estimate of exposure [i.e. propagule pressure; @chytrySeparatingHabitatInvasibility2008]. 
 However, many studies quantifying ecosystem invasibility have not been able to adjust for propagule pressure, typically because it is impossible to reconstruct the underlying dispersal history [@catfordQuantifyingLevelsBiological2012].
 We found that accounting for seed rain and other confounders of the relationship between ecosystems and wildling abundance reshuffles estimates of ecosystem invasibility.
