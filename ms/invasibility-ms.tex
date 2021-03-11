@@ -258,7 +258,7 @@ We included an effect of elevation from the stand on seed rain because neither o
 For all species, wildling abundance showed a high frequency of zeros that was underestimated by the best fitting negative binomial distribution.
 Accordingly, we applied zero-inflated generalized linear models, fitted with the glmmTMB package (version 1.0, Brooks et al. \protect\hyperlink{ref-brooksGlmmTMBBalancesSpeed2017}{2017}) in R (version 3.6, R Core Team \protect\hyperlink{ref-rcoreteamLanguageEnvironmentStatistical2020}{2020}).
 These zero-inflated models regard zeros as the mixed product of a binomial process as well as a (conditional) count process that can take different error distributions (Zuur et al. \protect\hyperlink{ref-zuurMixedEffectsModels2009}{2009}).
-Preliminary models fitted with a negative binomial error distribution in the count process (ZINB) sometimes showed residual underdispersion, so we switched to a generalized Poisson error distribution (ZIGP), which can accomodate both over- and underdispersion (Brooks et al. \protect\hyperlink{ref-brooksStatisticalModelingPatterns2019}{2019}).
+Preliminary models fitted with a negative binomial error distribution in the count process (ZINB) sometimes showed residual underdispersion, so we switched to a generalized Poisson error distribution (ZIGP), which can accommodate both over- and underdispersion (Brooks et al. \protect\hyperlink{ref-brooksStatisticalModelingPatterns2019}{2019}).
 
 We modeled the binomial process as dependent on stand age and site, with site as a random variable.
 We expected that younger stands would exhibit more wildling-free cells than predicted under a constant establishment rate from age zero, because of their infertile juvenile period.
@@ -272,7 +272,7 @@ We chose these variables because they showed the strongest correlations with Nor
 For lodgepole pine we used only Bio19 because the two variables were highly correlated (\(\rho\) = 0.98).
 Elevation from the stand was taken with respect to the highest point of the central stand, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
 Relative seed rain directly represents relative exposure in the count process, so\\
-we took the natural log of this variable and entered it as an offset term (coefficent fixed at 1) (Zuur et al. \protect\hyperlink{ref-zuurMixedEffectsModels2009}{2009}).
+we took the natural log of this variable and entered it as an offset term (coefficient fixed at 1) (Zuur et al. \protect\hyperlink{ref-zuurMixedEffectsModels2009}{2009}).
 We expect, for example, that a doubling in seed rain would result in a doubling in wildling abundance, all else being equal.
 
 To summarize, for each species we modeled:
@@ -372,7 +372,7 @@ Variation in establishment likelihoods shrank when ecosystems were aggregated by
 None of the species showed large differences in establishment likelihood between terrestrial and wetland ecosystems.
 At most, larches and lodgepole pine were three times less likely to establish in wetlands.
 Ecosystems structured by destabilizing disturbance tended to show higher establishment likelihoods than those structured by environmental stress and those without disturbance structuring.
-However, the association between structuring process and establishment likelihood was heterogenous across species.
+However, the association between structuring process and establishment likelihood was heterogeneous across species.
 
 \newpage
 \begin{landscape}
@@ -433,7 +433,7 @@ Ecological differences between Lutz and Sitka spruce might also explain some of 
 
 In a large database of vegetation plots across Europe, Chytrý et al.(\protect\hyperlink{ref-chytryHabitatInvasionsAlien2008}{2008}\protect\hyperlink{ref-chytryHabitatInvasionsAlien2008}{b}) found that alien plants as a group are consistently found at low rates in mires and heaths, and high rates in arable, man-made, and coastal ecosystems.
 The conifer species we examined do not conform closely to these broader trends in ecosystem invasibility, showing relatively high rates of establishment in heaths and very low rates of establishment in arable ecosystems.
-To the extent that there is any discernable pattern across these species, they appear to establish more easily in ecosystems infrequently hit by intense disturbances (e.g.~debris flows in ``open active landslides'', rock fall in ``bare talus slope'', or fire in ``coastal heath'') than in ecosystems frequently experiencing less intense disturbances (e.g.~erosion in ``sand dunes'' or flooding in ``semi-natural wet meadow'')
+To the extent that there is any discernible pattern across these species, they appear to establish more easily in ecosystems infrequently hit by intense disturbances (e.g.~debris flows in ``open active landslides'', rock fall in ``bare talus slope'', or fire in ``coastal heath'') than in ecosystems frequently experiencing less intense disturbances (e.g.~erosion in ``sand dunes'' or flooding in ``semi-natural wet meadow'')
 This pattern could be a function of the balance between disturbance-induced mortality and opportunities for establishment.
 
 Of the species in this study, lodgepole pine's establishment is best studied, and our results are consistent with this literature.
@@ -473,7 +473,7 @@ This constraint hinders species comparisons but underlines our main takeaway fro
 
 Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
 Many areas where conifer establishment is nearly impossible, like paved surfaces and annually plowed fields, count as terrestrial and strongly anthropogenically disturbed, which lowers the relative establishment likelihood of these two strata.
-Our results do not imply, for example, that a strong anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state Indeed, Vikane et al.~(\protect\hyperlink{ref-vikaneInvasionCallunaHeath2013}{2013}) show, for example, that burning in coastal heathland increases Sitka spruce establishment.
+Our results do not imply, for example, that a strong anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state Indeed, Vikane et al.~(\protect\hyperlink{ref-vikaneInvasionCallunaHeath2013}{2013}) show, for example, that burning in coastal heath increases Sitka spruce establishment.
 Rather, we find that ecosystems structured by strong anthropogenic disturbance, on the whole, are less susceptible to Sitka/Lutz spruce wildlings than other ecosystems.
 
 \hypertarget{conclusions}{%
@@ -493,7 +493,7 @@ We found that accounting for seed rain and other confounders of the relationship
 \hypertarget{authors-contributions}{%
 \section{Authors' contributions}\label{authors-contributions}}
 
-JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analysed the data and led the writing. All authors contributed to the drafts and gave approval for publication.
+JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analyzed the data and led the writing. All authors contributed to the drafts and gave approval for publication.
 
 \hypertarget{acknowledgements}{%
 \section{Acknowledgements}\label{acknowledgements}}
