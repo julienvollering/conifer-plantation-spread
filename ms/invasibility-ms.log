@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  11 MAR 2021 22:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  11 MAR 2021 23:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -611,19 +611,19 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4]
-<figures/sites-map.pdf, id=119, 315.81989pt x 448.13425pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+<figures/sites-map.pdf, id=103, 315.81989pt x 448.13425pt>
 File: figures/sites-map.pdf Graphic file (type pdf)
 <use figures/sites-map.pdf>
 Package pdftex.def Info: figures/sites-map.pdf  used on input line 192.
 (pdftex.def)             Requested size: 315.82391pt x 448.13998pt.
-[5] [6pdfTeX warning (ext4): destination with the same identifier (name{figure.
+[4] [5pdfTeX warning (ext4): destination with the same identifier (name{figure.
 1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.223 
-       <./figures/sites-map.pdf>]
+l.204 
+       <./figures/sites-map.pdf>] [6]
 <figures/site-example/site-example.pdf, id=1996, 597.43109pt x 844.83629pt>
 File: figures/site-example/site-example.pdf Graphic file (type pdf)
 <use figures/site-example/site-example.pdf>
@@ -631,14 +631,14 @@ Package pdftex.def Info: figures/site-example/site-example.pdf  used on input l
 ine 245.
 (pdftex.def)             Requested size: 310.50186pt x 439.08536pt.
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/dagitty-model.pdf, id=1998, 401.72754pt x 227.37123pt>
+res/dagitty-model.pdf, id=1998, 433.3259pt x 241.93488pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/dagitty-model.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
 figures/dagitty-model.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
 lantation-spread/ms/figures/dagitty-model.pdf  used on input line 254.
-(pdftex.def)             Requested size: 345.00081pt x 195.26482pt.
+(pdftex.def)             Requested size: 345.0082pt x 192.62524pt.
 [7] [8pdfTeX warning (ext4): destination with the same identifier (name{figure.
 2}) has been already used, duplicate ignored
 
@@ -854,7 +854,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  14352 strings out of 483183
  211634 string characters out of 5966293
- 530956 words of memory out of 5000000
+ 530953 words of memory out of 5000000
  28803 multiletter control sequences out of 15000+600000
  597262 words of font info for 126 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -872,7 +872,7 @@ e/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fon
 ts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pf
 b>
-Output written on invasibility-ms.pdf (38 pages, 7180004 bytes).
+Output written on invasibility-ms.pdf (38 pages, 7180285 bytes).
 PDF statistics:
  11906 PDF objects out of 12825 (max. 8388607)
  8013 compressed objects within 81 object streams
