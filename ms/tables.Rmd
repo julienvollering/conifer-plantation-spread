@@ -109,7 +109,7 @@ write.csv(table, here('ms', 'tables', 'corr-between-species.csv'), row.names = T
 
 ```{r}
 modelcomp <- results$model.comp %>% 
-  set_names(c("Picea sitchensis / lutzii", "Picea abies", "Larix", "Pinus contorta")) %>% 
+  set_names(c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta")) %>% 
   bind_rows(.id = "species group") %>% 
   mutate(`seed dispersal estimate` = ifelse(`seed dispersal estimate` == "ExP",
                                             "Exponential Power",
