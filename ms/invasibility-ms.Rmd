@@ -99,7 +99,7 @@ Note that Norway spruce is native to Norway, but the plantations included in thi
 We selected stands using aerial imagery, aiming for those isolated from conspecific stands.
 We collected field data for each stand in one of six field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019; @sandvenKartleggingAvKortdistansespredning2019].
 
-```{r sites-map, fig.cap='Locations of the 82 plantation stands in the sample.'}
+```{r sites-map, out.width='100%', fig.cap='Locations of the 82 plantation stands in the sample.'}
 knitr::include_graphics('figures/sites-map.pdf')
 ```
 
@@ -155,7 +155,7 @@ We used a directed acyclic graph (DAG) to diagram causal relationships among the
 In the DAG, the unmeasured, proximate causes of wildling abundance --- total seed rain over the lifetime of the stand and establishment likelihood --- are descendants of variables that we could observe or model.
 We included an effect of elevation from the stand on seed rain because neither of our models of seed dispersal account for uneven terrain.
 
-```{r DAG, fig.cap="A directed acyclic graph showing the causal relationships motivating our statistical model of ecosystems' effects on wildling abundance. Red variables causally affect both the ecosystem type and wildling abundance, blue variables causally affect only wildling abundance, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
+```{r DAG, out.width='90%', fig.cap="A directed acyclic graph showing the causal relationships motivating our statistical model of ecosystems' effects on wildling abundance. Red variables causally affect both the ecosystem type and wildling abundance, blue variables causally affect only wildling abundance, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
 
@@ -221,13 +221,6 @@ kbl(cortab, booktabs = TRUE,
   column_spec(1, italic = TRUE)
 ```
 
-For all species, models using relative seed rain estimates from the WALD dispersal model predicted wildling abundance best (Appendix, table \@ref(tab:model-comparison-table)).
-Omitting seed rain altogether produced better model fits than using estimates from the empirical dispersal kernel.
-Site had a strong influence on wildling abundance for Sitka/Lutz spruce and lodgepole pine, such that site variation swamped much of the variation between ecosystems, for these species.
-The direct effects of climate on establishment likelihood varied by species and was strongest for larches (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)). 
-The direct effects of elevation from the stand on wildling abundance (through seed rain) were comparatively modest and acted in different directions for different species.
-Stand age did not significantly affect wildling abundance in any species, except that older stands of Sitka/Lutz spruce had fewer wildling-free cells (structural zeros) than younger stands.
-
 \newpage
 \blandscape
 ```{r establishment, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups across ecosystem types, using 'forest' as the reference type. Zero density is plotted at the lower limit of the x-axis. Relative establishment likelihoods are shown with 95 % confidence intervals. Grey points depict relative establishment likelihoods for individual sites in our data set. The order of ecosystem types along the y-axis is determined by a confidence-weighted mean of their percentile-ranked establishment likelihoods within species, such that types with consistently high establishment likelihood across species are at the top. Photos licensed CC BY 4.0 Rune Halvorsen."}
@@ -236,6 +229,13 @@ knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.pd
 
 \elandscape
 \newpage
+
+For all species, models using relative seed rain estimates from the WALD dispersal model predicted wildling abundance best (Appendix, table \@ref(tab:model-comparison-table)).
+Omitting seed rain altogether produced better model fits than using estimates from the empirical dispersal kernel.
+Site had a strong influence on wildling abundance for Sitka/Lutz spruce and lodgepole pine, such that site variation swamped much of the variation between ecosystems, for these species.
+The direct effects of climate on establishment likelihood varied by species and was strongest for larches (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)). 
+The direct effects of elevation from the stand on wildling abundance (through seed rain) were comparatively modest and acted in different directions for different species.
+Stand age did not significantly affect wildling abundance in any species, except that older stands of Sitka/Lutz spruce had fewer wildling-free cells (structural zeros) than younger stands.
 
 Among ecosystems with at least one wildling, estimated establishment likelihoods varied by 3--5 orders of magnitude for the different species.
 Patterns of relative establishment likelihood were modestly similar between species, with positive rank correlations in four of six species pairs (table \@ref(tab:species-correlation-table)).
@@ -289,7 +289,7 @@ For example, changes in the distribution of seed rain as a stand matures were no
 
 The inconsistent effects of elevation from the stand on wildling abundance suggests that terrain does not affect seed dispersal much or that vertical distance alone misses its effect.
 In any case, there is no rule of thumb for management that wildlings tend to move up or down slopes.
-Similarly, the weak effects of stand age on wildling abundance suggests that wildlings do not accumulate over the lifetime of the stand, or at least that this accumulation tends to be weak and/or non-linear.
+Similarly, the weak and inconsistent effects of stand age on wildling abundance suggests that wildlings accumulate sporadically, and that other site characteristics tend to outweigh the effect of age.
 
 Our models do not estimate climate's total causal effect on wildling abundance, because they set aside its influence on ecosystems [@westreichTableFallacyPresenting2013].
 Therefore, we interpret the estimated climatic effects with respect to physiological constraints within a given ecosystem.
@@ -395,6 +395,7 @@ Simultaneously, we randomly sampled 100 wind velocities in the direction of the 
 The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
 The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional2020]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
 
+\newpage
 ```{r recreate traits-table, include=FALSE}
 traits <- tribble(
   ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
@@ -496,6 +497,7 @@ disptab <- read.csv(here('ms', 'tables', 'dispersion.csv'),
                     row.names = 1, check.names = FALSE)
 kbl(disptab, longtable = TRUE, booktabs = TRUE, escape = FALSE,
     caption = "Proportional variability in wildling densities among ecosystems compared to proportional variability in establishment likelihoods among ecosystems.") %>%
+    column_spec(1, italic = TRUE) %>%
   footnote(general = c("Heath, Joel P., and Peter Borowski. 2013. “Quantifying Proportional Variability.” PLoS ONE 8 (12): e84074. https://doi.org/10.1371/journal.pone.0084074."), 
             general_title = "References: ",
            threeparttable = TRUE)
@@ -507,6 +509,7 @@ mcomptab <- read.csv(here('ms', 'tables', 'modelcomp.csv'), check.names = FALSE)
 kbl(mcomptab, booktabs = TRUE,
     caption = "Comparison of models with different seed dispersal estimates") %>%
   kable_styling(full_width = F) %>% 
+  column_spec(1, italic = TRUE) %>%
   collapse_rows(columns = 1, latex_hline = "major", valign = "middle")
 ```
 
