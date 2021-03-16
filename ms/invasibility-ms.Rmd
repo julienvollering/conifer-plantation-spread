@@ -41,16 +41,6 @@ library(kableExtra)
 
 *Corresponding author: <julienvollering@gmail.com>
 
-# ORCIDs
-
-Julien Vollering: <https://orcid.org/0000-0002-7409-2898>
-
-Siri Lie Olsen: <https://orcid.org/0000-0002-4443-8261>
-
-Olav Skarpaas: <https://orcid.org/0000-0001-9727-1672>
-
-Magni Olsen Kyrkjeeide: <https://orcid.org/0000-0002-7454-3652> 
-
 # Abstract
 
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. To minimize the rate at which their offspring --- so-called "wildlings" --- colonize surroundings, and reduce the burden of conifer plantations on native ecosystems, managers need to know which ecosystems are most and least susceptible.
