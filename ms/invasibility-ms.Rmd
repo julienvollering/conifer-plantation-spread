@@ -5,11 +5,11 @@ author:
 - Siri Lie Olsen
 - Olav Skarpaas
 - Leif Appelgren
-- Magni Olsen Kyrkjeeide
+- Magni Olsen Kyrkjeeide^3^
 - Anders Often
 - Jakob Sandven
 - Odd Stabbetorp
-- Øyvind Sørhuus^3^ 
+- Øyvind Sørhuus^4^ 
 bibliography: invasibility-ms.bib
 link-citations: true
 output:
@@ -33,11 +33,13 @@ library(knitr)
 library(kableExtra)
 ```
 
-¹Department of Environmental Sciences, Western Norway University of Applied Sciences, Sogndal, Norway
+^1^Department of Environmental Sciences, Western Norway University of Applied Sciences, Sogndal, Norway
 
-²Department of Research and Collections, Natural History Museum, University of Oslo, Oslo, Norway
+^2^Department of Research and Collections, Natural History Museum, University of Oslo, Oslo, Norway
 
-³NORSKOG, Oslo, Norway
+^3^Norwegian Institute for Nature Research, Trondheim, Norway
+
+^4^NORSKOG, Oslo, Norway
 
 *Corresponding author: <julienvollering@gmail.com>
 
