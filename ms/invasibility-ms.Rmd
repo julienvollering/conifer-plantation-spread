@@ -1,7 +1,7 @@
 ---
 title: 'Accounting for seed rain and other confounders reveals which ecosystems are most susceptible to alien conifer establishment'
 author:
-- Julien Vollering^[julienvollering@gmail.com]
+- Julien Vollering^1,2^*
 - Siri Lie Olsen
 - Olav Skarpaas
 - Leif Appelgren
@@ -9,11 +9,12 @@ author:
 - Anders Often
 - Jakob Sandven
 - Odd Stabbetorp
-- Øyvind Sørhuus
+- Øyvind Sørhuus^3^ 
 bibliography: invasibility-ms.bib
 link-citations: true
 output:
   bookdown::pdf_document2:
+    toc: false
     keep_tex: true
 documentclass: article
 csl: journal-of-applied-ecology.csl
@@ -31,6 +32,14 @@ library(here)
 library(knitr)
 library(kableExtra)
 ```
+
+¹Department of Environmental Sciences, Western Norway University of Applied Sciences, Sogndal, Norway
+
+²Department of Research and Collections, Natural History Museum, University of Oslo, Oslo, Norway
+
+³NORSKOG, Oslo, Norway
+
+*Corresponding author: <julienvollering@gmail.com>
 
 # ORCIDs
 
@@ -369,7 +378,7 @@ JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO,
 
 # Acknowledgements
 
-We thank Honorata Gajda, Knut Børge Strøm, Heidi Elin Myklebost, Jon Hagelin, Vigdis Frivoll, Sina Thu Randulff, Roy Mangersnes, Bjarne Homnes Oddane, Rune Søyland, Solbjørg Engen Torvik, Toralf Tysse, Craig Jackson, Miene-Marie Gastinger, Ola Westby Aamodt, and Anders Ringstad for their help in collecting and/or collating the field data. Field work was financed by the Norwegian Environment Agency (contracts #15040036, #17070025, #19087471...).
+We thank Honorata Gajda, Knut Børge Strøm, Heidi Elin Myklebost, Jon Hagelin, Vigdis Frivoll, Sina Thu Randulff, Roy Mangersnes, Bjarne Homnes Oddane, Rune Søyland, Solbjørg Engen Torvik, Toralf Tysse, Craig Jackson, Miene-Marie Gastinger, Ola Westby Aamodt, and Anders Ringstad for their help in collecting and/or collating the field data. Field work was financed by the Norwegian Environment Agency (contracts #15040036, #17070025, #19087470, #19087471...).
 
 \newpage
 # Appendix
