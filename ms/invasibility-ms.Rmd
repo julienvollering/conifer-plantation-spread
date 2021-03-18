@@ -285,12 +285,13 @@ Exploring the alternative, we found that if we included relative seed rain as a 
 This result is consistent with the assumption that our WALD-derived estimates of relative seed rain capture true differences in seed rain.
 Although survivorship bias in our data prevents rigorous comparison of seed dispersal models, the superior fits of models with WALD-derived seed rain offsets compared to models with empirically-derived seed rain offsets also supports the WALD model estimates.
 Lastly, the mechanistic nature of the WALD model makes us more confident in its estimates across species and sites than we would be in a purely phenomenological model [@bullockAllDispersalFunctions2018]. 
-Nevertheless, that seed rain was was modeled and not measured is a limitation of our method, and it makes the establishment likelihoods we estimate less certain.
+Nevertheless, that seed rain was modeled and not measured is a limitation of our method, and it makes the establishment likelihoods we estimate less certain.
 For example, changes in the distribution of seed rain as a stand matures were not accounted for, nor was secondary seed dispersal from the few reproductive wildlings we observed. 
 
 The inconsistent effects of elevation from the stand on wildling abundance suggests that terrain does not affect seed dispersal much or that vertical distance alone misses its effect.
 In any case, there is no rule of thumb for management that wildlings tend to move up or down slopes.
-Similarly, the weak and inconsistent effects of stand age on wildling abundance suggests that wildlings accumulate sporadically, and that other site characteristics tend to outweigh the effect of age.
+On the other hand, our results were consistent with the idea that prevailing winds during the dispersal season affect the direction of wildling spread, since the WALD model provided the best fit.    
+Meanwhile, the weak and inconsistent effects of stand age on wildling abundance suggests that wildlings accumulate sporadically, and that other site characteristics tend to outweigh the effect of age.
 
 Our models do not estimate climate's total causal effect on wildling abundance, because they set aside its influence on ecosystems [@westreichTableFallacyPresenting2013].
 Therefore, we interpret the estimated climatic effects with respect to physiological constraints within a given ecosystem.
@@ -370,7 +371,7 @@ JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO,
 
 # Acknowledgements
 
-We thank Honorata Gajda, Knut Børge Strøm, Heidi Elin Myklebost, Jon Hagelin, Vigdis Frivoll, Sina Thu Randulff, Roy Mangersnes, Bjarne Homnes Oddane, Rune Søyland, Solbjørg Engen Torvik, Toralf Tysse, Craig Jackson, Miene-Marie Gastinger, Ola Westby Aamodt, and Anders Ringstad for their help in collecting and/or collating the field data. Field work was financed by the Norwegian Environment Agency (contracts #15040036, #17070025, #19087470, #19087471...).
+We thank Ola Westby Aamodt, Matteo De Stefano, Vigdis Frivoll, Honorata Gajda, Miene-Marie Gastinger, Jon Hagelin, Craig Jackson, Roy Mangersnes, Heidi Elin Myklebost, Bjarne Homnes Oddane, Sina Thu Randulff, Anders Ringstad, Monica Ruano, Knut Børge Strøm, Rune Søyland, Solbjørg Engen Torvik, and Toralf Tysse for their help in collecting and/or collating the field data. Field work was financed by the Norwegian Environment Agency (contracts #15040036, #17070025, #19087470, #19087471...).
 
 \newpage
 # Appendix
