@@ -188,9 +188,9 @@ To summarize, for each species we modeled:
 
 \begin{equation}
 \begin{aligned}
-wildlings_{ijk} &\sim ZIGP(\pi_{i}, \mu_{ijk}, \phi) \\
+wildlings_{ij} &\sim ZIGP(\pi_{i}, \mu_{ij}, \phi) \\
 logit(\pi_{i}) &= StandAge_{i} + Site_{i} \\
-log(\mu_{ijk}) &= \sum\limits_{k=1}^K EcosystemType_{ijk} + Site_{i} + Bio1_{i} + Bio19_{i} + \\
+log(\mu_{ij}) &= \sum\limits_{k=1}^K EcosystemType_{ijk} + Site_{i} + Bio1_{i} + Bio19_{i} + \\
 &RelativeElevation_{ij} + StandAge_{i} + \\
 &offset(log(RelativeSeedRain_{ij})) \\
 Site_{i} &\sim Normal(0, \sigma^2) \\
