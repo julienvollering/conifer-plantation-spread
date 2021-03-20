@@ -72,12 +72,13 @@ Wildling spread may be reduced by inhibiting either dispersal or establishment, 
 The conditions affecting establishment are also generally easier to manipulate than those affecting dispersal, either directly through intervention or indirectly through site selection.
 The question, then, is: how can we identify establishment-inhibiting conditions in a manner applicable to plantation management?
 
-In Norway, and similarly in other countries, the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
+In Norway, the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
 It aims for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
 As a result, it encapsulates in its ecosystem types (hereafter: "ecosystems") much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
 It also identifies broad similarities between ecosystems, which might be used to tease out generic trends in establishment likelihood.
 
-To estimate how likely wildlings are to establish in particular ecosystems based on their abundance around plantation stands, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
+Naively, the density of wildlings in a given ecosytem would seem to indicate how likely they are to establish there.
+But to estimate ecosystem establishment likelihoods based on wildling abundance around plantation stands, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
 For example, low establishment likelihood in an ecosystem frequently located close to plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
 Likewise, an ecosystem may appear to promote establishment if it tends to co-occur with climatic conditions that support germination.
 Once estimated, unconfounded establishment likelihoods may be used to predict how susceptible the surroundings of an unobserved plantation are, based on ecosystem composition.
@@ -113,14 +114,14 @@ This system is the national standard for land cover mapping and provides full sp
 We mapped ecosystems at a scale of 1:5000, which means that any polygon over 250 m^2^ was registered [@brynVeilederKartleggingAv2015].
 Regularly patterned occurrence of more than one ecosystem in polygons smaller than the minimum size were registered as so-called mosaic polygons.
 
-For each of the central stands we measured the height of a representative individual by clinometer.
-We also estimated the age of the stand at the time of the field campaign, either by contacting land owners and municipal officials, or by counting growth rings.
+We estimated or measured (by clinometer) the heights of the 82 central stands.
+We also estimated their ages at the time of the field campaign, either by contacting land owners and municipal officials, or by counting growth rings.
 Details of all 82 stands are provided in the Appendix (table \@ref(tab:sites-table)).
 
 ## Seed dispersal
 
 To account for the influence of seed dispersal on wildling abundance, we needed estimates of the spatial distribution of seed rain within the 500x500 m plots.
-We considered all conspecific stands within a 1 km radius of the central stand to be potential seed sources, and used two models of seed dispersal to derive different estimates of relative seed rain in space. 
+We considered all conspecific stands within a 1 km radius of the plot center to be potential seed sources, and used two models of seed dispersal to derive different estimates of relative seed rain in space. 
 Acknowledging the uncertainty involved in estimating seed dispersal, we explored one empirically-parameterized, isotropic model and one mechanistically-derived, anisotropic model.   
 
 The first model was a static seed dispersal kernel with parameter estimates generalized from multiple data sets.
@@ -154,7 +155,7 @@ knitr::include_graphics('figures/site-example/site-example.pdf')
 
 We used a directed acyclic graph (DAG) to diagram causal relationships among the factors we expected to influence wildling abundance per cell (fig. \@ref(fig:DAG)).
 In the DAG, the unmeasured, proximate causes of wildling abundance --- total seed rain over the lifetime of the stand and establishment likelihood --- are descendants of variables that we could observe or model.
-We included an effect of elevation from the stand on seed rain because neither of our models of seed dispersal account for uneven terrain.
+We included an effect of elevation relative to the stand on seed rain because neither of our models of seed dispersal account for uneven terrain.
 
 ```{r DAG, out.width='90%', fig.cap="A directed acyclic graph showing the causal relationships motivating our statistical model of ecosystems' effects on wildling abundance. Red variables causally affect both the ecosystem type and wildling abundance, blue variables causally affect only wildling abundance, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
@@ -170,12 +171,12 @@ We expected that younger stands would exhibit more wildling-free cells than pred
 We also expected the frequency of zeros to vary with site, because our field work documented that some land owners had occasionally made efforts to remove wildlings.
 Excess zeros that arose in these ways would therefore not bias our estimates of establishment likelihood [@blasco-morenoWhatDoesZero2019].
 
-To estimate the causal influence of ecosystems on wildling abundance in accordance with the DAG [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020], we modeled the count process as dependent on ecosystem, site, climate, elevation from the stand, and relative seed rain.
+To estimate the causal influence of ecosystems on wildling abundance in accordance with the DAG [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020], we modeled the count process as dependent on ecosystem, site, climate, elevation relative to the stand, and relative seed rain.
 We also included stand age in the count process model because it reduced the unexplained variance associated with the random effect of site, and because we could interpret its coefficient as an (unconfounded) total effect on wildling abundance [@westreichTableFallacyPresenting2013].
 Climate was represented as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30 arcsecond resolution, from CHELSA data [@kargerClimatologiesHighResolution2017].
 We chose these variables because they showed the strongest correlations with Norwegian vegetation zones and sections, respectively [@bakkestuenSteplessModelsRegional2008].
-For lodgepole pine we used only Bio19 because the two variables were highly correlated ($\rho$ = 0.98).
-Elevation from the stand was taken with respect to the highest point of the central stand, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
+For lodgepole pine we excluded Bio1 because the two climatic variables were highly correlated ($\rho$ = 0.98).
+Elevation relative to the stand was taken with respect to the highest point of the central stand, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
 Relative seed rain directly represents relative exposure in the count process, so we entered the natural log of this variable as an offset term [coefficient fixed at 1; @zuurMixedEffectsModels2009].
 We expect, for example, that a doubling in seed rain would result in a doubling in wildling abundance, all else being equal.
 
@@ -196,10 +197,10 @@ where $\pi$ is the probability of a zero from the binomial process, while $\mu$ 
 Subscripts $i$, $j$, and $k$ index sites, cells, and ecosystems.
 
 For each species, ecosystems where wildlings were totally absent were dropped as predictors (to avoid model convergence issues stemming from complete separation), along with the cells that were comprised mostly (> 0.5) of one of these ecosystems.
-The values of Bio1, Bio19, elevation from the stand, and stand age were standardized, and the natural log of relative seed rain was centered.
-We fitted three parallel models for each species: (1) with relative seed rain derived from the empirical dispersal kernel, (2) with relative seed rain derived from the WALD dispersal model, and (3) without relative seed rain.
+The values of Bio1, Bio19, elevation relative to the stand, and stand age were standardized, and the natural log of relative seed rain was centered.
+We fitted three parallel models for each species: (1) with relative seed rain derived from the static dispersal kernel, (2) with relative seed rain derived from the WALD dispersal model, and (3) without relative seed rain.
 From these three we selected that with the best AIC. 
-Two models (larches without seed rain and lodgepole pine with empirical dispersal kernel) did not converge and were excluded from selection.
+Two models (larches without seed rain and lodgepole pine with static dispersal kernel) did not converge and were excluded from selection.
 To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.2.7, @hartigDHARMaResidualDiagnostics2020].
 We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
 Relative establishment likelihoods among ecosystems were calculated as predictions from the conditional count part of the model (holding covariates at their mean values), and scaled by the value for "forests" (which were common in the sample).
@@ -232,10 +233,10 @@ knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.pd
 \newpage
 
 For all species, models using relative seed rain estimates from the WALD dispersal model predicted wildling abundance best (Appendix, table \@ref(tab:model-comparison-table)).
-Omitting seed rain altogether produced better model fits than using estimates from the empirical dispersal kernel.
+Omitting seed rain altogether produced better model fits than using estimates from the static dispersal kernel.
 Site had a strong influence on wildling abundance for Sitka/Lutz spruce and lodgepole pine, such that site variation swamped much of the variation between ecosystems, for these species.
 The direct effects of climate on establishment likelihood varied by species and was strongest for larches (Appendix, tables \@ref(tab:Ps)-\@ref(tab:Pc)). 
-The direct effects of elevation from the stand on wildling abundance (through seed rain) were comparatively modest and acted in different directions for different species.
+The direct effects of elevation relative to the stand on wildling abundance were comparatively modest and acted in different directions for different species.
 Stand age did not significantly affect wildling abundance in any species, except that older stands of Sitka/Lutz spruce had fewer wildling-free cells (structural zeros) than younger stands.
 
 Among ecosystems with at least one wildling, estimated establishment likelihoods varied by 3--5 orders of magnitude for the different species.
@@ -283,15 +284,15 @@ Because wildling abundance is the product of seed rain and establishment likelih
 By including relative seed rain as an offset in the model, we ensured that seed rain and establishment likelihood were not conflated, at the cost of assuming that our relative seed rain estimates were accurate.
 Exploring the alternative, we found that if we included relative seed rain as a covariate rather than an offset that its coefficient was estimated near one, and that estimated relative establishment likelihoods remained mostly unchanged (Appendix, fig. \@ref(fig:establishment-sensitivity)).
 This result is consistent with the assumption that our WALD-derived estimates of relative seed rain capture true differences in seed rain.
-Although survivorship bias in our data prevents rigorous comparison of seed dispersal models, the superior fits of models with WALD-derived seed rain offsets compared to models with empirically-derived seed rain offsets also supports the WALD model estimates.
+Although wildlings cannot rigorously validate seed dispersal models (due to survivorship bias), the superior fits of models with WALD-derived seed rain offsets compared to models with statically-derived seed rain offsets also supports the WALD model estimates.
 Lastly, the mechanistic nature of the WALD model makes us more confident in its estimates across species and sites than we would be in a purely phenomenological model [@bullockAllDispersalFunctions2018]. 
 Nevertheless, that seed rain was modeled and not measured is a limitation of our method, and it makes the establishment likelihoods we estimate less certain.
 For example, changes in the distribution of seed rain as a stand matures were not accounted for, nor was secondary seed dispersal from the few reproductive wildlings we observed. 
 
-The inconsistent effects of elevation from the stand on wildling abundance suggests that terrain does not affect seed dispersal much or that vertical distance alone misses its effect.
-In any case, there is no rule of thumb for management that wildlings tend to move up or down slopes.
+The inconsistent effects of relative elevation on wildling abundance indicate that there is no rule of thumb for management about wildlings moving up or down slopes. 
+However, since we defined elevation relative to the central stand, it is possible that seed sources above or below the central stand partly masked slope effects.
 On the other hand, our results were consistent with the idea that prevailing winds during the dispersal season affect the direction of wildling spread, since the WALD model provided the best fit.    
-Meanwhile, the weak and inconsistent effects of stand age on wildling abundance suggests that wildlings accumulate sporadically, and that other site characteristics tend to outweigh the effect of age.
+Meanwhile, the weak and uncertain effects of stand age on wildling abundance suggests that other site characteristics tend to outweigh the magnitude of wildling accumulation over time.
 
 Our models do not estimate climate's total causal effect on wildling abundance, because they set aside its influence on ecosystems [@westreichTableFallacyPresenting2013].
 Therefore, we interpret the estimated climatic effects with respect to physiological constraints within a given ecosystem.
@@ -303,7 +304,7 @@ A curious feature of our results that needs more research is the large amount of
 This means that our ability to predict the spread of these species at a specific site, relative to other sites, is limited (even if the site's ecosystem composition is known). 
 Nevertheless, ecosystem comparisons can and should guide management.
 Bianchi et al. [-@bianchiMethodsPredictingSitka2019] struggled to predict regeneration density within Sitka spruce plantations from stand density (among other predictors), which suggests that the unexplained site-level variation in our models was not caused by our assumption of constant seed source density.
-Alternative explanations could include: (1) property owners removing wildlings, (2) disturbance legacies not captured in the delineation of ecosystem types [especially in grazing pressure; @millerHowDisturbanceHistory2021], or (3) differing demographic characteristics among plantations [especially in cone production; @taylorDriversPlantInvasion2016], potentially as a result of provenance.
+Alternative sources of heterogeneity could include: (1) disturbance legacies not captured in the delineation of ecosystem types [especially in grazing pressure; @millerHowDisturbanceHistory2021], (2) demographic characteristics of plantations, potentially related to provenance [especially in cone production; @taylorDriversPlantInvasion2016], or (3) wildling control by property owners. 
 Ecological differences between Lutz and Sitka spruce might also explain some of the site variation in that case.
 
 
@@ -327,7 +328,7 @@ This knowledge may be applied in at least two ways.
 First, as a preventative measure, we recommend siting new stands where surrounded by high proportions of ecosystems with low establishment likelihood.
 In particular, "arable fields" repress wildling establishment for all species and are common near existing stands, so picking sites hemmed in by this kind of agricultural land should be both effective and feasible.
 This would probably reduce the rate of wildling establishment by orders of magnitude, even if long distance dispersal might preclude complete containment [@albertLanduseChangeSubalpine2008]. 
-In some cases it may also be desirable to transform ecosystems adjacent to existing stands to prevent (further) spread, for example by intensifying mowing regimes to promote the appearance of "agriculturally improved grassland".
+In some cases it may also be desirable to transform ecosystems adjacent to existing stands to prevent (further) spread, for example by intensifying mowing regimes.
 Second, as a reactive measure, we recommend allocating resources for monitoring and control in proportion to relative ecosystem susceptibility.
 Prioritizing ecosystems that are highly susceptible and also rare (e.g. "open active landslide") is especially likely to be cost-efficient. 
 
@@ -349,13 +350,13 @@ This constraint hinders species comparisons but underlines our main takeaway fro
 
 Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
 Many areas where conifer establishment is nearly impossible, like paved surfaces and annually plowed fields, count as terrestrial and strongly anthropogenically disturbed, which lowers the relative establishment likelihood of these two strata.
-Our results do not imply, for example, that a strong anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state Indeed, Vikane et al. [-@vikaneInvasionCallunaHeath2013] show, for example, that burning in coastal heath increases Sitka spruce establishment.
+Our results do not imply, for example, that a strong anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state. Indeed, Vikane et al. [-@vikaneInvasionCallunaHeath2013] show, for example, that burning in coastal heath increases Sitka spruce establishment.
 Rather, we find that ecosystems structured by strong anthropogenic disturbance, on the whole, are less susceptible to Sitka/Lutz spruce wildlings than other ecosystems.
 
 # Conclusions
 
 One of the main novelties of this study is that we inferred susceptibility/invasibility using mechanistically reconstructed, spatial estimates of seed rain.
-Scientists studying invasibility at national and continental scales have already recognized the importance of normalizing observed levels of invasion by a spatially explicit estimate of exposure [i.e. propagule pressure; @chytrySeparatingHabitatInvasibility2008]. 
+Scientists studying invasibility at national and continental scales have already recognized the importance of normalizing observed levels of invasion by a spatially explicit estimate of exposure [i.e. propagule pressure; @colauttiPropagulePressureNull2006; @chytrySeparatingHabitatInvasibility2008]. 
 However, many studies quantifying ecosystem invasibility have not been able to adjust for propagule pressure, typically because it is impossible to reconstruct the underlying dispersal history [@catfordQuantifyingLevelsBiological2012].
 We found that accounting for seed rain and other confounders of the relationship between ecosystems and wildling abundance reshuffles estimates of ecosystem invasibility considerably.
 
@@ -558,7 +559,7 @@ kable(msumms$`Pc-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 
 
 \newpage
 \blandscape
-```{r establishment-sensitivity, fig.cap="Shifts in estimated relative establishment likelihoods when relative seed rain (from the WALD dispersal model) is included in the model as a covariate rather than an offset. Arrows point from the models with with offsets to the models with covariates."}
+```{r establishment-sensitivity, fig.cap="Shifts in estimated relative establishment likelihoods when relative seed rain (from the WALD dispersal model) is included in the model as a covariate rather than an offset. Arrows point from the models with offsets to the models with covariates."}
 knitr::include_graphics(here('ms', 'figures', 'establishment-sensitivity.pdf'))
 ```
 

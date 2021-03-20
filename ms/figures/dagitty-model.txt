@@ -1,31 +1,31 @@
 dag {
 bb="-6.627,-3.552,5.654,3.649"
 "ecosystem type" [exposure,pos="-5.347,2.760"]
-"elevation from stand" [pos="0.019,0.309"]
+"elevation relative to stand" [pos="0.019,0.309"]
 "establishment likelihood" [latent,pos="-1.800,2.760"]
-"stand age" [pos="3.742,-2.594"]
-"position from stand" [pos="-0.318,-1.578"]
+"position relative to stand" [pos="-0.318,-1.578"]
 "relative seed rain (in flat terrain)" [pos="2.803,-0.949"]
+"stand age" [pos="3.742,-2.594"]
 "total seed rain" [latent,pos="3.813,0.916"]
 "wildling abundance" [outcome,pos="3.858,2.760"]
 climate [pos="-5.415,-2.598"]
 site [pos="-2.586,-2.598"]
 "ecosystem type" -> "establishment likelihood"
-"elevation from stand" -> "ecosystem type"
-"elevation from stand" -> "total seed rain"
+"elevation relative to stand" -> "ecosystem type"
+"elevation relative to stand" -> "total seed rain"
 "establishment likelihood" -> "wildling abundance"
-"stand age" -> "total seed rain"
-"position from stand" -> "ecosystem type"
-"position from stand" -> "elevation from stand"
-"position from stand" -> "relative seed rain (in flat terrain)"
+"position relative to stand" -> "ecosystem type"
+"position relative to stand" -> "elevation relative to stand"
+"position relative to stand" -> "relative seed rain (in flat terrain)"
 "relative seed rain (in flat terrain)" -> "total seed rain"
+"stand age" -> "total seed rain"
 "total seed rain" -> "wildling abundance"
 climate -> "ecosystem type"
 climate -> "establishment likelihood"
 site -> "ecosystem type"
 site -> "establishment likelihood"
+site -> "position relative to stand"
 site -> "stand age"
-site -> "position from stand"
 site -> climate
 }
 

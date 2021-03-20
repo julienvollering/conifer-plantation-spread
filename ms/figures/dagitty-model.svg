@@ -370,35 +370,12 @@
        style="fill:#000000" />
   </g>
   <g
-     transform="translate(319.06353,160.52242)"
+     transform="translate(229.7502,282.37466)"
      id="g120">
     <path
        z-index="1"
        d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
        id="path114"
-       inkscape:connector-curvature="0"
-       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
-    <rect
-       class="textbg"
-       width="144.11667"
-       height="19"
-       x="-72.058334"
-       y="20"
-       id="rect116"
-       style="fill:#ffffff" />
-    <text
-       class="nodelabel"
-       y="35"
-       id="text118"
-       style="text-anchor:middle">elevation from stand</text>
-  </g>
-  <g
-     transform="translate(229.7502,282.37466)"
-     id="g128">
-    <path
-       z-index="1"
-       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
-       id="path122"
        inkscape:connector-curvature="0"
        style="fill:#dddddd;fill-opacity:0.7;stroke:#aaaaaa;stroke-width:2" />
     <rect
@@ -407,16 +384,39 @@
        height="19"
        x="-84.941666"
        y="20"
+       id="rect116"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text118"
+       style="text-anchor:middle">establishment likelihood</text>
+  </g>
+  <g
+     transform="translate(501.86371,16.198855)"
+     id="g128">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path122"
+       inkscape:connector-curvature="0"
+       style="fill:#00a2e0;fill-opacity:0.7;stroke:#00a2e0;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="70.300003"
+       height="19"
+       x="-35.150002"
+       y="20"
        id="rect124"
        style="fill:#ffffff" />
     <text
        class="nodelabel"
        y="35"
        id="text126"
-       style="text-anchor:middle">establishment likelihood</text>
+       style="text-anchor:middle">stand age</text>
   </g>
   <g
-     transform="translate(501.86371,16.198855)"
+     transform="translate(455.75859,97.980551)"
      id="g136">
     <path
        z-index="1"
@@ -426,9 +426,9 @@
        style="fill:#00a2e0;fill-opacity:0.7;stroke:#00a2e0;stroke-width:2" />
     <rect
        class="textbg"
-       width="70.300003"
+       width="225.05"
        height="19"
-       x="-35.150002"
+       x="-112.525"
        y="20"
        id="rect132"
        style="fill:#ffffff" />
@@ -436,61 +436,15 @@
        class="nodelabel"
        y="35"
        id="text134"
-       style="text-anchor:middle">stand age</text>
+       style="text-anchor:middle">relative seed rain (in flat terrain)</text>
   </g>
   <g
-     transform="translate(302.51675,66.709617)"
+     transform="translate(505.34983,190.69962)"
      id="g144">
     <path
        z-index="1"
        d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
        id="path138"
-       inkscape:connector-curvature="0"
-       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
-    <rect
-       class="textbg"
-       width="135.21666"
-       height="19"
-       x="-67.60833"
-       y="20"
-       id="rect140"
-       style="fill:#ffffff" />
-    <text
-       class="nodelabel"
-       y="35"
-       id="text142"
-       style="text-anchor:middle">position from stand</text>
-  </g>
-  <g
-     transform="translate(455.75859,97.980551)"
-     id="g152">
-    <path
-       z-index="1"
-       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
-       id="path146"
-       inkscape:connector-curvature="0"
-       style="fill:#00a2e0;fill-opacity:0.7;stroke:#00a2e0;stroke-width:2" />
-    <rect
-       class="textbg"
-       width="225.05"
-       height="19"
-       x="-112.525"
-       y="20"
-       id="rect148"
-       style="fill:#ffffff" />
-    <text
-       class="nodelabel"
-       y="35"
-       id="text150"
-       style="text-anchor:middle">relative seed rain (in flat terrain)</text>
-  </g>
-  <g
-     transform="translate(505.34983,190.69962)"
-     id="g160">
-    <path
-       z-index="1"
-       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
-       id="path154"
        inkscape:connector-curvature="0"
        style="fill:#dddddd;fill-opacity:0.7;stroke:#aaaaaa;stroke-width:2" />
     <rect
@@ -499,21 +453,21 @@
        height="19"
        x="-50.266666"
        y="20"
-       id="rect156"
+       id="rect140"
        style="fill:#ffffff" />
     <text
        class="nodelabel"
        y="35"
-       id="text158"
+       id="text142"
        style="text-anchor:middle">total seed rain</text>
   </g>
   <g
      transform="translate(507.55934,282.37466)"
-     id="g170">
+     id="g154">
     <path
        z-index="1"
        d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
-       id="path162"
+       id="path146"
        inkscape:connector-curvature="0"
        style="fill:#00a2e0;fill-opacity:0.7;stroke:#000000;stroke-width:2" />
     <rect
@@ -522,21 +476,67 @@
        height="19"
        x="-68.050003"
        y="20"
-       id="rect164"
+       id="rect148"
        style="fill:#ffffff" />
     <text
        class="nodelabel"
        y="35"
-       id="text166"
+       id="text150"
        style="text-anchor:middle">wildling abundance</text>
     <path
        d="M -2,-6 H 2 V 6 h -4 z"
-       id="path168"
+       id="path152"
        inkscape:connector-curvature="0"
        style="fill:#000000" />
   </g>
   <g
      transform="translate(52.252851,15.999994)"
+     id="g162">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path156"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="50.683334"
+       height="19"
+       x="-25.341667"
+       y="20"
+       id="rect158"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text160"
+       style="text-anchor:middle">climate</text>
+  </g>
+  <g
+     transform="translate(191.15741,15.999994)"
+     id="g170">
+    <path
+       z-index="1"
+       d="M 0,0 M 20,0 A 20,15 0 1 1 -20,0 20,15 0 1 1 20,0"
+       id="path164"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
+    <rect
+       class="textbg"
+       width="24.9"
+       height="19"
+       x="-12.45"
+       y="20"
+       id="rect166"
+       style="fill:#ffffff" />
+    <text
+       class="nodelabel"
+       y="35"
+       id="text168"
+       style="text-anchor:middle">site</text>
+  </g>
+  <g
+     transform="translate(302.51675,66.709617)"
      id="g178">
     <path
        z-index="1"
@@ -546,9 +546,9 @@
        style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
     <rect
        class="textbg"
-       width="50.683334"
+       width="172.58333"
        height="19"
-       x="-25.341667"
+       x="-86.291664"
        y="20"
        id="rect174"
        style="fill:#ffffff" />
@@ -556,10 +556,10 @@
        class="nodelabel"
        y="35"
        id="text176"
-       style="text-anchor:middle">climate</text>
+       style="text-anchor:middle">position relative to stand</text>
   </g>
   <g
-     transform="translate(191.15741,15.999994)"
+     transform="translate(319.06353,160.52242)"
      id="g186">
     <path
        z-index="1"
@@ -569,9 +569,9 @@
        style="fill:#ff7777;fill-opacity:0.7;stroke:#ff7777;stroke-width:2" />
     <rect
        class="textbg"
-       width="24.9"
+       width="181.48334"
        height="19"
-       x="-12.45"
+       x="-90.741669"
        y="20"
        id="rect182"
        style="fill:#ffffff" />
@@ -579,6 +579,6 @@
        class="nodelabel"
        y="35"
        id="text184"
-       style="text-anchor:middle">site</text>
+       style="text-anchor:middle">elevation relative to stand</text>
   </g>
 </svg>
