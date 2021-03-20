@@ -2,14 +2,14 @@
 title: 'Accounting for seed rain and other confounders reveals which ecosystems are most susceptible to alien conifer establishment'
 author:
 - Julien Vollering^1,2^*
-- Siri Lie Olsen
-- Olav Skarpaas
+- Siri Lie Olsen^3,4^
+- Olav Skarpaas^2^
 - Leif Appelgren
-- Magni Olsen Kyrkjeeide^3^
+- Magni Olsen Kyrkjeeide^5^
 - Anders Often
 - Jakob Sandven
 - Odd Stabbetorp
-- Øyvind Sørhuus^4^ 
+- Øyvind Sørhuus^6^ 
 bibliography: invasibility-ms.bib
 link-citations: true
 output:
@@ -37,9 +37,13 @@ library(kableExtra)
 
 ^2^Department of Research and Collections, Natural History Museum, University of Oslo, Oslo, Norway
 
-^3^Norwegian Institute for Nature Research, Trondheim, Norway
+^3^Norwegian Institute for Nature Research, Oslo, Norway
 
-^4^NORSKOG, Oslo, Norway
+^4^Institute of Urbanism and Landscape, The Oslo School of Architecture and Design, Oslo, Norway
+
+^5^Norwegian Institute for Nature Research, Trondheim, Norway
+
+^6^NORSKOG, Oslo, Norway
 
 *Corresponding author: <julienvollering@gmail.com>
 
