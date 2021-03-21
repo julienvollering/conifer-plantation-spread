@@ -81,7 +81,7 @@ It aims for reproducible and value-neutral classification of ecosystems by rule-
 As a result, it encapsulates in its ecosystem types (hereafter: "ecosystems") much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, and the like [@richardsonNaturalizationIntroducedPlants2012].
 It also identifies broad similarities between ecosystems, which might be used to tease out generic trends in establishment likelihood.
 
-Naively, the density of wildlings in a given ecosytem would seem to indicate how likely they are to establish there.
+Naively, the density of wildlings in a given ecosystem would seem to indicate how likely they are to establish there.
 But to estimate ecosystem establishment likelihoods based on wildling abundance around plantation stands, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
 For example, low establishment likelihood in an ecosystem frequently located close to plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
 Likewise, an ecosystem may appear to promote establishment if it tends to co-occur with climatic conditions that support germination.
