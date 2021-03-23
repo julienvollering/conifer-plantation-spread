@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  23 MAR 2021 09:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  23 MAR 2021 09:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -602,253 +602,253 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-<figures/sites-map.pdf, id=66, 315.81989pt x 448.13425pt>
+<figures/sites-map.pdf, id=65, 315.81989pt x 448.13425pt>
 File: figures/sites-map.pdf Graphic file (type pdf)
 <use figures/sites-map.pdf>
-Package pdftex.def Info: figures/sites-map.pdf  used on input line 189.
+Package pdftex.def Info: figures/sites-map.pdf  used on input line 191.
 (pdftex.def)             Requested size: 315.82391pt x 448.13998pt.
 [4] [5pdfTeX warning (ext4): destination with the same identifier (name{figure.
 1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.211 
-       <./figures/sites-map.pdf>]
-<figures/site-example/site-example.pdf, id=1947, 597.43109pt x 844.83629pt>
+l.213 
+       <./figures/sites-map.pdf>] [6]
+<figures/site-example/site-example.pdf, id=1960, 597.43109pt x 844.83629pt>
 File: figures/site-example/site-example.pdf Graphic file (type pdf)
 <use figures/site-example/site-example.pdf>
 Package pdftex.def Info: figures/site-example/site-example.pdf  used on input l
-ine 239.
+ine 241.
 (pdftex.def)             Requested size: 310.50186pt x 439.08536pt.
-[6] [7pdfTeX warning (ext4): destination with the same identifier (name{figure.
-2}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.245 
-       <./figures/site-example/site-example.pdf>]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/dagitty-model.pdf, id=1988, 433.3259pt x 241.93488pt>
+res/dagitty-model.pdf, id=1962, 433.3259pt x 241.93488pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/dagitty-model.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
 figures/dagitty-model.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
-lantation-spread/ms/figures/dagitty-model.pdf  used on input line 247.
+lantation-spread/ms/figures/dagitty-model.pdf  used on input line 249.
 (pdftex.def)             Requested size: 310.50671pt x 173.36235pt.
-[8pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
-has been already used, duplicate ignored
+[7] [8pdfTeX warning (ext4): destination with the same identifier (name{figure.
+2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.259 
+l.270 
+       <./figures/site-example/site-example.pdf>] [9pdfTeX warning (ext4): dest
+ination with the same identifier (name{figure.3}) has been already used, duplic
+ate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.295 
        </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/
-ms/figures/dagitty-model.pdf>] [9] [10pdfTeX warning (ext4): destination with t
-he same identifier (name{table.1}) has been already used, duplicate ignored
+ms/figures/dagitty-model.pdf>] [10] [11pdfTeX warning (ext4): destination with 
+the same identifier (name{table.1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.321 \newpage
-              ]
+l.324 \begin{landscape}
+                       ]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment/establishment.pdf, id=2051, 785.15329pt x 448.93977pt>
+res/establishment/establishment.pdf, id=2055, 785.15329pt x 448.93977pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment/establishment.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
 figures/establishment/establishment.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
 lantation-spread/ms/figures/establishment/establishment.pdf  used on input line
- 326.
+ 328.
 (pdftex.def)             Requested size: 550.0109pt x 314.48859pt.
 
-LaTeX Warning: Float too large for page by 65.43301pt on input line 328.
+LaTeX Warning: Float too large for page by 65.43301pt on input line 330.
 
-[11pdfTeX warning (ext4): destination with the same identifier (name{figure.4})
+[12pdfTeX warning (ext4): destination with the same identifier (name{figure.4})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.330 \end{landscape}
+l.332 \end{landscape}
                       </home/julien/Documents/dissertation/chapter3/conifer-pla
-ntation-spread/ms/figures/establishment/establishment.pdf>] [12pdfTeX warning (
+ntation-spread/ms/figures/establishment/establishment.pdf>] [13pdfTeX warning (
 ext4): destination with the same identifier (name{table.2}) has been already us
 ed, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.366 \newpage
+l.368 \newpage
               
 
 
 ]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-hypotheses.pdf, id=9201, 672.1938pt x 190.13786pt>
+res/establishment-hypotheses.pdf, id=9206, 672.1938pt x 190.13786pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-hypotheses.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
 figures/establishment-hypotheses.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
 lantation-spread/ms/figures/establishment-hypotheses.pdf  used on input line 37
-1.
+3.
 (pdftex.def)             Requested size: 550.00243pt x 155.5746pt.
-[13
+[14
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
 s been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.375 \end{landscape}
+l.377 \end{landscape}
                       </home/julien/Documents/dissertation/chapter3/conifer-pla
-ntation-spread/ms/figures/establishment-hypotheses.pdf>] [14
+ntation-spread/ms/figures/establishment-hypotheses.pdf>] [15
 
-] [15] [16] [17] [18]
+] [16] [17] [18] [19]
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 5
-03.
+05.
 (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [19]
-Overfull \hbox (12.49498pt too wide) in alignment at lines 519--530
+) [20]
+Overfull \hbox (12.49498pt too wide) in alignment at lines 521--532
  [] [] [] [] 
  []
 
-[20]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 540--545
+[21]
+Overfull \hbox (30.91093pt too wide) in alignment at lines 542--547
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 545--550
+Overfull \hbox (30.91093pt too wide) in alignment at lines 547--552
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 550--552
+Overfull \hbox (30.91093pt too wide) in alignment at lines 552--554
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 552--560
+Overfull \hbox (30.91093pt too wide) in alignment at lines 554--562
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 560--584
+Overfull \hbox (30.91093pt too wide) in alignment at lines 562--586
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 584--608
+Overfull \hbox (30.91093pt too wide) in alignment at lines 586--610
  [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (30.91093pt too wide) in alignment at lines 608--632
+Overfull \hbox (30.91093pt too wide) in alignment at lines 610--634
  [] [] [] [] [] [] [] [] [] 
  []
 
-[21
+[22
 
 ]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 632--656
+Overfull \hbox (30.91093pt too wide) in alignment at lines 634--658
  [] [] [] [] [] [] [] [] [] 
  []
 
-[22]
-Overfull \hbox (30.91093pt too wide) in alignment at lines 656--659
+[23]
+Overfull \hbox (30.91093pt too wide) in alignment at lines 658--661
  [] [] [] [] [] [] [] [] [] 
  []
 
-[23] [24]
-Overfull \hbox (83.23676pt too wide) in alignment at lines 663--668
+[24] [25]
+Overfull \hbox (83.23676pt too wide) in alignment at lines 665--670
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 668--673
+Overfull \hbox (83.23676pt too wide) in alignment at lines 670--675
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 673--675
+Overfull \hbox (83.23676pt too wide) in alignment at lines 675--677
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 675--678
+Overfull \hbox (83.23676pt too wide) in alignment at lines 677--680
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 678--702
+Overfull \hbox (83.23676pt too wide) in alignment at lines 680--704
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 702--726
+Overfull \hbox (83.23676pt too wide) in alignment at lines 704--728
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (83.23676pt too wide) in alignment at lines 726--726
+Overfull \hbox (83.23676pt too wide) in alignment at lines 728--728
  [] [] [] [] [] 
  []
 
-[25
+[26
 
 
-] [26]
-Overfull \hbox (22.63321pt too wide) in paragraph at lines 752--779
+] [27]
+Overfull \hbox (22.63321pt too wide) in paragraph at lines 754--781
  [][] 
  []
 
-[27pdfTeX warning (ext4): destination with the same identifier (name{table.7}) 
+[28pdfTeX warning (ext4): destination with the same identifier (name{table.7}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.827 \hspace
+l.829 \hspace
              {1em}age & -0.78 & -1.19, -0.36 &  & \\
 
-] [28] [29] [30]
+] [29] [30] [31]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-sensitivity.pdf, id=10149, 633.78535pt x 448.13425pt>
+res/establishment-sensitivity.pdf, id=10154, 633.78535pt x 448.13425pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-sensitivity.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
 figures/establishment-sensitivity.pdf>
 Package pdftex.def Info: /home/julien/Documents/dissertation/chapter3/conifer-p
 lantation-spread/ms/figures/establishment-sensitivity.pdf  used on input line 9
-40.
+42.
 (pdftex.def)             Requested size: 487.92918pt x 345.00288pt.
 
-LaTeX Warning: Float too large for page by 46.00288pt on input line 942.
+LaTeX Warning: Float too large for page by 46.00288pt on input line 944.
 
-[31pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
+[32pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.944 \end{landscape}
+l.946 \end{landscape}
                       </home/julien/Documents/dissertation/chapter3/conifer-pla
-ntation-spread/ms/figures/establishment-sensitivity.pdf>] [32
+ntation-spread/ms/figures/establishment-sensitivity.pdf>] [33
 
 
-] [33] [34] [35]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1102.
-[36]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1102.
+] [34] [35] [36]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1104.
+[37]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1104.
 (./invasibility-ms.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1102.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1102.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1104.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1104.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14358 strings out of 483183
- 211661 string characters out of 5966293
- 530603 words of memory out of 5000000
+ 14359 strings out of 483183
+ 211668 string characters out of 5966293
+ 530639 words of memory out of 5000000
  28794 multiletter control sequences out of 15000+600000
  595483 words of font info for 138 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -865,10 +865,10 @@ ublic/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/shar
 e/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmsy10.pfb>
-Output written on invasibility-ms.pdf (36 pages, 7180986 bytes).
+Output written on invasibility-ms.pdf (37 pages, 7181937 bytes).
 PDF statistics:
- 11896 PDF objects out of 12825 (max. 8388607)
- 8006 compressed objects within 81 object streams
- 150 named destinations out of 1000 (max. 500000)
+ 11904 PDF objects out of 12825 (max. 8388607)
+ 8013 compressed objects within 81 object streams
+ 151 named destinations out of 1000 (max. 500000)
  14503 words of extra memory for PDF output out of 17280 (max. 10000000)
 

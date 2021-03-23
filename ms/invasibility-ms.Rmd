@@ -4,12 +4,12 @@ author:
 - Julien Vollering^1,2^*
 - Siri Lie Olsen^3,4^
 - Olav Skarpaas^2^
-- Leif Appelgren
-- Magni Olsen Kyrkjeeide^5^
-- Anders Often
-- Jakob Sandven
-- Odd Stabbetorp
-- Øyvind Sørhuus^6^ 
+- Leif Appelgren^5^
+- Magni Olsen Kyrkjeeide^6^
+- Anders Often^3^
+- Jakob Sandven^7^
+- Odd Stabbetorp^3^
+- Øyvind Sørhuus^7^ 
 bibliography: invasibility-ms.bib
 link-citations: true
 output:
@@ -41,9 +41,11 @@ library(kableExtra)
 
 ^4^Institute of Urbanism and Landscape, The Oslo School of Architecture and Design, Oslo, Norway
 
-^5^Norwegian Institute for Nature Research, Trondheim, Norway
+^5^ Ecofact AS, Sandnes, Norway
 
-^6^NORSKOG, Oslo, Norway
+^6^Norwegian Institute for Nature Research, Trondheim, Norway
+
+^7^NORSKOG, Oslo, Norway
 
 *Corresponding author: <julienvollering@gmail.com>
 
