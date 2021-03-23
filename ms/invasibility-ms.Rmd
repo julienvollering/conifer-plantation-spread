@@ -133,7 +133,7 @@ Specifically, we selected from Bullock et al. [-@bullockSynthesisEmpiricalPlant2
 Seventy-two of the 82 stands in our data set matched this height range better than a taller range with a different empirical kernel.
 
 The second model was an anisotropic implementation of the Wald Analytical Long-distance Dispersal model [WALD, @katulMechanisticAnalyticalModels2005], following Skarpaas & Shea [-@skarpaasDispersalPatternsDispersal2007].
-We parameterized the model with: site- and season-specific wind vectors retrieved from meteorological data sets, wind turbulence estimated from local ecosystem composition, seed release height based on stand height, and species-specific seed terminal velocities from literature.
+We parameterized the model with: site- and season-specific wind vectors retrieved from meteorological data sets [MET Norway; @reistadHighresolutionHindcastWind2011; @haakenstad15yearHighResolution2017], wind turbulence estimated from local ecosystem composition, seed release height based on stand height, and species-specific seed terminal velocities from literature.
 
 We transformed field-mapped polygons of potential seed sources into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
 Then we applied our two dispersal models to estimate the distribution of relative seed rain from all point sources in a grid of 10 m cells.

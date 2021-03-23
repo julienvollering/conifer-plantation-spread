@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  21 MAR 2021 21:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  23 MAR 2021 09:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -614,7 +614,7 @@ Package pdftex.def Info: figures/sites-map.pdf  used on input line 189.
                                                   \fi \fi 
 l.211 
        <./figures/sites-map.pdf>]
-<figures/site-example/site-example.pdf, id=1945, 597.43109pt x 844.83629pt>
+<figures/site-example/site-example.pdf, id=1947, 597.43109pt x 844.83629pt>
 File: figures/site-example/site-example.pdf Graphic file (type pdf)
 <use figures/site-example/site-example.pdf>
 Package pdftex.def Info: figures/site-example/site-example.pdf  used on input l
@@ -628,7 +628,7 @@ ine 239.
 l.245 
        <./figures/site-example/site-example.pdf>]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/dagitty-model.pdf, id=1984, 433.3259pt x 241.93488pt>
+res/dagitty-model.pdf, id=1988, 433.3259pt x 241.93488pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/dagitty-model.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
@@ -651,7 +651,7 @@ he same identifier (name{table.1}) has been already used, duplicate ignored
 l.321 \newpage
               ]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment/establishment.pdf, id=2047, 785.15329pt x 448.93977pt>
+res/establishment/establishment.pdf, id=2051, 785.15329pt x 448.93977pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment/establishment.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
@@ -682,7 +682,7 @@ l.366 \newpage
 
 ]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-hypotheses.pdf, id=9197, 672.1938pt x 190.13786pt>
+res/establishment-hypotheses.pdf, id=9201, 672.1938pt x 190.13786pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-hypotheses.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
@@ -812,7 +812,7 @@ l.827 \hspace
 
 ] [28] [29] [30]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-sensitivity.pdf, id=10147, 633.78535pt x 448.13425pt>
+res/establishment-sensitivity.pdf, id=10149, 633.78535pt x 448.13425pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-sensitivity.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
@@ -865,10 +865,10 @@ ublic/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/shar
 e/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmsy10.pfb>
-Output written on invasibility-ms.pdf (36 pages, 7180760 bytes).
+Output written on invasibility-ms.pdf (36 pages, 7180986 bytes).
 PDF statistics:
- 11894 PDF objects out of 12825 (max. 8388607)
- 8004 compressed objects within 81 object streams
+ 11896 PDF objects out of 12825 (max. 8388607)
+ 8006 compressed objects within 81 object streams
  150 named destinations out of 1000 (max. 500000)
  14503 words of extra memory for PDF output out of 17280 (max. 10000000)
 
