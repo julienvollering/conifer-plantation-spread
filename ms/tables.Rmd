@@ -201,6 +201,48 @@ Pc <- Pc.tidy %>%
 write_csv(Pc, here('ms', 'tables', 'Pc-modelsummary.csv'))
 ```
 
+# Types by report
+
+```{r}
+locs <- read_csv(here('data', 'localities.csv')) # see 'wildlings-NiN.Rmd'
+locs <- select(locs, reference, locality, species) %>% 
+  mutate(locality = paste(tolower(substring(locality, 1, 1)), 
+                          substring(locality, 2), sep = ""))
+
+datlist <- readRDS(here("output","data.rds"))
+dat <- bind_rows(datlist, .id = "species") %>% 
+  select(-c(age, bio01, bio19, seeds.ExP, seeds.WALD, relelev, `plantation forest`))
+
+d <- full_join(locs, dat)
+summ <- pivot_longer(d, !(1:4), names_to = "nin", values_to = "are") %>%
+  filter(wildlings > 0) %>% 
+  group_by(species, reference, nin) %>% 
+  summarize(daa = sum(are)/10, # units from are to decare
+            n = sum(wildlings*are)) %>% 
+  filter(n > 0) %>% 
+  group_by(species, nin) %>% 
+  summarize(reference = reference) %>% 
+  na.omit()
+
+types <- read_csv(here('data', 'types.csv')) %>% 
+  transmute(nin = type, type = name)
+
+tab <- left_join(summ, types) %>%
+  select(species, code = nin, type, reference) %>% 
+  arrange(species, code) %>% 
+  mutate(species = case_when(
+    species == "P.contorta" ~ "Pinus contorta",
+    species == "P.sitchensis-lutzii" ~ "Picea sitchensis / lutzii",
+    species == "P.abies" ~ "Picea abies",
+    species == "Larix" ~ "Larix spp.")) %>% 
+  rename(`species group` = species) %>% 
+  mutate(order = case_when(
+    str_length(code) == 2 ~ paste0(substr(code,1,1),"0",substr(code,2,2)),
+    TRUE ~ code)) %>% 
+  arrange(`species group`, order) %>% 
+  select(-order)
+```
+
 # sessionInfo 
 
 ```{r sessionInfo}
