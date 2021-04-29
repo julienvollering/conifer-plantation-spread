@@ -214,7 +214,6 @@ dat <- bind_rows(datlist, .id = "species") %>%
 
 d <- full_join(locs, dat)
 summbyref <- pivot_longer(d, !(1:4), names_to = "nin", values_to = "are") %>%
-  filter(wildlings > 0) %>% 
   group_by(species, reference, nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are)) %>% 
