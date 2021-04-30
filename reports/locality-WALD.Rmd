@@ -107,7 +107,7 @@ rlogging::SetLogFile(base.file="locality-WALD.log", folder=here('reports'))
 ```{r WALD seed shadows}
 species <- list.files(here("data","qc"))
 
-for (i in species[1]) { # i <- species[1]
+for (i in species) { # i <- species[1]
   message(i)
   terminal.velocity <- filter(traits, species == i) %>% 
     pull(terminal.velocity)
@@ -117,7 +117,7 @@ for (i in species[1]) { # i <- species[1]
   
   localities <- list.files(here("data","qc",i))
   
-  for (j in localities[1]) { # j <- localities[1]
+  for (j in localities) { # j <- localities[1]
     message(j)
     nin <- st_read(here("data","qc",i,j,"nin.shp"), quiet = TRUE) %>% 
       as_tibble %>% st_as_sf() %>% 
