@@ -21,11 +21,14 @@ pairing <- read_csv(here('data','codetype-pairing.csv'))
 ```
 
 ```{r check topology, include=FALSE, eval=FALSE}
+ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
 for (i in ninfiles) {
-  shp <- st_read(here("data","qc",i), quiet = TRUE)
+  shp <- st_read(here("data","qc",i), quiet = TRUE) %>% 
+    st_zm(drop = TRUE, what = "ZM")
   if (!all(st_is_valid(shp))) {
     message(paste(i, "contains invalid topology"))
   }
+  message(i)
 }
 ```
 

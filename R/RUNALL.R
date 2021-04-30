@@ -1,0 +1,7 @@
+rmarkdown::render("../reports/ClimateData.Rmd")
+rmarkdown::render("../reports/locality-WALD.Rmd")
+rmarkdown::render("../reports/wildlings-NiN.Rmd")
+rmarkdown::render("../reports/locality-maps.Rmd")
+rmarkdown::render("../reports/exploringData.Rmd")
+rmarkdown::render("../reports/modelingData.Rmd")
+rmarkdown::render("../reports/hypothesisComparisons.Rmd")
