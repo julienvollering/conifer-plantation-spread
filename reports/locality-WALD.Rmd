@@ -56,7 +56,7 @@ g <- ggplot(loc.tab, aes(x=age.at.registration, y=height.source, color=species))
 g + geom_point()
 ```
 
-```{r, eval=FALSE}
+```{r}
 write_csv(loc.tab, here('output', 'localities-modified.csv'))
 ```
 
@@ -271,15 +271,6 @@ for (i in species[1]) { # i <- species[1]
   }
 }
 
-```
-
-```{r, eval=FALSE, include=FALSE}
-slow <- raster::raster(here("data","qc","Larix","anisdal","wald10daa.tif"))
-fast <- raster::raster(here("data","qc","Larix","anisdal","wald.tif"))
-st <- raster::stack(slow, fast)
-df <- raster::as.data.frame(st, na.rm=TRUE)
-cor(df)
-pairs(df)
 ```
 
 ```{r sessionInfo}

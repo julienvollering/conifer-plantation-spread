@@ -99,7 +99,7 @@ FF2 <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.poi2.txt"),
                   delim = ";")
 ```
 
-```{r eye test 2, eval= FALSE, include=FALSE}
+```{r eye test 2, eval=FALSE, include=FALSE}
 poi2.sp <- poi2 %>% 
   st_as_sf(coords = c("X", "Y"), crs = 4326)
 which(st_distance(poi2.sp) < units::set_units(2e3, 'm'), arr.ind = TRUE) %>% 
@@ -122,7 +122,7 @@ FF3 <- read_delim(here("data","raw","NORA10","nora10bc.WindSpeed.poi3.txt"),
                   delim = ";")
 ```
 
-```{r eye test 3, eval= FALSE, include=FALSE}
+```{r eye test 3, eval=FALSE, include=FALSE}
 poi3.sp <- poi3 %>% 
   st_as_sf(coords = c("X", "Y"), crs = 4326)
 which(st_distance(poi3.sp) < units::set_units(1e3, 'm'), arr.ind = TRUE) %>% 
@@ -182,7 +182,7 @@ FF4 <- read_delim(here("data","raw","NORA10","nora10.WindSpeed.poi4.txt"),
                   delim = ";")
 ```
 
-```{r eye test 4, eval= FALSE, include=FALSE}
+```{r eye test 4, eval=FALSE, include=FALSE}
 poi4.sp <- poi4 %>% 
   st_as_sf(coords = c("X", "Y"), crs = 4326)
 which(st_distance(poi4.sp) < units::set_units(1e3, 'm'), arr.ind = TRUE) %>% 
