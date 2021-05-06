@@ -73,7 +73,7 @@ add_dummies_to_grid <- function(grid, poly, field) {
   poly <- sf::st_make_valid(poly) %>%
     mutate(!!field.enq := as.character(!!field.enq)) %>% 
     group_by(!!field.enq) %>% 
-    summarize() # geometry union
+    summarize(.groups = "drop") # geometry union
   suppressWarnings({
     int <- st_intersection(poly, grid) %>% 
       mutate(area = st_area(geometry))
@@ -86,7 +86,7 @@ add_dummies_to_grid <- function(grid, poly, field) {
       st_set_geometry(NULL) %>% 
       filter(!!field.enq == name) %>%
       group_by(ID) %>% 
-      summarize(!!name := sum(area))
+      summarize(!!name := sum(area), .groups = "drop_last")
     grid <- left_join(grid, summ, by = "ID")
   }
   
@@ -101,7 +101,8 @@ add_dummies_to_grid <- function(grid, poly, field) {
   fact <- ifelse(rowS > 1, 1/rowS, 1)
   grid <- grid %>% 
     mutate_at(groups, function(x) {x * fact}) %>% 
-    mutate_at(groups, ~ replace_na(., replace = 0))
+    mutate_at(groups, ~ replace_na(., replace = 0)) %>% 
+    mutate_at(groups, function(x) {attributes(x) <- NULL; x})
   
   return(grid)
 }

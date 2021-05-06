@@ -118,29 +118,29 @@ cor(dat$P.contorta[nottypes], use = "complete")
 # P.sitchensis-lutzii
 
 ```{r, echo = FALSE, results='asis'}
-dfSummary(dat$P.sitchensis, plain.ascii = FALSE, style = "grid", 
+dfSummary(dat$`P.sitchensis-lutzii`, plain.ascii = FALSE, style = "grid", 
           graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
 ```
 
 ```{r}
-plot_histogram(dat$P.sitchensis[nottypes])
+plot_histogram(dat$`P.sitchensis-lutzii`[nottypes])
 ```
 
 ```{r}
-ggplot(dat$P.sitchensis, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
-ggplot(dat$P.sitchensis, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
-ggplot(dat$P.sitchensis, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
+ggplot(dat$`P.sitchensis-lutzii`, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
+ggplot(dat$`P.sitchensis-lutzii`, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat$`P.sitchensis-lutzii`, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
 ```
 
 ```{r}
-hist(dat$P.sitchensis$wildlings, prob=TRUE, breaks=210)
-fit <- MASS::fitdistr(dat$P.sitchensis$wildlings, "negative binomial"); fit
+hist(dat$`P.sitchensis-lutzii`$wildlings, prob=TRUE, breaks=210)
+fit <- MASS::fitdistr(dat$`P.sitchensis-lutzii`$wildlings, "negative binomial"); fit
 points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
 ```
 
 ```{r}
-pairs(dat$P.sitchensis[sample(nrow(dat$P.sitchensis), 1e4), nottypes])
-cor(dat$P.sitchensis[nottypes], use = "complete")
+pairs(dat$`P.sitchensis-lutzii`[sample(nrow(dat$`P.sitchensis-lutzii`), 1e4), nottypes])
+cor(dat$`P.sitchensis-lutzii`[nottypes], use = "complete")
 ```
 
 ```{r sessionInfo}
