@@ -106,10 +106,11 @@ Ps_m1 <- glmmTMB(Ps_f, Ps_dat, offset = seeds.WALD, family = "genpois",
 summary(Ps_m1)
 ```
 
-```{r}
+```{r, error=TRUE}
 Ps_m2 <- update(Ps_m1, offset = seeds.ExP)
-summary(Ps_m2)
 ```
+
+Error in optimHess
 
 ```{r}
 Ps_m3 <- update(Ps_m1, offset = NULL)
@@ -117,10 +118,11 @@ summary(Ps_m3)
 ```
 
 ```{r, include=FALSE}
-Ps_modelcomp <- bbmle::ICtab(Ps_m1, Ps_m2, Ps_m3, base = TRUE, delta = TRUE, 
+Ps_modelcomp <- bbmle::ICtab(Ps_m1, Ps_m3, base = TRUE, delta = TRUE, 
                              sort = FALSE) %>% 
   as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
+  add_column(`seed dispersal estimate` = c('WALD', 'none'), .before = 1) %>% 
+  add_row(`seed dispersal estimate` = 'ExP', AIC = NA, dAIC = NA, df = NA, .before = 2) 
 ```
 
 Continue with WALD.
@@ -469,19 +471,18 @@ L_m2 <- update(L_m1, offset = seeds.ExP)
 summary(L_m2)
 ```
 
-```{r, error=TRUE}
+```{r}
 L_m3 <- update(L_m1, offset = NULL)
 summary(L_m3)
 ```
 
-Error in optimHess(par.fixed, obj$fn, obj$gr) : 
-  gradient in optim evaluated to length 1 not 21
+Model convergence problem; false convergence
 
 ```{r, include=FALSE}
-L_modelcomp <- bbmle::ICtab(L_m1, L_m2, base = TRUE, delta = TRUE, 
+L_modelcomp <- bbmle::ICtab(L_m1, L_m2, L_m3, base = TRUE, delta = TRUE, 
                             sort = FALSE) %>% 
   as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP'), .before = 1)
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1) 
 ```
 
 Continue with WALD.
@@ -655,11 +656,7 @@ Pc_m2 <- update(Pc_m1, offset = seeds.ExP)
 summary(Pc_m2)
 ```
 
-Warning messages:
-1: In fitTMB(TMBStruc) :
-  Model convergence problem; non-positive-definite Hessian matrix. See vignette('troubleshooting')
-2: In fitTMB(TMBStruc) :
-  Model convergence problem; false convergence (8). See vignette('troubleshooting')
+Model convergence problem; false convergence
   
 ```{r}
 Pc_m3 <- update(Pc_m1, offset = NULL)

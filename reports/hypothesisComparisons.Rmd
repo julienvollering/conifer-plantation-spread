@@ -94,36 +94,40 @@ for (i in seq_along(datlist)) { # i <- 1
   selmod <- results$models[[species]]
   covars <- intersect(c('age', 'bio01','bio19', 'relelev'),
                       attributes(attributes(selmod$frame)$terms)$term.labels)
-  # dd <- data.frame(a = gl(2,6), b = gl(6,1,12))
-  # model.matrix(~ a + b, dd)
   form <- as.formula(paste("wildlings ~ ", 
                            paste(covars, collapse= "+"), "+",
                            paste(category[!category == "terr"], collapse= "+"), "+",
                            paste(structuring[!structuring == "nodist"], collapse= "+"), "+",
                            "(1 | locality)"))
-  eval(bquote(
-    m <- glmmTMB(formula = form, data = dat, offset = .(selmod$call$offset), 
-                 family = selmod$call$family, ziformula = selmod$call$ziformula)
-  ))
+  m <- tryCatch(
+    eval(bquote(
+      glmmTMB(formula = form, data = dat, offset = .(selmod$call$offset), 
+              family = selmod$call$family, ziformula = selmod$call$ziformula)
+    )),
+    warning=function(w) w)
 
-  newdat <- expand_grid(category, structuring) %>%
-    sjmisc::to_dummy() %>%
-    setNames(c(category[order(category)], structuring[order(structuring)])) %>% 
-    cbind(expand_grid(category, structuring)) %>% 
-    mutate(locality = NA, seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0)  
-  link <- newdat %>%
-    bind_cols(predict(m, newdat, se.fit = TRUE, type = "link")) %>%
-    mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
-    select(category, structuring, fit, ci.l, ci.u) %>% 
-    mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.)) %>% 
-    mutate(modeled = TRUE)
-  scaler <- filter(link, category == "terr", structuring == "nodist") %>% 
-    pull(fit)
-  link.scaled <- mutate_at(link, c('fit', 'ci.l', 'ci.u'), 
-                           ~ `/`(., scaler))
-
-  results.hypothesis[[i]] <- list(arithmetic = arith.scaled, 
-                                  model.preds = link.scaled)
+  if (is(m,"warning")) {
+    results.hypothesis[[i]] <- NULL
+  } else {
+    newdat <- expand_grid(category, structuring) %>%
+      sjmisc::to_dummy() %>%
+      setNames(c(category[order(category)], structuring[order(structuring)])) %>% 
+      cbind(expand_grid(category, structuring)) %>% 
+      mutate(locality = NA, seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0)  
+    link <- newdat %>%
+      bind_cols(predict(m, newdat, se.fit = TRUE, type = "link")) %>%
+      mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+      select(category, structuring, fit, ci.l, ci.u) %>% 
+      mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.)) %>% 
+      mutate(modeled = TRUE)
+    scaler <- filter(link, category == "terr", structuring == "nodist") %>% 
+      pull(fit)
+    link.scaled <- mutate_at(link, c('fit', 'ci.l', 'ci.u'), 
+                             ~ `/`(., scaler))
+    
+    results.hypothesis[[i]] <- list(arithmetic = arith.scaled, 
+                                    model.preds = link.scaled)
+  }
 }
 
 names(results.hypothesis) <- names(datlist)
