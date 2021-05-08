@@ -1,12 +1,13 @@
 "species group","seed dispersal estimate","AIC","dAIC","df"
-"Picea sitchensis / lutzii","WALD",51967.2609947408,0,38
-"Picea sitchensis / lutzii","Exponential Power",128861.238899527,76893.9779047864,38
-"Picea sitchensis / lutzii","none",54477.7124771566,2510.45148241578,38
-"Picea abies","WALD",9680.58581289186,0,26
-"Picea abies","Exponential Power",25316.4503522261,15635.8645393342,26
-"Picea abies","none",9781.12725122987,100.541438338005,26
-"Larix spp.","WALD",10057.5884085429,0,21
-"Larix spp.","Exponential Power",27310.0479719373,17252.4595633944,21
-"Pinus contorta","WALD",3319.14348490459,0,17
+"Picea sitchensis / lutzii","WALD",51967.2609948511,0,38
+"Picea sitchensis / lutzii","Exponential Power",NA,NA,NA
+"Picea sitchensis / lutzii","none",54477.7124771926,2510.45148234151,38
+"Picea abies","WALD",9680.5858127319,0,26
+"Picea abies","Exponential Power",25316.4503522229,15635.864539491,26
+"Picea abies","none",9781.12725111102,100.541438379127,26
+"Larix spp.","WALD",10057.5884086366,0,21
+"Larix spp.","Exponential Power",27310.0479719314,17252.4595632948,21
+"Larix spp.","none",NA,NA,21
+"Pinus contorta","WALD",3319.14348489788,0,17
 "Pinus contorta","Exponential Power",NA,NA,17
-"Pinus contorta","none",3372.10158021183,52.9580953072382,17
+"Pinus contorta","none",3372.10158022541,52.9580953275272,17

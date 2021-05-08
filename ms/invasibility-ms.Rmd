@@ -49,7 +49,7 @@ library(kableExtra)
 
 *Corresponding author: <julienvollering@gmail.com>
 
-# Abstract
+# Abstract {-}
 
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. To minimize the rate at which their offspring --- so-called "wildlings" --- colonize surroundings, and reduce the burden of conifer plantations on native ecosystems, managers need to know which ecosystems are most and least susceptible.
 2. We compared how likely wildlings are to establish across a wide range of ecosystems, focusing on four groups of alien conifer species planted in Norway. We used data from detailed surveys around 82 plantation stands to model the relationship between ecosystem type and wildling abundance, accounting for seed rain (estimated), climate, and other sources of variation between sites. We also tested whether differences in susceptibility between individual ecosystem types could be generalized based on broad, shared characteristics.
@@ -57,7 +57,7 @@ library(kableExtra)
 4. The four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystems repeatedly among the least susceptible. We found that ecosystems characterized by destabilizing disturbance tended to be most susceptible, but broad ecosystem characteristics did not clarify patterns of susceptibility much, neither within nor across species groups. 
 5. *Synthesis and applications* Differences in wildling establishment between ecosystems can be exploited to keep alien conifers within plantation boundaries. Stands hemmed in by agriculture or other unsusceptible ecosystems will result in relatively few wildlings, while stands near susceptible ecosystems like landslides will need monitoring and control. Managers should be aware that the density of wildlings in a given ecosystem may not reflect its relative susceptibility, because variation in seed rain, climate, and site characteristics obscures the relationship between ecosystem type and wildling establishment.
 
-# Keywords
+# Keywords {-}
 
 alien species, conifer, establishment likelihood, disturbance, invasibility, plantation, recruitment, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
 
@@ -206,13 +206,13 @@ For each species, ecosystems where wildlings were totally absent were dropped as
 The values of Bio1, Bio19, elevation relative to the stand, and stand age were standardized, and the natural log of relative seed rain was centered.
 We fitted three parallel models for each species: (1) with relative seed rain derived from the static dispersal kernel, (2) with relative seed rain derived from the WALD dispersal model, and (3) without relative seed rain.
 From these three we selected that with the best AIC. 
-Two models (larches without seed rain and lodgepole pine with static dispersal kernel) did not converge and were excluded from selection.
-To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.2.7, @hartigDHARMaResidualDiagnostics2020].
+Three models (Sitka/Lutz spruce and lodgepole pine with static dispersal kernel; larches without seed rain) did not converge and were excluded from selection.
+To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.3.3, @hartigDHARMaResidualDiagnostics2020].
 We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
 Relative establishment likelihoods among ecosystems were calculated as predictions from the conditional count part of the model (holding covariates at their mean values), and scaled by the value for "forests" (which were common in the sample).
 
 To test whether higher-level characteristics of ecosystems can be used to generalize patterns of susceptibility, we aggregated ecosystems by their category (terrestrial or wetland) and structuring process (none, environmental stress, regulating disturbance, destabilizing disturbance, moderate anthropogenic disturbance, or strong anthropogenic disturbance), as defined in the Nature in Norway system (Appendix, table \@ref(tab:types-table)).
-We then refitted our four selected models with these eight strata replacing ecosystems, and obtained estimates of relative establishment likelihood for each category and structuring process.
+We then refitted our selected models with these eight strata replacing ecosystems, and obtained estimates of relative establishment likelihood for each category and structuring process.
 
 # Results
 
@@ -263,14 +263,14 @@ kbl(cortab, booktabs = TRUE,
 ```
 
 Variation in establishment likelihoods shrank when ecosystems were aggregated by category or structuring process, to 0--3 orders of magnitude (fig. \@ref(fig:establishment-hypotheses)).
-None of the species showed large differences in establishment likelihood between terrestrial and wetland ecosystems.
-At most, larches and lodgepole pine were three times less likely to establish in wetlands.
-Ecosystems structured by destabilizing disturbance tended to show higher establishment likelihoods than those structured by environmental stress and those without disturbance structuring.
+The model for lodgepole pine did not converge and was disregarded, but none of the remaining species showed large differences in establishment likelihood between terrestrial and wetland ecosystems.
+At most, larches were three times less likely to establish in wetlands.
+Ecosystems structured by destabilizing disturbance tended to show higher establishment likelihoods than those without disturbance structuring.
 However, the association between structuring process and establishment likelihood was heterogeneous across species.
 
 \newpage
 \blandscape
-```{r establishment-hypotheses, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom). Relative establishment likelihoods are shown with 95 % confidence intervals. The horizontal dotted lines indicate the reference strata."}
+```{r establishment-hypotheses, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of three alien conifer species groups among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom). Relative establishment likelihoods are shown with 95 % confidence intervals. The horizontal dotted lines indicate the reference strata."}
 knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.pdf'))
 ```
 
@@ -297,7 +297,7 @@ For example, changes in the distribution of seed rain as a stand matures were no
 
 The inconsistent effects of relative elevation on wildling abundance indicate that there is no rule of thumb for management about wildlings moving up or down slopes. 
 However, since we defined elevation relative to the central stand, it is possible that seed sources above or below the central stand partly masked slope effects.
-On the other hand, our results were consistent with the idea that prevailing winds during the dispersal season affect the direction of wildling spread, since the WALD model provided the best fit.    
+On the other hand, our results were consistent with the idea that prevailing winds during the dispersal season affect the direction of wildling spread, since the WALD model provided the best fit.
 Meanwhile, the weak and uncertain effects of stand age on wildling abundance suggests that other site characteristics tend to outweigh the magnitude of wildling accumulation over time.
 
 Our models do not estimate climate's total causal effect on wildling abundance, because they set aside its influence on ecosystems [@westreichTableFallacyPresenting2013].
@@ -515,7 +515,7 @@ kbl(disptab, longtable = TRUE, booktabs = TRUE, escape = FALSE,
 ```{r model-comparison-table}
 options(knitr.kable.NA = 'NA')
 mcomptab <- read.csv(here('ms', 'tables', 'modelcomp.csv'), check.names = FALSE)
-kbl(mcomptab, booktabs = TRUE,
+kbl(mcomptab, booktabs = TRUE, digits = 0,
     caption = "Comparison of models with different seed dispersal estimates") %>%
   kable_styling(full_width = F) %>% 
   column_spec(1, italic = TRUE) %>%

@@ -477,7 +477,7 @@ g4 <- ggplot(data = d, mapping = aes(x = name)) +
 g1234 <- g1 + g2 + g3 + g4 + 
   plot_layout(ncol = 4)
 
-ggsave(g1234, filename= 'establishment-sensitivity.svg', 
+ggsave(g1234, filename= 'establishment-sensitivity-new.svg', 
        path = here('ms', 'figures'),
        scale = 1, width = 29.7, height = 21, units = 'cm', dpi = 300)
 ```
@@ -486,6 +486,7 @@ ggsave(g1234, filename= 'establishment-sensitivity.svg',
 
 ```{r}
 results.hypothesis <- readRDS(here("output","results-hypothesis.rds"))
+results.hypothesis <- results.hypothesis[-3] # Removed P.contorta item (see 'reports/hypothesisComparisons.Rmd')
 results.hypothesis <- map(results.hypothesis, bind_rows)
 
 d <- map(results.hypothesis, function(x) {
@@ -621,30 +622,6 @@ g3 <- ggplot(data = d, mapping = aes(x = category)) +
         axis.ticks.x = element_blank(),
         plot.title = element_text(face = 'italic'))
 
-d <- filter(plotd, species == "P.contorta", structuring == "none")
-col <- '#e41a1c'
-g4 <- ggplot(data = d, mapping = aes(x = category)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$category) == 'terrestrial'), 
-             linetype = "dotted") +
-  geom_linerange(data = filter(d, modeled == TRUE), 
-                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
-  geom_point(data = filter(d, modeled == TRUE),
-             mapping = aes(y = fit), color = col, size = 2) +
-  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = 2) +
-  scale_y_log10(minor_breaks = NULL) +
-  coord_flip(ylim = ylimits$P.contorta) +
-  labs(title = 'Pinus contorta') +
-  theme_light() +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x = element_blank(),
-        plot.title = element_text(face = 'italic'))
-
 d <- filter(plotd, species == "P.sitchensis-lutzii", category == "terrestrial")
 col <- '#984ea3'
 g5 <- ggplot(data = d, mapping = aes(x = structuring)) + 
@@ -712,39 +689,15 @@ g7 <- ggplot(data = d, mapping = aes(x = structuring)) +
         axis.title.x = element_blank(),
         plot.title = element_blank())
 
-d <- filter(plotd, species == "P.contorta", category == "terrestrial")
-col <- '#e41a1c'
-g8 <- ggplot(data = d, mapping = aes(x = structuring)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$structuring) == 'none'), 
-             linetype = "dotted") +
-  geom_linerange(data = filter(d, modeled == TRUE), 
-                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
-  geom_point(data = filter(d, modeled == TRUE),
-             mapping = aes(y = fit), color = col, size = 2) +
-  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = 2) +
-  scale_y_log10(
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = ylimits$P.contorta) +
-  theme_light() +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        plot.title = element_blank())
-
-
 g <- 
-  g1 + g2 + g3 + g4 + 
-  g5 + g6 + g7 + g8 +
-  plot_layout(ncol = 4, heights = c(2, 6))
+  g1 + g2 + g3 + 
+  g5 + g6 + g7 +
+  plot_layout(ncol = 3, heights = c(2, 6))
 ```
 
 ```{r}
 ggsave(g, filename= 'establishment-hypotheses.svg', path = here('ms', 'figures'),
-  scale = 1.5, width = 210, height = 297/5, units = 'mm', dpi = 300)
+  scale = 1.5, width = 150, height = 297/5, units = 'mm', dpi = 300)
 ```
 
 

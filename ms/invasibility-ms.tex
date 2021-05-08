@@ -109,7 +109,8 @@
 *Corresponding author: \href{mailto:julienvollering@gmail.com}{\nolinkurl{julienvollering@gmail.com}}
 
 \hypertarget{abstract}{%
-\section{Abstract}\label{abstract}}
+\section*{Abstract}\label{abstract}}
+\addcontentsline{toc}{section}{Abstract}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -127,7 +128,8 @@
 \end{enumerate}
 
 \hypertarget{keywords}{%
-\section{Keywords}\label{keywords}}
+\section*{Keywords}\label{keywords}}
+\addcontentsline{toc}{section}{Keywords}
 
 alien species, conifer, establishment likelihood, disturbance, invasibility, plantation, recruitment, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
 
@@ -288,13 +290,13 @@ For each species, ecosystems where wildlings were totally absent were dropped as
 The values of Bio1, Bio19, elevation relative to the stand, and stand age were standardized, and the natural log of relative seed rain was centered.
 We fitted three parallel models for each species: (1) with relative seed rain derived from the static dispersal kernel, (2) with relative seed rain derived from the WALD dispersal model, and (3) without relative seed rain.
 From these three we selected that with the best AIC.
-Two models (larches without seed rain and lodgepole pine with static dispersal kernel) did not converge and were excluded from selection.
-To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package (version 0.2.7, Hartig, \protect\hyperlink{ref-hartigDHARMaResidualDiagnostics2020}{2020}).
+Three models (Sitka/Lutz spruce and lodgepole pine with static dispersal kernel; larches without seed rain) did not converge and were excluded from selection.
+To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package (version 0.3.3, Hartig, \protect\hyperlink{ref-hartigDHARMaResidualDiagnostics2020}{2020}).
 We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
 Relative establishment likelihoods among ecosystems were calculated as predictions from the conditional count part of the model (holding covariates at their mean values), and scaled by the value for ``forests'' (which were common in the sample).
 
 To test whether higher-level characteristics of ecosystems can be used to generalize patterns of susceptibility, we aggregated ecosystems by their category (terrestrial or wetland) and structuring process (none, environmental stress, regulating disturbance, destabilizing disturbance, moderate anthropogenic disturbance, or strong anthropogenic disturbance), as defined in the Nature in Norway system (Appendix, table~\ref{tab:types-table}).
-We then refitted our four selected models with these eight strata replacing ecosystems, and obtained estimates of relative establishment likelihood for each category and structuring process.
+We then refitted our selected models with these eight strata replacing ecosystems, and obtained estimates of relative establishment likelihood for each category and structuring process.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -360,9 +362,9 @@ Meanwhile, ecosystems with high establishment likelihoods tended to be rarer typ
 \end{table}
 
 Variation in establishment likelihoods shrank when ecosystems were aggregated by category or structuring process, to 0--3 orders of magnitude (fig.~\ref{fig:establishment-hypotheses}).
-None of the species showed large differences in establishment likelihood between terrestrial and wetland ecosystems.
-At most, larches and lodgepole pine were three times less likely to establish in wetlands.
-Ecosystems structured by destabilizing disturbance tended to show higher establishment likelihoods than those structured by environmental stress and those without disturbance structuring.
+The model for lodgepole pine did not converge and was disregarded, but none of the remaining species showed large differences in establishment likelihood between terrestrial and wetland ecosystems.
+At most, larches were three times less likely to establish in wetlands.
+Ecosystems structured by destabilizing disturbance tended to show higher establishment likelihoods than those without disturbance structuring.
 However, the association between structuring process and establishment likelihood was heterogeneous across species.
 
 \newpage
@@ -371,7 +373,7 @@ However, the association between structuring process and establishment likelihoo
 \begin{figure}
 \centering
 \includegraphics{/home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figures/establishment-hypotheses.pdf}
-\caption{\label{fig:establishment-hypotheses}Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom). Relative establishment likelihoods are shown with 95 \% confidence intervals. The horizontal dotted lines indicate the reference strata.}
+\caption{\label{fig:establishment-hypotheses}Relative densities (unfilled points) and relative establishment likelihoods (filled points) of three alien conifer species groups among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom). Relative establishment likelihoods are shown with 95 \% confidence intervals. The horizontal dotted lines indicate the reference strata.}
 \end{figure}
 
 \end{landscape}
@@ -399,7 +401,7 @@ For example, changes in the distribution of seed rain as a stand matures were no
 
 The inconsistent effects of relative elevation on wildling abundance indicate that there is no rule of thumb for management about wildlings moving up or down slopes.
 However, since we defined elevation relative to the central stand, it is possible that seed sources above or below the central stand partly masked slope effects.
-On the other hand, our results were consistent with the idea that prevailing winds during the dispersal season affect the direction of wildling spread, since the WALD model provided the best fit.\\
+On the other hand, our results were consistent with the idea that prevailing winds during the dispersal season affect the direction of wildling spread, since the WALD model provided the best fit.
 Meanwhile, the weak and uncertain effects of stand age on wildling abundance suggests that other site characteristics tend to outweigh the magnitude of wildling accumulation over time.
 
 Our models do not estimate climate's total causal effect on wildling abundance, because they set aside its influence on ecosystems (Westreich \& Greenland, \protect\hyperlink{ref-westreichTableFallacyPresenting2013}{2013}).
@@ -755,27 +757,29 @@ artificial wetland & V13 & wetland & strong anthropogenic disturbance & 0.0\\*
 \toprule
 species group & seed dispersal estimate & AIC & dAIC & df\\
 \midrule
- & WALD & 51967.261 & 0.0000 & 38\\
+ & WALD & 51967 & 0 & 38\\
 
- & Exponential Power & 128861.239 & 76893.9779 & 38\\
+ & Exponential Power & NA & NA & NA\\
 
-\multirow{-3}{*}{\raggedright\arraybackslash \em{Picea sitchensis / lutzii}} & none & 54477.712 & 2510.4515 & 38\\
+\multirow{-3}{*}{\raggedright\arraybackslash \em{Picea sitchensis / lutzii}} & none & 54478 & 2510 & 38\\
 \cmidrule{1-5}
- & WALD & 9680.586 & 0.0000 & 26\\
+ & WALD & 9681 & 0 & 26\\
 
- & Exponential Power & 25316.450 & 15635.8645 & 26\\
+ & Exponential Power & 25316 & 15636 & 26\\
 
-\multirow{-3}{*}{\raggedright\arraybackslash \em{Picea abies}} & none & 9781.127 & 100.5414 & 26\\
+\multirow{-3}{*}{\raggedright\arraybackslash \em{Picea abies}} & none & 9781 & 101 & 26\\
 \cmidrule{1-5}
- & WALD & 10057.588 & 0.0000 & 21\\
+ & WALD & 10058 & 0 & 21\\
 
-\multirow{-2}{*}{\raggedright\arraybackslash \em{Larix spp.}} & Exponential Power & 27310.048 & 17252.4596 & 21\\
+ & Exponential Power & 27310 & 17252 & 21\\
+
+\multirow{-3}{*}{\raggedright\arraybackslash \em{Larix spp.}} & none & NA & NA & 21\\
 \cmidrule{1-5}
- & WALD & 3319.143 & 0.0000 & 17\\
+ & WALD & 3319 & 0 & 17\\
 
  & Exponential Power & NA & NA & 17\\
 
-\multirow{-3}{*}{\raggedright\arraybackslash \em{Pinus contorta}} & none & 3372.102 & 52.9581 & 17\\
+\multirow{-3}{*}{\raggedright\arraybackslash \em{Pinus contorta}} & none & 3372 & 53 & 17\\
 \bottomrule
 \end{tabular}
 \end{table}
