@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  10 MAY 2021 13:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  10 MAY 2021 14:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -843,8 +843,8 @@ LaTeX Warning: There were multiply-defined labels.
  ) 
 Here is how much of TeX's memory you used:
  14358 strings out of 483183
- 211629 string characters out of 5966293
- 530539 words of memory out of 5000000
+ 211627 string characters out of 5966293
+ 530538 words of memory out of 5000000
  28794 multiletter control sequences out of 15000+600000
  595483 words of font info for 138 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -861,7 +861,7 @@ ublic/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/shar
 e/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmsy10.pfb>
-Output written on invasibility-ms.pdf (37 pages, 7168509 bytes).
+Output written on invasibility-ms.pdf (37 pages, 7168506 bytes).
 PDF statistics:
  11712 PDF objects out of 12825 (max. 8388607)
  7885 compressed objects within 79 object streams
