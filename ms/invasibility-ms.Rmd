@@ -103,7 +103,7 @@ We examine plantations of alien conifers in Norway to investigate the following 
 2. In which ecosystems are wildlings of alien conifers most and least likely to establish?
 3. Can overarching characteristics of ecosystems be used to generalize patterns of wildling establishment?
 
-# Methods
+# Materials and methods
 
 ## Field data
 
@@ -379,6 +379,10 @@ JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO,
 # Acknowledgments
 
 We thank Ola Westby Aamodt, Matteo De Stefano, Vigdis Frivoll, Honorata Gajda, Miene-Marie Gastinger, Jon Hagelin, Craig Jackson, Roy Mangersnes, Heidi Elin Myklebost, Bjarne Homnes Oddane, Sina Thu Randulff, Anders Ringstad, Monica Ruano, Knut Børge Strøm, Rune Søyland, Solbjørg Engen Torvik, and Toralf Tysse for their help in collecting and/or collating the field data. Field work was financed by the Norwegian Environment Agency (contracts 15040036, 17070025, 17070031, 19087470, 19087471).
+
+# Data availability statement
+
+Data will be made available via the Dryad Digital Repository.
 
 \newpage
 # Appendix
