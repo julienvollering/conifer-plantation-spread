@@ -382,7 +382,7 @@ We thank Ola Westby Aamodt, Matteo De Stefano, Vigdis Frivoll, Honorata Gajda, M
 
 # Data availability statement
 
-Data will be made available via the Dryad Digital Repository.
+Data will be made available via the Dryad Digital Repository. Code is available at <https://github.com/julienvollering/conifer-plantation-spread>.
 
 \newpage
 # Appendix

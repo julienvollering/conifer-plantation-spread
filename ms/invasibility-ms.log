@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  10 MAY 2021 15:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.8.1)  10 MAY 2021 22:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -847,7 +847,7 @@ l.818 \hspace
 
 ] [44] [45] [46] [47] [48]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
-res/establishment-sensitivity.pdf, id=10036, 633.78535pt x 448.13425pt>
+res/establishment-sensitivity.pdf, id=10037, 633.78535pt x 448.13425pt>
 File: /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms
 /figures/establishment-sensitivity.pdf Graphic file (type pdf)
 <use /home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/
@@ -882,8 +882,8 @@ LaTeX Warning: There were multiply-defined labels.
  ) 
 Here is how much of TeX's memory you used:
  14658 strings out of 483183
- 216193 string characters out of 5966293
- 529233 words of memory out of 5000000
+ 216221 string characters out of 5966293
+ 529247 words of memory out of 5000000
  29059 multiletter control sequences out of 15000+600000
  601235 words of font info for 140 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -901,10 +901,10 @@ e/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.p
 fb>
-Output written on invasibility-ms.pdf (56 pages, 7196515 bytes).
+Output written on invasibility-ms.pdf (56 pages, 7196868 bytes).
 PDF statistics:
- 11817 PDF objects out of 12825 (max. 8388607)
- 7969 compressed objects within 80 object streams
+ 11818 PDF objects out of 12825 (max. 8388607)
+ 7970 compressed objects within 80 object streams
  171 named destinations out of 1000 (max. 500000)
  14511 words of extra memory for PDF output out of 17280 (max. 10000000)
 
