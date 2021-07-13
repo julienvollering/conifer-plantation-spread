@@ -15,4 +15,4 @@ ms/*.docx
 ms/*.html
 ms/*.txt
 ms/coauthor-comments/*
-ms/submission
+ms/submission*
