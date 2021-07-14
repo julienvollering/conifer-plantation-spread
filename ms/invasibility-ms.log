@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.6.10)  14 JUL 2021 00:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.6.10)  14 JUL 2021 10:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -843,7 +843,7 @@ name{table.7}) has been already used, duplicate ignored
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.818 \hspace
-             {1em}\cellcolor{gray!6}{V2} & \cellcolor{gray!6}{-1.29} & \cell...
+             {1em}V2 & -1.29 & -1.77, -0.82 &  & \\
 
 ] [44] [45] [46] [47] [48]
 </home/julien/Documents/dissertation/chapter3/conifer-plantation-spread/ms/figu
@@ -881,10 +881,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14658 strings out of 483107
- 216221 string characters out of 5964630
+ 14657 strings out of 483107
+ 216208 string characters out of 5964630
  520492 words of memory out of 5000000
- 29068 multiletter control sequences out of 15000+600000
+ 29067 multiletter control sequences out of 15000+600000
  601235 words of font info for 140 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  41i,11n,42p,874b,480s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -901,7 +901,7 @@ e/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.p
 fb>
-Output written on invasibility-ms.pdf (56 pages, 7191711 bytes).
+Output written on invasibility-ms.pdf (56 pages, 7189038 bytes).
 PDF statistics:
  11818 PDF objects out of 12825 (max. 8388607)
  7970 compressed objects within 80 object streams

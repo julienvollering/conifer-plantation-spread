@@ -540,7 +540,6 @@ options(knitr.kable.NA = '')
 kable(msumms$`Ps-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
       caption = "\\label{tab:Ps}Model summary for Picea sitchensis / lutzii. The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 7.745472") %>%
   add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  kable_styling(latex_options = "striped") %>% 
   pack_rows(index = c("Conditional model" = sum(msumms$`Ps-modelsummary`[,1]=="Conditional Model"),
                       "Zero-inflation model" = sum(msumms$`Ps-modelsummary`[,1]=="Zero-inflation model")))
 
@@ -548,21 +547,18 @@ kable(msumms$`Ps-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 
 kable(msumms$`Pa-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
       caption = "\\label{tab:Pa}Model summary for Picea abies. The conditional model is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 2.495544") %>%
   add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  kable_styling(latex_options = "striped") %>% 
   pack_rows(index = c("Conditional model" = sum(msumms$`Pa-modelsummary`[,1]=="Conditional Model"),
                       "Zero-inflation model" = sum(msumms$`Pa-modelsummary`[,1]=="Zero-inflation model")))
 
 kable(msumms$`L-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
       caption = "\\label{tab:L}Model summary for Larix spp. The conditional model is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 6.713045") %>%
   add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  kable_styling(latex_options = "striped") %>% 
   pack_rows(index = c("Conditional model" = sum(msumms$`L-modelsummary`[,1]=="Conditional Model"),
                       "Zero-inflation model" = sum(msumms$`L-modelsummary`[,1]=="Zero-inflation model")))
 
 kable(msumms$`Pc-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
       caption = "\\label{tab:Pc}Model summary for Pinus contorta. The conditional model is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 68.49936") %>%
   add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  kable_styling(latex_options = "striped") %>% 
   pack_rows(index = c("Conditional model" = sum(msumms$`Pc-modelsummary`[,1]=="Conditional Model"),
                       "Zero-inflation model" = sum(msumms$`Pc-modelsummary`[,1]=="Zero-inflation model")))
 ```
