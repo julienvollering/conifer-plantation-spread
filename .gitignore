@@ -9,6 +9,7 @@
 data
 output
 notes
+archive
 reproducible
 reports/locality-maps.html
 ms/*.docx
