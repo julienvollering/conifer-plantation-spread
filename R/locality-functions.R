@@ -92,17 +92,17 @@ add_dummies_to_grid <- function(grid, poly, field) {
   
   grid <- grid %>% 
     select(-ID) %>% 
-    mutate_at(groups, `/`, st_area(grid)) %>% 
-    mutate_at(groups, as.numeric)
+    mutate_at(all_of(groups), `/`, st_area(grid)) %>% 
+    mutate_at(all_of(groups), as.numeric)
   
-  rowS <- select(grid, groups) %>% 
+  rowS <- select(grid, all_of(groups)) %>% 
     st_set_geometry(NULL) %>% 
     rowSums(na.rm = TRUE)
   fact <- ifelse(rowS > 1, 1/rowS, 1)
   grid <- grid %>% 
-    mutate_at(groups, function(x) {x * fact}) %>% 
-    mutate_at(groups, ~ replace_na(., replace = 0)) %>% 
-    mutate_at(groups, function(x) {attributes(x) <- NULL; x})
+    mutate_at(all_of(groups), function(x) {x * fact}) %>% 
+    mutate_at(all_of(groups), ~ replace_na(., replace = 0)) %>% 
+    mutate_at(all_of(groups), function(x) {attributes(x) <- NULL; x})
   
   return(grid)
 }
