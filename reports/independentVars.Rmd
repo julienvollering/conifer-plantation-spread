@@ -14,11 +14,7 @@ library(units)
 source(here("R","locality-functions.R"))
 ```
 
-# Setup
-
-```{r code-type pairing}
-pairing <- read_csv(here('data','codetype-pairing.csv'))
-```
+# Checks
 
 ```{r check topology, include=FALSE, eval=FALSE}
 ninfiles <- list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE)
@@ -32,11 +28,47 @@ for (i in ninfiles) {
 }
 ```
 
-# Cell intersection
+```{r check crs, include=FALSE, eval=FALSE}
+list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE) %>% 
+  map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
+        st_crs()) %>% 
+  unique()
+list.files(here("data","qc"), pattern = "wildlings-height.shp", recursive = TRUE) %>% 
+  map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
+        st_crs()) %>% 
+  unique()
+```
+
+```{r check heights, include=FALSE, eval=FALSE}
+heightfiles <- list.files(here("data","qc"), pattern = "height.shp", recursive = TRUE)
+hgts <- heightfiles %>% 
+  set_names(gsub("/wildlings-height.shp","",.)) %>% 
+  map(~ st_read(here("data","qc",.x), quiet = TRUE) %>%
+        pull(hgt))
+boxplot(hgts)
+stack(hgts) %>% 
+  filter(values < 30) %>%
+  arrange(ind, values)
+stack(hgts) %>% 
+  filter(ind=="P.sitchensis-lutzii/kvia" | ind=="P.sitchensis-lutzii/skorphella",
+         values>30)
+
+heightfiles %>% 
+  set_names(gsub("/wildlings-height.shp","",.)) %>% 
+  map(function(x) {
+    pts <- st_read(here("data","qc",x), quiet = TRUE)
+    if(has_name(pts, "hgt_assume")) {pull(pts, hgt_assume)} else {NA}
+  })
+```
+
+# Grid cells with covariates
 
 WALD seed shadows produced separately because of long computation time. 
 
-```{r wildlings per cell}
+```{r cells}
+standardcrs <- st_crs(25833) 
+pairing <- read_csv(here('data','codetype-pairing.csv'))
+
 species <- list.files(here("data","qc"))
 
 percell <- list()
@@ -48,7 +80,8 @@ for (j in species) { # j <- species[1]
   for (i in localities) { # i <- localities[1]
     message(i)
     nin <- st_read(here("data","qc",j,i,"nin.shp"), quiet = TRUE) %>% 
-      as_tibble %>% st_as_sf() %>% 
+      st_transform(standardcrs) %>% 
+      as_tibble() %>% st_as_sf() %>% 
       mutate(code = as.character(code), type = NULL) %>% 
       left_join(pairing, by = "code")
     grd <- make_grid(nin, gridres = 10)
@@ -87,26 +120,22 @@ for (j in species) { # j <- species[1]
     }
     grd <- add_relative_elevation(grd, filter(source, FID == 0), dtm)
     
-    wildlings <- st_read(here("data","qc",j,i,"wildlings.shp"), quiet = TRUE)
-    grd <- add_wildlings(grd, wildlings)
-    
-    percell[[j]][[i]] <- select(grd, wildlings, everything())
+    percell[[j]][[i]] <- grd
   }
 }
 
 saveRDS(percell, here("output","percell-data.rds"))
 ```
 
-```{r wildlings per cell aggregated}
+```{r aggregated by species}
 percell <- readRDS(here("output","percell-data.rds"))
 
 str(percell, 2)
-percell <- map(percell, ~ map(., ~ st_set_geometry(., NULL)))
 percell.agg <- map(percell, ~ map_dfr(., identity, .id = "locality"))
 str(percell.agg, 1)
 percell.agg
 
-excluded <- c("wildlings", "locality", "seeds.ExP", "seeds.WALD", "relelev")
+excluded <- c("locality", "seeds.ExP", "seeds.WALD", "relelev")
 percell.agg <- map(percell.agg, function(x) {
   included <- names(x)[!(names(x) %in% excluded)]
   mutate_at(x, included, ~replace_na(., 0))
@@ -132,9 +161,9 @@ anyNA(jointable)
 percell.agg <- percell.agg %>% 
   map_dfr(identity, .id = 'species') %>% 
   left_join(jointable, by = c("species", "locality")) %>%
-  select(species, locality, wildlings, age, bio01, bio19, 
+  select(species, locality, age, bio01, bio19, 
          seeds.ExP, seeds.WALD, relelev, `plantation forest`, everything()) %>% 
-  group_split(species, keep = TRUE)
+  group_split(species, .keep = TRUE)
 names(percell.agg) <- map_chr(percell.agg, ~pull(., species) %>% unique())
 
 str(map(percell, ~ map_dfr(., identity, .id = "locality")), 1)
