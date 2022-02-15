@@ -1,0 +1,76 @@
+---
+title: "wildlings-NiN"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(sf)
+library(units)
+source(here("R","locality-functions.R"))
+```
+
+# Checks
+
+```{r check crs, include=FALSE, eval=FALSE}
+list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE) %>% 
+  map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
+        st_crs()) %>% 
+  unique()
+list.files(here("data","qc"), pattern = "wildlings-height.shp", recursive = TRUE) %>% 
+  map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
+        st_crs()) %>% 
+  unique()
+```
+
+```{r check heights}
+hgtfiles <- list.files(here("data","qc"), pattern = "height.shp", recursive = TRUE)
+hgtpts <- hgtfiles %>% 
+  set_names(gsub("/wildlings-height.shp","",.)) %>% 
+  map(~ st_read(here("data","qc",.x), quiet = TRUE))
+        
+hgts <- hgtpts %>% 
+  map_dfr(st_drop_geometry, .id = "file") %>% 
+  select(file, count, hgt, hgt_assume) %>% 
+  mutate(count = replace_na(count, 1),
+         hgt_assume = replace_na(hgt_assume, 0)) %>% 
+  tibble()
+summary(hgts)
+all.equal(hgts$count, as.integer(hgts$count))
+all.equal(hgts$hgt, as.integer(hgts$hgt))
+slice(hgts, which(hgts$hgt != as.integer(hgts$hgt)))
+pull(hgts, hgt_assume) %>% unique()
+
+filter(hgts, hgt_assume == 0) %>% 
+  ggplot(aes(hgt, file)) + geom_boxplot() + labs(title = "Individually measured heights")
+filter(hgts, hgt < 30) %>% 
+  arrange(file, hgt) %>% 
+  print(n = nrow(.))
+
+filter(hgts, hgt_assume == 1) %>% 
+  ggplot(aes(hgt, file)) + geom_boxplot() + labs(title = "Indirectly measured heights")
+
+hgts %>% 
+  uncount(weights = count) %>% 
+  group_by(file) %>% 
+  summarize(unmeasured = sum(is.na(hgt)),
+            n = n(),
+            propunmeasured = unmeasured/n()) %>% 
+  ggplot(aes(propunmeasured, file)) + geom_col() + 
+  geom_text(aes(label = n), hjust = 0) +
+  labs(title = "Proportion of unmeasured heights",
+       subtitle = "Labelled with total number of wildlings")
+hgts %>% 
+  uncount(weights = count) %>% 
+  summarise(sum(is.na(hgt))/n())
+```
+
+# Point geometries with heights
+
+```{r sessionInfo}
+sessionInfo()
+```

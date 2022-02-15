@@ -39,28 +39,6 @@ list.files(here("data","qc"), pattern = "wildlings-height.shp", recursive = TRUE
   unique()
 ```
 
-```{r check heights, include=FALSE, eval=FALSE}
-heightfiles <- list.files(here("data","qc"), pattern = "height.shp", recursive = TRUE)
-hgts <- heightfiles %>% 
-  set_names(gsub("/wildlings-height.shp","",.)) %>% 
-  map(~ st_read(here("data","qc",.x), quiet = TRUE) %>%
-        pull(hgt))
-boxplot(hgts)
-stack(hgts) %>% 
-  filter(values < 30) %>%
-  arrange(ind, values)
-stack(hgts) %>% 
-  filter(ind=="P.sitchensis-lutzii/kvia" | ind=="P.sitchensis-lutzii/skorphella",
-         values>30)
-
-heightfiles %>% 
-  set_names(gsub("/wildlings-height.shp","",.)) %>% 
-  map(function(x) {
-    pts <- st_read(here("data","qc",x), quiet = TRUE)
-    if(has_name(pts, "hgt_assume")) {pull(pts, hgt_assume)} else {NA}
-  })
-```
-
 # Grid cells with covariates
 
 WALD seed shadows produced separately because of long computation time. 
@@ -113,8 +91,7 @@ for (j in species) { # j <- species[1]
     )) 
 
     if (file.exists(here("data","qc",j,i,"dtm1","data","dtm1.tif"))) {
-      dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif")) %>% 
-        raster::aggregate(fact = 2)
+      dtm <- raster::raster(here("data","qc",j,i,"dtm1","data","dtm1.tif"))
     } else {
       dtm <- raster::raster(here("data","qc",j,i,"dtm10","data","dtm10.tif"))
     }
