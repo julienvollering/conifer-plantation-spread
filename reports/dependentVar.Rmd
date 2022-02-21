@@ -20,11 +20,13 @@ source(here("R","locality-functions.R"))
 list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE) %>% 
   map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
         st_crs()) %>% 
-  unique()
+  map_int(~ .$epsg) %>% 
+  table()
 list.files(here("data","qc"), pattern = "wildlings-height.shp", recursive = TRUE) %>% 
   map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
         st_crs()) %>% 
-  unique()
+  map_int(~ .$epsg) %>% 
+  table()
 ```
 
 ```{r check heights}
@@ -70,6 +72,24 @@ hgts %>%
 ```
 
 # Point geometries with heights
+
+```{r}
+hgtfiles <- list.files(here("data","qc"), pattern = "height.shp", recursive = TRUE)
+hgtpts <- hgtfiles %>% 
+  set_names(gsub("/wildlings-height.shp","",.)) %>% 
+  map(~ st_read(here("data","qc",.x), quiet = TRUE))
+str(hgtpts, 1)
+hgtpts25832 <- hgtpts %>% 
+  map(st_transform, crs = 25832) %>% 
+  bind_rows(.id = "file") %>% 
+  mutate(species = gsub("/.*", "", file),
+         locality =  gsub(".*/", "", file),
+         count = as.integer(replace_na(count, 1)),
+         hgt_assume = as.logical(replace_na(hgt_assume, 0))) %>% 
+  select(species, locality, count, hgt, hgt_assume)
+
+saveRDS(hgtpts25832, here("output","dependentVar.rds"))
+```
 
 ```{r sessionInfo}
 sessionInfo()
