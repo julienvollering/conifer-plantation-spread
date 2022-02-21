@@ -1,5 +1,5 @@
 ---
-title: "wildlings-NiN"
+title: "Prepare dependent variable"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -10,8 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(sf)
-library(units)
-source(here("R","locality-functions.R"))
 ```
 
 # Checks
@@ -86,6 +84,7 @@ hgtpts25832 <- hgtpts %>%
          locality =  gsub(".*/", "", file),
          count = as.integer(replace_na(count, 1)),
          hgt_assume = as.logical(replace_na(hgt_assume, 0))) %>% 
+  filter(hgt >= 30 | is.na(hgt)) %>% 
   select(species, locality, count, hgt, hgt_assume)
 
 saveRDS(hgtpts25832, here("output","dependentVar.rds"))
