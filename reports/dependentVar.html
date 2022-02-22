@@ -341,7 +341,8 @@ summary(hgts)</code></pre>
 </div>
 <div id="point-geometries-with-heights" class="section level1">
 <h1>Point geometries with heights</h1>
-<pre class="r"><code>hgtfiles &lt;- list.files(here(&quot;data&quot;,&quot;qc&quot;), pattern = &quot;height.shp&quot;, recursive = TRUE)
+<pre class="r"><code>standardcrs &lt;- st_crs(25833) 
+hgtfiles &lt;- list.files(here(&quot;data&quot;,&quot;qc&quot;), pattern = &quot;height.shp&quot;, recursive = TRUE)
 hgtpts &lt;- hgtfiles %&gt;% 
   set_names(gsub(&quot;/wildlings-height.shp&quot;,&quot;&quot;,.)) %&gt;% 
   map(~ st_read(here(&quot;data&quot;,&quot;qc&quot;,.x), quiet = TRUE))</code></pre>
@@ -666,7 +667,7 @@ hgtpts &lt;- hgtfiles %&gt;%
 ##   ..- attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA NA NA
 ##   .. ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;FID&quot; &quot;hoeyde&quot; &quot;count&quot; &quot;hgt&quot;</code></pre>
 <pre class="r"><code>hgtpts25832 &lt;- hgtpts %&gt;% 
-  map(st_transform, crs = 25832) %&gt;% 
+  map(st_transform, crs = standardcrs) %&gt;% 
   bind_rows(.id = &quot;file&quot;) %&gt;% 
   mutate(species = gsub(&quot;/.*&quot;, &quot;&quot;, file),
          locality =  gsub(&quot;.*/&quot;, &quot;&quot;, file),

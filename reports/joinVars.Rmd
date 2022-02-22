@@ -44,21 +44,37 @@ hgtptssplit <- hgtpts %>%
   group_by(species, locality) %>% 
   group_split()
 
-hgtptsEDhgt <- hgtptssplit %>% 
-  map(~ pull(., hgt) %>% 
-        discard(., ~ is.na(.)))
-
 set.seed(42)
-hgtptsimpute <- map2(hgtptssplit, hgtptsEDhgt, 
-                     ~ mutate(.x, 
-                              hgt_impute = ifelse(is.na(hgt), TRUE, FALSE),
-                              hgt = ifelse(is.na(hgt), sample(.y, 1), hgt)))
-
-hgtptsimpute %>% 
+hgtptsi <- hgtptssplit %>%
+  map(~ mutate(., 
+               hgt_random = sample(na.omit(hgt), size = nrow(.), replace = TRUE),
+               hgt_assign = is.na(hgt),
+               hgt = ifelse(hgt_assign, hgt_random, hgt))) %>% 
   bind_rows() %>% 
-  group_by(species, locality) %>% 
-  filter(hgt_impute)
+  select(species, locality, hgt, hgt_assume, hgt_assign, geometry)
+tail(hgtptsi)
+
+hgtptsi %>% 
+  mutate(file=paste(species, locality, sep = "/")) %>% 
+  ggplot(aes(x=hgt, y=file, color = hgt_assign)) + geom_boxplot()
 ```
+
+```{r}
+iv <- readRDS(here("output","independentVars.rds"))
+group_split(iv, species) %>% 
+  map2(add_wildlings)
+
+hgtclasses <- classlimits %>% 
+  pmap(~ filter(hgtptsi, hgt >= ..2, hgt <= ..3))
+
+
+```
+
+Pseudocode:
+1. Load independentVars
+2. Separate by species (x3)
+3. "left_join" independentVars to hgtclasses (x2) (see *add_wildlings* function)
+4. save as list with species at first level, followed by height classes at lower level
 
 
 ```{r sessionInfo}
