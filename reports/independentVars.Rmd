@@ -32,11 +32,13 @@ for (i in ninfiles) {
 list.files(here("data","qc"), pattern = "nin.shp", recursive = TRUE) %>% 
   map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
         st_crs()) %>% 
-  unique()
+  map_int(~ .$epsg) %>% 
+  table()
 list.files(here("data","qc"), pattern = "wildlings-height.shp", recursive = TRUE) %>% 
   map(~ st_read(here("data","qc",.x), quiet = TRUE) %>% 
         st_crs()) %>% 
-  unique()
+  map_int(~ .$epsg) %>% 
+  table()
 ```
 
 # Grid cells with covariates
@@ -75,7 +77,7 @@ for (j in species) { # j <- species[1]
     source <- st_read(here("data","qc",j,i,"source_polygon.shp"), quiet = TRUE) %>% 
       st_zm(drop = TRUE, what = "ZM")
     source <- mutate(source, nsources = st_area(source) %>% 
-                       `/`(10) %>% # 10 sources per 100m2 (gridres 10x10m)
+                       `/`(100) %>% # 1 sources per 100m2 (gridres 10x10m)
                        drop_units() %>% 
                        round())
     source.nonz <- filter(source, nsources > 0)
