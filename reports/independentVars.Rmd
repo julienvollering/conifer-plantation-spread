@@ -51,7 +51,7 @@ pairing <- read_csv(here('data','codetype-pairing.csv'))
 
 species <- list.files(here("data","qc"))
 
-percell <- list()
+bylocality <- list()
 
 for (j in species) { # j <- species[1]
   message(j)
@@ -99,26 +99,22 @@ for (j in species) { # j <- species[1]
     }
     grd <- add_relative_elevation(grd, filter(source, FID == 0), dtm)
     
-    percell[[j]][[i]] <- grd
+    bylocality[[j]][[i]] <- grd
   }
 }
-
-saveRDS(percell, here("output","percell-data.rds"))
 ```
 
 ```{r aggregated by species}
-percell <- readRDS(here("output","percell-data.rds"))
+str(bylocality, 2)
+collated <- bylocality %>% 
+  map(bind_rows, .id = "locality") %>% 
+  bind_rows(.id = "species")
 
-str(percell, 2)
-percell.agg <- map(percell, ~ map_dfr(., identity, .id = "locality"))
-str(percell.agg, 1)
-percell.agg
-
-excluded <- c("locality", "seeds.ExP", "seeds.WALD", "relelev")
-percell.agg <- map(percell.agg, function(x) {
-  included <- names(x)[!(names(x) %in% excluded)]
-  mutate_at(x, included, ~replace_na(., 0))
-})
+summary(collated)
+excluded <- c("species", "locality", "seeds.ExP", "seeds.WALD", "relelev")
+collated <- collated %>% 
+  mutate(across(!all_of(excluded), ~ replace_na(.x, replace = 0)))
+summary(collated)
 ```
 
 ```{r locality covariates}
@@ -137,18 +133,13 @@ jointable <- raster::extract(chelsa, locs, sp = TRUE) %>%
   mutate(locality = tolower(locality))
 anyNA(jointable)
 
-percell.agg <- percell.agg %>% 
-  map_dfr(identity, .id = 'species') %>% 
+collated <- collated %>% 
   left_join(jointable, by = c("species", "locality")) %>%
-  select(species, locality, age, bio01, bio19, 
-         seeds.ExP, seeds.WALD, relelev, `plantation forest`, everything()) %>% 
-  group_split(species, .keep = TRUE)
-names(percell.agg) <- map_chr(percell.agg, ~pull(., species) %>% unique())
+  relocate(species, locality, age, bio01, bio19, 
+           seeds.ExP, seeds.WALD, relelev, `plantation forest`) %>% 
+  relocate(geometry, .after = last_col())
 
-str(map(percell, ~ map_dfr(., identity, .id = "locality")), 1)
-str(percell.agg, 1)
-
-saveRDS(percell.agg, here("output","data.rds"))
+saveRDS(collated, here("output","independentVars.rds"))
 
 localities %>% 
   mutate(locality = tolower(locality)) %>% 
