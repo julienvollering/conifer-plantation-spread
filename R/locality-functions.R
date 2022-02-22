@@ -131,17 +131,13 @@ add_seeds_ExP <- function(grid, sourcepts) {
   add_column(grid, seeds.ExP = rowSums(src.array, na.rm = TRUE), .before = "geometry")
 }
 
+
 add_seeds_WALD <- function(grid, raster) {
-  suppressWarnings({
-    centr <- st_centroid(st_geometry(grid)) 
-  })
-  if (st_crs(centr) != st_crs(raster)) {
-    centr <- st_transform(centr, st_crs(raster))
-  }
-  centr <- as(centr, "Spatial")
-  
-  add_column(grid, seeds.WALD = raster::extract(raster, centr), .before = "geometry")
+  grd.proj <- sf::st_transform(grid, crs = raster::projection(raster)) 
+  WALD <- exactextractr::exact_extract(raster, grd.proj, fun = 'mean', progress = FALSE)
+  add_column(grid, seeds.WALD = WALD, .before = "geometry")
 }
+
 
 add_relative_elevation <- function(grid, sourcepoly, dtm) {
   
