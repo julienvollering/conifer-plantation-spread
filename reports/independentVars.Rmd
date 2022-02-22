@@ -115,6 +115,7 @@ excluded <- c("species", "locality", "seeds.ExP", "seeds.WALD", "relelev")
 collated <- collated %>% 
   mutate(across(!all_of(excluded), ~ replace_na(.x, replace = 0)))
 summary(collated)
+collated <- drop_na(collated)
 ```
 
 ```{r locality covariates}
