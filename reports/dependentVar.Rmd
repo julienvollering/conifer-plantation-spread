@@ -72,13 +72,15 @@ hgts %>%
 # Point geometries with heights
 
 ```{r}
+standardcrs <- st_crs(25833) 
 hgtfiles <- list.files(here("data","qc"), pattern = "height.shp", recursive = TRUE)
 hgtpts <- hgtfiles %>% 
   set_names(gsub("/wildlings-height.shp","",.)) %>% 
   map(~ st_read(here("data","qc",.x), quiet = TRUE))
 str(hgtpts, 1)
+
 hgtpts25832 <- hgtpts %>% 
-  map(st_transform, crs = 25832) %>% 
+  map(st_transform, crs = standardcrs) %>% 
   bind_rows(.id = "file") %>% 
   mutate(species = gsub("/.*", "", file),
          locality =  gsub(".*/", "", file),
