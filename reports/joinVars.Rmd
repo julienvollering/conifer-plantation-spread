@@ -57,12 +57,36 @@ tail(hgtptsi)
 hgtptsi %>% 
   mutate(file=paste(species, locality, sep = "/")) %>% 
   ggplot(aes(x=hgt, y=file, color = hgt_assign)) + geom_boxplot()
+
+assign_random_height <- function(seed, DV) { #seed <- 42; DV <- filter(hgtpts, species == "Larix")
+  DVsplit <- DV %>% 
+    uncount(weights = count) %>%
+    group_by(locality) %>% 
+    group_split()
+  set.seed(seed)
+  DVassigned <- DVsplit %>%
+    map(~ mutate(., 
+                 hgt_random = sample(na.omit(hgt), size = nrow(.), replace = TRUE),
+                 hgt_assign = is.na(hgt),
+                 hgt = ifelse(hgt_assign, hgt_random, hgt))) %>% 
+    bind_rows() %>% 
+    select(species, locality, hgt, hgt_assume, hgt_assign, geometry)
+  return(DVassigned)
+}
 ```
 
 ```{r}
 iv <- readRDS(here("output","independentVars.rds"))
-group_split(iv, species) %>% 
-  map2(add_wildlings)
+
+for (i in unique(hgtpts$species)) { # i <- "Larix"
+  IV <- filter(iv, species == i)
+  DV <- filter(hgtpts, species == i)
+  DV <- 1:5 %>% 
+    map(assign_random_height, DV = DV)
+  
+}
+
+group_split(iv, species)
 
 hgtclasses <- classlimits %>% 
   pmap(~ filter(hgtptsi, hgt >= ..2, hgt <= ..3))
@@ -73,9 +97,8 @@ hgtclasses <- classlimits %>%
 Pseudocode:
 1. Load independentVars
 2. Separate by species (x3)
-3. "left_join" independentVars to hgtclasses (x2) (see *add_wildlings* function)
-4. save as list with species at first level, followed by height classes at lower level
-
+3. spatial "left_join" of independentVars to dependentVar (x2 hgtclasses) (see *add_wildlings* function)
+4. save as list with species at first level, followed by height classes at lower level, (followed by set.seed at lower level?)
 
 ```{r sessionInfo}
 sessionInfo()
