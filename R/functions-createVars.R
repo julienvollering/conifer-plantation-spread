@@ -15,45 +15,6 @@ interpolate_height <- function(locality, localities) {
 }
 
 
-calc_density_by_field <- function(poly, pts, field) {
-  
-  field.enq <- enquo(field)
-
-  poly <- poly %>%
-    mutate(area = st_area(poly)) %>% 
-    mutate(mosaic = st_equals(poly, poly, sparse = FALSE) %>% apply(1, sum)) %>% 
-    mutate(area.corrected = area/mosaic) %>% 
-    group_by(!!field.enq) %>%
-    summarize(area = sum(area.corrected))
-  units(poly$area) <- with(ud_units, daa)
-
-  pts <- st_transform(pts, st_crs(poly))
-  if (!has_name(pts, "count")) {pts <- add_column(pts, count = 1)}
-  suppressWarnings({
-    if (nrow(st_intersection(pts, poly)) > 0) {
-      tally <- pts %>%
-        st_intersection(poly) %>%
-        group_by(!!field.enq) %>%
-        tally(wt = count) %>% 
-        st_set_geometry(NULL)
-    } else {
-      tally <- poly %>% 
-        group_by(!!field.enq) %>%
-        summarize(n = 0) %>%
-        st_set_geometry(NULL)
-    }
-  })
-
-  density <- left_join(poly, tally, by = quo_name(field.enq)) %>%
-    st_set_geometry(NULL) %>%
-    mutate(n = replace_na(n, 0)) %>%
-    mutate(density = round(n/area, digits = 1)) %>%
-    arrange(desc(density), desc(n), area)
-  
-  return(density)
-}
-
-
 make_grid <- function(poly, gridres) {
   
   datageom <- st_geometry(poly)
@@ -154,23 +115,19 @@ add_relative_elevation <- function(grid, sourcepoly, dtm) {
 
 
 # Note: grid must not contain column "ID"
-add_wildlings <- function(grid, pts) {
-  
-  grid <- add_column(grid, ID = 1:nrow(grid))
-  
-  pts <- st_transform(pts, st_crs(grid))
-  if (!has_name(pts, "count")) {pts <- add_column(pts, count = 1)}
-  suppressWarnings({
-    tally <- grid %>% 
-      st_intersection(pts) %>% 
-      st_set_geometry(NULL) %>% 
-      group_by(ID) %>%
-      tally(wt = count, name = "wildlings")
-  })  
-  
-  grid <- grid %>% 
-    left_join(tally, by = "ID") %>% 
-    select(-ID) %>% 
-    select(-geometry, geometry)
-  mutate(grid, wildlings = replace_na(grid$wildlings, 0))
+add_wildlings <- function(grid, pts) { #grid <- IV; pts <- DV$seed1$heightclass1
+  idx <- st_geometry(grid) %>% 
+    st_intersection(st_geometry(pts)) %>% 
+    attr(., "idx")
+  tally <- table(idx[,1]) %>% 
+    as.data.frame(responseName = "wildlings", stringsAsFactors = FALSE) %>% 
+    mutate(Var1 = as.integer(Var1))
+  out <- grid %>% 
+    mutate(Var1 = 1:nrow(grid), .before = 1) %>% 
+    mutate(wildlings = 0, .before = locality) %>% 
+    as_tibble() %>% 
+    rows_update(tally, by = "Var1") %>%
+    select(-Var1) %>% 
+    st_as_sf()
+  return(out)
 }

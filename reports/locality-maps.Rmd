@@ -13,27 +13,43 @@ knitr::opts_chunk$set(echo = FALSE)
 library(here)
 library(tidyverse)
 library(sf)
+source(here("R","functions-createVars.R"))
 ```
 
 ```{r}
-plotting <- readRDS(here("output","percell-data.rds"))
-for (i in seq_along(plotting)) {
-  plotting[[i]] <- plotting[[i]] %>% 
-    lapply(function(x) {
-      select(x, wildlings, seeds.WALD, seeds.ExP, relelev, everything())
-      })
-}
-maxplot <- max(flatten(plotting) %>% sapply(ncol))
+IV <- readRDS(here("output","independentVars.rds")) %>% 
+  st_as_sf()
+DV <- readRDS(here("output","dependentVar.rds"))
+```
+
+Only plotting with randomseed == 1. Other ranndomseeds will have slightly different distributions of wildlings across height classes.
+
+```{r}
+DV <- filter(DV, randomseed == 1)
 ```
 
 ```{r results='asis'}
-for (i in names(plotting)) {
+for (i in unique(DV$species)) { # i <- "Larix"
   cat('\n#', i, '\n')
-  for (j in names(plotting[[i]])){
+  localities <- filter(DV, species == i) %>% 
+    pull(locality) %>% 
+    unique()
+  for (j in localities){ # j <- "anisdal"
     cat('\n##', j, '\n')
-    suppressWarnings(
-      plot(plotting[[i]][[j]], max.plot = maxplot)
-    )
+    DVij <- filter(DV, species == i, locality == j)
+    IVij <- filter(IV, species == i, locality == j)
+    present <- IVij %>% 
+      st_drop_geometry() %>% 
+      select(9:last_col()) %>% 
+      colSums(na.rm=TRUE) %>% 
+      enframe() %>% 
+      arrange(desc(value)) %>% 
+      filter(value > 0) %>% 
+      pull(name)
+    IVij %>% 
+      select(seeds.WALD, seeds.ExP, relelev, all_of(present)) %>% 
+      plot()
+    
     cat('\n')
   }
 }
