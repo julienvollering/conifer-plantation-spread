@@ -22,7 +22,7 @@ IV <- readRDS(here("output","independentVars.rds")) %>%
 DV <- readRDS(here("output","dependentVar.rds"))
 ```
 
-Only plotting with randomseed == 1. Other ranndomseeds will have slightly different distributions of wildlings across height classes.
+Only plotting with randomseed == 1. Other randomseeds will have slightly different distributions of wildlings across height classes (but the same total number of wildlings).
 
 ```{r}
 DV <- filter(DV, randomseed == 1)
@@ -46,11 +46,25 @@ for (i in unique(DV$species)) { # i <- "Larix"
       arrange(desc(value)) %>% 
       filter(value > 0) %>% 
       pull(name)
+    mp <- 3 + length(present)
     IVij %>% 
       select(seeds.WALD, seeds.ExP, relelev, all_of(present)) %>% 
-      plot()
-    
+      plot(max.plot = mp)
+    op <- par(mfrow = c(1,3))
+    DVij %>% 
+      group_split(hgtclass) %>%
+      walk(function(x) {
+        hgtclass <- paste("hgtclass", unique(pull(x, hgtclass)))
+        add_wildlings(IVij, x) %>% 
+          select(wildlings) %>% 
+          plot(main = hgtclass)
+      })
+    par(op)
     cat('\n')
   }
 }
+```
+
+```{r sessionInfo}
+sessionInfo()
 ```

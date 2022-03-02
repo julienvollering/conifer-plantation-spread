@@ -121,8 +121,7 @@ assign_hgts_singleseed <- function(hgtpts, seed) {
     select(species, randomseed, locality, hgt, hgt_assume, hgt_assign, geometry)
 }
 
-nrseeds <- 5
-assign_heights <- function(hgtptssplit) {
+assign_heights <- function(hgtptssplit, nrseeds = 5) {
   map(seq_len(nrseeds), ~ assign_hgts_singleseed(hgtptssplit, .)) %>% 
     bind_rows()
 }

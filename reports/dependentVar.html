@@ -903,8 +903,7 @@ hgtpts &lt;- hgtfiles %&gt;%
     select(species, randomseed, locality, hgt, hgt_assume, hgt_assign, geometry)
 }
 
-nrseeds &lt;- 5
-assign_heights &lt;- function(hgtptssplit) {
+assign_heights &lt;- function(hgtptssplit, nrseeds = 5) {
   map(seq_len(nrseeds), ~ assign_hgts_singleseed(hgtptssplit, .)) %&gt;% 
     bind_rows()
 }
