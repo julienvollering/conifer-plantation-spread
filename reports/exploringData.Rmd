@@ -12,13 +12,24 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(tidyverse)
+library(sf)
+source(here("R","functions-createVars.R"))
 library(summarytools)
 library(DataExplorer)
 ```
 
 ```{r}
-dat <- readRDS(here("output","data.rds"))
+IV <- readRDS(here("output","independentVars.rds")) %>% 
+  st_as_sf()
+DV <- readRDS(here("output","dependentVar.rds"))
+
 nottypes <- c("wildlings","age","bio01","bio19","seeds.ExP","seeds.WALD","relelev")
+```
+
+Only plotting with randomseed == 1. Other randomseeds will have slightly different distributions of wildlings across height classes (but the same total number of wildlings).
+
+```{r}
+DV <- filter(DV, randomseed == 1)
 ```
 
 ```{r, include=FALSE}
@@ -26,121 +37,111 @@ theme_dotplot <- theme_bw(14) +
     theme(axis.text.y = element_text(size = rel(.75)),
         axis.ticks.y = element_blank(),
         axis.title.x = element_text(size = rel(.75)),
+        axis.title.y = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.major.y = element_line(size = 0.5),
         panel.grid.minor.x = element_blank())
 ```
 
+Also, only examining independent variables once --- not separately for each height class --- as they remain identical.
+
 # Larix
 
+```{r}
+IVi <- filter(IV, species == "Larix") %>% 
+  remove_zero_cols()
+DVi <- filter(DV, species == "Larix")
+dat <- DVi %>% 
+  group_split(hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry())
+```
+
+'wildlings' below are those in height class 2.
+
 ```{r, echo = FALSE, results='asis'}
-dfSummary(dat$Larix, plain.ascii = FALSE, style = "grid", 
+dfSummary(dat[[2]], plain.ascii = FALSE, style = "grid", 
           graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
 ```
 
+'wildlings' by height class and locality.
+
 ```{r}
-plot_histogram(dat$Larix[nottypes])
+bind_rows(dat, .id = "hgtclass") %>% 
+  ggplot(aes(wildlings, fct_reorder(locality, wildlings, mean))) + 
+         geom_point() + theme_dotplot + facet_grid(cols = vars(hgtclass))
+ggplot(dat[[2]], aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat[[2]], aes(seeds.ExP, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
 ```
 
 ```{r}
-ggplot(dat$Larix, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
-ggplot(dat$Larix, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
-ggplot(dat$Larix, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
-```
-
-```{r}
-hist(dat$Larix$wildlings, prob=TRUE, breaks=50)
-fit <- MASS::fitdistr(dat$Larix$wildlings, "negative binomial"); fit
-points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
-```
-
-```{r}
-pairs(dat$Larix[sample(nrow(dat$Larix), 1e4), nottypes])
-cor(dat$Larix[nottypes], use = "complete")
+pairs(dat[[2]][sample(nrow(dat[[2]]), 1e4), nottypes])
 ```
  
 # P.abies
 
+```{r}
+IVi <- filter(IV, species == "P.abies") %>% 
+  remove_zero_cols()
+DVi <- filter(DV, species == "P.abies")
+dat <- DVi %>% 
+  group_split(hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry())
+```
+
+'wildlings' below are those in height class 2.
+
 ```{r, echo = FALSE, results='asis'}
-dfSummary(dat$P.abies, plain.ascii = FALSE, style = "grid", 
+dfSummary(dat[[2]], plain.ascii = FALSE, style = "grid", 
           graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
 ```
 
+'wildlings' by height class and locality.
+
 ```{r}
-plot_histogram(dat$P.abies[nottypes])
+bind_rows(dat, .id = "hgtclass") %>% 
+  ggplot(aes(wildlings, fct_reorder(locality, wildlings, mean))) + 
+         geom_point() + theme_dotplot + facet_grid(cols = vars(hgtclass))
+ggplot(dat[[2]], aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat[[2]], aes(seeds.ExP, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
 ```
 
 ```{r}
-ggplot(dat$P.abies, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
-ggplot(dat$P.abies, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
-ggplot(dat$P.abies, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
-```
-
-```{r}
-hist(dat$P.abies$wildlings, prob=TRUE, breaks=25)
-fit <- MASS::fitdistr(dat$P.abies$wildlings, "negative binomial"); fit
-points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
-```
-
-```{r}
-pairs(dat$P.abies[sample(nrow(dat$P.abies), 1e4), nottypes])
-cor(dat$P.abies[nottypes], use = "complete")
-```
-
-# P.contorta
-
-```{r, echo = FALSE, results='asis'}
-dfSummary(dat$P.contorta, plain.ascii = FALSE, style = "grid", 
-          graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
-```
-
-```{r}
-plot_histogram(dat$P.contorta[nottypes])
-```
-
-```{r}
-ggplot(dat$P.contorta, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
-ggplot(dat$P.contorta, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
-ggplot(dat$P.contorta, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
-```
-
-```{r}
-hist(dat$P.contorta$wildlings, prob=TRUE, breaks=135)
-fit <- MASS::fitdistr(dat$P.contorta$wildlings, "negative binomial"); fit
-points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
-```
-
-```{r}
-pairs(dat$P.contorta[sample(nrow(dat$P.contorta), 1e4), nottypes])
-cor(dat$P.contorta[nottypes], use = "complete")
+pairs(dat[[2]][sample(nrow(dat[[2]]), 1e4), nottypes])
 ```
 
 # P.sitchensis-lutzii
 
+```{r}
+IVi <- filter(IV, species == "P.sitchensis-lutzii") %>% 
+  remove_zero_cols()
+DVi <- filter(DV, species == "P.sitchensis-lutzii")
+dat <- DVi %>% 
+  group_split(hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry())
+```
+
+'wildlings' below are those in height class 2.
+
 ```{r, echo = FALSE, results='asis'}
-dfSummary(dat$`P.sitchensis-lutzii`, plain.ascii = FALSE, style = "grid", 
+dfSummary(dat[[2]], plain.ascii = FALSE, style = "grid", 
           graph.magnif = 0.75, valid.col = FALSE, tmp.img.dir = "/tmp")
 ```
 
+'wildlings' by height class and locality.
+
 ```{r}
-plot_histogram(dat$`P.sitchensis-lutzii`[nottypes])
+bind_rows(dat, .id = "hgtclass") %>% 
+  ggplot(aes(wildlings, fct_reorder(locality, wildlings, mean))) + 
+         geom_point() + theme_dotplot + facet_grid(cols = vars(hgtclass))
+ggplot(dat[[2]], aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
+ggplot(dat[[2]], aes(seeds.ExP, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
 ```
 
 ```{r}
-ggplot(dat$`P.sitchensis-lutzii`, aes(wildlings, fct_reorder(locality, wildlings, mean))) + geom_point() + theme_dotplot
-ggplot(dat$`P.sitchensis-lutzii`, aes(seeds.WALD, fct_reorder(locality, seeds.WALD, mean))) + geom_point() + theme_dotplot
-ggplot(dat$`P.sitchensis-lutzii`, aes(seeds.WALD, fct_reorder(locality, seeds.ExP, mean))) + geom_point() + theme_dotplot
-```
-
-```{r}
-hist(dat$`P.sitchensis-lutzii`$wildlings, prob=TRUE, breaks=210)
-fit <- MASS::fitdistr(dat$`P.sitchensis-lutzii`$wildlings, "negative binomial"); fit
-points(0, dnbinom(0, size=fit$estimate[1], mu=fit$estimate[2]), pch='.', col='red', cex=3)
-```
-
-```{r}
-pairs(dat$`P.sitchensis-lutzii`[sample(nrow(dat$`P.sitchensis-lutzii`), 1e4), nottypes])
-cor(dat$`P.sitchensis-lutzii`[nottypes], use = "complete")
+pairs(dat[[2]][sample(nrow(dat[[2]]), 1e4), nottypes])
 ```
 
 ```{r sessionInfo}

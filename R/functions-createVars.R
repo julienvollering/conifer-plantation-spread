@@ -131,3 +131,15 @@ add_wildlings <- function(grid, pts) { #grid <- IV; pts <- DV$seed1$heightclass1
     st_as_sf()
   return(out)
 }
+
+remove_zero_cols <- function(sf, na.rm = TRUE) {
+  df <- st_drop_geometry(sf)
+  nonnum <- select(df, !where(is.numeric)) %>% 
+    names()
+  num <- select(df, where(is.numeric)) %>% 
+    colSums(na.rm = na.rm) %>% 
+    enframe() %>% 
+    filter(value != 0) %>% 
+    pull(name)
+  return(select(sf, all_of(c(nonnum, num))))
+}
