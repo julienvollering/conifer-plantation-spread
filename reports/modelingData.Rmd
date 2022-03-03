@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(here)
 library(tidyverse)
+source(here("R","functions-createVars.R"))
 library(glmmTMB)
 library(DHARMa)
 ```
@@ -22,54 +23,72 @@ library(DHARMa)
 # Load data
 
 ```{r}
-datlist <- readRDS(here("output","data.rds"))
+IV <- readRDS(here("output","independentVars.rds")) %>% 
+  st_as_sf()
+IV <- IV %>% 
+  filter(`plantation forest` < 0.5) %>% 
+  select(-`plantation forest`)
+DV <- readRDS(here("output","dependentVar.rds"))
+
 types <- read_csv(here('data','types.csv'))
-
-datlist <- datlist %>% 
-  map(~ filter(., `plantation forest` < 0.5) %>% 
-        select(-"plantation forest")
-  )
-
+contrasttype <- "T4"
+contrasthgtclass <- 3
 nottypes <- c('species', 'locality','wildlings','age','bio01','bio19',
-              'seeds.ExP','seeds.WALD','relelev')
+              'seeds.ExP','seeds.WALD','relelev','geometry')
 
-contrast <- "T4"
-str(datlist, 1)
-
-map(datlist, function(x) {sum(x$wildlings) / nrow(x) * 100}) # wildlings per hectare
+DV %>% 
+  filter(randomseed == 1) %>% 
+  group_split(species) %>% 
+  map2(group_split(IV, species), ~ add_wildlings(.y,.x)) %>% 
+  bind_rows() %>% 
+  st_drop_geometry() %>% 
+  group_by(species) %>% 
+  summarize(per.are = mean(wildlings)) %>% 
+  mutate(per.hectare = per.are * 100) # overall wildlings per hectare
 ```
 
 # P.sitchensis-lutzii
 
 ```{r}
-#Remove types (columns) that do not exist in the species' data
-Ps_dat <- Filter(function(x)!all(is.na(x)), datlist$`P.sitchensis-lutzii`) 
+IVi <- filter(IV, species == "P.sitchensis-lutzii") %>% 
+  remove_zero_cols() %>% 
+  mutate(across(c(age,bio01,bio19,relelev), ~ as.vector(scale(.))),
+         across(c(seeds.ExP,seeds.WALD), ~ as.vector(scale(log(.), scale = FALSE))))
+summary(IVi)
+typenames <- names(IVi)[!names(IVi) %in% nottypes]
+
+DVi <- filter(DV, species == "P.sitchensis-lutzii")
+dat <- DVi %>% 
+  group_split(randomseed, hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry())
 ```
 
 ```{r}
-typenames <- names(Ps_dat)[!names(Ps_dat) %in% nottypes]
-Ps_arith <- pivot_longer(Ps_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(nin) %>% 
+datsingleseed <- DVi %>% 
+  filter(randomseed == 1) %>% 
+  group_split(hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry()) %>% 
+  set_names(1:3) %>% 
+  bind_rows(.id = "hgtclass")
+
+Ps_arith <- pivot_longer(datsingleseed, one_of(typenames), names_to = "nin", values_to = "are") %>%
+  group_by(hgtclass, nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
-            n = sum(wildlings*are)) %>% 
+            n = sum(wildlings*are), .groups = "drop_last") %>% 
   mutate(density = n/daa) %>%
-  arrange(desc(density), desc(n), daa)
-scaler <- filter(Ps_arith, nin == contrast) %>% 
+  arrange(hgtclass, desc(density), desc(n), daa)
+scaler <- filter(Ps_arith, nin == contrasttype, hgtclass == contrasthgtclass) %>% 
   pull(density)
-Ps_arith.scaled <- mutate(Ps_arith, fit = density/scaler)
+Ps_arith <- mutate(Ps_arith, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(Ps_arith.scaled, digits = 1)
+knitr::kable(Ps_arith, digits = 1)
 ```
 
-```{r}
-Ps_arith.scaled %>% 
-  filter(daa > 10) %>% # exclude rare types for low sample size
-  mutate(density=density*10) %>% # density per ha
-  pull(density) %>% 
-  range()
-```
+
 
 ```{r}
 perfectlyseparated <- c("T42", "T18", "T3", "T33", "V4")
@@ -78,18 +97,6 @@ Ps_dat <- Ps_dat %>%
   filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
   select(-c('species'))
 sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
-```
-
-```{r}
-Ps_dat <- mutate(Ps_dat, across(starts_with("seeds"), log))
-Ps_dat <- mutate(Ps_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
-Ps_means <- Ps_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
-Ps_sds <- Ps_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
-for (i in c('age','bio01','bio19','relelev')) {
-  Ps_dat <- modify_at(Ps_dat, .at = i, ~ (. - Ps_means[i]) / Ps_sds[i])
-}
-summary(Ps_dat)
-
 paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
       collapse = " + ")
 ```
@@ -580,191 +587,6 @@ L_link_sens <- mutate(L_link_sens, fit = fit/scaler) %>%
 ```
 
 
-# P.contorta
-
-```{r}
-#Remove types (columns) that do not exist in the species' data
-Pc_dat <- Filter(function(x)!all(is.na(x)), datlist$P.contorta)
-```
-
-```{r}
-typenames <- names(Pc_dat)[!names(Pc_dat) %in% nottypes]
-Pc_arith <- pivot_longer(Pc_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(nin) %>% 
-  summarize(daa = sum(are)/10, # units from are to decare
-            n = sum(wildlings*are)) %>% 
-  mutate(density = n/daa) %>%
-  arrange(desc(density), desc(n), daa)
-scaler <- filter(Pc_arith, nin == contrast) %>% 
-  pull(density)
-Pc_arith.scaled <- mutate(Pc_arith, fit = density/scaler)
-```
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(Pc_arith, digits = 1)
-```
-
-```{r}
-Pc_arith.scaled %>% 
-  filter(daa > 10) %>% # exclude rare types for low sample size
-  mutate(density=density*10) %>% # density per ha
-  pull(density) %>% 
-  range()
-```
-
-```{r}
-perfectlyseparated <- c("V10", "V11", "V2", "T45", "T27", "T32")
-Pc_dat <- Pc_dat %>% 
-  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
-  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>%
-  select(-c('species'))
-sum(complete.cases(Pc_dat)) == nrow(Pc_dat)
-```
-
-```{r}
-Pc_dat <- mutate(Pc_dat, across(starts_with("seeds"), log))
-Pc_dat <- mutate(Pc_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
-Pc_means <- Pc_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
-Pc_sds <- Pc_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
-for (i in c('age','bio01','bio19','relelev')) {
-  Pc_dat <- modify_at(Pc_dat, .at = i, ~ (. - Pc_means[i]) / Pc_sds[i])
-}
-summary(Pc_dat)
-
-paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
-      collapse = " + ")
-```
-
-```{r, include=FALSE}
-cor(Pc_dat$bio01, Pc_dat$bio19)
-```
-
-Exclude bio01 due to very high correlation with bio19. 
-
-### Compare WALD vs ExP vs null
-
-```{r}
-Pc_f <- formula("wildlings ~ age + bio19 + relelev + 
-                 artificial + T34 + V1 + T1 + T40 + T30 + V8 + V3 + (1 | locality)")
-Pc_m1 <- glmmTMB(Pc_f, Pc_dat, offset = seeds.WALD, family = "genpois", 
-                 ziformula = ~ age + (1 | locality))
-summary(Pc_m1)
-```
-
-```{r}
-Pc_m2 <- update(Pc_m1, offset = seeds.ExP)
-summary(Pc_m2)
-```
-
-Model convergence problem; false convergence
-  
-```{r}
-Pc_m3 <- update(Pc_m1, offset = NULL)
-summary(Pc_m3)
-```
-
-```{r, include=FALSE}
-Pc_modelcomp <- bbmle::ICtab(Pc_m1, Pc_m2, Pc_m3, base = TRUE, delta = TRUE, 
-                             sort = FALSE) %>% 
-  as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
-```
-
-Continue with WALD.
-
-### Residual diagnostics
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pc_m1)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics look OK. 
-
-### Interpret relative establishment probability
-
-```{r}
-selmod <- Pc_m1
-
-terms <- attributes(selmod$frame)$terms
-localities <- c(NA, unique(selmod$frame$locality))
-newdat <- attributes(terms)$factors %>% 
-  as_tibble() %>% 
-  select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
-  distinct()
-newdat <- newdat %>% 
-  mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
-  replace_na(list(nin = "T4")) %>% 
-  expand_grid(locality = c(NA_character_, unique(selmod$frame$locality)))
-```
-
-```{r}
-Pc_link <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "link"))
-Pc_link <- Pc_link %>% 
-  select(nin, locality, fit, se.fit) %>% 
-  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
-  select(-se.fit) %>% 
-  mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(Pc_link, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-Pc_link.scaled <- mutate_at(Pc_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
-```
-
-```{r}
-Pc_link.scaled %>% 
-  filter(is.na(locality), nin %in% filter(Pc_arith.scaled, daa > 10, n > 1)$nin) %>% 
-  pull(fit) %>% range() %>% log10() %>% diff()
-```
-
-```{r}
-filter(Pc_link.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(Pc_arith.scaled, nin %in% Pc_link.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
-```{r, eval=FALSE, include=FALSE}
-cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
-cond <- cond %>% 
-  select(nin, locality, fit, se.fit) %>% 
-  mutate(se.l = fit - se.fit, se.u = fit + se.fit) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
-  mutate(ci.l = fit + 1.96*(se.l - fit),
-         ci.u = fit + 1.96*(se.u - fit)) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(cond, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
-                         ~ `/`(., scaler))
-
-filter(cond.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(Pc_arith.scaled, nin %in% cond.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
-```{r, include=FALSE}
-sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
-newdat <- filter(newdat, is.na(locality))
-Pc_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
-scaler <- filter(Pc_link_sens, nin == "T4") %>% 
-  pull(fit)
-Pc_link_sens <- mutate(Pc_link_sens, fit = fit/scaler) %>% 
-  select(nin, fit)
-```
-
-
 # All species
 
 ```{r}
@@ -805,9 +627,7 @@ names(link_sens.list) <- species
 saveRDS(link_sens.list, here("output","results-sensitivity.rds"))
 ```
 
-# sessionInfo
 
 ```{r sessionInfo}
 sessionInfo()
 ```
-
