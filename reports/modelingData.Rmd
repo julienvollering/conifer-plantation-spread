@@ -58,11 +58,9 @@ summary(IVi)
 typenames <- names(IVi)[!names(IVi) %in% nottypes]
 
 DVi <- filter(DV, species == "P.sitchensis-lutzii")
-dat <- DVi %>% 
-  group_split(randomseed, hgtclass) %>% 
-  map(~ add_wildlings(IVi, .) %>% 
-        st_drop_geometry())
 ```
+
+## Wildling densities
 
 ```{r}
 datsingleseed <- DVi %>% 
@@ -88,51 +86,83 @@ Ps_arith <- mutate(Ps_arith, fit = density/scaler)
 knitr::kable(Ps_arith, digits = 1)
 ```
 
+## Pilot model
 
+Disregards height classes.
 
-```{r}
-perfectlyseparated <- c("T42", "T18", "T3", "T33", "V4")
-Ps_dat <- Ps_dat %>% 
-  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
-  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
-  select(-c('species'))
-sum(complete.cases(Ps_dat)) == nrow(Ps_dat)
-paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
-      collapse = " + ")
-```
-
-### Compare WALD vs ExP vs null
+For choosing:
+1. poisson vs. negative binomial vs. generalized poisson
+2. seeds.ExP vs. seeds.WALD
 
 ```{r}
-Ps_f <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + T34 + V12 + V1 + T13 + 
-                 T41 + T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + V8 + 
-                 T31 + V3 + T6 + V13 + T12 + T24 + T21 + T36 + (1 | locality)")
-Ps_m1 <- glmmTMB(Ps_f, Ps_dat, offset = seeds.WALD, family = "genpois", 
-                 ziformula = ~ age + (1 | locality))
-summary(Ps_m1)
+dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
+  st_drop_geometry()
+cs <- identify_completeseparation(dat, typenames)
+paste(typenames[!(typenames %in% c(cs, contrasttype))], collapse = " + ")
+
+mf <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
+              T44 + artificial + T45 + T32 + V9 + T34 + V12 + V1 + T13 + T41 + 
+              T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + T31 + V3 + T6 + 
+              V13 + T12 + T24 + T21 + T36 + (1 | locality)")
+m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
+                         ziformula = ~ age + (1 | locality))
+simulationOutput <- simulateResiduals(fittedModel = m.poissonWALD)
+testDispersion(simulationOutput) #dispersion = 0.004407, p-value = 0.024
+
+m.nbinom2WALD <- update(m.poissonWALD, family = "nbinom2")
+summary(m.nbinom2WALD) #Dispersion parameter for nbinom2 family (): 0.274 
+simulationOutput <- simulateResiduals(fittedModel = m.nbinom2WALD)
+testDispersion(simulationOutput) #dispersion = 0.00039592, p-value < 2.2e-16
+
+m.genpoisWALD <- update(m.poissonWALD, family = "genpois")
+summary(m.genpoisWALD) #Dispersion parameter for genpois family (): 7.75
+simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
+testDispersion(simulationOutput) #dispersion = 0.066341, p-value = 0.136
 ```
 
-```{r, error=TRUE}
-Ps_m2 <- update(Ps_m1, offset = seeds.ExP)
-```
-
-Error in optimHess
+Support for generalized Poisson family.
 
 ```{r}
-Ps_m3 <- update(Ps_m1, offset = NULL)
-summary(Ps_m3)
+m.genpoisExP <- update(m.genpoisWALD, offset = seeds.ExP)
+# Error in optimHess(par.fixed, obj$fn, obj$gr) : 
+#   gradient in optim evaluated to length 1 not 37
+m.genpoisNULL <- update(m.genpoisWALD, offset = NULL)
 ```
 
 ```{r, include=FALSE}
-Ps_modelcomp <- bbmle::ICtab(Ps_m1, Ps_m3, base = TRUE, delta = TRUE, 
-                             sort = FALSE) %>% 
+Ps_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE, 
+                             delta = TRUE, sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'none'), .before = 1) %>% 
   add_row(`seed dispersal estimate` = 'ExP', AIC = NA, dAIC = NA, df = NA, .before = 2) 
 ```
 
-Continue with WALD.
+Support for seeds.WALD.
+
+## Height-stratified models
+
+```{r}
+dat <- DVi %>% 
+  group_split(randomseed, hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry())
+
+m1 <- fit_genpoisWALDmodel(dat[[1]], paste_modelformula(dat[[1]], typenames))
+# Error in optimHess(par.fixed, obj$fn, obj$gr) : 
+#   gradient in optim evaluated to length 1 not 34
+summary(dat[[1]])
+m2 <- fit_genpoisWALDmodel(dat[[2]], paste_modelformula(dat[[2]], typenames))
+m3 <- fit_genpoisWALDmodel(dat[[3]], paste_modelformula(dat[[3]], typenames))
+list(m.genpoisWALD, m2, m3) %>% 
+  map(broom.mixed::tidy) %>% 
+  set_names(nm = c("mall", "m2", "m3")) %>% 
+  bind_rows(.id = "model") %>% 
+  pivot_wider(id_cols = all_of(c("effect", "component", "term")), 
+              names_from = "model", values_from = "estimate") %>% 
+  View()
+
+```
+
 
 ### Residual diagnostics
 

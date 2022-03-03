@@ -143,3 +143,25 @@ remove_zero_cols <- function(sf, na.rm = TRUE) {
     pull(name)
   return(select(sf, all_of(c(nonnum, num))))
 }
+
+identify_completeseparation <- function(dat, typenames) {
+  pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
+    group_by(nin) %>% 
+    summarize(n = sum(wildlings*are), .groups = "drop_last") %>% 
+    filter(n == 0) %>% 
+    pull(nin)
+}
+
+paste_modelformula <- function(dat, typenames) {
+  cs <- identify_completeseparation(dat, typenames)
+  mtypes <- typenames[!(typenames %in% c(cs, "T4"))]
+  fstring <- paste("wildlings ~ age + bio01 + bio19 + relelev +",
+                   paste(mtypes, collapse = " + "),
+                   "+ (1 | locality)")
+  return(formula(fstring))
+}
+
+fit_genpoisWALDmodel <- function(dat, formula) {
+  glmmTMB(formula, dat, offset = seeds.WALD, family = "genpois", 
+          ziformula = ~ age + (1 | locality))
+}
