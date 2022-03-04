@@ -154,14 +154,19 @@ identify_completeseparation <- function(dat, typenames) {
 
 paste_modelformula <- function(dat, typenames) {
   cs <- identify_completeseparation(dat, typenames)
-  mtypes <- typenames[!(typenames %in% c(cs, "T4"))]
+  mtypes <- typenames[!(typenames %in% cs)]
   fstring <- paste("wildlings ~ age + bio01 + bio19 + relelev +",
                    paste(mtypes, collapse = " + "),
                    "+ (1 | locality)")
   return(formula(fstring))
 }
 
-fit_genpoisWALDmodel <- function(dat, formula) {
-  glmmTMB(formula, dat, offset = seeds.WALD, family = "genpois", 
-          ziformula = ~ age + (1 | locality))
+predict_from_genpoisWALDmodel <- function(dat, newdat, typenames) {
+  formula <- paste_modelformula(dat, typenames)
+  mod <- glmmTMB(formula, dat, offset = seeds.WALD, family = "genpois", 
+                 ziformula = ~ age + (1 | locality))
+  link <- bind_cols(newdat, predict(mod, newdat, se.fit = TRUE, type = "link"))
+  return(link)
 }
+
+

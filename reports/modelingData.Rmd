@@ -18,6 +18,7 @@ library(tidyverse)
 source(here("R","functions-createVars.R"))
 library(glmmTMB)
 library(DHARMa)
+library(furrr)
 ```
 
 # Load data
@@ -63,7 +64,7 @@ DVi <- filter(DV, species == "P.sitchensis-lutzii")
 ## Wildling densities
 
 ```{r}
-datsingleseed <- DVi %>% 
+dat <- DVi %>% 
   filter(randomseed == 1) %>% 
   group_split(hgtclass) %>% 
   map(~ add_wildlings(IVi, .) %>% 
@@ -71,7 +72,7 @@ datsingleseed <- DVi %>%
   set_names(1:3) %>% 
   bind_rows(.id = "hgtclass")
 
-Ps_arith <- pivot_longer(datsingleseed, one_of(typenames), names_to = "nin", values_to = "are") %>%
+Ps_arith <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(hgtclass, nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = "drop_last") %>% 
@@ -97,13 +98,20 @@ For choosing:
 ```{r}
 dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
   st_drop_geometry()
-cs <- identify_completeseparation(dat, typenames)
-paste(typenames[!(typenames %in% c(cs, contrasttype))], collapse = " + ")
 
-mf <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
-              T44 + artificial + T45 + T32 + V9 + T34 + V12 + V1 + T13 + T41 + 
-              T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 + T16 + T31 + V3 + T6 + 
-              V13 + T12 + T24 + T21 + T36 + (1 | locality)")
+modeltypes <- typenames[!(typenames %in% identify_completeseparation(dat, typenames))]
+modellocalities <- unique(pull(dat, locality))
+newdat <- diag(length(modeltypes)) %>% 
+  as_tibble(.name_repair = "minimal") %>% 
+  set_names(modeltypes) %>% 
+  slice(rep(1:n(), each = length(modellocalities))) %>% 
+  mutate(locality = rep(modellocalities, length(modeltypes)),
+         age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
+         .before = 1)
+```
+
+```{r}
+mf <- paste_modelformula(dat, typenames)
 m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
                          ziformula = ~ age + (1 | locality))
 simulationOutput <- simulateResiduals(fittedModel = m.poissonWALD)
@@ -139,6 +147,20 @@ Ps_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE,
 
 Support for seeds.WALD.
 
+### Residual diagnostics
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
+plot(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+### Model predictions
+
+```{r}
+Ps_link <- bind_cols(newdat, predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link"))
+```
+
 ## Height-stratified models
 
 ```{r}
@@ -146,55 +168,26 @@ dat <- DVi %>%
   group_split(randomseed, hgtclass) %>% 
   map(~ add_wildlings(IVi, .) %>% 
         st_drop_geometry())
-
-m1 <- fit_genpoisWALDmodel(dat[[1]], paste_modelformula(dat[[1]], typenames))
-# Error in optimHess(par.fixed, obj$fn, obj$gr) : 
-#   gradient in optim evaluated to length 1 not 34
-summary(dat[[1]])
-m2 <- fit_genpoisWALDmodel(dat[[2]], paste_modelformula(dat[[2]], typenames))
-m3 <- fit_genpoisWALDmodel(dat[[3]], paste_modelformula(dat[[3]], typenames))
-list(m.genpoisWALD, m2, m3) %>% 
-  map(broom.mixed::tidy) %>% 
-  set_names(nm = c("mall", "m2", "m3")) %>% 
-  bind_rows(.id = "model") %>% 
-  pivot_wider(id_cols = all_of(c("effect", "component", "term")), 
-              names_from = "model", values_from = "estimate") %>% 
-  View()
-
-```
-
-
-### Residual diagnostics
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Ps_m1)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics look OK.
-
-### Interpret relative establishment probability
-
-```{r}
-selmod <- Ps_m1
-
-terms <- attributes(selmod$frame)$terms
-localities <- c(NA, unique(selmod$frame$locality))
-newdat <- attributes(terms)$factors %>% 
-  as_tibble() %>% 
-  select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
-  distinct()
 newdat <- newdat %>% 
-  mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
-  replace_na(list(nin = "T4")) %>% 
-  expand_grid(locality = c(NA_character_, unique(selmod$frame$locality)))
+  mutate(locality = NA) %>% 
+  distinct()
+  
+safe_predict <- safely(predict_from_genpoisWALDmodel)
+plan(multisession, workers = availableCores()-1)
+tictoc::tic()
+res <- dat %>% 
+  future_map(~ safe_predict(., newdat, typenames))
+tictoc::toc()
+saveRDS(res, here("output","res-temp.rds"))
+
+modres <- transpose(res)$result
 ```
 
+
+
+## Interpret relative establishment probability
+
 ```{r}
-Ps_link <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "link"))
 Ps_link <- Ps_link %>% 
   select(nin, locality, fit, se.fit) %>% 
   mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
@@ -222,30 +215,6 @@ filter(Ps_link.scaled, is.na(locality)) %>%
   coord_flip()
 ```
 
-```{r, eval=FALSE, include=FALSE}
-cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
-cond <- cond %>% 
-  select(nin, locality, fit, se.fit) %>% 
-  mutate(se.l = fit - se.fit, se.u = fit + se.fit) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
-  mutate(ci.l = fit + 1.96*(se.l - fit),
-         ci.u = fit + 1.96*(se.u - fit)) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(cond, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
-                         ~ `/`(., scaler))
-
-filter(cond.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(Ps_arith.scaled, nin %in% cond.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
 ```{r, include=FALSE}
 sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
 newdat <- filter(newdat, is.na(locality))
@@ -256,407 +225,36 @@ Ps_link_sens <- mutate(Ps_link_sens, fit = fit/scaler) %>%
   select(nin, fit)
 ```
 
-
 # P.abies
 
-```{r}
-#Remove types (columns) that do not exist in the species' data
-Pa_dat <- Filter(function(x)!all(is.na(x)), datlist$P.abies)
-```
-
-```{r}
-typenames <- names(Pa_dat)[!names(Pa_dat) %in% nottypes]
-Pa_arith <- pivot_longer(Pa_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(nin) %>% 
-  summarize(daa = sum(are)/10, # units from are to decare
-            n = sum(wildlings*are)) %>% 
-  mutate(density = n/daa) %>%
-  arrange(desc(density), desc(n), daa)
-scaler <- filter(Pa_arith, nin == contrast) %>% 
-  pull(density)
-Pa_arith.scaled <- mutate(Pa_arith, fit = density/scaler)
-```
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(Pa_arith.scaled, digits = 1)
-```
-
-```{r}
-Pa_arith.scaled %>% 
-  filter(daa > 10) %>% # exclude rare types for low sample size
-  mutate(density=density*10) %>% # density per ha
-  pull(density) %>% 
-  range()
-```
-
-```{r}
-perfectlyseparated <- c("T40", "T42", "T6", "T30", "V8", "T16")
-Pa_dat <- Pa_dat %>% 
-  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>% 
-  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
-  select(-c('species'))
-sum(complete.cases(Pa_dat)) == nrow(Pa_dat)
-```
-
-```{r}
-Pa_dat <- mutate(Pa_dat, across(starts_with("seeds"), log))
-Pa_dat <- mutate(Pa_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
-Pa_means <- Pa_dat[, c('age','bio01','bio19','relelev')] %>% 
-  map_dbl(mean)
-Pa_sds <- Pa_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
-for (i in c('age','bio01','bio19','relelev')) {
-  Pa_dat <- modify_at(Pa_dat, .at = i, ~ (. - Pa_means[i]) / Pa_sds[i])
-}
-summary(Pa_dat)
-
-paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
-      collapse = " + ")
-```
-
-### Compare WALD vs ExP vs null
-
-```{r}
-Pa_f <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
-                 T45 + artificial + T44 + T32 + V9 + V12 + V1 + T13 + T41 + T1 +
-                 V2 + T2 + V10 + T31 + V4 + V3 + (1 | locality)")
-Pa_m1 <- glmmTMB(Pa_f, Pa_dat, offset = seeds.WALD, family = "genpois", 
-                 ziformula = ~ age + (1 | locality))
-summary(Pa_m1)
-```
-
-```{r}
-Pa_m2 <- update(Pa_m1, offset = seeds.ExP)
-summary(Pa_m2)
-```
-
-```{r}
-Pa_m3 <- update(Pa_m1, offset = NULL)
-summary(Pa_m3)
-```
-
-```{r, include=FALSE}
-Pa_modelcomp <- bbmle::ICtab(Pa_m1, Pa_m2, Pa_m3, base = TRUE, delta = TRUE, 
-                             sort = FALSE) %>% 
-  as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
-```
-
-Continue with WALD.
-
-### Residual diagnostics
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = Pa_m1)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics look OK.
-
-### Interpret relative establishment probability
-
-```{r}
-selmod <- Pa_m1
-
-terms <- attributes(selmod$frame)$terms
-localities <- c(NA, unique(selmod$frame$locality))
-newdat <- attributes(terms)$factors %>% 
-  as_tibble() %>% 
-  select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
-  distinct()
-newdat <- newdat %>% 
-  mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
-  replace_na(list(nin = "T4")) %>% 
-  expand_grid(locality = c(NA_character_, unique(selmod$frame$locality)))
-```
-
-```{r}
-Pa_link <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "link"))
-Pa_link <- Pa_link %>% 
-  select(nin, locality, fit, se.fit) %>% 
-  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
-  select(-se.fit) %>% 
-  mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(Pa_link, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-Pa_link.scaled <- mutate_at(Pa_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
-```
-
-```{r}
-Pa_link.scaled %>% 
-  filter(is.na(locality), nin %in% filter(Pa_arith.scaled, daa > 10, n > 1)$nin) %>% 
-  pull(fit) %>% range() %>% log10() %>% diff()
-```
-
-```{r}
-filter(Pa_link.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(Pa_arith.scaled, nin %in% Pa_link.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
-```{r, eval=FALSE, include=FALSE}
-cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
-cond <- cond %>% 
-  select(nin, locality, fit, se.fit) %>% 
-  mutate(se.l = fit - se.fit, se.u = fit + se.fit) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
-  mutate(ci.l = fit + 1.96*(se.l - fit),
-         ci.u = fit + 1.96*(se.u - fit)) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(cond, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
-                         ~ `/`(., scaler))
-
-filter(cond.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(Pa_arith.scaled, nin %in% cond.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
-```{r, include=FALSE}
-sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
-newdat <- filter(newdat, is.na(locality))
-Pa_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
-scaler <- filter(Pa_link_sens, nin == "T4") %>% 
-  pull(fit)
-Pa_link_sens <- mutate(Pa_link_sens, fit = fit/scaler) %>% 
-  select(nin, fit)
-```
-
-
 # Larix
-
-```{r}
-#Remove types (columns) that do not exist in the species' data
-L_dat <- Filter(function(x)!all(is.na(x)), datlist$Larix)
-```
-
-```{r}
-typenames <- names(L_dat)[!names(L_dat) %in% nottypes]
-L_arith <- pivot_longer(L_dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(nin) %>% 
-  summarize(daa = sum(are)/10, # units from are to decare
-            n = sum(wildlings*are)) %>% 
-  mutate(density = n/daa) %>%
-  arrange(desc(density), desc(n), daa)
-scaler <- filter(L_arith, nin == contrast) %>% 
-  pull(density)
-L_arith.scaled <- mutate(L_arith, fit = density/scaler)
-```
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(L_arith.scaled, digits = 1)
-```
-
-```{r}
-L_arith.scaled %>% 
-  filter(daa > 10) %>% # exclude rare types for low sample size
-  mutate(density=density*10) %>% # density per ha
-  pull(density) %>% 
-  range()
-```
-
-```{r}
-perfectlyseparated <- c("T18", "T29", "T27", "T2", "T40", "T30", "T13", "T42", 
-                        "V12", "V10")
-L_dat <- L_dat %>% 
-  filter_at(perfectlyseparated, all_vars(. < 0.5)) %>%
-  filter_at(c('seeds.ExP', 'seeds.WALD'), all_vars(!is.na(.))) %>% 
-  select(-c('species'))
-sum(complete.cases(L_dat)) == nrow(L_dat)
-```
-
-```{r}
-L_dat <- mutate(L_dat, across(starts_with("seeds"), log))
-L_dat <- mutate(L_dat, across(starts_with("seeds"), ~ .x - mean(.x)))
-L_means <- L_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(mean)
-L_sds <- L_dat[, c('age','bio01','bio19','relelev')] %>% map_dbl(sd)
-for (i in c('age','bio01','bio19','relelev')) {
-  L_dat <- modify_at(L_dat, .at = i, ~ (. - L_means[i]) / L_sds[i])
-}
-summary(L_dat)
-
-paste(typenames[!(typenames %in% c(contrast, perfectlyseparated))], 
-      collapse = " + ")
-```
-
-### Compare WALD vs ExP vs null
-
-```{r}
-L_f <- formula("wildlings ~ age + bio01 + bio19 + relelev + 
-                T45 + artificial + T44 + T32 + V9 + T34 + V1 + T41 + T1 + V2 + 
-                T17 + (1 | locality)")
-L_m1 <- glmmTMB(L_f, L_dat, offset = seeds.WALD, family = "genpois", 
-                ziformula = ~ age + (1 | locality))
-summary(L_m1)
-```
-
-```{r}
-L_m2 <- update(L_m1, offset = seeds.ExP)
-summary(L_m2)
-```
-
-```{r}
-L_m3 <- update(L_m1, offset = NULL)
-summary(L_m3)
-```
-
-Model convergence problem; false convergence
-
-```{r, include=FALSE}
-L_modelcomp <- bbmle::ICtab(L_m1, L_m2, L_m3, base = TRUE, delta = TRUE, 
-                            sort = FALSE) %>% 
-  as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1) 
-```
-
-Continue with WALD.
-
-### Residual diagnostics
-
-```{r}
-simulationOutput <- simulateResiduals(fittedModel = L_m1)
-plot(simulationOutput)
-testDispersion(simulationOutput)
-testZeroInflation(simulationOutput)
-```
-
-Diagnostics look OK.
-
-### Interpret relative establishment probability
-
-```{r}
-selmod <- L_m1
-
-terms <- attributes(selmod$frame)$terms
-localities <- c(NA, unique(selmod$frame$locality))
-newdat <- attributes(terms)$factors %>% 
-  as_tibble() %>% 
-  select(-locality) %>% 
-  mutate(seeds.WALD = 0, age = 0, bio01 = 0, bio19 = 0, relelev = 0) %>%   
-  distinct()
-newdat <- newdat %>% 
-  mutate(nin = names(newdat)[apply(newdat, 1, match, x = 1)]) %>% 
-  replace_na(list(nin = "T4")) %>% 
-  expand_grid(locality = c(NA_character_, unique(selmod$frame$locality)))
-```
-
-```{r}
-L_link <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "link"))
-L_link <- L_link %>% 
-  select(nin, locality, fit, se.fit) %>% 
-  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
-  select(-se.fit) %>% 
-  mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(L_link, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-L_link.scaled <- mutate_at(L_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
-```
-
-```{r}
-L_link.scaled %>% 
-  filter(is.na(locality), nin %in% filter(L_arith.scaled, daa > 10, n > 1)$nin) %>% 
-  pull(fit) %>% range() %>% log10() %>% diff()
-```
-
-```{r}
-filter(L_link.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(L_arith.scaled, nin %in% L_link.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
-```{r, eval=FALSE, include=FALSE}
-cond <- bind_cols(newdat, predict(selmod, newdat, se.fit = TRUE, type = "conditional"))
-cond <- cond %>% 
-  select(nin, locality, fit, se.fit) %>% 
-  mutate(se.l = fit - se.fit, se.u = fit + se.fit) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u'), ~ log(.)) %>% 
-  mutate(ci.l = fit + 1.96*(se.l - fit),
-         ci.u = fit + 1.96*(se.u - fit)) %>% 
-  mutate_at(.vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(cond, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-cond.scaled <- mutate_at(cond, .vars = c('fit', 'se.l', 'se.u', 'ci.l', 'ci.u'),
-                         ~ `/`(., scaler))
-
-filter(cond.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(L_arith.scaled, nin %in% cond.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
-```{r, include=FALSE}
-sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
-newdat <- filter(newdat, is.na(locality))
-L_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
-scaler <- filter(L_link_sens, nin == "T4") %>% 
-  pull(fit)
-L_link_sens <- mutate(L_link_sens, fit = fit/scaler) %>% 
-  select(nin, fit)
-```
-
 
 # All species
 
 ```{r}
-species <- c("P.sitchensis-lutzii", "P.abies", "Larix", "P.contorta")
+species <- c("P.sitchensis-lutzii", "P.abies", "Larix")
 
-arith.list <- list(Ps_arith.scaled, Pa_arith.scaled, L_arith.scaled, Pc_arith.scaled)
+arith.list <- list(Ps_arith.scaled, Pa_arith.scaled, L_arith.scaled)
 names(arith.list) <- species
 
-means <- rbind(Ps_means, Pa_means, L_means, Pc_means) %>% 
-  as_tibble() %>% 
-  add_column(species = species, .before = "age")
-sds <- rbind(Ps_sds, Pa_sds, L_sds, Pc_sds) %>% 
-  as_tibble() %>% 
-  add_column(species = species, .before = "age")
-
-modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp, Pc_modelcomp)
+modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp)
 names(modelcomp.list) <- species
 
-models.list <- list(Ps_m1, Pa_m1, L_m1, Pc_m1)
-names(models.list) <- species
-
-link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled, Pc_link.scaled)
+link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled)
 names(link.list) <- species
 
 results <- list(arithmetic = arith.list, 
-                predictor.means = means, 
-                predictor.sds = sds,
                 model.comp = modelcomp.list,
-                models = models.list, 
                 model.preds = link.list)
 str(results, 2)
 saveRDS(results, here("output","results.rds"))
 ```
 
 ```{r, include=FALSE}
-link_sens.list <- list(Ps_link_sens, Pa_link_sens, L_link_sens, Pc_link_sens)
+link_sens.list <- list(Ps_link_sens, Pa_link_sens, L_link_sens)
 names(link_sens.list) <- species
 saveRDS(link_sens.list, here("output","results-sensitivity.rds"))
 ```
-
 
 ```{r sessionInfo}
 sessionInfo()
