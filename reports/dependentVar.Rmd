@@ -97,13 +97,13 @@ hgtpts25832 %>%
   group_by(species) %>% 
   uncount(weights = count) %>% 
   summarise(lowerquartilehgt = quantile(hgt, 0.25, na.rm = TRUE),
+            medianhgt = median(hgt, na.rm = TRUE),
             upperquartilehgt = quantile(hgt, 0.75, na.rm = TRUE))
 
 classlimits <- tribble(
   ~class, ~lower, ~upper,
-       1,     30,     80,
-       2,     80,    200,
-       3,    200,  10000
+       1,     30,    100,
+       2,    100,  10000
 )
 ```
 
@@ -121,7 +121,7 @@ assign_hgts_singleseed <- function(hgtpts, seed) {
     select(species, randomseed, locality, hgt, hgt_assume, hgt_assign, geometry)
 }
 
-assign_heights <- function(hgtptssplit, nrseeds = 5) {
+assign_heights <- function(hgtptssplit, nrseeds = 3) {
   map(seq_len(nrseeds), ~ assign_hgts_singleseed(hgtptssplit, .)) %>% 
     bind_rows()
 }
@@ -135,8 +135,7 @@ DV <- map(hgtptssplit, assign_heights) %>%
   bind_rows() %>% 
   mutate(hgtclass = case_when(
     hgt < classlimits$upper[1] ~ classlimits$class[1],
-    hgt >= classlimits$lower[2] & hgt < classlimits$upper[2] ~ classlimits$class[2],
-    hgt >= classlimits$lower[3] ~ classlimits$class[3]),
+    hgt >= classlimits$lower[2] ~ classlimits$class[2]),
     .before = locality)
 
 DV %>%

@@ -9,13 +9,13 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
 ```
 
 ```{r}
 library(here)
 library(tidyverse)
-source(here("R","functions-createVars.R"))
+source(here("R","functions.R"))
 library(glmmTMB)
 library(DHARMa)
 library(furrr)
@@ -31,9 +31,11 @@ IV <- IV %>%
   select(-`plantation forest`)
 DV <- readRDS(here("output","dependentVar.rds"))
 
+nrseeds <- length(unique(DV$randomseed))
+nrhgtclasses <- length(unique(DV$hgtclass))
 types <- read_csv(here('data','types.csv'))
 contrasttype <- "T4"
-contrasthgtclass <- 3
+contrasthgtclass <- 2
 nottypes <- c('species', 'locality','wildlings','age','bio01','bio19',
               'seeds.ExP','seeds.WALD','relelev','geometry')
 
@@ -48,13 +50,20 @@ DV %>%
   mutate(per.hectare = per.are * 100) # overall wildlings per hectare
 ```
 
+```{r}
+IV <- IV %>% 
+  group_split(species) %>% 
+  map(~ mutate(., 
+               across(c(age,bio01,bio19,relelev), ~ as.vector(scale(.))),
+               across(c(seeds.ExP,seeds.WALD), ~ as.vector(scale(log(.), scale = FALSE))))) %>% 
+  bind_rows()
+```
+
 # P.sitchensis-lutzii
 
 ```{r}
 IVi <- filter(IV, species == "P.sitchensis-lutzii") %>% 
-  remove_zero_cols() %>% 
-  mutate(across(c(age,bio01,bio19,relelev), ~ as.vector(scale(.))),
-         across(c(seeds.ExP,seeds.WALD), ~ as.vector(scale(log(.), scale = FALSE))))
+  remove_zero_cols()
 summary(IVi)
 typenames <- names(IVi)[!names(IVi) %in% nottypes]
 
@@ -63,22 +72,19 @@ DVi <- filter(DV, species == "P.sitchensis-lutzii")
 
 ## Wildling densities
 
+Disregards height classes.
+
 ```{r}
-dat <- DVi %>% 
-  filter(randomseed == 1) %>% 
-  group_split(hgtclass) %>% 
-  map(~ add_wildlings(IVi, .) %>% 
-        st_drop_geometry()) %>% 
-  set_names(1:3) %>% 
-  bind_rows(.id = "hgtclass")
+dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
+  st_drop_geometry()
 
 Ps_arith <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(hgtclass, nin) %>% 
+  group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = "drop_last") %>% 
   mutate(density = n/daa) %>%
-  arrange(hgtclass, desc(density), desc(n), daa)
-scaler <- filter(Ps_arith, nin == contrasttype, hgtclass == contrasthgtclass) %>% 
+  arrange(desc(density), desc(n), daa)
+scaler <- filter(Ps_arith, nin == contrasttype) %>% 
   pull(density)
 Ps_arith <- mutate(Ps_arith, fit = density/scaler)
 ```
@@ -87,7 +93,7 @@ Ps_arith <- mutate(Ps_arith, fit = density/scaler)
 knitr::kable(Ps_arith, digits = 1)
 ```
 
-## Pilot model
+## Height-blind model
 
 Disregards height classes.
 
@@ -96,14 +102,12 @@ For choosing:
 2. seeds.ExP vs. seeds.WALD
 
 ```{r}
-dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
-  st_drop_geometry()
-
 modeltypes <- typenames[!(typenames %in% identify_completeseparation(dat, typenames))]
-modellocalities <- unique(pull(dat, locality))
+modellocalities <- c(NA, unique(pull(dat, locality)))
 newdat <- diag(length(modeltypes)) %>% 
   as_tibble(.name_repair = "minimal") %>% 
   set_names(modeltypes) %>% 
+  mutate(nin = modeltypes, .before = 1) %>% 
   slice(rep(1:n(), each = length(modellocalities))) %>% 
   mutate(locality = rep(modellocalities, length(modeltypes)),
          age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
@@ -114,15 +118,18 @@ newdat <- diag(length(modeltypes)) %>%
 mf <- paste_modelformula(dat, typenames)
 m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
                          ziformula = ~ age + (1 | locality))
+summary(m.poissonWALD)
 simulationOutput <- simulateResiduals(fittedModel = m.poissonWALD)
 testDispersion(simulationOutput) #dispersion = 0.004407, p-value = 0.024
 
-m.nbinom2WALD <- update(m.poissonWALD, family = "nbinom2")
+m.nbinom2WALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "nbinom2",
+                         ziformula = ~ age + (1 | locality))
 summary(m.nbinom2WALD) #Dispersion parameter for nbinom2 family (): 0.274 
 simulationOutput <- simulateResiduals(fittedModel = m.nbinom2WALD)
 testDispersion(simulationOutput) #dispersion = 0.00039592, p-value < 2.2e-16
 
-m.genpoisWALD <- update(m.poissonWALD, family = "genpois")
+m.genpoisWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "genpois",
+                         ziformula = ~ age + (1 | locality))
 summary(m.genpoisWALD) #Dispersion parameter for genpois family (): 7.75
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 testDispersion(simulationOutput) #dispersion = 0.066341, p-value = 0.136
@@ -131,10 +138,13 @@ testDispersion(simulationOutput) #dispersion = 0.066341, p-value = 0.136
 Support for generalized Poisson family.
 
 ```{r}
-m.genpoisExP <- update(m.genpoisWALD, offset = seeds.ExP)
-# Error in optimHess(par.fixed, obj$fn, obj$gr) : 
-#   gradient in optim evaluated to length 1 not 37
-m.genpoisNULL <- update(m.genpoisWALD, offset = NULL)
+m.genpoisExP <- glmmTMB(mf, dat, offset = seeds.ExP, family = "genpois",
+                        ziformula = ~ age + (1 | locality))
+summary(m.genpoisExP)
+
+m.genpoisNULL <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
+                         ziformula = ~ age + (1 | locality))
+summary(m.genpoisNULL)
 ```
 
 ```{r, include=FALSE}
@@ -158,7 +168,18 @@ testZeroInflation(simulationOutput)
 ### Model predictions
 
 ```{r}
-Ps_link <- bind_cols(newdat, predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link"))
+Ps_link <- newdat %>% 
+  bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link")) %>% 
+  select(locality, fit, se.fit, nin)
+```
+
+```{r, include=FALSE}
+sensmod <- update(m.genpoisWALD, 
+                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), offset = NULL)
+newdat <- filter(newdat, is.na(locality))
+Ps_link_sens <- newdat %>% 
+  mutate(fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional")) %>% 
+  select(nin, fit)
 ```
 
 ## Height-stratified models
@@ -168,80 +189,402 @@ dat <- DVi %>%
   group_split(randomseed, hgtclass) %>% 
   map(~ add_wildlings(IVi, .) %>% 
         st_drop_geometry())
-newdat <- newdat %>% 
-  mutate(locality = NA) %>% 
-  distinct()
+newdat <- filter(newdat, is.na(locality))
   
 safe_predict <- safely(predict_from_genpoisWALDmodel)
 plan(multisession, workers = availableCores()-1)
-tictoc::tic()
-res <- dat %>% 
+res <- dat %>% # 3.6 hours for 10 successfully fitted models on 7 workers
   future_map(~ safe_predict(., newdat, typenames))
-tictoc::toc()
-saveRDS(res, here("output","res-temp.rds"))
+transpose(res)$error
+saveRDS(here('output', 'res-Ps-byheight.rds'))
 
 modres <- transpose(res)$result
+for (i in seq_along(modres)) {
+  if(!is.null(modres[[i]])) {
+    modres[[i]] <- modres[[i]] %>% 
+      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
+             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
+  }
+}
+modres <- modres %>% 
+  bind_rows() %>% 
+  select(randomseed, hgtclass, fit, se.fit, nin)
 ```
-
-
-
-## Interpret relative establishment probability
 
 ```{r}
 Ps_link <- Ps_link %>% 
-  select(nin, locality, fit, se.fit) %>% 
+  bind_rows(modres)
+```
+
+
+```{r, include = FALSE, eval = FALSE}
+res <- readRDS(here('output', 'res-temp.rds'))
+
+modres <- transpose(res)$result
+for (i in seq_along(modres)) {
+  if(!is.null(modres[[i]])) {
+    modres[[i]] <- modres[[i]] %>% 
+      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
+             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
+  }
+}
+modres <- modres %>% 
+  bind_rows() %>% 
+  select(randomseed, hgtclass, fit, se.fit, nin)
+
+plotting <- modres %>% 
   mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+  mutate(across(c('fit', 'ci.l', 'ci.u'), ~ exp(.))) %>% 
   select(-se.fit) %>% 
-  mutate_at(c('fit', 'ci.l', 'ci.u'), ~ exp(.))
-scaler <- filter(Ps_link, is.na(locality), nin == "T4") %>% 
-  pull(fit)
-Ps_link.scaled <- mutate_at(Ps_link, c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler))
-```
+  group_split(randomseed, hgtclass)
+plotting <- map(plotting, function(x) {
+  scaler <- filter(x, nin == contrasttype) %>% 
+    pull(fit)
+  mutate(x, across(c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler)))
+})
+plotting <- bind_rows(plotting) %>% 
+  mutate(across(c('randomseed', 'hgtclass', 'nin'), as_factor))
 
-```{r}
-Ps_link.scaled %>% 
-  filter(is.na(locality), nin %in% filter(Ps_arith.scaled, daa > 10, n > 1)$nin) %>% 
-  pull(fit) %>% range() %>% log10() %>% diff()
-```
+ggplot(plotting, aes(fit, reorder(nin, fit), color = hgtclass, group = hgtclass)) + 
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), position = position_dodge(width=0.4)) + 
+  geom_point(position = position_dodge(width=0.4))  + 
+  scale_x_log10(limits = c(1e-3, 1e3)) +
+  facet_grid(cols = vars(randomseed))
 
-```{r}
-filter(Ps_link.scaled, is.na(locality)) %>% 
-  ggplot(aes(reorder(nin, fit), fit)) + 
-  geom_linerange(mapping = aes(ymin = ci.l, ymax = ci.u)) + 
-  geom_point()  + 
-  geom_point(data = filter(Ps_arith.scaled, nin %in% Ps_link.scaled$nin), 
-             col = "grey", pch = 1) + 
-  scale_y_log10() + 
-  coord_flip()
-```
-
-```{r, include=FALSE}
-sensmod <- update(selmod, update.formula(formula(selmod), ~ . + seeds.WALD), offset = NULL)
-newdat <- filter(newdat, is.na(locality))
-Ps_link_sens <- mutate(newdat, fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional"))
-scaler <- filter(Ps_link_sens, nin == "T4") %>% 
-  pull(fit)
-Ps_link_sens <- mutate(Ps_link_sens, fit = fit/scaler) %>% 
-  select(nin, fit)
+#effect of randomseed
+filter(plotting, hgtclass == 3) %>% 
+  ggplot(aes(fit, reorder(nin, fit), color = randomseed, group = randomseed)) + 
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), position = position_dodge(width=0.4)) + 
+  geom_point(position = position_dodge(width=0.4))  + 
+  scale_x_log10(limits = c(1e-3, 1e3))
 ```
 
 # P.abies
 
+```{r}
+IVi <- filter(IV, species == "P.abies") %>% 
+  remove_zero_cols()
+summary(IVi)
+typenames <- names(IVi)[!names(IVi) %in% nottypes]
+
+DVi <- filter(DV, species == "P.abies")
+```
+
+## Wildling densities
+
+Disregards height classes.
+
+```{r}
+dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
+  st_drop_geometry()
+
+Pa_arith <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
+  group_by(nin) %>% 
+  summarize(daa = sum(are)/10, # units from are to decare
+            n = sum(wildlings*are), .groups = "drop_last") %>% 
+  mutate(density = n/daa) %>%
+  arrange(desc(density), desc(n), daa)
+scaler <- filter(Pa_arith, nin == contrasttype) %>% 
+  pull(density)
+Pa_arith <- mutate(Pa_arith, fit = density/scaler)
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(Pa_arith, digits = 1)
+```
+
+## Height-blind model
+
+Disregards height classes.
+
+For choosing:
+1. poisson vs. negative binomial vs. generalized poisson
+2. seeds.ExP vs. seeds.WALD
+
+```{r}
+modeltypes <- typenames[!(typenames %in% identify_completeseparation(dat, typenames))]
+modellocalities <- c(NA, unique(pull(dat, locality)))
+newdat <- diag(length(modeltypes)) %>% 
+  as_tibble(.name_repair = "minimal") %>% 
+  set_names(modeltypes) %>% 
+  mutate(nin = modeltypes, .before = 1) %>% 
+  slice(rep(1:n(), each = length(modellocalities))) %>% 
+  mutate(locality = rep(modellocalities, length(modeltypes)),
+         age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
+         .before = 1)
+```
+
+```{r}
+mf <- paste_modelformula(dat, typenames)
+m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
+                         ziformula = ~ age + (1 | locality))
+summary(m.poissonWALD)
+simulationOutput <- simulateResiduals(fittedModel = m.poissonWALD)
+testDispersion(simulationOutput) #dispersion = 0.49281, p-value = 0.416
+
+m.nbinom2WALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "nbinom2",
+                         ziformula = ~ age + (1 | locality))
+summary(m.nbinom2WALD)
+simulationOutput <- simulateResiduals(fittedModel = m.nbinom2WALD)
+testDispersion(simulationOutput) #dispersion = 0.028817, p-value < 2.2e-16
+
+m.genpoisWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "genpois",
+                         ziformula = ~ age + (1 | locality))
+summary(m.genpoisWALD) 
+simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
+testDispersion(simulationOutput) #dispersion = 0.62164, p-value = 0.424
+```
+
+Support for generalized Poisson family.
+
+```{r}
+m.genpoisExP <- glmmTMB(mf, dat, offset = seeds.ExP, family = "genpois",
+                        ziformula = ~ age + (1 | locality))
+summary(m.genpoisExP)
+
+m.genpoisNULL <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
+                         ziformula = ~ age + (1 | locality))
+summary(m.genpoisNULL)
+```
+
+```{r, include=FALSE}
+Pa_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisExP, m.genpoisNULL, 
+                             base = TRUE, delta = TRUE, sort = FALSE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
+```
+
+Support for seeds.WALD.
+
+### Residual diagnostics
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
+plot(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+### Model predictions
+
+```{r}
+Pa_link <- newdat %>% 
+  bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link")) %>% 
+  select(locality, fit, se.fit, nin)
+```
+
+```{r, include=FALSE}
+sensmod <- update(m.genpoisWALD, 
+                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), offset = NULL)
+newdat <- filter(newdat, is.na(locality))
+Pa_link_sens <- newdat %>% 
+  mutate(fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional")) %>% 
+  select(nin, fit)
+```
+
+## Height-stratified models
+
+```{r}
+dat <- DVi %>% 
+  group_split(randomseed, hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry())
+newdat <- filter(newdat, is.na(locality))
+  
+safe_predict <- safely(predict_from_genpoisWALDmodel)
+plan(multisession, workers = availableCores()-1)
+res <- dat %>% # 
+  future_map(~ safe_predict(., newdat, typenames))
+transpose(res)$error
+saveRDS(here('output', 'res-Pa-byheight.rds'))
+
+modres <- transpose(res)$result
+for (i in seq_along(modres)) {
+  if(!is.null(modres[[i]])) {
+    modres[[i]] <- modres[[i]] %>% 
+      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
+             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
+  }
+}
+modres <- modres %>% 
+  bind_rows() %>% 
+  select(randomseed, hgtclass, fit, se.fit, nin)
+```
+
+```{r}
+Pa_link <- Pa_link %>% 
+  bind_rows(modres)
+```
+
 # Larix
+
+```{r}
+IVi <- filter(IV, species == "Larix") %>% 
+  remove_zero_cols()
+summary(IVi)
+typenames <- names(IVi)[!names(IVi) %in% nottypes]
+
+DVi <- filter(DV, species == "Larix")
+```
+
+## Wildling densities
+
+Disregards height classes.
+
+```{r}
+dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
+  st_drop_geometry()
+
+L_arith <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
+  group_by(nin) %>% 
+  summarize(daa = sum(are)/10, # units from are to decare
+            n = sum(wildlings*are), .groups = "drop_last") %>% 
+  mutate(density = n/daa) %>%
+  arrange(desc(density), desc(n), daa)
+scaler <- filter(L_arith, nin == contrasttype) %>% 
+  pull(density)
+L_arith <- mutate(L_arith, fit = density/scaler)
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(L_arith, digits = 1)
+```
+
+## Height-blind model
+
+Disregards height classes.
+
+For choosing:
+1. poisson vs. negative binomial vs. generalized poisson
+2. seeds.ExP vs. seeds.WALD
+
+```{r}
+modeltypes <- typenames[!(typenames %in% identify_completeseparation(dat, typenames))]
+modellocalities <- c(NA, unique(pull(dat, locality)))
+newdat <- diag(length(modeltypes)) %>% 
+  as_tibble(.name_repair = "minimal") %>% 
+  set_names(modeltypes) %>% 
+  mutate(nin = modeltypes, .before = 1) %>% 
+  slice(rep(1:n(), each = length(modellocalities))) %>% 
+  mutate(locality = rep(modellocalities, length(modeltypes)),
+         age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
+         .before = 1)
+```
+
+```{r}
+mf <- paste_modelformula(dat, typenames)
+m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
+                         ziformula = ~ age + (1 | locality))
+summary(m.poissonWALD)
+simulationOutput <- simulateResiduals(fittedModel = m.poissonWALD)
+testDispersion(simulationOutput)
+
+m.nbinom2WALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "nbinom2",
+                         ziformula = ~ age + (1 | locality))
+summary(m.nbinom2WALD)
+simulationOutput <- simulateResiduals(fittedModel = m.nbinom2WALD)
+testDispersion(simulationOutput)
+
+m.genpoisWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "genpois",
+                         ziformula = ~ age + (1 | locality))
+summary(m.genpoisWALD)
+simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
+testDispersion(simulationOutput) 
+```
+
+Support for generalized Poisson family.
+
+```{r}
+m.genpoisExP <- glmmTMB(mf, dat, offset = seeds.ExP, family = "genpois",
+                        ziformula = ~ age + (1 | locality))
+summary(m.genpoisExP)
+
+m.genpoisNULL <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
+                        ziformula = ~ age + (1 | locality))
+summary(m.genpoisNULL)
+```
+
+```{r, include=FALSE}
+L_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisExP, base = TRUE, 
+                             delta = TRUE, sort = FALSE) %>% 
+  as_tibble() %>% 
+  add_column(`seed dispersal estimate` = c('WALD', 'ExP'), .before = 1) %>% 
+  add_row(`seed dispersal estimate` = 'none', AIC = NA, dAIC = NA, df = NA) 
+```
+
+
+
+### Residual diagnostics
+
+```{r}
+simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
+plot(simulationOutput)
+testZeroInflation(simulationOutput)
+```
+
+### Model predictions
+
+```{r}
+L_link <- newdat %>% 
+  bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link")) %>% 
+  select(locality, fit, se.fit, nin)
+```
+
+```{r, include=FALSE}
+sensmod <- update(m.genpoisWALD, 
+                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), offset = NULL)
+newdat <- filter(newdat, is.na(locality))
+L_link_sens <- newdat %>% 
+  mutate(fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional")) %>% 
+  select(nin, fit)
+```
+
+## Height-stratified models
+
+```{r}
+dat <- DVi %>% 
+  group_split(randomseed, hgtclass) %>% 
+  map(~ add_wildlings(IVi, .) %>% 
+        st_drop_geometry())
+newdat <- filter(newdat, is.na(locality))
+  
+safe_predict <- safely(predict_from_genpoisWALDmodel)
+plan(multisession, workers = availableCores()-1)
+res <- dat %>%
+  future_map(~ safe_predict(., newdat, typenames))
+transpose(res)$error
+saveRDS(here('output', 'res-L-byheight.rds'))
+
+modres <- transpose(res)$result
+for (i in seq_along(modres)) {
+  if(!is.null(modres[[i]])) {
+    modres[[i]] <- modres[[i]] %>% 
+      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
+             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
+  }
+}
+modres <- modres %>% 
+  bind_rows() %>% 
+  select(randomseed, hgtclass, fit, se.fit, nin)
+```
+
+```{r}
+L_link <- L_link %>% 
+  bind_rows(modres)
+```
 
 # All species
 
 ```{r}
 species <- c("P.sitchensis-lutzii", "P.abies", "Larix")
 
-arith.list <- list(Ps_arith.scaled, Pa_arith.scaled, L_arith.scaled)
-names(arith.list) <- species
+arith.list <- list(Ps_arith, Pa_arith, L_arith) %>% 
+  set_names(species)
 
-modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp)
-names(modelcomp.list) <- species
+modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp) %>% 
+  set_names(species)
 
-link.list <- list(Ps_link.scaled, Pa_link.scaled, L_link.scaled)
-names(link.list) <- species
+link.list <- list(Ps_link, Pa_link, L_link) %>% 
+  set_names(species)
 
 results <- list(arithmetic = arith.list, 
                 model.comp = modelcomp.list,
@@ -251,8 +594,8 @@ saveRDS(results, here("output","results.rds"))
 ```
 
 ```{r, include=FALSE}
-link_sens.list <- list(Ps_link_sens, Pa_link_sens, L_link_sens)
-names(link_sens.list) <- species
+link_sens.list <- list(Ps_link_sens, Pa_link_sens, L_link_sens) %>% 
+  set_names(species)
 saveRDS(link_sens.list, here("output","results-sensitivity.rds"))
 ```
 
