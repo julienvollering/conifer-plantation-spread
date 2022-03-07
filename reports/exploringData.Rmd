@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(tidyverse)
 library(sf)
-source(here("R","functions-createVars.R"))
+source(here("R","functions.R"))
 library(summarytools)
 library(DataExplorer)
 ```
