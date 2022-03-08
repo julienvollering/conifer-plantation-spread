@@ -24,20 +24,33 @@ library(furrr)
 # Load data
 
 ```{r}
-IV <- readRDS(here("output","independentVars.rds")) %>% 
-  st_as_sf()
-IV <- IV %>% 
-  filter(`plantation forest` < 0.5) %>% 
-  select(-`plantation forest`)
-DV <- readRDS(here("output","dependentVar.rds"))
-
-nrseeds <- length(unique(DV$randomseed))
-nrhgtclasses <- length(unique(DV$hgtclass))
 types <- read_csv(here('data','types.csv'))
 contrasttype <- "T4"
 contrasthgtclass <- 2
 nottypes <- c('species', 'locality','wildlings','age','bio01','bio19',
-              'seeds.ExP','seeds.WALD','relelev','geometry')
+              'seeds.ExP','seeds.WALD','relelev','geometry','are')
+```
+
+
+```{r}
+IV <- readRDS(here("output","independentVars.rds")) %>% 
+  st_as_sf()
+IV <- IV %>% 
+  filter(`plantation forest` < 0.5) %>% 
+  select(-`plantation forest`) %>% 
+  rowwise() %>% 
+  mutate(are = sum(c_across(any_of(types$type)))) %>% 
+  filter(are >= 0.5) %>% 
+  ungroup()
+filter(IV, are > 1.01)
+filter(IV, T4 > 0.5) %>%
+  select(species, are, any_of(types$type)) %>% 
+  group_split(species)
+IV <- select(IV, -are)
+
+DV <- readRDS(here("output","dependentVar.rds"))
+nrseeds <- length(unique(DV$randomseed))
+nrhgtclasses <- length(unique(DV$hgtclass))
 
 DV %>% 
   filter(randomseed == 1) %>% 
@@ -97,45 +110,48 @@ knitr::kable(Ps_arith, digits = 1)
 
 Disregards height classes.
 
-For choosing:
-1. poisson vs. negative binomial vs. generalized poisson
-2. seeds.ExP vs. seeds.WALD
+Comparing:
+
+1. distribution family (poisson vs. negative binomial vs. generalized poisson)
+2. dispersal predictor (seeds.WALD vs. seeds.ExP vs null)
 
 ```{r}
-modeltypes <- typenames[!(typenames %in% identify_completeseparation(dat, typenames))]
+modeltypes <- typenames[!(typenames %in% c(contrasttype, identify_completeseparation(dat, typenames)))]
 modellocalities <- c(NA, unique(pull(dat, locality)))
-newdat <- diag(length(modeltypes)) %>% 
+newdat <- rbind(0, diag(length(modeltypes))) %>% 
   as_tibble(.name_repair = "minimal") %>% 
   set_names(modeltypes) %>% 
-  mutate(nin = modeltypes, .before = 1) %>% 
+  mutate(nin = c(contrasttype, modeltypes), .before = 1) %>% 
   slice(rep(1:n(), each = length(modellocalities))) %>% 
-  mutate(locality = rep(modellocalities, length(modeltypes)),
+  mutate(locality = rep(modellocalities, length(c(contrasttype, modeltypes))),
          age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
          .before = 1)
 ```
 
+### distribution family
+
 ```{r}
-mf <- paste_modelformula(dat, typenames)
+mf <- paste_modelformula(dat, typenames, contrasttype)
 m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
                          ziformula = ~ age + (1 | locality))
 summary(m.poissonWALD)
 simulationOutput <- simulateResiduals(fittedModel = m.poissonWALD)
-testDispersion(simulationOutput) #dispersion = 0.004407, p-value = 0.024
+testDispersion(simulationOutput)
 
 m.nbinom2WALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "nbinom2",
                          ziformula = ~ age + (1 | locality))
-summary(m.nbinom2WALD) #Dispersion parameter for nbinom2 family (): 0.274 
+summary(m.nbinom2WALD) 
 simulationOutput <- simulateResiduals(fittedModel = m.nbinom2WALD)
-testDispersion(simulationOutput) #dispersion = 0.00039592, p-value < 2.2e-16
+testDispersion(simulationOutput) 
 
 m.genpoisWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "genpois",
                          ziformula = ~ age + (1 | locality))
-summary(m.genpoisWALD) #Dispersion parameter for genpois family (): 7.75
+summary(m.genpoisWALD) 
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
-testDispersion(simulationOutput) #dispersion = 0.066341, p-value = 0.136
+testDispersion(simulationOutput)
 ```
 
-Support for generalized Poisson family.
+### dispersal predictor
 
 ```{r}
 m.genpoisExP <- glmmTMB(mf, dat, offset = seeds.ExP, family = "genpois",
@@ -155,17 +171,13 @@ Ps_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE,
   add_row(`seed dispersal estimate` = 'ExP', AIC = NA, dAIC = NA, df = NA, .before = 2) 
 ```
 
-Support for seeds.WALD.
-
-### Residual diagnostics
+### Residual diagnostics + predictions
 
 ```{r}
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 plot(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
-
-### Model predictions
 
 ```{r}
 Ps_link <- newdat %>% 
@@ -194,9 +206,9 @@ newdat <- filter(newdat, is.na(locality))
 safe_predict <- safely(predict_from_genpoisWALDmodel)
 plan(multisession, workers = availableCores()-1)
 res <- dat %>% # 3.6 hours for 10 successfully fitted models on 7 workers
-  future_map(~ safe_predict(., newdat, typenames))
+  future_map(~ safe_predict(., newdat, typenames, contrasttype))
 transpose(res)$error
-saveRDS(here('output', 'res-Ps-byheight.rds'))
+saveRDS(res, here('output', 'res-Ps-byheight.rds'))
 
 modres <- transpose(res)$result
 for (i in seq_along(modres)) {
@@ -214,49 +226,8 @@ modres <- modres %>%
 ```{r}
 Ps_link <- Ps_link %>% 
   bind_rows(modres)
-```
 
-
-```{r, include = FALSE, eval = FALSE}
-res <- readRDS(here('output', 'res-temp.rds'))
-
-modres <- transpose(res)$result
-for (i in seq_along(modres)) {
-  if(!is.null(modres[[i]])) {
-    modres[[i]] <- modres[[i]] %>% 
-      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
-             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
-  }
-}
-modres <- modres %>% 
-  bind_rows() %>% 
-  select(randomseed, hgtclass, fit, se.fit, nin)
-
-plotting <- modres %>% 
-  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
-  mutate(across(c('fit', 'ci.l', 'ci.u'), ~ exp(.))) %>% 
-  select(-se.fit) %>% 
-  group_split(randomseed, hgtclass)
-plotting <- map(plotting, function(x) {
-  scaler <- filter(x, nin == contrasttype) %>% 
-    pull(fit)
-  mutate(x, across(c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler)))
-})
-plotting <- bind_rows(plotting) %>% 
-  mutate(across(c('randomseed', 'hgtclass', 'nin'), as_factor))
-
-ggplot(plotting, aes(fit, reorder(nin, fit), color = hgtclass, group = hgtclass)) + 
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), position = position_dodge(width=0.4)) + 
-  geom_point(position = position_dodge(width=0.4))  + 
-  scale_x_log10(limits = c(1e-3, 1e3)) +
-  facet_grid(cols = vars(randomseed))
-
-#effect of randomseed
-filter(plotting, hgtclass == 3) %>% 
-  ggplot(aes(fit, reorder(nin, fit), color = randomseed, group = randomseed)) + 
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), position = position_dodge(width=0.4)) + 
-  geom_point(position = position_dodge(width=0.4))  + 
-  scale_x_log10(limits = c(1e-3, 1e3))
+rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)
 ```
 
 # P.abies
@@ -297,45 +268,48 @@ knitr::kable(Pa_arith, digits = 1)
 
 Disregards height classes.
 
-For choosing:
-1. poisson vs. negative binomial vs. generalized poisson
-2. seeds.ExP vs. seeds.WALD
+Comparing:
+
+1. distribution family (poisson vs. negative binomial vs. generalized poisson)
+2. dispersal predictor (seeds.WALD vs. seeds.ExP vs null)
 
 ```{r}
-modeltypes <- typenames[!(typenames %in% identify_completeseparation(dat, typenames))]
+modeltypes <- typenames[!(typenames %in% c(contrasttype, identify_completeseparation(dat, typenames)))]
 modellocalities <- c(NA, unique(pull(dat, locality)))
-newdat <- diag(length(modeltypes)) %>% 
+newdat <- rbind(0, diag(length(modeltypes))) %>% 
   as_tibble(.name_repair = "minimal") %>% 
   set_names(modeltypes) %>% 
-  mutate(nin = modeltypes, .before = 1) %>% 
+  mutate(nin = c(contrasttype, modeltypes), .before = 1) %>% 
   slice(rep(1:n(), each = length(modellocalities))) %>% 
-  mutate(locality = rep(modellocalities, length(modeltypes)),
+  mutate(locality = rep(modellocalities, length(c(contrasttype, modeltypes))),
          age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
          .before = 1)
 ```
 
+### distribution family
+
 ```{r}
-mf <- paste_modelformula(dat, typenames)
+mf <- paste_modelformula(dat, typenames, contrasttype)
 m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
                          ziformula = ~ age + (1 | locality))
 summary(m.poissonWALD)
 simulationOutput <- simulateResiduals(fittedModel = m.poissonWALD)
-testDispersion(simulationOutput) #dispersion = 0.49281, p-value = 0.416
+testDispersion(simulationOutput)
 
 m.nbinom2WALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "nbinom2",
                          ziformula = ~ age + (1 | locality))
 summary(m.nbinom2WALD)
 simulationOutput <- simulateResiduals(fittedModel = m.nbinom2WALD)
-testDispersion(simulationOutput) #dispersion = 0.028817, p-value < 2.2e-16
+testDispersion(simulationOutput) 
 
 m.genpoisWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "genpois",
                          ziformula = ~ age + (1 | locality))
 summary(m.genpoisWALD) 
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
-testDispersion(simulationOutput) #dispersion = 0.62164, p-value = 0.424
+testDispersion(simulationOutput) 
 ```
 
-Support for generalized Poisson family.
+### dispersal predictor
 
 ```{r}
 m.genpoisExP <- glmmTMB(mf, dat, offset = seeds.ExP, family = "genpois",
@@ -348,23 +322,20 @@ summary(m.genpoisNULL)
 ```
 
 ```{r, include=FALSE}
-Pa_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisExP, m.genpoisNULL, 
-                             base = TRUE, delta = TRUE, sort = FALSE) %>% 
+Pa_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE, 
+                             delta = TRUE, sort = FALSE) %>% 
   as_tibble() %>% 
-  add_column(`seed dispersal estimate` = c('WALD', 'ExP', 'none'), .before = 1)
+  add_column(`seed dispersal estimate` = c('WALD', 'none'), .before = 1) %>% 
+  add_row(`seed dispersal estimate` = 'ExP', AIC = NA, dAIC = NA, df = NA, .before = 2) 
 ```
 
-Support for seeds.WALD.
-
-### Residual diagnostics
+### Residual diagnostics + predictions
 
 ```{r}
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 plot(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
-
-### Model predictions
 
 ```{r}
 Pa_link <- newdat %>% 
@@ -393,9 +364,9 @@ newdat <- filter(newdat, is.na(locality))
 safe_predict <- safely(predict_from_genpoisWALDmodel)
 plan(multisession, workers = availableCores()-1)
 res <- dat %>% # 
-  future_map(~ safe_predict(., newdat, typenames))
+  future_map(~ safe_predict(., newdat, typenames, contrasttype))
 transpose(res)$error
-saveRDS(here('output', 'res-Pa-byheight.rds'))
+saveRDS(res, here('output', 'res-Pa-byheight.rds'))
 
 modres <- transpose(res)$result
 for (i in seq_along(modres)) {
@@ -413,6 +384,8 @@ modres <- modres %>%
 ```{r}
 Pa_link <- Pa_link %>% 
   bind_rows(modres)
+
+rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)
 ```
 
 # Larix
@@ -453,25 +426,28 @@ knitr::kable(L_arith, digits = 1)
 
 Disregards height classes.
 
-For choosing:
-1. poisson vs. negative binomial vs. generalized poisson
-2. seeds.ExP vs. seeds.WALD
+Comparing:
+
+1. distribution family (poisson vs. negative binomial vs. generalized poisson)
+2. dispersal predictor (seeds.WALD vs. seeds.ExP vs null)
 
 ```{r}
-modeltypes <- typenames[!(typenames %in% identify_completeseparation(dat, typenames))]
+modeltypes <- typenames[!(typenames %in% c(contrasttype, identify_completeseparation(dat, typenames)))]
 modellocalities <- c(NA, unique(pull(dat, locality)))
-newdat <- diag(length(modeltypes)) %>% 
+newdat <- rbind(0, diag(length(modeltypes))) %>% 
   as_tibble(.name_repair = "minimal") %>% 
   set_names(modeltypes) %>% 
-  mutate(nin = modeltypes, .before = 1) %>% 
+  mutate(nin = c(contrasttype, modeltypes), .before = 1) %>% 
   slice(rep(1:n(), each = length(modellocalities))) %>% 
-  mutate(locality = rep(modellocalities, length(modeltypes)),
+  mutate(locality = rep(modellocalities, length(c(contrasttype, modeltypes))),
          age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
          .before = 1)
 ```
 
+### distribution family
+
 ```{r}
-mf <- paste_modelformula(dat, typenames)
+mf <- paste_modelformula(dat, typenames, contrasttype)
 m.poissonWALD <- glmmTMB(mf, dat, offset = seeds.WALD, family = "poisson", 
                          ziformula = ~ age + (1 | locality))
 summary(m.poissonWALD)
@@ -491,7 +467,7 @@ simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 testDispersion(simulationOutput) 
 ```
 
-Support for generalized Poisson family.
+### dispersal predictor
 
 ```{r}
 m.genpoisExP <- glmmTMB(mf, dat, offset = seeds.ExP, family = "genpois",
@@ -511,17 +487,13 @@ L_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisExP, base = TRUE,
   add_row(`seed dispersal estimate` = 'none', AIC = NA, dAIC = NA, df = NA) 
 ```
 
-
-
-### Residual diagnostics
+### Residual diagnostics + predictions
 
 ```{r}
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 plot(simulationOutput)
 testZeroInflation(simulationOutput)
 ```
-
-### Model predictions
 
 ```{r}
 L_link <- newdat %>% 
@@ -550,9 +522,9 @@ newdat <- filter(newdat, is.na(locality))
 safe_predict <- safely(predict_from_genpoisWALDmodel)
 plan(multisession, workers = availableCores()-1)
 res <- dat %>%
-  future_map(~ safe_predict(., newdat, typenames))
+  future_map(~ safe_predict(., newdat, typenames, contrasttype))
 transpose(res)$error
-saveRDS(here('output', 'res-L-byheight.rds'))
+saveRDS(res, here('output', 'res-L-byheight.rds'))
 
 modres <- transpose(res)$result
 for (i in seq_along(modres)) {
@@ -570,6 +542,8 @@ modres <- modres %>%
 ```{r}
 L_link <- L_link %>% 
   bind_rows(modres)
+
+rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)
 ```
 
 # All species
