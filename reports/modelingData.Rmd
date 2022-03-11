@@ -187,9 +187,10 @@ Ps_link <- newdat %>%
 
 ```{r, include=FALSE}
 sensmod <- update(m.genpoisWALD, 
-                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), offset = NULL)
+                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), 
+                  offset = NULL)
 newdat <- filter(newdat, is.na(locality))
-Ps_link_sens <- newdat %>% 
+Ps_cond_sens <- newdat %>% 
   mutate(fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional")) %>% 
   select(nin, fit)
 ```
@@ -345,9 +346,10 @@ Pa_link <- newdat %>%
 
 ```{r, include=FALSE}
 sensmod <- update(m.genpoisWALD, 
-                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), offset = NULL)
+                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), 
+                  offset = NULL)
 newdat <- filter(newdat, is.na(locality))
-Pa_link_sens <- newdat %>% 
+Pa_cond_sens <- newdat %>% 
   mutate(fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional")) %>% 
   select(nin, fit)
 ```
@@ -503,9 +505,10 @@ L_link <- newdat %>%
 
 ```{r, include=FALSE}
 sensmod <- update(m.genpoisWALD, 
-                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), offset = NULL)
+                  update.formula(formula(m.genpoisWALD), ~ . + seeds.WALD), 
+                  offset = NULL)
 newdat <- filter(newdat, is.na(locality))
-L_link_sens <- newdat %>% 
+L_cond_sens <- newdat %>% 
   mutate(fit = predict(sensmod, newdat, se.fit = FALSE, type = "conditional")) %>% 
   select(nin, fit)
 ```
@@ -557,20 +560,42 @@ arith.list <- list(Ps_arith, Pa_arith, L_arith) %>%
 modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp) %>% 
   set_names(species)
 
-link.list <- list(Ps_link, Pa_link, L_link) %>% 
-  set_names(species)
+pred.tbl <- list(Ps_link, Pa_link, L_link) %>% 
+  set_names(species) %>% 
+  bind_rows(.id = "species") %>% 
+  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+  mutate(across(c('fit', 'ci.l', 'ci.u'), ~ exp(.))) %>% 
+  select(-se.fit) %>% 
+  group_by(species, randomseed, hgtclass) %>% 
+  group_split(.keep = TRUE) %>% 
+  map(function(x) {
+    scaler <- filter(x, nin == contrasttype, is.na(locality)) %>% 
+      pull(fit)
+    mutate(x, across(c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler)))
+  }) %>% 
+  bind_rows()
 
 results <- list(arithmetic = arith.list, 
                 model.comp = modelcomp.list,
-                model.preds = link.list)
+                model.preds = pred.tbl)
 str(results, 2)
 saveRDS(results, here("output","results.rds"))
 ```
 
 ```{r, include=FALSE}
-link_sens.list <- list(Ps_link_sens, Pa_link_sens, L_link_sens) %>% 
-  set_names(species)
-saveRDS(link_sens.list, here("output","results-sensitivity.rds"))
+pred_sens.tbl <- list(Ps_cond_sens, Pa_cond_sens, L_cond_sens) %>% 
+  set_names(species) %>% 
+  bind_rows(.id = "species") %>% 
+  group_by(species) %>% 
+  group_split(.keep = TRUE) %>% 
+  map(function(x) {
+    scaler <- filter(x, nin == contrasttype) %>% 
+      pull(fit)
+    mutate(x, fit = fit/scaler)
+  }) %>% 
+  bind_rows()
+
+saveRDS(pred_sens.tbl, here("output","results-sensitivity.rds"))
 ```
 
 ```{r sessionInfo}

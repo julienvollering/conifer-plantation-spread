@@ -3829,12 +3829,24 @@ arith.list &lt;- list(Ps_arith, Pa_arith, L_arith) %&gt;%
 modelcomp.list &lt;- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp) %&gt;% 
   set_names(species)
 
-link.list &lt;- list(Ps_link, Pa_link, L_link) %&gt;% 
-  set_names(species)
+pred.tbl &lt;- list(Ps_link, Pa_link, L_link) %&gt;% 
+  set_names(species) %&gt;% 
+  bind_rows(.id = &quot;species&quot;) %&gt;% 
+  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %&gt;% 
+  mutate(across(c(&#39;fit&#39;, &#39;ci.l&#39;, &#39;ci.u&#39;), ~ exp(.))) %&gt;% 
+  select(-se.fit) %&gt;% 
+  group_by(species, randomseed, hgtclass) %&gt;% 
+  group_split(.keep = TRUE) %&gt;% 
+  map(function(x) {
+    scaler &lt;- filter(x, nin == contrasttype, is.na(locality)) %&gt;% 
+      pull(fit)
+    mutate(x, across(c(&#39;fit&#39;, &#39;ci.l&#39;, &#39;ci.u&#39;), ~ `/`(., scaler)))
+  }) %&gt;% 
+  bind_rows()
 
 results &lt;- list(arithmetic = arith.list, 
                 model.comp = modelcomp.list,
-                model.preds = link.list)
+                model.preds = pred.tbl)
 str(results, 2)</code></pre>
 <pre><code>## List of 3
 ##  $ arithmetic :List of 3
@@ -3845,10 +3857,7 @@ str(results, 2)</code></pre>
 ##   ..$ P.sitchensis-lutzii: tibble [3 x 4] (S3: tbl_df/tbl/data.frame)
 ##   ..$ P.abies            : tibble [3 x 4] (S3: tbl_df/tbl/data.frame)
 ##   ..$ Larix              : tibble [3 x 4] (S3: tbl_df/tbl/data.frame)
-##  $ model.preds:List of 3
-##   ..$ P.sitchensis-lutzii: tibble [1,372 x 6] (S3: tbl_df/tbl/data.frame)
-##   ..$ P.abies            : tibble [442 x 6] (S3: tbl_df/tbl/data.frame)
-##   ..$ Larix              : tibble [252 x 6] (S3: tbl_df/tbl/data.frame)</code></pre>
+##  $ model.preds: tibble [2,066 x 8] (S3: tbl_df/tbl/data.frame)</code></pre>
 <pre class="r"><code>saveRDS(results, here(&quot;output&quot;,&quot;results.rds&quot;))</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 4.1.2 (2021-11-01)
