@@ -392,6 +392,12 @@ g123 <- g1 + g2 + g3 +
   plot_layout(nrow = 3, heights = layoutheights)
 ```
 
+```{r}
+ggsave(g123, filename= 'establishment-vs-density.svg', 
+       path = here('ms', 'figures'),
+       scale = 1, width = 210, height = 297, units = 'mm', dpi = 300)
+```
+
 
 ## sensitivity to offsetting seed rain
 
