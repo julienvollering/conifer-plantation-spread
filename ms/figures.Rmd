@@ -199,16 +199,7 @@ dev.off()
 results <- readRDS(here("output","results.rds"))
 types <- read_csv(here('data', 'types.csv')) %>% 
   select(-vegheight) %>% 
-  mutate(name = ifelse(category == 'wetland', paste0(paste0('*',name),'*'), name)) %>% 
-  mutate(name = case_when(
-    name == 'drained wetland and terrestrialized freshwater sediment' ~
-      'drained wetland and<br>terrestrialized freshwater sediment',
-    name == 'strongly altered ground with semi-natural grassland character' ~
-      'strongly altered ground with<br>semi-natural grassland character',
-    name == 'agriculturally improved grassland with semi-natural character' ~
-      'agriculturally improved grassland<br>with semi-natural character',
-    TRUE ~ name
-  ))
+  mutate(name = ifelse(category == 'wetland', paste0(paste0('*',name),'*'), name))
 
 arith <- results$arithmetic %>% 
   bind_rows(.id = "species") %>% 
@@ -219,265 +210,123 @@ arith <- results$arithmetic %>%
   mutate(modeled = FALSE)
   
 est <- results$model.preds %>% 
-  bind_rows(.id = "species") %>% 
   rename(type = nin) %>% 
   left_join(types, by = 'type') %>% 
   mutate(modeled = TRUE)
 
-dat <- bind_rows(est, arith)
-dat
-tail(dat)
-print(filter(types, type %in% dat$type), n=31)
+dat <- bind_rows(est, arith) %>% 
+  filter(type %in% unique(pull(est, type)))
 ```
 
-```{r}
-typerank <- filter(est, is.na(locality)) %>% 
-  mutate(wgt = 1/(log(ci.u) - log(ci.l))) %>% 
-  group_by(species) %>% 
-  group_split() %>% 
-  map(~ mutate(., fit.rank = percent_rank(.data$fit))) %>% 
-  bind_rows() %>% 
-  group_by(type) %>% 
-  summarize(rank = weighted.mean(fit.rank, wgt)) %>% 
-  arrange(rank)
-
-plot <- dat %>% 
-  left_join(typerank, by = 'type') %>%
-  mutate(rank = if_else(is.na(rank), -1, rank)) %>%
-  mutate(name = fct_reorder(name, rank))
-
-str(plot)
-```
+## by height class
 
 ```{r}
 csize <- 3
+plotting <- est %>% 
+  mutate(hgtclassname = if_else(hgtclass == 1, '30 cm \u2264 height < 100 cm',
+                                '100 cm \u2264 height'))
 
-d <- filter(plot, species == "P.sitchensis-lutzii")
+d <- filter(plotting, species == "P.sitchensis-lutzii", randomseed == 2) %>% 
+  arrange(desc(hgtclass)) %>% 
+  mutate(name = fct_reorder(name, fit, first))
 col <- '#984ea3'
-g1 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
-             position = position_jitter(width = 0.25, height = 0)) +
-  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
-                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = csize) +
-  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = csize) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-4, 1e2)) +
-  labs(title = 'Picea sitchensis / lutzii', 
-       x = 'ecosystem type', y = 'establishment likelihood') +
+g1 <- ggplot(d, aes(x = fit, y = name)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = col, size = 1) +
+  geom_point(color = col, size = csize) +
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-4, 1e2)) +
+  facet_grid(cols = vars(hgtclassname)) +
   theme_light() + 
   theme(axis.text.y = element_markdown(),
-        plot.title = element_text(face = 'italic'))
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        strip.background =element_rect(fill="white"),
+        strip.text = element_text(colour = "black"),
+        panel.spacing = unit(1, "lines"))
 
-d <- filter(plot, species == "P.abies")
+d <- filter(plotting, species == "P.abies", randomseed == 2) %>% 
+  arrange(desc(hgtclass)) %>% 
+  mutate(name = fct_reorder(name, fit, first))
 col <- '#377eb8'
-g2 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
-             position = position_jitter(width = 0.25, height = 0)) +
-  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
-                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = csize) +
-  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = csize) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-4, 1e2)) +
-  labs(title = 'Picea abies') +
+g2 <- ggplot(d, aes(x = fit, y = name)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = col, size = 1) +
+  geom_point(color = col, size = csize) +
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-5, 1e1)) +
+  facet_grid(cols = vars(hgtclassname)) +
   theme_light() +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        plot.title = element_text(face = 'italic'))
+  theme(axis.text.y = element_markdown(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        strip.background =element_blank(),
+        strip.text = element_blank(),
+        panel.spacing = unit(1, "lines"))
 
-d <- filter(plot, species == "Larix")
+d <- filter(plotting, species == "Larix", randomseed == 2) %>% 
+  arrange(desc(hgtclass)) %>% 
+  mutate(name = fct_reorder(name, fit, first))
 col <- '#4daf4a'
-g3 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
-             position = position_jitter(width = 0.25, height = 0)) +
-  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
-                 mapping = aes(ymin = ci.l, ymax = ci.u), color =col, size = 1) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = csize) +
-  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = csize) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-3, 1e3)) +
-  labs(title = 'Larix spp.') +
+g3 <- ggplot(d, aes(x = fit, y = name)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = col, size = 1) +
+  geom_point(color = col, size = csize) +
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-3, 1e3)) +
+  facet_grid(cols = vars(hgtclassname)) +
+  labs(x = 'relative establishment likelihood') +
   theme_light() +
   theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        plot.title = element_text(face = 'italic'))
+        axis.text.y=element_markdown(),
+        axis.ticks = element_blank(),
+        strip.background =element_blank(),
+        strip.text = element_blank(),
+        panel.spacing = unit(1, "lines"))
 
-d <- filter(plot, species == "P.contorta")
-col <- '#e41a1c'
-g4 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
-             mapping = aes(y = fit), color = 'grey', alpha = 0.5,
-             position = position_jitter(width = 0.25, height = 0)) +
-  geom_linerange(data = filter(d, modeled == TRUE, is.na(locality)),
-                 mapping = aes(ymin = ci.l, ymax = ci.u), color = col, size = 1) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality)),
-             mapping = aes(y = fit), color = col, size = csize) +
-  geom_point(data = filter(d, modeled == FALSE), mapping = aes(y = fit), 
-             color = col, pch = 1, size = csize) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-2, 1e4)) +
-  labs(title = 'Pinus contorta') +
-  theme_light() +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        plot.title = element_text(face = 'italic'))
-
-g1234 <- g1 + g2 + g3 + g4 + 
-  plot_layout(ncol = 4)
+layoutheights <- filter(plotting, randomseed == 1, hgtclass == 2) %>% 
+  group_by(species) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(species)) %>% 
+  pull(n)
+g123 <- g1 + g2 + g3 + 
+  plot_layout(nrow = 3, heights = layoutheights)
 ```
 
 ```{r}
-ggsave(g1234, filename= 'ggplot.svg', 
+ggsave(g123, filename= 'ggplot.svg', 
        path = here('ms', 'figures', 'establishment'),
-       scale = 1, width = 29.7, height = 21, units = 'cm', dpi = 300)
+       scale = 1, width = 210, height = 297, units = 'mm', dpi = 300)
 ```
+
+## vs. density
+
+```{r}
+  # geom_point(data = filter(d, modeled == TRUE, !is.na(locality)),
+  #            color = 'grey', alpha = 0.5,
+  #            position = position_jitter(width = 0, height = 0.25)) +
+  # geom_linerange(data = filter(d, modeled == TRUE, is.na(locality), is.na(randomseed)),
+  #                mapping = aes(xmin = ci.l, xmax = ci.u), color = col, size = 1) +
+  # geom_point(data = filter(d, modeled == TRUE, is.na(locality), is.na(randomseed)),
+  #            color = col, size = csize) +
+  # geom_point(data = filter(d, modeled == FALSE), 
+  #            color = col, pch = 1, size = csize) +
+```
+
+## sensitivity to offsetting seed rain
 
 ```{r, include=FALSE}
 results_sens <- readRDS(here("output","results-sensitivity.rds"))
 sens <- results_sens %>% 
-  bind_rows(.id = "species") %>% 
   rename(type = nin, fit.end = fit)
-plot <- filter(plot, modeled, is.na(locality)) %>% 
+plot <- filter(est, modeled, is.na(locality), is.na(randomseed)) %>% 
   left_join(sens) %>% 
   mutate(diff = fit.end - fit)
 
-d <- filter(plot, species == "P.sitchensis-lutzii")
-col <- '#984ea3'
-g1 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_segment(data = filter(d, diff != 0), 
-               mapping = aes(xend = name, y = fit, yend = fit.end), color = col, 
-               size = 2, lineend = 'round', linejoin = 'mitre',
-               arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality), diff == 0),
-             mapping = aes(y = fit), color = col, size = 2) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-4, 1e2)) +
-  labs(title = 'Picea sitchensis / lutzii', 
-       x = 'ecosystem type', y = 'establishment likelihood') +
-  theme_light() + 
-  theme(axis.text.y = element_markdown(),
-        plot.title = element_text(face = 'italic'))
-
-d <- filter(plot, species == "P.abies")
-col <- '#377eb8'
-g2 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_segment(data = filter(d, diff != 0), 
-               mapping = aes(xend = name, y = fit, yend = fit.end), color = col, 
-               size = 2, lineend = 'round', linejoin = 'mitre',
-               arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality), diff == 0),
-             mapping = aes(y = fit), color = col, size = 2) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-4, 1e2)) +
-  labs(title = 'Picea abies', 
-       x = 'ecosystem type', y = 'establishment likelihood') +
-  theme_light() + 
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        plot.title = element_text(face = 'italic'))
-
-d <- filter(plot, species == "Larix")
-col <- '#4daf4a'
-g3 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_segment(data = filter(d, diff != 0), 
-               mapping = aes(xend = name, y = fit, yend = fit.end), color = col, 
-               size = 2, lineend = 'round', linejoin = 'mitre',
-               arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality), diff == 0),
-             mapping = aes(y = fit), color = col, size = 2) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-3, 1e3)) +
-  labs(title = 'Larix spp.', 
-       x = 'ecosystem type', y = 'establishment likelihood') +
-  theme_light() + 
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        plot.title = element_text(face = 'italic'))
-
-d <- filter(plot, species == "P.contorta")
-col <- '#e41a1c'
-g4 <- ggplot(data = d, mapping = aes(x = name)) + 
-  scale_x_discrete(drop = FALSE) +
-  geom_vline(xintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_segment(data = filter(d, diff != 0), 
-               mapping = aes(xend = name, y = fit, yend = fit.end), color = col, 
-               size = 2, lineend = 'round', linejoin = 'mitre',
-               arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
-  geom_point(data = filter(d, modeled == TRUE, is.na(locality), diff == 0),
-             mapping = aes(y = fit), color = col, size = 2) +
-  scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x)),
-    minor_breaks = NULL) +
-  coord_flip(ylim = c(1e-2, 1e4)) +
-  labs(title = 'Picea sitchensis / lutzii', 
-       x = 'ecosystem type', y = 'establishment likelihood') +
-  theme_light() + 
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x = element_blank(),
-        plot.title = element_text(face = 'italic'))
-
-g1234 <- g1 + g2 + g3 + g4 + 
-  plot_layout(ncol = 4)
-
-ggsave(g1234, filename= 'establishment-sensitivity-new.svg', 
+ggsave(g123, filename= 'establishment-sensitivity-new.svg', 
        path = here('ms', 'figures'),
        scale = 1, width = 29.7, height = 21, units = 'cm', dpi = 300)
 ```
