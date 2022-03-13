@@ -302,6 +302,92 @@ ggsave(g123, filename= 'ggplot.svg',
        scale = 1, width = 210, height = 297, units = 'mm', dpi = 300)
 ```
 
+## sensitivity to random height assignment
+
+```{r}
+plotting <- est %>% 
+  mutate(hgtclassname = if_else(hgtclass == 1, '30 cm \u2264 height < 100 cm',
+                                '100 cm \u2264 height'))
+
+d <- filter(plotting, species == "P.sitchensis-lutzii", !is.na(randomseed)) %>% 
+  arrange(match(randomseed, c(2, 1, 3)), desc(hgtclass)) %>% 
+  mutate(name = fct_reorder(name, fit, first))
+col <- '#984ea3'
+g1 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = col, size = 0.5,
+                 position = position_dodge(width = 0.5)) +
+  geom_point(color = col, size = 1, position = position_dodge(width = 0.5)) +
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-4, 1e2)) +
+  facet_grid(cols = vars(hgtclassname)) +
+  theme_light() + 
+  theme(axis.text.y = element_markdown(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        strip.background =element_rect(fill="white"),
+        strip.text = element_text(colour = "black"),
+        panel.spacing = unit(1, "lines"))
+
+d <- filter(plotting, species == "P.abies", !is.na(randomseed)) %>% 
+  arrange(match(randomseed, c(2, 1, 3)), desc(hgtclass)) %>%
+  mutate(name = fct_reorder(name, fit, first))
+col <- '#377eb8'
+g2 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = col, size = 0.5,
+                 position = position_dodge(width = 0.5)) +
+  geom_point(color = col, size = 1, position = position_dodge(width = 0.5)) +
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-5, 1e1)) +
+  facet_grid(cols = vars(hgtclassname)) +
+  theme_light() +
+  theme(axis.text.y = element_markdown(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        strip.background =element_blank(),
+        strip.text = element_blank(),
+        panel.spacing = unit(1, "lines"))
+
+d <- filter(plotting, species == "Larix", !is.na(randomseed)) %>% 
+  arrange(match(randomseed, c(2, 1, 3)), desc(hgtclass)) %>% 
+  mutate(name = fct_reorder(name, fit, first))
+col <- '#4daf4a'
+g3 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = col, size = 0.5, 
+                 position = position_dodge(width = 0.5)) +
+  geom_point(color = col, size = 1, position = position_dodge(width = 0.5)) +
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-3, 1e3)) +
+  facet_grid(cols = vars(hgtclassname)) +
+  labs(x = 'relative establishment likelihood') +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_markdown(),
+        axis.ticks = element_blank(),
+        strip.background =element_blank(),
+        strip.text = element_blank(),
+        panel.spacing = unit(1, "lines"))
+
+layoutheights <- distinct(plotting, species, name) %>% 
+  group_by(species) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(species)) %>% 
+  pull(n)
+g123 <- g1 + g2 + g3 + 
+  plot_layout(nrow = 3, heights = layoutheights)
+```
+
+```{r}
+ggsave(g123, filename= 'establishment-sensitivity-randomseed.svg', 
+       path = here('ms', 'figures'),
+       scale = 1, width = 210, height = 297, units = 'mm', dpi = 300)
+```
+
 ## vs. density
 
 ```{r}
@@ -398,20 +484,96 @@ ggsave(g123, filename= 'establishment-vs-density.svg',
        scale = 1, width = 210, height = 297, units = 'mm', dpi = 300)
 ```
 
-
 ## sensitivity to offsetting seed rain
 
 ```{r, include=FALSE}
 results_sens <- readRDS(here("output","results-sensitivity.rds"))
 sens <- results_sens %>% 
   rename(type = nin, fit.end = fit)
-plot <- filter(est, modeled, is.na(locality), is.na(randomseed)) %>% 
+plotting <- filter(est, modeled, is.na(locality), is.na(randomseed)) %>% 
   left_join(sens) %>% 
   mutate(diff = fit.end - fit)
 
-ggsave(g123, filename= 'establishment-sensitivity-new.svg', 
+d <- filter(plotting, species == "P.sitchensis-lutzii") %>% 
+  mutate(name = fct_reorder(name, fit, last))
+col <- '#984ea3'
+g1 <- ggplot(d, aes(x = fit, y = name)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_segment(data = filter(d, diff != 0), 
+               mapping = aes(yend = name, x = fit, xend = fit.end), color = col, 
+               size = 2, lineend = 'round', linejoin = 'mitre',
+               arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
+  geom_point(data = filter(d, modeled == TRUE, is.na(locality), diff == 0),
+             mapping = aes(x = fit), color = col, size = 2) +  
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-4, 1e2)) +
+  theme_light() + 
+  theme(axis.text.y = element_markdown(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        strip.background =element_rect(fill="white"),
+        strip.text = element_text(colour = "black"),
+        panel.spacing = unit(1, "lines"))
+
+d <- filter(plotting, species == "P.abies") %>% 
+  mutate(name = fct_reorder(name, fit, last))
+col <- '#377eb8'
+g2 <- ggplot(d, aes(x = fit, y = name)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_segment(data = filter(d, diff != 0), 
+               mapping = aes(yend = name, x = fit, xend = fit.end), color = col, 
+               size = 2, lineend = 'round', linejoin = 'mitre',
+               arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
+  geom_point(data = filter(d, modeled == TRUE, is.na(locality), diff == 0),
+             mapping = aes(x = fit), color = col, size = 2) +  
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-5, 1e1)) +
+  theme_light() +
+  theme(axis.text.y = element_markdown(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        strip.background =element_blank(),
+        strip.text = element_blank(),
+        panel.spacing = unit(1, "lines"))
+
+d <- filter(plotting, species == "Larix") %>% 
+  mutate(name = fct_reorder(name, fit, last))
+col <- '#4daf4a'
+g3 <- ggplot(d, aes(x = fit, y = name)) + 
+  geom_blank() +
+  geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
+  geom_segment(data = filter(d, diff != 0), 
+               mapping = aes(yend = name, x = fit, xend = fit.end), color = col, 
+               size = 2, lineend = 'round', linejoin = 'mitre',
+               arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
+  geom_point(data = filter(d, modeled == TRUE, is.na(locality), diff == 0),
+             mapping = aes(x = fit), color = col, size = 2) +  
+  scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  coord_cartesian(xlim = c(1e-3, 1e3)) +
+  labs(x = 'relative establishment likelihood') +
+  theme_light() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_markdown(),
+        axis.ticks = element_blank(),
+        strip.background =element_blank(),
+        strip.text = element_blank(),
+        panel.spacing = unit(1, "lines"))
+
+layoutheights <- distinct(plotting, species, name) %>% 
+  group_by(species) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(species)) %>% 
+  pull(n)
+g123 <- g1 + g2 + g3 + 
+  plot_layout(nrow = 3, heights = layoutheights)
+```
+
+```{r}
+ggsave(g123, filename= 'establishment-sensitivity-offset.svg', 
        path = here('ms', 'figures'),
-       scale = 1, width = 29.7, height = 21, units = 'cm', dpi = 300)
+       scale = 1, width = 210, height = 297, units = 'mm', dpi = 300)
 ```
 
 # Establishment hypotheses
