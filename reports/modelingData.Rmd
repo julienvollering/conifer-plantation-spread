@@ -195,6 +195,15 @@ Ps_cond_sens <- newdat %>%
   select(nin, fit)
 ```
 
+### Types-only null model
+
+```{r}
+mf <- formula(paste("wildlings ~", paste(modeltypes, collapse = " + ")))
+m.typesonly <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
+                       ziformula = ~ age + (1 | locality))
+summary(m.typesonly)
+```
+
 ## Height-stratified models
 
 ```{r}
@@ -209,7 +218,6 @@ plan(multisession, workers = availableCores()-1)
 res <- dat %>% # 3.6 hours for 10 successfully fitted models on 7 workers
   future_map(~ safe_predict(., newdat, typenames, contrasttype))
 transpose(res)$error
-saveRDS(res, here('output', 'res-Ps-byheight.rds'))
 
 modres <- transpose(res)$result
 for (i in seq_along(modres)) {
@@ -354,6 +362,15 @@ Pa_cond_sens <- newdat %>%
   select(nin, fit)
 ```
 
+### Types-only null model
+
+```{r}
+mf <- formula(paste("wildlings ~", paste(modeltypes, collapse = " + ")))
+m.typesonly <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
+                       ziformula = ~ age + (1 | locality))
+summary(m.typesonly)
+```
+
 ## Height-stratified models
 
 ```{r}
@@ -368,7 +385,6 @@ plan(multisession, workers = availableCores()-1)
 res <- dat %>% # 
   future_map(~ safe_predict(., newdat, typenames, contrasttype))
 transpose(res)$error
-saveRDS(res, here('output', 'res-Pa-byheight.rds'))
 
 modres <- transpose(res)$result
 for (i in seq_along(modres)) {
@@ -513,6 +529,15 @@ L_cond_sens <- newdat %>%
   select(nin, fit)
 ```
 
+### Types-only null model
+
+```{r}
+mf <- formula(paste("wildlings ~", paste(modeltypes, collapse = " + ")))
+m.typesonly <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
+                       ziformula = ~ age + (1 | locality))
+summary(m.typesonly)
+```
+
 ## Height-stratified models
 
 ```{r}
@@ -527,7 +552,6 @@ plan(multisession, workers = availableCores()-1)
 res <- dat %>%
   future_map(~ safe_predict(., newdat, typenames, contrasttype))
 transpose(res)$error
-saveRDS(res, here('output', 'res-L-byheight.rds'))
 
 modres <- transpose(res)$result
 for (i in seq_along(modres)) {
