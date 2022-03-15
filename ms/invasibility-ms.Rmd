@@ -1,5 +1,5 @@
 ---
-title: 'Accounting for seed rain and other confounders reveals which ecosystems are most susceptible to alien conifer establishment'
+title: 'Agricultural ecosystems are least susceptible to alien conifer spread in Norway'
 author:
 - Julien Vollering^1,2^*
 - Siri Lie Olsen^3,4^
@@ -56,8 +56,8 @@ library(kableExtra)
 # Abstract {-}
 
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades. To minimize the rate at which their offspring --- so-called "wildlings" --- colonize surroundings, and reduce the burden of conifer plantations on native ecosystems, managers need to know which ecosystems are most and least susceptible.
-2. We compared how likely wildlings are to establish across a wide range of ecosystems, focusing on four groups of alien conifer species planted in Norway. We used data from detailed surveys around 82 plantation stands to model the relationship between ecosystem type and wildling abundance, accounting for seed rain (estimated), climate, and other sources of variation between sites. We also tested whether differences in susceptibility between individual ecosystem types could be generalized based on broad, shared characteristics.
-3. We found that ecosystem susceptibility to wildling establishment (modeled as relative establishment likelihood) was poorly correlated with surveyed wildling density (abundance/area). Susceptibility generally varied as much or more than wildling density, with relative establishment likelihoods spanning several orders of magnitude between the most and least susceptible ecosystems for every species group.
+2. We compared how likely wildlings are to establish in different ecosystems, studying three groups of alien conifer species in Norway. We used data from detailed surveys around 76 plantation stands to model the relationship between ecosystem type and wildling abundance, accounting for seed rain (estimated), climate, and other sources of variation between sites.
+3. We found that relative establishment likelihood spanned at least three orders of magnitude between the most and least susceptible ecosystems. Agricultural ecosystems were among the least susceptible to any of the alien conifer species. We also found that surveyed wildling densities (abundance/area) were poorly correlated with susceptibility to wildling establishment (expected wildling abundance, all else being equal), because ecosystems were unequally exposed.
 4. The four groups of conifer species showed somewhat similar patterns of establishment likelihood across ecosystem types, with intensively farmed ecosystems repeatedly among the least susceptible. We found that ecosystems characterized by destabilizing disturbance tended to be more susceptible than others, but broad ecosystem characteristics did not clarify patterns of susceptibility much, neither within nor across species groups. 
 5. *Synthesis and applications* Differences in wildling establishment between ecosystems can be exploited to keep alien conifers within plantation boundaries. Stands hemmed in by agriculture or other unsusceptible ecosystems will result in relatively few wildlings, while stands near susceptible ecosystems like landslides will need monitoring and control. Managers should be aware that the density of wildlings in a given ecosystem may not reflect its relative susceptibility, because variation in seed rain, climate, and site characteristics obscures the relationship between ecosystem type and wildling establishment.
 
