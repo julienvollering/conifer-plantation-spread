@@ -1761,15 +1761,15 @@ DVi &lt;- filter(DV, species == &quot;P.sitchensis-lutzii&quot;)</code></pre>
 <pre class="r"><code>dat &lt;- add_wildlings(IVi, filter(DVi, randomseed == 1)) %&gt;% 
   st_drop_geometry()
 
-Ps_arith &lt;- pivot_longer(dat, one_of(typenames), names_to = &quot;nin&quot;, values_to = &quot;are&quot;) %&gt;%
+Ps_densities &lt;- pivot_longer(dat, one_of(typenames), names_to = &quot;nin&quot;, values_to = &quot;are&quot;) %&gt;%
   group_by(nin) %&gt;% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = &quot;drop_last&quot;) %&gt;% 
   mutate(density = n/daa) %&gt;%
   arrange(desc(density), desc(n), daa)
-scaler &lt;- filter(Ps_arith, nin == contrasttype) %&gt;% 
+scaler &lt;- filter(Ps_densities, nin == contrasttype) %&gt;% 
   pull(density)
-Ps_arith &lt;- mutate(Ps_arith, fit = density/scaler)</code></pre>
+Ps_densities &lt;- mutate(Ps_densities, fit = density/scaler)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -2441,54 +2441,96 @@ plot(simulationOutput)</code></pre>
   bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = &quot;link&quot;)) %&gt;% 
   select(locality, fit, se.fit, nin)</code></pre>
 </div>
+<div id="types-only-null-model" class="section level3">
+<h3>Types-only null model</h3>
+<pre class="r"><code>mf &lt;- formula(paste(&quot;wildlings ~&quot;, paste(modeltypes, collapse = &quot; + &quot;)))
+m.typesonly &lt;- glmmTMB(mf, dat, offset = NULL, family = &quot;genpois&quot;,
+                       ziformula = ~ age + (1 | locality))
+summary(m.typesonly)</code></pre>
+<pre><code>##  Family: genpois  ( log )
+## Formula:          
+## wildlings ~ T44 + artificial + T45 + T32 + V9 + T34 + V12 + V1 +  
+##     T13 + T41 + T1 + V2 + T2 + T40 + V10 + T27 + T17 + T29 +  
+##     T16 + T31 + V3 + T6 + V13 + T12 + T24 + T21 + T36
+## Zero inflation:             ~age + (1 | locality)
+## Data: dat
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##  55194.4  55494.5 -27565.2  55130.4    87297 
+## 
+## Random effects:
+## 
+## Zero-inflation model:
+##  Groups   Name        Variance Std.Dev.
+##  locality (Intercept) 4.763    2.183   
+## Number of obs: 87329, groups:  locality, 42
+## 
+## Dispersion parameter for genpois family (): 11.9 
+## 
+## Conditional model:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  1.09582    0.06065   18.07  &lt; 2e-16 ***
+## T44         -4.68435    0.40551  -11.55  &lt; 2e-16 ***
+## artificial  -1.50635    0.09406  -16.01  &lt; 2e-16 ***
+## T45         -2.76540    0.08430  -32.80  &lt; 2e-16 ***
+## T32         -1.36885    0.08710  -15.72  &lt; 2e-16 ***
+## V9           0.03961    0.09467    0.42 0.675674    
+## T34         -0.37408    0.06760   -5.53 3.13e-08 ***
+## V12         -1.82487    0.80674   -2.26 0.023696 *  
+## V1          -0.94240    0.07774  -12.12  &lt; 2e-16 ***
+## T13         -1.28178    0.85392   -1.50 0.133341    
+## T41         -1.63474    0.15771  -10.37  &lt; 2e-16 ***
+## T1          -1.04650    0.12994   -8.05 8.04e-16 ***
+## V2          -1.78883    0.24384   -7.34 2.20e-13 ***
+## T2           1.19758    0.14018    8.54  &lt; 2e-16 ***
+## T40         -1.39994    0.39983   -3.50 0.000463 ***
+## V10         -4.19016    1.16902   -3.58 0.000338 ***
+## T27         -1.39113    0.51753   -2.69 0.007188 ** 
+## T17          0.99997    0.30819    3.24 0.001176 ** 
+## T29         -5.27298    2.87651   -1.83 0.066785 .  
+## T16         -1.06121    0.66019   -1.61 0.107960    
+## T31         -0.07585    0.16426   -0.46 0.644255    
+## V3          -0.94040    0.22645   -4.15 3.28e-05 ***
+## T6          -0.06629    0.61235   -0.11 0.913799    
+## V13         -0.90614    1.33120   -0.68 0.496062    
+## T12         -2.45138    1.65300   -1.48 0.138079    
+## T24         -0.90463    2.83956   -0.32 0.750044    
+## T21          0.54396    1.69506    0.32 0.748278    
+## T36          1.83169    0.38065    4.81 1.49e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Zero-inflation model:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)   1.8077     0.3468   5.213 1.86e-07 ***
+## age          -0.8227     0.3410  -2.413   0.0158 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
 </div>
 <div id="height-stratified-models" class="section level2">
 <h2>Height-stratified models</h2>
-<pre class="r"><code>dat &lt;- DVi %&gt;% 
-  group_split(randomseed, hgtclass) %&gt;% 
-  map(~ add_wildlings(IVi, .) %&gt;% 
-        st_drop_geometry())
-newdat &lt;- filter(newdat, is.na(locality))
-  
-safe_predict &lt;- safely(predict_from_genpoisWALDmodel)
+<pre class="r"><code>stratified &lt;- DVi %&gt;% 
+  select(species, randomseed, hgtclass) %&gt;% 
+  nest(dv = geometry) %&gt;% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %&gt;%
+  mutate(data = map(data, st_drop_geometry)) %&gt;% 
+  select(-dv)
+
+possibly_fit &lt;- possibly(fit_genpoisWALDmodel, otherwise = NA)
 plan(multisession, workers = availableCores()-1)
-res &lt;- dat %&gt;% # 3.6 hours for 10 successfully fitted models on 7 workers
-  future_map(~ safe_predict(., newdat, typenames, contrasttype))
-transpose(res)$error</code></pre>
-<pre><code>## [[1]]
-## NULL
-## 
-## [[2]]
-## NULL
-## 
-## [[3]]
-## NULL
-## 
-## [[4]]
-## NULL
-## 
-## [[5]]
-## NULL
-## 
-## [[6]]
-## NULL</code></pre>
-<pre class="r"><code>saveRDS(res, here(&#39;output&#39;, &#39;res-Ps-byheight.rds&#39;))
+stratified &lt;- stratified %&gt;% 
+  mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
 
-modres &lt;- transpose(res)$result
-for (i in seq_along(modres)) {
-  if(!is.null(modres[[i]])) {
-    modres[[i]] &lt;- modres[[i]] %&gt;% 
-      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
-             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
-  }
-}
-modres &lt;- modres %&gt;% 
-  bind_rows() %&gt;% 
-  select(randomseed, hgtclass, fit, se.fit, nin)</code></pre>
-<pre class="r"><code>Ps_link &lt;- Ps_link %&gt;% 
-  bind_rows(modres)
+newdat &lt;- filter(newdat, is.na(locality))
+stratified &lt;- stratified %&gt;% 
+  filter(!is.na(model)) %&gt;% 
+  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = &quot;link&quot;))) %&gt;% 
+  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
 
-rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)</code></pre>
+Ps_stratified &lt;- stratified</code></pre>
+<pre class="r"><code>rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL,
+   stratified)</code></pre>
 <pre><code>## Warning in rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, :
 ## object &#39;m.genpoisExP&#39; not found</code></pre>
 </div>
@@ -2570,15 +2612,15 @@ DVi &lt;- filter(DV, species == &quot;P.abies&quot;)</code></pre>
 <pre class="r"><code>dat &lt;- add_wildlings(IVi, filter(DVi, randomseed == 1)) %&gt;% 
   st_drop_geometry()
 
-Pa_arith &lt;- pivot_longer(dat, one_of(typenames), names_to = &quot;nin&quot;, values_to = &quot;are&quot;) %&gt;%
+Pa_densities &lt;- pivot_longer(dat, one_of(typenames), names_to = &quot;nin&quot;, values_to = &quot;are&quot;) %&gt;%
   group_by(nin) %&gt;% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = &quot;drop_last&quot;) %&gt;% 
   mutate(density = n/daa) %&gt;%
   arrange(desc(density), desc(n), daa)
-scaler &lt;- filter(Pa_arith, nin == contrasttype) %&gt;% 
+scaler &lt;- filter(Pa_densities, nin == contrasttype) %&gt;% 
   pull(density)
-Pa_arith &lt;- mutate(Pa_arith, fit = density/scaler)</code></pre>
+Pa_densities &lt;- mutate(Pa_densities, fit = density/scaler)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -3136,54 +3178,84 @@ plot(simulationOutput)</code></pre>
   bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = &quot;link&quot;)) %&gt;% 
   select(locality, fit, se.fit, nin)</code></pre>
 </div>
+<div id="types-only-null-model-1" class="section level3">
+<h3>Types-only null model</h3>
+<pre class="r"><code>mf &lt;- formula(paste(&quot;wildlings ~&quot;, paste(modeltypes, collapse = &quot; + &quot;)))
+m.typesonly &lt;- glmmTMB(mf, dat, offset = NULL, family = &quot;genpois&quot;,
+                       ziformula = ~ age + (1 | locality))
+summary(m.typesonly)</code></pre>
+<pre><code>##  Family: genpois  ( log )
+## Formula:          
+## wildlings ~ T44 + artificial + T45 + T32 + V9 + V12 + V1 + T13 +  
+##     T41 + T1 + V2 + T2 + V10 + T31 + V4 + V3
+## Zero inflation:             ~age + (1 | locality)
+## Data: dat
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   9830.0  10010.7  -4894.0   9788.0    40291 
+## 
+## Random effects:
+## 
+## Zero-inflation model:
+##  Groups   Name        Variance Std.Dev.
+##  locality (Intercept) 4.393    2.096   
+## Number of obs: 40312, groups:  locality, 19
+## 
+## Dispersion parameter for genpois family (): 2.56 
+## 
+## Conditional model:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)   0.10327    0.05582   1.850  0.06432 .  
+## T44          -5.69598    1.40525  -4.053 5.05e-05 ***
+## artificial   -1.37861    0.15807  -8.721  &lt; 2e-16 ***
+## T45          -6.76427    0.63395 -10.670  &lt; 2e-16 ***
+## T32          -1.17746    0.12689  -9.280  &lt; 2e-16 ***
+## V9            0.92468    3.37004   0.274  0.78379    
+## V12           0.90261    0.13385   6.744 1.55e-11 ***
+## V1           -2.07718    0.43545  -4.770 1.84e-06 ***
+## T13          -2.25714    0.55870  -4.040 5.35e-05 ***
+## T41          -0.72446    0.33685  -2.151  0.03150 *  
+## T1           -0.34405    0.34933  -0.985  0.32467    
+## V2           -0.70391    0.25708  -2.738  0.00618 ** 
+## T2          -11.62659   12.01396  -0.968  0.33317    
+## V10          -2.30998    5.66934  -0.407  0.68368    
+## T31          -0.91911    0.49006  -1.876  0.06072 .  
+## V4           -0.82471    1.48278  -0.556  0.57808    
+## V3           -0.38541    1.24000  -0.311  0.75594    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Zero-inflation model:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)   2.8768     0.4945   5.817 5.98e-09 ***
+## age           0.5493     0.4886   1.124    0.261    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
 </div>
 <div id="height-stratified-models-1" class="section level2">
 <h2>Height-stratified models</h2>
-<pre class="r"><code>dat &lt;- DVi %&gt;% 
-  group_split(randomseed, hgtclass) %&gt;% 
-  map(~ add_wildlings(IVi, .) %&gt;% 
-        st_drop_geometry())
-newdat &lt;- filter(newdat, is.na(locality))
-  
-safe_predict &lt;- safely(predict_from_genpoisWALDmodel)
+<pre class="r"><code>stratified &lt;- DVi %&gt;% 
+  select(species, randomseed, hgtclass) %&gt;% 
+  nest(dv = geometry) %&gt;% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %&gt;%
+  mutate(data = map(data, st_drop_geometry)) %&gt;% 
+  select(-dv)
+
+possibly_fit &lt;- possibly(fit_genpoisWALDmodel, otherwise = NA)
 plan(multisession, workers = availableCores()-1)
-res &lt;- dat %&gt;% # 
-  future_map(~ safe_predict(., newdat, typenames, contrasttype))
-transpose(res)$error</code></pre>
-<pre><code>## [[1]]
-## NULL
-## 
-## [[2]]
-## NULL
-## 
-## [[3]]
-## NULL
-## 
-## [[4]]
-## NULL
-## 
-## [[5]]
-## NULL
-## 
-## [[6]]
-## NULL</code></pre>
-<pre class="r"><code>saveRDS(res, here(&#39;output&#39;, &#39;res-Pa-byheight.rds&#39;))
+stratified &lt;- stratified %&gt;% 
+  mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
 
-modres &lt;- transpose(res)$result
-for (i in seq_along(modres)) {
-  if(!is.null(modres[[i]])) {
-    modres[[i]] &lt;- modres[[i]] %&gt;% 
-      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
-             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
-  }
-}
-modres &lt;- modres %&gt;% 
-  bind_rows() %&gt;% 
-  select(randomseed, hgtclass, fit, se.fit, nin)</code></pre>
-<pre class="r"><code>Pa_link &lt;- Pa_link %&gt;% 
-  bind_rows(modres)
+newdat &lt;- filter(newdat, is.na(locality))
+stratified &lt;- stratified %&gt;% 
+  filter(!is.na(model)) %&gt;% 
+  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = &quot;link&quot;))) %&gt;% 
+  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
 
-rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)</code></pre>
+Pa_stratified &lt;- stratified</code></pre>
+<pre class="r"><code>rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL,
+   stratified)</code></pre>
 </div>
 </div>
 <div id="larix" class="section level1">
@@ -3256,15 +3328,15 @@ DVi &lt;- filter(DV, species == &quot;Larix&quot;)</code></pre>
 <pre class="r"><code>dat &lt;- add_wildlings(IVi, filter(DVi, randomseed == 1)) %&gt;% 
   st_drop_geometry()
 
-L_arith &lt;- pivot_longer(dat, one_of(typenames), names_to = &quot;nin&quot;, values_to = &quot;are&quot;) %&gt;%
+L_densities &lt;- pivot_longer(dat, one_of(typenames), names_to = &quot;nin&quot;, values_to = &quot;are&quot;) %&gt;%
   group_by(nin) %&gt;% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = &quot;drop_last&quot;) %&gt;% 
   mutate(density = n/daa) %&gt;%
   arrange(desc(density), desc(n), daa)
-scaler &lt;- filter(L_arith, nin == contrasttype) %&gt;% 
+scaler &lt;- filter(L_densities, nin == contrasttype) %&gt;% 
   pull(density)
-L_arith &lt;- mutate(L_arith, fit = density/scaler)</code></pre>
+L_densities &lt;- mutate(L_densities, fit = density/scaler)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -3759,19 +3831,69 @@ plot(simulationOutput)</code></pre>
   bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = &quot;link&quot;)) %&gt;% 
   select(locality, fit, se.fit, nin)</code></pre>
 </div>
+<div id="types-only-null-model-2" class="section level3">
+<h3>Types-only null model</h3>
+<pre class="r"><code>mf &lt;- formula(paste(&quot;wildlings ~&quot;, paste(modeltypes, collapse = &quot; + &quot;)))
+m.typesonly &lt;- glmmTMB(mf, dat, offset = NULL, family = &quot;genpois&quot;,
+                       ziformula = ~ age + (1 | locality))
+summary(m.typesonly)</code></pre>
+<pre><code>##  Family: genpois  ( log )
+## Formula:          
+## wildlings ~ T44 + artificial + T45 + T32 + V9 + T34 + V1 + T41 +  
+##     T1 + V2 + T17
+## Zero inflation:             ~age + (1 | locality)
+## Data: dat
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##  10612.4  10746.6  -5290.2  10580.4    32412 
+## 
+## Random effects:
+## 
+## Zero-inflation model:
+##  Groups   Name        Variance Std.Dev.
+##  locality (Intercept) 0.8309   0.9115  
+## Number of obs: 32428, groups:  locality, 15
+## 
+## Dispersion parameter for genpois family ():  6.2 
+## 
+## Conditional model:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  1.39366    0.07394  18.848  &lt; 2e-16 ***
+## T44         -6.31986    1.66686  -3.791 0.000150 ***
+## artificial  -0.46299    0.13652  -3.391 0.000696 ***
+## T45         -3.44824    0.22635 -15.234  &lt; 2e-16 ***
+## T32         -1.27321    0.16023  -7.946 1.92e-15 ***
+## V9          -4.24361    0.67955  -6.245 4.24e-10 ***
+## T34         -1.17481    0.15633  -7.515 5.70e-14 ***
+## V1          -1.31034    0.60987  -2.149 0.031669 *  
+## T41         -3.46983    0.59482  -5.833 5.43e-09 ***
+## T1          -1.96630    0.69380  -2.834 0.004595 ** 
+## V2          -0.81448    3.08183  -0.264 0.791561    
+## T17          1.13324    0.18108   6.258 3.89e-10 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Zero-inflation model:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)   3.1712     0.2567  12.354  &lt; 2e-16 ***
+## age          -0.9305     0.2576  -3.612 0.000304 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
 </div>
 <div id="height-stratified-models-2" class="section level2">
 <h2>Height-stratified models</h2>
-<pre class="r"><code>dat &lt;- DVi %&gt;% 
-  group_split(randomseed, hgtclass) %&gt;% 
-  map(~ add_wildlings(IVi, .) %&gt;% 
-        st_drop_geometry())
-newdat &lt;- filter(newdat, is.na(locality))
-  
-safe_predict &lt;- safely(predict_from_genpoisWALDmodel)
+<pre class="r"><code>stratified &lt;- DVi %&gt;% 
+  select(species, randomseed, hgtclass) %&gt;% 
+  nest(dv = geometry) %&gt;% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %&gt;%
+  mutate(data = map(data, st_drop_geometry)) %&gt;% 
+  select(-dv)
+
+possibly_fit &lt;- possibly(fit_genpoisWALDmodel, otherwise = NA)
 plan(multisession, workers = availableCores()-1)
-res &lt;- dat %&gt;%
-  future_map(~ safe_predict(., newdat, typenames, contrasttype))</code></pre>
+stratified &lt;- stratified %&gt;% 
+  mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))</code></pre>
 <pre><code>## Warning in (function (start, objective, gradient = NULL, hessian = NULL, : NA/
 ## NaN function evaluation
 
@@ -3780,41 +3902,15 @@ res &lt;- dat %&gt;%
 
 ## Warning in (function (start, objective, gradient = NULL, hessian = NULL, : NA/
 ## NaN function evaluation</code></pre>
-<pre class="r"><code>transpose(res)$error</code></pre>
-<pre><code>## [[1]]
-## &lt;simpleError in optimHess(par.fixed, obj$fn, obj$gr): gradient in optim evaluated to length 1 not 19&gt;
-## 
-## [[2]]
-## NULL
-## 
-## [[3]]
-## NULL
-## 
-## [[4]]
-## NULL
-## 
-## [[5]]
-## NULL
-## 
-## [[6]]
-## NULL</code></pre>
-<pre class="r"><code>saveRDS(res, here(&#39;output&#39;, &#39;res-L-byheight.rds&#39;))
+<pre class="r"><code>newdat &lt;- filter(newdat, is.na(locality))
+stratified &lt;- stratified %&gt;% 
+  filter(!is.na(model)) %&gt;% 
+  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = &quot;link&quot;))) %&gt;% 
+  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
 
-modres &lt;- transpose(res)$result
-for (i in seq_along(modres)) {
-  if(!is.null(modres[[i]])) {
-    modres[[i]] &lt;- modres[[i]] %&gt;% 
-      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
-             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
-  }
-}
-modres &lt;- modres %&gt;% 
-  bind_rows() %&gt;% 
-  select(randomseed, hgtclass, fit, se.fit, nin)</code></pre>
-<pre class="r"><code>L_link &lt;- L_link %&gt;% 
-  bind_rows(modres)
-
-rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)</code></pre>
+L_stratified &lt;- stratified</code></pre>
+<pre class="r"><code>rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL,
+   stratified)</code></pre>
 <pre><code>## Warning in rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, :
 ## object &#39;m.genpoisNULL&#39; not found</code></pre>
 </div>
@@ -3823,44 +3919,392 @@ rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)</co
 <h1>All species</h1>
 <pre class="r"><code>species &lt;- c(&quot;P.sitchensis-lutzii&quot;, &quot;P.abies&quot;, &quot;Larix&quot;)
 
-arith.list &lt;- list(Ps_arith, Pa_arith, L_arith) %&gt;% 
-  set_names(species)
-
-modelcomp.list &lt;- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp) %&gt;% 
-  set_names(species)
-
-pred.tbl &lt;- list(Ps_link, Pa_link, L_link) %&gt;% 
+list(Ps_densities, Pa_densities, L_densities) %&gt;% 
   set_names(species) %&gt;% 
   bind_rows(.id = &quot;species&quot;) %&gt;% 
-  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %&gt;% 
-  mutate(across(c(&#39;fit&#39;, &#39;ci.l&#39;, &#39;ci.u&#39;), ~ exp(.))) %&gt;% 
-  select(-se.fit) %&gt;% 
-  group_by(species, randomseed, hgtclass) %&gt;% 
-  group_split(.keep = TRUE) %&gt;% 
-  map(function(x) {
+  saveRDS(here(&quot;output&quot;,&quot;results-densities.rds&quot;))
+
+list(Ps_dispersalcomp, Pa_dispersalcomp, L_dispersalcomp) %&gt;% 
+  set_names(species) %&gt;% 
+  saveRDS(here(&quot;output&quot;,&quot;results-dispersalcomparison.rds&quot;))
+
+list(Ps_link, Pa_link, L_link) %&gt;% 
+  set_names(species) %&gt;% 
+  bind_rows(.id = &quot;species&quot;) %&gt;% 
+  nest(preds = c(locality, nin, fit, se.fit)) %&gt;% 
+  bind_rows(Ps_stratified, Pa_stratified, L_stratified) %&gt;%
+  mutate(preds = map(preds, function(x) {
+    x &lt;- mutate(x, ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %&gt;% 
+      mutate(across(c(&#39;fit&#39;, &#39;ci.l&#39;, &#39;ci.u&#39;), ~ exp(.))) %&gt;% 
+      select(-se.fit) 
     scaler &lt;- filter(x, nin == contrasttype, is.na(locality)) %&gt;% 
       pull(fit)
     mutate(x, across(c(&#39;fit&#39;, &#39;ci.l&#39;, &#39;ci.u&#39;), ~ `/`(., scaler)))
-  }) %&gt;% 
-  bind_rows()
-
-results &lt;- list(arithmetic = arith.list, 
-                model.comp = modelcomp.list,
-                model.preds = pred.tbl)
-str(results, 2)</code></pre>
-<pre><code>## List of 3
-##  $ arithmetic :List of 3
-##   ..$ P.sitchensis-lutzii: tibble [34 x 5] (S3: tbl_df/tbl/data.frame)
-##   ..$ P.abies            : tibble [23 x 5] (S3: tbl_df/tbl/data.frame)
-##   ..$ Larix              : tibble [22 x 5] (S3: tbl_df/tbl/data.frame)
-##  $ model.comp :List of 3
-##   ..$ P.sitchensis-lutzii: tibble [3 x 4] (S3: tbl_df/tbl/data.frame)
-##   ..$ P.abies            : tibble [3 x 4] (S3: tbl_df/tbl/data.frame)
-##   ..$ Larix              : tibble [3 x 4] (S3: tbl_df/tbl/data.frame)
-##  $ model.preds: tibble [2,066 x 8] (S3: tbl_df/tbl/data.frame)</code></pre>
-<pre class="r"><code>saveRDS(results, here(&quot;output&quot;,&quot;results.rds&quot;))</code></pre>
+  })) %&gt;% pull(preds)</code></pre>
+<pre><code>## [[1]]
+## # A tibble: 1,204 x 5
+##    locality           nin     fit   ci.l   ci.u
+##    &lt;chr&gt;              &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 &lt;NA&gt;               T4    1     0.602   1.66 
+##  2 aarheia            T4    0.644 0.354   1.17 
+##  3 alstahaugmyran     T4    0.147 0.0378  0.572
+##  4 dale               T4    2.09  0.694   6.27 
+##  5 fjoesne            T4    0.136 0.0186  0.992
+##  6 foersvoll          T4    4.66  2.85    7.60 
+##  7 fuglavasstoppen    T4    1.22  0.503   2.97 
+##  8 gryttingdalen-oest T4    5.82  2.27   14.9  
+##  9 gryttingdalen-vest T4    3.60  1.32    9.84 
+## 10 haakoeya           T4    0.185 0.0198  1.73 
+## # ... with 1,194 more rows
+## 
+## [[2]]
+## # A tibble: 340 x 5
+##    locality     nin     fit  ci.l  ci.u
+##    &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 &lt;NA&gt;         T4    1     0.628 1.59 
+##  2 boerve       T4    1.97  0.929 4.16 
+##  3 bondhusdalen T4    1.03  0.310 3.44 
+##  4 efteland     T4    2.55  1.50  4.33 
+##  5 hjelmtveit   T4    0.698 0.309 1.57 
+##  6 indre-arna   T4    1.50  0.770 2.94 
+##  7 kvamskogen   T4    1.31  0.510 3.35 
+##  8 myklebostad  T4    0.788 0.240 2.59 
+##  9 myrvoll      T4    1.18  0.367 3.79 
+## 10 mysingveien  T4    0.472 0.231 0.966
+## # ... with 330 more rows
+## 
+## [[3]]
+## # A tibble: 192 x 5
+##    locality       nin     fit   ci.l  ci.u
+##    &lt;chr&gt;          &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##  1 &lt;NA&gt;           T4    1     0.540   1.85
+##  2 anisdal        T4    0.960 0.264   3.49
+##  3 engjane        T4    1.35  0.767   2.36
+##  4 haalandsbotn   T4    0.560 0.125   2.50
+##  5 hoegaas        T4    4.43  2.58    7.60
+##  6 hyljafjellet   T4    0.819 0.249   2.70
+##  7 indre-bjotveit T4    2.34  0.930   5.88
+##  8 knappeidet     T4    1.54  0.482   4.93
+##  9 myrvoll        T4    0.482 0.0890  2.61
+## 10 oaland         T4    0.560 0.127   2.46
+## # ... with 182 more rows
+## 
+## [[4]]
+## # A tibble: 28 x 5
+##        fit locality nin           ci.l     ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;
+##  1  1      &lt;NA&gt;     T4         0.543     1.84  
+##  2  0.0242 &lt;NA&gt;     T44        0.00869   0.0677
+##  3  0.296  &lt;NA&gt;     artificial 0.158     0.555 
+##  4  0.111  &lt;NA&gt;     T45        0.0598    0.208 
+##  5  0.346  &lt;NA&gt;     T32        0.186     0.644 
+##  6  2.24   &lt;NA&gt;     V9         1.19      4.21  
+##  7  1.15   &lt;NA&gt;     T34        0.625     2.11  
+##  8  1.22   &lt;NA&gt;     V12        0.241     6.14  
+##  9  0.607  &lt;NA&gt;     V1         0.326     1.13  
+## 10 20.9    &lt;NA&gt;     T13        3.87    113.    
+## # ... with 18 more rows
+## 
+## [[5]]
+## # A tibble: 28 x 5
+##        fit locality nin           ci.l   ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+##  1 1       &lt;NA&gt;     T4         0.619   1.62  
+##  2 0.00448 &lt;NA&gt;     T44        0.00130 0.0155
+##  3 0.444   &lt;NA&gt;     artificial 0.268   0.735 
+##  4 0.0986  &lt;NA&gt;     T45        0.0598  0.163 
+##  5 0.354   &lt;NA&gt;     T32        0.216   0.579 
+##  6 3.87    &lt;NA&gt;     V9         2.27    6.59  
+##  7 1.44    &lt;NA&gt;     T34        0.895   2.31  
+##  8 0.609   &lt;NA&gt;     V12        0.0604  6.13  
+##  9 1.00    &lt;NA&gt;     V1         0.615   1.63  
+## 10 1       &lt;NA&gt;     T13        0.619   1.62  
+## # ... with 18 more rows
+## 
+## [[6]]
+## # A tibble: 28 x 5
+##        fit locality nin          ci.l     ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+##  1  1      &lt;NA&gt;     T4         0.553    1.81  
+##  2  0.0293 &lt;NA&gt;     T44        0.0108   0.0797
+##  3  0.301  &lt;NA&gt;     artificial 0.162    0.558 
+##  4  0.113  &lt;NA&gt;     T45        0.0615   0.207 
+##  5  0.356  &lt;NA&gt;     T32        0.194    0.653 
+##  6  2.34   &lt;NA&gt;     V9         1.26     4.33  
+##  7  1.16   &lt;NA&gt;     T34        0.643    2.10  
+##  8  1.23   &lt;NA&gt;     V12        0.245    6.20  
+##  9  0.612  &lt;NA&gt;     V1         0.334    1.12  
+## 10 21.6    &lt;NA&gt;     T13        4.02   116.    
+## # ... with 18 more rows
+## 
+## [[7]]
+## # A tibble: 28 x 5
+##        fit locality nin            ci.l   ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;
+##  1 1       &lt;NA&gt;     T4         0.616    1.62  
+##  2 0.00262 &lt;NA&gt;     T44        0.000628 0.0109
+##  3 0.418   &lt;NA&gt;     artificial 0.251    0.694 
+##  4 0.0872  &lt;NA&gt;     T45        0.0525   0.145 
+##  5 0.325   &lt;NA&gt;     T32        0.198    0.535 
+##  6 3.57    &lt;NA&gt;     V9         2.09     6.10  
+##  7 1.37    &lt;NA&gt;     T34        0.845    2.21  
+##  8 0.581   &lt;NA&gt;     V12        0.0578   5.84  
+##  9 0.860   &lt;NA&gt;     V1         0.526    1.41  
+## 10 1       &lt;NA&gt;     T13        0.616    1.62  
+## # ... with 18 more rows
+## 
+## [[8]]
+## # A tibble: 28 x 5
+##        fit locality nin          ci.l     ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+##  1  1      &lt;NA&gt;     T4         0.548    1.83  
+##  2  0.0306 &lt;NA&gt;     T44        0.0116   0.0811
+##  3  0.301  &lt;NA&gt;     artificial 0.161    0.561 
+##  4  0.114  &lt;NA&gt;     T45        0.0613   0.210 
+##  5  0.353  &lt;NA&gt;     T32        0.191    0.654 
+##  6  2.36   &lt;NA&gt;     V9         1.27     4.39  
+##  7  1.16   &lt;NA&gt;     T34        0.636    2.12  
+##  8  1.21   &lt;NA&gt;     V12        0.241    6.11  
+##  9  0.621  &lt;NA&gt;     V1         0.337    1.15  
+## 10 20.5    &lt;NA&gt;     T13        3.82   110.    
+## # ... with 18 more rows
+## 
+## [[9]]
+## # A tibble: 28 x 5
+##        fit locality nin            ci.l    ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1       &lt;NA&gt;     T4         0.628    1.59   
+##  2 0.00162 &lt;NA&gt;     T44        0.000297 0.00885
+##  3 0.409   &lt;NA&gt;     artificial 0.251    0.667  
+##  4 0.0830  &lt;NA&gt;     T45        0.0508   0.136  
+##  5 0.318   &lt;NA&gt;     T32        0.197    0.515  
+##  6 3.29    &lt;NA&gt;     V9         1.96     5.50   
+##  7 1.28    &lt;NA&gt;     T34        0.808    2.04   
+##  8 0.555   &lt;NA&gt;     V12        0.0553   5.57   
+##  9 0.860   &lt;NA&gt;     V1         0.536    1.38   
+## 10 1       &lt;NA&gt;     T13        0.628    1.59   
+## # ... with 18 more rows
+## 
+## [[10]]
+## # A tibble: 17 x 5
+##        fit locality nin            ci.l    ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1       &lt;NA&gt;     T4         0.518    1.93   
+##  2 0.00618 &lt;NA&gt;     T44        0.000317 0.120  
+##  3 0.258   &lt;NA&gt;     artificial 0.121    0.550  
+##  4 0.00229 &lt;NA&gt;     T45        0.000569 0.00922
+##  5 0.482   &lt;NA&gt;     T32        0.247    0.943  
+##  6 1       &lt;NA&gt;     V9         0.518    1.93   
+##  7 1.66    &lt;NA&gt;     V12        0.723    3.83   
+##  8 0.183   &lt;NA&gt;     V1         0.0554   0.605  
+##  9 0.213   &lt;NA&gt;     T13        0.0594   0.762  
+## 10 0.459   &lt;NA&gt;     T41        0.159    1.33   
+## 11 0.813   &lt;NA&gt;     T1         0.301    2.19   
+## 12 0.628   &lt;NA&gt;     V2         0.262    1.51   
+## 13 1       &lt;NA&gt;     T2         0.518    1.93   
+## 14 1       &lt;NA&gt;     V10        0.518    1.93   
+## 15 2.85    &lt;NA&gt;     T31        1.05     7.74   
+## 16 1       &lt;NA&gt;     V4         0.518    1.93   
+## 17 1       &lt;NA&gt;     V3         0.518    1.93   
+## 
+## [[11]]
+## # A tibble: 17 x 5
+##           fit locality nin            ci.l          ci.u
+##         &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+##  1  1         &lt;NA&gt;     T4         4.47e- 1       2.24   
+##  2  1         &lt;NA&gt;     T44        4.47e- 1       2.24   
+##  3  1.23      &lt;NA&gt;     artificial 4.90e- 1       3.09   
+##  4  0.0000643 &lt;NA&gt;     T45        4.65e- 7       0.00888
+##  5  0.272     &lt;NA&gt;     T32        1.10e- 1       0.672  
+##  6 12.1       &lt;NA&gt;     V9         3.09e- 1     471.     
+##  7 10.2       &lt;NA&gt;     V12        3.44e+ 0      30.5    
+##  8  0.687     &lt;NA&gt;     V1         1.65e- 1       2.87   
+##  9  0.0254    &lt;NA&gt;     T13        1.82e- 3       0.356  
+## 10  0.731     &lt;NA&gt;     T41        2.15e- 1       2.48   
+## 11  0.882     &lt;NA&gt;     T1         2.36e- 1       3.30   
+## 12  1.52      &lt;NA&gt;     V2         5.32e- 1       4.32   
+## 13  0.000335  &lt;NA&gt;     T2         1.01e-13 1110797.     
+## 14  1.83      &lt;NA&gt;     V10        1.66e- 2     201.     
+## 15  1         &lt;NA&gt;     T31        4.47e- 1       2.24   
+## 16  0.286     &lt;NA&gt;     V4         1.44e- 2       5.67   
+## 17  0.598     &lt;NA&gt;     V3         6.29e- 2       5.68   
+## 
+## [[12]]
+## # A tibble: 17 x 5
+##        fit locality nin            ci.l    ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1       &lt;NA&gt;     T4         0.540    1.85   
+##  2 0.00645 &lt;NA&gt;     T44        0.000339 0.123  
+##  3 0.263   &lt;NA&gt;     artificial 0.128    0.540  
+##  4 0.00241 &lt;NA&gt;     T45        0.000615 0.00945
+##  5 0.492   &lt;NA&gt;     T32        0.262    0.922  
+##  6 1       &lt;NA&gt;     V9         0.540    1.85   
+##  7 1.70    &lt;NA&gt;     V12        0.759    3.80   
+##  8 0.242   &lt;NA&gt;     V1         0.0808   0.724  
+##  9 0.226   &lt;NA&gt;     T13        0.0647   0.789  
+## 10 0.468   &lt;NA&gt;     T41        0.167    1.31   
+## 11 0.795   &lt;NA&gt;     T1         0.299    2.12   
+## 12 0.777   &lt;NA&gt;     V2         0.340    1.78   
+## 13 1       &lt;NA&gt;     T2         0.540    1.85   
+## 14 1       &lt;NA&gt;     V10        0.540    1.85   
+## 15 2.92    &lt;NA&gt;     T31        1.11     7.66   
+## 16 1       &lt;NA&gt;     V4         0.540    1.85   
+## 17 1       &lt;NA&gt;     V3         0.540    1.85   
+## 
+## [[13]]
+## # A tibble: 17 x 5
+##          fit locality nin            ci.l    ci.u
+##        &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1         &lt;NA&gt;     T4         4.68e- 1 2.14e+0
+##  2 1         &lt;NA&gt;     T44        4.68e- 1 2.14e+0
+##  3 1.18      &lt;NA&gt;     artificial 4.78e- 1 2.90e+0
+##  4 0.0000623 &lt;NA&gt;     T45        4.74e- 7 8.19e-3
+##  5 0.253     &lt;NA&gt;     T32        1.04e- 1 6.14e-1
+##  6 9.29      &lt;NA&gt;     V9         4.03e- 1 2.14e+2
+##  7 6.73      &lt;NA&gt;     V12        2.37e+ 0 1.91e+1
+##  8 0.180     &lt;NA&gt;     V1         3.21e- 2 1.01e+0
+##  9 0.0276    &lt;NA&gt;     T13        2.03e- 3 3.76e-1
+## 10 0.769     &lt;NA&gt;     T41        2.43e- 1 2.44e+0
+## 11 0.803     &lt;NA&gt;     T1         2.26e- 1 2.86e+0
+## 12 0.808     &lt;NA&gt;     V2         2.64e- 1 2.47e+0
+## 13 0.0000118 &lt;NA&gt;     T2         6.32e-20 2.20e+9
+## 14 1.73      &lt;NA&gt;     V10        2.15e- 2 1.40e+2
+## 15 1         &lt;NA&gt;     T31        4.68e- 1 2.14e+0
+## 16 1.31      &lt;NA&gt;     V4         8.10e- 2 2.12e+1
+## 17 4.91      &lt;NA&gt;     V3         4.73e- 1 5.09e+1
+## 
+## [[14]]
+## # A tibble: 17 x 5
+##        fit locality nin            ci.l    ci.u
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1       &lt;NA&gt;     T4         0.533    1.88   
+##  2 0.00609 &lt;NA&gt;     T44        0.000313 0.119  
+##  3 0.269   &lt;NA&gt;     artificial 0.129    0.564  
+##  4 0.00225 &lt;NA&gt;     T45        0.000564 0.00895
+##  5 0.477   &lt;NA&gt;     T32        0.249    0.912  
+##  6 1       &lt;NA&gt;     V9         0.533    1.88   
+##  7 1.63    &lt;NA&gt;     V12        0.724    3.68   
+##  8 0.283   &lt;NA&gt;     V1         0.0989   0.808  
+##  9 0.218   &lt;NA&gt;     T13        0.0615   0.774  
+## 10 0.452   &lt;NA&gt;     T41        0.159    1.29   
+## 11 0.725   &lt;NA&gt;     T1         0.269    1.95   
+## 12 0.666   &lt;NA&gt;     V2         0.283    1.57   
+## 13 1       &lt;NA&gt;     T2         0.533    1.88   
+## 14 1       &lt;NA&gt;     V10        0.533    1.88   
+## 15 2.84    &lt;NA&gt;     T31        1.07     7.57   
+## 16 1       &lt;NA&gt;     V4         0.533    1.88   
+## 17 1       &lt;NA&gt;     V3         0.533    1.88   
+## 
+## [[15]]
+## # A tibble: 17 x 5
+##           fit locality nin            ci.l         ci.u
+##         &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;        &lt;dbl&gt;
+##  1  1         &lt;NA&gt;     T4         4.25e- 1      2.35   
+##  2  1         &lt;NA&gt;     T44        4.25e- 1      2.35   
+##  3  1.28      &lt;NA&gt;     artificial 4.97e- 1      3.31   
+##  4  0.0000685 &lt;NA&gt;     T45        5.05e- 7      0.00930
+##  5  0.283     &lt;NA&gt;     T32        1.12e- 1      0.718  
+##  6 10.5       &lt;NA&gt;     V9         2.85e- 1    390.     
+##  7  9.13      &lt;NA&gt;     V12        3.06e+ 0     27.2    
+##  8  0.134     &lt;NA&gt;     V1         1.30e- 2      1.37   
+##  9  0.0251    &lt;NA&gt;     T13        1.77e- 3      0.358  
+## 10  0.824     &lt;NA&gt;     T41        2.45e- 1      2.77   
+## 11  1.00      &lt;NA&gt;     T1         2.72e- 1      3.71   
+## 12  1.11      &lt;NA&gt;     V2         3.45e- 1      3.57   
+## 13  0.000341  &lt;NA&gt;     T2         1.82e-13 639637.     
+## 14  1.73      &lt;NA&gt;     V10        1.58e- 2    189.     
+## 15  1         &lt;NA&gt;     T31        4.25e- 1      2.35   
+## 16  0.301     &lt;NA&gt;     V4         1.51e- 2      6.01   
+## 17  0.638     &lt;NA&gt;     V3         6.65e- 2      6.12   
+## 
+## [[16]]
+## # A tibble: 12 x 5
+##         fit locality nin             ci.l     ci.u
+##       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
+##  1   1      &lt;NA&gt;     T4           0.518      1.93 
+##  2   0.0348 &lt;NA&gt;     T44          0.00131    0.929
+##  3   6.46   &lt;NA&gt;     artificial   3.22      13.0  
+##  4   0.487  &lt;NA&gt;     T45          0.242      0.980
+##  5   1.76   &lt;NA&gt;     T32          0.890      3.49 
+##  6   0.358  &lt;NA&gt;     V9           0.0728     1.76 
+##  7   2.10   &lt;NA&gt;     T34          1.06       4.16 
+##  8   0.958  &lt;NA&gt;     V1           0.237      3.88 
+##  9   0.0628 &lt;NA&gt;     T41          0.0109     0.362
+## 10   0.754  &lt;NA&gt;     T1           0.150      3.79 
+## 11   0.675  &lt;NA&gt;     V2           0.0172    26.5  
+## 12 451.     &lt;NA&gt;     T17        203.      1003.   
+## 
+## [[17]]
+## # A tibble: 12 x 5
+##         fit locality nin             ci.l    ci.u
+##       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;   &lt;dbl&gt;
+##  1   1      &lt;NA&gt;     T4           0.512     1.95 
+##  2   0.0387 &lt;NA&gt;     T44          0.00145   1.03 
+##  3   6.99   &lt;NA&gt;     artificial   3.45     14.2  
+##  4   0.543  &lt;NA&gt;     T45          0.268     1.10 
+##  5   2.07   &lt;NA&gt;     T32          1.04      4.13 
+##  6   0.661  &lt;NA&gt;     V9           0.169     2.58 
+##  7   2.28   &lt;NA&gt;     T34          1.14      4.57 
+##  8   1.06   &lt;NA&gt;     V1           0.260     4.34 
+##  9   0.0616 &lt;NA&gt;     T41          0.0106    0.358
+## 10   0.768  &lt;NA&gt;     T1           0.151     3.91 
+## 11   0.732  &lt;NA&gt;     V2           0.0187   28.7  
+## 12 422.     &lt;NA&gt;     T17        187.      955.   
+## 
+## [[18]]
+## # A tibble: 12 x 5
+##          fit locality nin                 ci.l    ci.u
+##        &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt;
+##  1   1       &lt;NA&gt;     T4          0.234          4.28 
+##  2   0.00377 &lt;NA&gt;     T44         0.0000000780 182.   
+##  3  17.0     &lt;NA&gt;     artificial  3.69          78.2  
+##  4   0.0564  &lt;NA&gt;     T45         0.00988        0.322
+##  5   0.664   &lt;NA&gt;     T32         0.151          2.91 
+##  6   0.0126  &lt;NA&gt;     V9          0.0000186      8.58 
+##  7   5.04    &lt;NA&gt;     T34         1.31          19.3  
+##  8   1       &lt;NA&gt;     V1          0.234          4.28 
+##  9   0.0239  &lt;NA&gt;     T41         0.00183        0.312
+## 10   0.00770 &lt;NA&gt;     T1          0.000221       0.269
+## 11   1       &lt;NA&gt;     V2          0.234          4.28 
+## 12 177.      &lt;NA&gt;     T17        38.0          823.   
+## 
+## [[19]]
+## # A tibble: 12 x 5
+##         fit locality nin             ci.l     ci.u
+##       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
+##  1   1      &lt;NA&gt;     T4           0.522      1.91 
+##  2   0.0393 &lt;NA&gt;     T44          0.00147    1.05 
+##  3   7.28   &lt;NA&gt;     artificial   3.64      14.6  
+##  4   0.533  &lt;NA&gt;     T45          0.272      1.04 
+##  5   2.07   &lt;NA&gt;     T32          1.06       4.04 
+##  6   0.615  &lt;NA&gt;     V9           0.157      2.40 
+##  7   2.27   &lt;NA&gt;     T34          1.16       4.41 
+##  8   1.07   &lt;NA&gt;     V1           0.261      4.36 
+##  9   0.0607 &lt;NA&gt;     T41          0.0102     0.362
+## 10   0.772  &lt;NA&gt;     T1           0.155      3.84 
+## 11   0.743  &lt;NA&gt;     V2           0.0193    28.6  
+## 12 474.     &lt;NA&gt;     T17        220.      1020.   
+## 
+## [[20]]
+## # A tibble: 12 x 5
+##          fit locality nin                ci.l    ci.u
+##        &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;             &lt;dbl&gt;   &lt;dbl&gt;
+##  1   1       &lt;NA&gt;     T4          0.213         4.70 
+##  2   0.00593 &lt;NA&gt;     T44         0.000000425  82.7  
+##  3  15.6     &lt;NA&gt;     artificial  3.28         73.9  
+##  4   0.0560  &lt;NA&gt;     T45         0.00852       0.368
+##  5   0.711   &lt;NA&gt;     T32         0.142         3.56 
+##  6   0.0285  &lt;NA&gt;     V9          0.0000713    11.4  
+##  7   6.57    &lt;NA&gt;     T34         1.66         25.9  
+##  8   1       &lt;NA&gt;     V1          0.213         4.70 
+##  9   0.0189  &lt;NA&gt;     T41         0.00133       0.271
+## 10   0.00164 &lt;NA&gt;     T1          0.0000149     0.181
+## 11   1       &lt;NA&gt;     V2          0.213         4.70 
+## 12 173.      &lt;NA&gt;     T17        34.0         874.</code></pre>
+<pre class="r"><code>  saveRDS(here(&quot;output&quot;,&quot;results-models.rds&quot;))</code></pre>
+<pre><code>## Error in saveRDS(here(&quot;output&quot;, &quot;results-models.rds&quot;)): &#39;file&#39; must be non-empty string</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.1.2 (2021-11-01)
+<pre><code>## R version 4.1.3 (2022-03-10)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 19044)
 ## 
@@ -3883,13 +4327,13 @@ str(results, 2)</code></pre>
 ## [13] tibble_3.1.6    ggplot2_3.3.5   tidyverse_1.3.1 here_1.0.1     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-153        fs_1.5.0            bit64_4.0.5        
+##  [1] nlme_3.1-155        fs_1.5.0            bit64_4.0.5        
 ##  [4] lubridate_1.7.10    httr_1.4.2          rprojroot_2.0.2    
-##  [7] numDeriv_2016.8-1.1 tools_4.1.2         TMB_1.7.22         
+##  [7] numDeriv_2016.8-1.1 tools_4.1.3         TMB_1.7.22         
 ## [10] backports_1.3.0     bslib_0.3.1         utf8_1.2.2         
 ## [13] R6_2.5.1            KernSmooth_2.23-20  DBI_1.1.1          
 ## [16] colorspace_2.0-3    withr_2.4.3         tidyselect_1.1.1   
-## [19] bit_4.0.4           compiler_4.1.2      cli_3.0.1          
+## [19] bit_4.0.4           compiler_4.1.3      cli_3.0.1          
 ## [22] rvest_1.0.1         xml2_1.3.2          sass_0.4.0         
 ## [25] scales_1.1.1        mvtnorm_1.1-3       classInt_0.4-3     
 ## [28] proxy_0.4-26        digest_0.6.29       minqa_1.2.4        
@@ -3901,16 +4345,16 @@ str(results, 2)</code></pre>
 ## [46] vroom_1.5.7         magrittr_2.0.2      Matrix_1.4-0       
 ## [49] Rcpp_1.0.8          munsell_0.5.0       fansi_1.0.2        
 ## [52] lifecycle_1.0.1     stringi_1.7.5       yaml_2.2.1         
-## [55] MASS_7.3-54         grid_4.1.2          parallel_4.1.2     
+## [55] MASS_7.3-55         grid_4.1.3          parallel_4.1.3     
 ## [58] listenv_0.8.0       bdsmatrix_1.3-4     crayon_1.5.0       
-## [61] lattice_0.20-45     haven_2.4.3         splines_4.1.2      
+## [61] lattice_0.20-45     haven_2.4.3         splines_4.1.3      
 ## [64] hms_1.1.1           knitr_1.36          pillar_1.7.0       
-## [67] boot_1.3-28         stats4_4.1.2        codetools_0.2-18   
+## [67] boot_1.3-28         stats4_4.1.3        codetools_0.2-18   
 ## [70] reprex_2.0.1        glue_1.6.1          evaluate_0.14      
 ## [73] modelr_0.1.8        vctrs_0.3.8         nloptr_2.0.0       
 ## [76] tzdb_0.1.2          cellranger_1.1.0    gtable_0.3.0       
 ## [79] assertthat_0.2.1    xfun_0.26           broom_0.7.9        
-## [82] e1071_1.7-9         class_7.3-19        globals_0.14.0     
+## [82] e1071_1.7-9         class_7.3-20        globals_0.14.0     
 ## [85] ellipsis_0.3.2      gap_1.2.3-1</code></pre>
 </div>
 

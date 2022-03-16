@@ -91,19 +91,19 @@ Disregards height classes.
 dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
   st_drop_geometry()
 
-Ps_arith <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
+Ps_densities <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = "drop_last") %>% 
   mutate(density = n/daa) %>%
   arrange(desc(density), desc(n), daa)
-scaler <- filter(Ps_arith, nin == contrasttype) %>% 
+scaler <- filter(Ps_densities, nin == contrasttype) %>% 
   pull(density)
-Ps_arith <- mutate(Ps_arith, fit = density/scaler)
+Ps_densities <- mutate(Ps_densities, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(Ps_arith, digits = 1)
+knitr::kable(Ps_densities, digits = 1)
 ```
 
 ## Height-blind model
@@ -164,8 +164,8 @@ summary(m.genpoisNULL)
 ```
 
 ```{r, include=FALSE}
-Ps_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE, 
-                             delta = TRUE, sort = FALSE) %>% 
+Ps_dispersalcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE, 
+                                 delta = TRUE, sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'none'), .before = 1) %>% 
   add_row(`seed dispersal estimate` = 'ExP', AIC = NA, dAIC = NA, df = NA, .before = 2) 
@@ -207,36 +207,30 @@ summary(m.typesonly)
 ## Height-stratified models
 
 ```{r}
-dat <- DVi %>% 
-  group_split(randomseed, hgtclass) %>% 
-  map(~ add_wildlings(IVi, .) %>% 
-        st_drop_geometry())
-newdat <- filter(newdat, is.na(locality))
-  
-safe_predict <- safely(predict_from_genpoisWALDmodel)
-plan(multisession, workers = availableCores()-1)
-res <- dat %>% # 3.6 hours for 10 successfully fitted models on 7 workers
-  future_map(~ safe_predict(., newdat, typenames, contrasttype))
-transpose(res)$error
+stratified <- DVi %>% 
+  select(species, randomseed, hgtclass) %>% 
+  nest(dv = geometry) %>% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
+  mutate(data = map(data, st_drop_geometry)) %>% 
+  select(-dv)
 
-modres <- transpose(res)$result
-for (i in seq_along(modres)) {
-  if(!is.null(modres[[i]])) {
-    modres[[i]] <- modres[[i]] %>% 
-      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
-             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
-  }
-}
-modres <- modres %>% 
-  bind_rows() %>% 
-  select(randomseed, hgtclass, fit, se.fit, nin)
+possibly_fit <- possibly(fit_genpoisWALDmodel, otherwise = NA)
+plan(multisession, workers = availableCores()-1)
+stratified <- stratified %>% 
+  mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
+
+newdat <- filter(newdat, is.na(locality))
+stratified <- stratified %>% 
+  filter(!is.na(model)) %>% 
+  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = "link"))) %>% 
+  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
+
+Ps_stratified <- stratified
 ```
 
 ```{r}
-Ps_link <- Ps_link %>% 
-  bind_rows(modres)
-
-rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)
+rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL,
+   stratified)
 ```
 
 # P.abies
@@ -258,19 +252,19 @@ Disregards height classes.
 dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
   st_drop_geometry()
 
-Pa_arith <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
+Pa_densities <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = "drop_last") %>% 
   mutate(density = n/daa) %>%
   arrange(desc(density), desc(n), daa)
-scaler <- filter(Pa_arith, nin == contrasttype) %>% 
+scaler <- filter(Pa_densities, nin == contrasttype) %>% 
   pull(density)
-Pa_arith <- mutate(Pa_arith, fit = density/scaler)
+Pa_densities <- mutate(Pa_densities, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(Pa_arith, digits = 1)
+knitr::kable(Pa_densities, digits = 1)
 ```
 
 ## Height-blind model
@@ -331,8 +325,8 @@ summary(m.genpoisNULL)
 ```
 
 ```{r, include=FALSE}
-Pa_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE, 
-                             delta = TRUE, sort = FALSE) %>% 
+Pa_dispersalcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE, 
+                                 delta = TRUE, sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'none'), .before = 1) %>% 
   add_row(`seed dispersal estimate` = 'ExP', AIC = NA, dAIC = NA, df = NA, .before = 2) 
@@ -374,36 +368,30 @@ summary(m.typesonly)
 ## Height-stratified models
 
 ```{r}
-dat <- DVi %>% 
-  group_split(randomseed, hgtclass) %>% 
-  map(~ add_wildlings(IVi, .) %>% 
-        st_drop_geometry())
-newdat <- filter(newdat, is.na(locality))
-  
-safe_predict <- safely(predict_from_genpoisWALDmodel)
-plan(multisession, workers = availableCores()-1)
-res <- dat %>% # 
-  future_map(~ safe_predict(., newdat, typenames, contrasttype))
-transpose(res)$error
+stratified <- DVi %>% 
+  select(species, randomseed, hgtclass) %>% 
+  nest(dv = geometry) %>% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
+  mutate(data = map(data, st_drop_geometry)) %>% 
+  select(-dv)
 
-modres <- transpose(res)$result
-for (i in seq_along(modres)) {
-  if(!is.null(modres[[i]])) {
-    modres[[i]] <- modres[[i]] %>% 
-      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
-             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
-  }
-}
-modres <- modres %>% 
-  bind_rows() %>% 
-  select(randomseed, hgtclass, fit, se.fit, nin)
+possibly_fit <- possibly(fit_genpoisWALDmodel, otherwise = NA)
+plan(multisession, workers = availableCores()-1)
+stratified <- stratified %>% 
+  mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
+
+newdat <- filter(newdat, is.na(locality))
+stratified <- stratified %>% 
+  filter(!is.na(model)) %>% 
+  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = "link"))) %>% 
+  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
+
+Pa_stratified <- stratified
 ```
 
 ```{r}
-Pa_link <- Pa_link %>% 
-  bind_rows(modres)
-
-rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)
+rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL,
+   stratified)
 ```
 
 # Larix
@@ -425,19 +413,19 @@ Disregards height classes.
 dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
   st_drop_geometry()
 
-L_arith <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
+L_densities <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
   group_by(nin) %>% 
   summarize(daa = sum(are)/10, # units from are to decare
             n = sum(wildlings*are), .groups = "drop_last") %>% 
   mutate(density = n/daa) %>%
   arrange(desc(density), desc(n), daa)
-scaler <- filter(L_arith, nin == contrasttype) %>% 
+scaler <- filter(L_densities, nin == contrasttype) %>% 
   pull(density)
-L_arith <- mutate(L_arith, fit = density/scaler)
+L_densities <- mutate(L_densities, fit = density/scaler)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(L_arith, digits = 1)
+knitr::kable(L_densities, digits = 1)
 ```
 
 ## Height-blind model
@@ -498,8 +486,8 @@ summary(m.genpoisNULL)
 ```
 
 ```{r, include=FALSE}
-L_modelcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisExP, base = TRUE, 
-                             delta = TRUE, sort = FALSE) %>% 
+L_dispersalcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisExP, base = TRUE, 
+                                delta = TRUE, sort = FALSE) %>% 
   as_tibble() %>% 
   add_column(`seed dispersal estimate` = c('WALD', 'ExP'), .before = 1) %>% 
   add_row(`seed dispersal estimate` = 'none', AIC = NA, dAIC = NA, df = NA) 
@@ -541,36 +529,30 @@ summary(m.typesonly)
 ## Height-stratified models
 
 ```{r}
-dat <- DVi %>% 
-  group_split(randomseed, hgtclass) %>% 
-  map(~ add_wildlings(IVi, .) %>% 
-        st_drop_geometry())
-newdat <- filter(newdat, is.na(locality))
-  
-safe_predict <- safely(predict_from_genpoisWALDmodel)
-plan(multisession, workers = availableCores()-1)
-res <- dat %>%
-  future_map(~ safe_predict(., newdat, typenames, contrasttype))
-transpose(res)$error
+stratified <- DVi %>% 
+  select(species, randomseed, hgtclass) %>% 
+  nest(dv = geometry) %>% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
+  mutate(data = map(data, st_drop_geometry)) %>% 
+  select(-dv)
 
-modres <- transpose(res)$result
-for (i in seq_along(modres)) {
-  if(!is.null(modres[[i]])) {
-    modres[[i]] <- modres[[i]] %>% 
-      mutate(randomseed = rep(seq_len(nrseeds), each = nrhgtclasses)[i],
-             hgtclass = rep(seq_len(nrhgtclasses), nrseeds)[i], .before = 1)
-  }
-}
-modres <- modres %>% 
-  bind_rows() %>% 
-  select(randomseed, hgtclass, fit, se.fit, nin)
+possibly_fit <- possibly(fit_genpoisWALDmodel, otherwise = NA)
+plan(multisession, workers = availableCores()-1)
+stratified <- stratified %>% 
+  mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
+
+newdat <- filter(newdat, is.na(locality))
+stratified <- stratified %>% 
+  filter(!is.na(model)) %>% 
+  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = "link"))) %>% 
+  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
+
+L_stratified <- stratified
 ```
 
 ```{r}
-L_link <- L_link %>% 
-  bind_rows(modres)
-
-rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)
+rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL,
+   stratified)
 ```
 
 # All species
@@ -578,32 +560,29 @@ rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL)
 ```{r}
 species <- c("P.sitchensis-lutzii", "P.abies", "Larix")
 
-arith.list <- list(Ps_arith, Pa_arith, L_arith) %>% 
-  set_names(species)
-
-modelcomp.list <- list(Ps_modelcomp, Pa_modelcomp, L_modelcomp) %>% 
-  set_names(species)
-
-pred.tbl <- list(Ps_link, Pa_link, L_link) %>% 
+list(Ps_densities, Pa_densities, L_densities) %>% 
   set_names(species) %>% 
   bind_rows(.id = "species") %>% 
-  mutate(ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
-  mutate(across(c('fit', 'ci.l', 'ci.u'), ~ exp(.))) %>% 
-  select(-se.fit) %>% 
-  group_by(species, randomseed, hgtclass) %>% 
-  group_split(.keep = TRUE) %>% 
-  map(function(x) {
+  saveRDS(here("output","results-densities.rds"))
+
+list(Ps_dispersalcomp, Pa_dispersalcomp, L_dispersalcomp) %>% 
+  set_names(species) %>% 
+  saveRDS(here("output","results-dispersalcomparison.rds"))
+
+list(Ps_link, Pa_link, L_link) %>% 
+  set_names(species) %>% 
+  bind_rows(.id = "species") %>% 
+  nest(preds = c(locality, nin, fit, se.fit)) %>% 
+  bind_rows(Ps_stratified, Pa_stratified, L_stratified) %>%
+  mutate(preds = map(preds, function(x) {
+    x <- mutate(x, ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 
+      mutate(across(c('fit', 'ci.l', 'ci.u'), ~ exp(.))) %>% 
+      select(-se.fit) 
     scaler <- filter(x, nin == contrasttype, is.na(locality)) %>% 
       pull(fit)
     mutate(x, across(c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler)))
-  }) %>% 
-  bind_rows()
-
-results <- list(arithmetic = arith.list, 
-                model.comp = modelcomp.list,
-                model.preds = pred.tbl)
-str(results, 2)
-saveRDS(results, here("output","results.rds"))
+  })) %>% pull(preds)
+  saveRDS(here("output","results-models.rds"))
 ```
 
 ```{r, include=FALSE}
@@ -619,7 +598,7 @@ pred_sens.tbl <- list(Ps_cond_sens, Pa_cond_sens, L_cond_sens) %>%
   }) %>% 
   bind_rows()
 
-saveRDS(pred_sens.tbl, here("output","results-sensitivity.rds"))
+saveRDS(pred_sens.tbl, here("output","results-sensitivity-offsetting.rds"))
 ```
 
 ```{r sessionInfo}

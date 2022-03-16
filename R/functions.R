@@ -115,7 +115,7 @@ add_relative_elevation <- function(grid, sourcepoly, dtm) {
 
 
 # Note: grid must not contain column "ID"
-add_wildlings <- function(grid, pts) { #grid <- IV; pts <- DV$seed1$heightclass1
+add_wildlings <- function(grid, pts) {
   idx <- st_geometry(grid) %>% 
     st_intersection(st_geometry(pts)) %>% 
     attr(., "idx")
@@ -161,12 +161,11 @@ paste_modelformula <- function(dat, typenames, contrasttype) {
   return(formula(fstring))
 }
 
-predict_from_genpoisWALDmodel <- function(dat, newdat, typenames, contrasttype) {
+fit_genpoisWALDmodel <- function(dat, typenames, contrasttype) {
   formula <- paste_modelformula(dat, typenames, contrasttype)
   mod <- glmmTMB(formula, dat, offset = seeds.WALD, family = "genpois", 
                  ziformula = ~ age + (1 | locality))
-  link <- bind_cols(newdat, predict(mod, newdat, se.fit = TRUE, type = "link"))
-  return(link)
+  return(mod)
 }
 
 
