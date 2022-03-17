@@ -43,8 +43,7 @@ locs <- read_csv(here("data", "localities.csv"), col_types = cols()) %>%
 locs <- mutate(locs, species.latin = factor(species.latin, 
                                             levels = c("Picea sitchensis / lutzii",
                                                        "Picea abies",
-                                                       "Larix spp.",
-                                                       "Pinus contorta")))
+                                                       "Larix spp.")))
 st_bbox(locs)
 
 filter(locs, county %in% c("Rogaland","Hordaland")) %>% 
@@ -68,6 +67,7 @@ inset2 <- st_polygon(list(matrix(c(xlimits2[1],ylimits2[1],
                          xlimits2[1],ylimits2[2],
                          xlimits2[1],ylimits2[1]), byrow = T, ncol = 2))) %>% 
   st_sfc(crs = 25833)
+CBdark2.3class <- c('#7570b3','#d95f02','#1b9e77')
 
 g1 <- ggplot() +
   geom_sf(data = nor50, fill = "white") + 
@@ -76,12 +76,11 @@ g1 <- ggplot() +
                nudge_y = c(-3e4,3e4,4e4), 
                nudge_x = c(0, 10e4, 0), size = 2) +
   geom_sf(data = locs, #st_jitter(locs, amount=5e3)
-          mapping = aes(color = species.latin, shape = species.latin), 
+          mapping = aes(color = species.latin), 
           show.legend = "point", size = 1.5, alpha = 0.6) +
-  scale_shape_manual(values = c(15, 16, 17, 18)) +
   geom_sf(data = inset, fill = NA, linetype = "longdash", color = 'black') + 
   geom_sf(data = inset2, fill = NA, linetype = "longdash", color = 'black') + 
-  scale_color_manual(values = c('#984ea3','#377eb8','#4daf4a','#e41a1c')) + #Set1
+  scale_color_manual(values = CBdark2.3class) +
   coord_sf(xlim = c(-60e3,730e3), ylim = c(6.5e6,7.8e6)) +
   theme_minimal() +
   theme(legend.position = c(0.35,0.88), legend.title = element_blank(), 
@@ -94,10 +93,9 @@ g2 <- ggplot() +
   geom_sf(data = norislands, fill = "white") + 
   geom_sf(data = norcities) +
   geom_sf(data = locs, 
-          mapping = aes(color = species.latin, shape = species.latin), 
+          mapping = aes(color = species.latin), 
           show.legend = FALSE, size = 2, alpha = 0.7) + 
-  scale_shape_manual(values = c(15, 16, 17, 18)) +
-  scale_color_manual(values = c('#984ea3','#377eb8','#4daf4a','#e41a1c')) + #Set1
+  scale_color_manual(values = CBdark2.3class) + 
   coord_sf(xlim = xlimits, ylim = ylimits, datum = NA) +
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0),
@@ -108,10 +106,9 @@ g3 <- ggplot() +
   geom_sf(data = nor10, fill = "white") + 
   geom_sf(data = norislands, fill = "white") + 
   geom_sf(data = locs, 
-          mapping = aes(color = species.latin, shape = species.latin), 
+          mapping = aes(color = species.latin), 
           show.legend = FALSE, size = 2, alpha = 0.7) + 
-  scale_shape_manual(values = c(15, 16, 17, 18)) +
-  scale_color_manual(values = c('#984ea3','#377eb8','#4daf4a','#e41a1c')) + #Set1
+  scale_color_manual(values = CBdark2.3class) +
   coord_sf(xlim = xlimits2, ylim = ylimits2, datum = NA) +
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0),
@@ -223,9 +220,7 @@ bottomtheme <- theme_light() +
         strip.text = element_blank(),
         panel.spacing = unit(1, "lines"))
 csize <- 3
-coltop <- '#984ea3'
-colmid <- '#377eb8'
-colbot <- '#4daf4a'
+CBdark2.3class <- c('#7570b3','#d95f02','#1b9e77')
 ```
 
 ## by height class
@@ -246,8 +241,8 @@ d <- filter(plotting, species == "P.sitchensis-lutzii", randomseed == 2) %>%
 g1 <- ggplot(d, aes(x = fit, y = name)) + 
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = coltop, size = 1) +
-  geom_point(color = coltop, size = csize) +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[1], size = 1) +
+  geom_point(color = CBdark2.3class[1], size = csize) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-4, 1e2)) +
   facet_grid(cols = vars(hgtclassname)) +
@@ -259,8 +254,8 @@ d <- filter(plotting, species == "P.abies", randomseed == 2) %>%
 g2 <- ggplot(d, aes(x = fit, y = name)) + 
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = colmid, size = 1) +
-  geom_point(color = colmid, size = csize) +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[2], size = 1) +
+  geom_point(color = CBdark2.3class[2], size = csize) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-5, 1e1)) +
   facet_grid(cols = vars(hgtclassname)) +
@@ -272,8 +267,8 @@ d <- filter(plotting, species == "Larix", randomseed == 2) %>%
 g3 <- ggplot(d, aes(x = fit, y = name)) + 
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = colbot, size = 1) +
-  geom_point(color = colbot, size = csize) +
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[3], size = 1) +
+  geom_point(color = CBdark2.3class[3], size = csize) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-3, 1e3)) +
   facet_grid(cols = vars(hgtclassname)) +
@@ -304,9 +299,9 @@ d <- filter(plotting, species == "P.sitchensis-lutzii") %>%
 g1 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = coltop, size = 0.5,
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[1], size = 0.5,
                  position = position_dodge(width = 0.5)) +
-  geom_point(color = coltop, size = 1, position = position_dodge(width = 0.5)) +
+  geom_point(color = CBdark2.3class[1], size = 1, position = position_dodge(width = 0.5)) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-4, 1e2)) +
   facet_grid(cols = vars(hgtclassname)) +
@@ -318,9 +313,9 @@ d <- filter(plotting, species == "P.abies") %>%
 g2 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = colmid, size = 0.5,
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[2], size = 0.5,
                  position = position_dodge(width = 0.5)) +
-  geom_point(color = colmid, size = 1, position = position_dodge(width = 0.5)) +
+  geom_point(color = CBdark2.3class[2], size = 1, position = position_dodge(width = 0.5)) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-5, 1e1)) +
   facet_grid(cols = vars(hgtclassname)) +
@@ -332,9 +327,9 @@ d <- filter(plotting, species == "Larix") %>%
 g3 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
-  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = colbot, size = 0.5, 
+  geom_linerange(mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[3], size = 0.5, 
                  position = position_dodge(width = 0.5)) +
-  geom_point(color = colbot, size = 1, position = position_dodge(width = 0.5)) +
+  geom_point(color = CBdark2.3class[3], size = 1, position = position_dodge(width = 0.5)) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-3, 1e3)) +
   facet_grid(cols = vars(hgtclassname)) +
@@ -392,10 +387,10 @@ g1 <- ggplot(d, aes(x = fit, y = name)) +
              color = 'grey', alpha = 0.5,
              position = position_jitter(width = 0, height = 0.25)) +
   geom_point(data = filter(d, modeled == FALSE), 
-             color = coltop, pch = 1, size = csize+1) +
+             color = CBdark2.3class[1], pch = 1, size = csize+1) +
   geom_linerange(data = filter(d, modeled, is.na(locality)),
-                 mapping = aes(xmin = ci.l, xmax = ci.u), color = coltop, size = 1) +
-  geom_point(data = filter(d, modeled, is.na(locality)), color = coltop, size = csize) +
+                 mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[1], size = 1) +
+  geom_point(data = filter(d, modeled, is.na(locality)), color = CBdark2.3class[1], size = csize) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-4, 1e2)) +
   toptheme
@@ -410,10 +405,10 @@ g2 <- ggplot(d, aes(x = fit, y = name)) +
              color = 'grey', alpha = 0.5,
              position = position_jitter(width = 0, height = 0.25)) +
   geom_point(data = filter(d, modeled == FALSE), 
-             color = colmid, pch = 1, size = csize+1) +
+             color = CBdark2.3class[2], pch = 1, size = csize+1) +
   geom_linerange(data = filter(d, modeled, is.na(locality)),
-                 mapping = aes(xmin = ci.l, xmax = ci.u), color = colmid, size = 1) +
-  geom_point(data = filter(d, modeled, is.na(locality)), color = colmid, size = csize) +
+                 mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[2], size = 1) +
+  geom_point(data = filter(d, modeled, is.na(locality)), color = CBdark2.3class[2], size = csize) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-5, 1e1)) +
   middletheme
@@ -428,10 +423,10 @@ g3 <- ggplot(d, aes(x = fit, y = name)) +
              color = 'grey', alpha = 0.5,
              position = position_jitter(width = 0, height = 0.25)) +
   geom_point(data = filter(d, modeled == FALSE), 
-             color = colbot, pch = 1, size = csize+1) +
+             color = CBdark2.3class[3], pch = 1, size = csize+1) +
   geom_linerange(data = filter(d, modeled, is.na(locality)),
-                 mapping = aes(xmin = ci.l, xmax = ci.u), color = colbot, size = 1) +
-  geom_point(data = filter(d, modeled, is.na(locality)), color = colbot, size = csize) +
+                 mapping = aes(xmin = ci.l, xmax = ci.u), color = CBdark2.3class[3], size = 1) +
+  geom_point(data = filter(d, modeled, is.na(locality)), color = CBdark2.3class[3], size = csize) +
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-3, 1e3)) +
   labs(x = 'relative establishment likelihood') +
@@ -472,11 +467,11 @@ g1 <- ggplot(d, aes(x = fit, y = name)) +
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_segment(data = filter(d, diff != 0), 
-               mapping = aes(yend = name, x = fit, xend = fit.end), color = coltop, 
+               mapping = aes(yend = name, x = fit, xend = fit.end), color = CBdark2.3class[1], 
                size = 2, lineend = 'round', linejoin = 'mitre',
                arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
   geom_point(data = filter(d, diff == 0),
-             mapping = aes(x = fit), color = coltop, size = 2) +  
+             mapping = aes(x = fit), color = CBdark2.3class[1], size = 2) +  
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-4, 1e2)) +
   toptheme
@@ -487,11 +482,11 @@ g2 <- ggplot(d, aes(x = fit, y = name)) +
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_segment(data = filter(d, diff != 0), 
-               mapping = aes(yend = name, x = fit, xend = fit.end), color = colmid, 
+               mapping = aes(yend = name, x = fit, xend = fit.end), color = CBdark2.3class[2], 
                size = 2, lineend = 'round', linejoin = 'mitre',
                arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
   geom_point(data = filter(d, diff == 0),
-             mapping = aes(x = fit), color = colmid, size = 2) +  
+             mapping = aes(x = fit), color = CBdark2.3class[2], size = 2) +  
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-5, 1e1)) +
   middletheme
@@ -502,11 +497,11 @@ g3 <- ggplot(d, aes(x = fit, y = name)) +
   geom_blank() +
   geom_hline(yintercept = which(levels(d$name) == 'forest'), linetype = "dotted") +
   geom_segment(data = filter(d, diff != 0), 
-               mapping = aes(yend = name, x = fit, xend = fit.end), color = colbot, 
+               mapping = aes(yend = name, x = fit, xend = fit.end), color = CBdark2.3class[3], 
                size = 2, lineend = 'round', linejoin = 'mitre',
                arrow = arrow(length = unit(0.001, "npc"), angle = 45, type = "closed")) +
   geom_point(data = filter(d, diff == 0),
-             mapping = aes(x = fit), color = colbot, size = 2) +  
+             mapping = aes(x = fit), color = CBdark2.3class[3], size = 2) +  
   scale_x_log10(labels = scales::trans_format("log10", scales::math_format(10^.x))) +
   coord_cartesian(xlim = c(1e-3, 1e3)) +
   labs(x = 'relative establishment likelihood') +
