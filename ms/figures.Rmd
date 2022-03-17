@@ -67,7 +67,7 @@ inset2 <- st_polygon(list(matrix(c(xlimits2[1],ylimits2[1],
                          xlimits2[1],ylimits2[2],
                          xlimits2[1],ylimits2[1]), byrow = T, ncol = 2))) %>% 
   st_sfc(crs = 25833)
-CBdark2.3class <- c('#7570b3','#d95f02','#1b9e77')
+CBdark2.3class <- c('#d95f02', '#7570b3', '#1b9e77')
 
 g1 <- ggplot() +
   geom_sf(data = nor50, fill = "white") + 
@@ -220,7 +220,7 @@ bottomtheme <- theme_light() +
         strip.text = element_blank(),
         panel.spacing = unit(1, "lines"))
 csize <- 3
-CBdark2.3class <- c('#7570b3','#d95f02','#1b9e77')
+CBdark2.3class <- c('#d95f02', '#7570b3','#1b9e77')
 ```
 
 ## by height class
@@ -353,22 +353,12 @@ ggsave(g123, filename= 'establishment-sensitivity-randomseed.svg',
 
 ## vs. density
 
-TODO: Needs fixing
-
 ```{r}
 results.dens <- readRDS(here("output","results-densities.rds"))
 plotting.dens <- results.dens %>% 
-  filter(!(n == 0 & daa < 10)) %>% 
+  filter(!(n == 0)) %>% 
   mutate(modeled = FALSE) %>% 
   select(-daa, -n, -density)
-
-temp <- results %>% 
-  filter(is.na(randomseed)) %>% 
-  select(species, preds) %>% 
-  unnest(preds)
-ggplot(temp, aes(fit, locality, color = nin)) + geom_point() + coord_cartesian(xlim = c(0,10))
-
-
 plotting.mod <- results %>% 
   filter(is.na(randomseed)) %>% 
   select(species, preds) %>% 
