@@ -581,7 +581,7 @@ list(Ps_link, Pa_link, L_link) %>%
     scaler <- filter(x, nin == contrasttype, is.na(locality)) %>% 
       pull(fit)
     mutate(x, across(c('fit', 'ci.l', 'ci.u'), ~ `/`(., scaler)))
-  })) %>% pull(preds)
+  })) %>%
   saveRDS(here("output","results-models.rds"))
 ```
 
