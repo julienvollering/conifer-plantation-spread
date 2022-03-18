@@ -26,7 +26,6 @@ library(furrr)
 ```{r}
 types <- read_csv(here('data','types.csv'))
 contrasttype <- "T4"
-contrasthgtclass <- 2
 nottypes <- c('species', 'locality','wildlings','age','bio01','bio19',
               'seeds.ExP','seeds.WALD','relelev','geometry','are')
 ```

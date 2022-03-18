@@ -79,7 +79,7 @@ hgtpts <- hgtfiles %>%
   map(~ st_read(here("data","qc",.x), quiet = TRUE))
 str(hgtpts, 1)
 
-hgtpts25832 <- hgtpts %>% 
+hgtpts25833 <- hgtpts %>% 
   map(st_transform, crs = standardcrs) %>% 
   bind_rows(.id = "file") %>% 
   mutate(species = gsub("/.*", "", file),
@@ -93,7 +93,7 @@ hgtpts25832 <- hgtpts %>%
 # Height stratification
 
 ```{r}
-hgtpts25832 %>% 
+hgtpts25833 %>% 
   group_by(species) %>% 
   uncount(weights = count) %>% 
   summarise(lowerquartilehgt = quantile(hgt, 0.25, na.rm = TRUE),
@@ -126,7 +126,7 @@ assign_heights <- function(hgtptssplit, nrseeds = 3) {
     bind_rows()
 }
 
-hgtptssplit <- hgtpts25832 %>% 
+hgtptssplit <- hgtpts25833 %>% 
   uncount(weights = count) %>%
   group_by(species, locality) %>% 
   group_split()
