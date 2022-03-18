@@ -13,6 +13,7 @@ library(ggtext)
 library(here)
 library(sf)
 library(rnaturalearth)
+source(here("R","functions.R"))
 ```
 
 # Sites map
@@ -159,33 +160,44 @@ Criteria for selecting example location:
 Of those locations that fill these criteria, chose that with most wildlings: Meaasen (2019).
 
 ```{r}
-plotting <- readRDS(here("output","percell-data.rds"))
-meaasen <- plotting$`P.sitchensis-lutzii`$meaasen
-st_bbox(meaasen)
+types <- read_csv(here('data','types.csv'))
+IV <- readRDS(here("output","independentVars.rds")) %>% 
+  st_as_sf() %>% 
+  filter(species == "P.sitchensis-lutzii", locality == "meaasen") %>% 
+  filter(`plantation forest` < 0.5) %>% 
+  rowwise() %>% 
+  mutate(are = sum(c_across(any_of(types$type)))) %>% 
+  filter(are >= 0.5) %>% 
+  ungroup()
+DV <- readRDS(here("output","dependentVar.rds")) %>% 
+  filter(species == "P.sitchensis-lutzii", locality == "meaasen", 
+         randomseed == 2, hgtclass == 2)
+dat <- add_wildlings(IV, DV)
+st_bbox(dat)
 ```
 
 ```{r}
 png(filename = here('ms', 'figures', 'site-example', 'wildlings.png'),
     width = 10, height = 10, units = 'cm', res = 300)
-plot(meaasen["wildlings"], main = 'wildlings', 
+plot(dat["wildlings"], main = 'wildlings, height \u2265 100 cm', 
      key.pos = 1, key.width = lcm(1.4))
 dev.off()
 
 png(filename = here('ms', 'figures', 'site-example', 'WALD.png'),
     width = 10, height = 10, units = 'cm', res = 300)
-plot(meaasen["seeds.WALD"], main = 'WALD seed probability density', 
+plot(dat["seeds.WALD"], main = 'WALD seed probability density', 
      key.pos = 1, key.width = lcm(1.4), logz = TRUE, at = c(-5,-4,-3))
 dev.off()
 
 png(filename = here('ms', 'figures', 'site-example', 'T2.png'),
     width = 10, height = 10, units = 'cm', res = 300)
-plot(meaasen["T2"], main = 'open shallow-soil ground', 
+plot(dat["T2"], main = 'open shallow-soil ground', 
      key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
 dev.off()
 
 png(filename = here('ms', 'figures', 'site-example', 'T4.png'),
     width = 10, height = 10, units = 'cm', res = 300)
-plot(meaasen["T4"], main = 'forest', 
+plot(dat["T4"], main = 'forest', 
      key.pos = 1, key.width = lcm(1.4), nbreaks = 6)
 dev.off()
 ```
