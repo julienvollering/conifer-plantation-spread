@@ -207,6 +207,7 @@ summary(m.typesonly)
 
 ```{r}
 stratified <- DVi %>% 
+  filter(hgtclass == 2) %>%
   select(species, randomseed, hgtclass) %>% 
   nest(dv = geometry) %>% 
   mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
@@ -368,6 +369,7 @@ summary(m.typesonly)
 
 ```{r}
 stratified <- DVi %>% 
+  filter(hgtclass == 2) %>%
   select(species, randomseed, hgtclass) %>% 
   nest(dv = geometry) %>% 
   mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
@@ -529,6 +531,7 @@ summary(m.typesonly)
 
 ```{r}
 stratified <- DVi %>% 
+  filter(hgtclass == 2) %>%
   select(species, randomseed, hgtclass) %>% 
   nest(dv = geometry) %>% 
   mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%

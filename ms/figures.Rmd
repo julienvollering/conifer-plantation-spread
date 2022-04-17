@@ -240,14 +240,14 @@ CBdark2.3class <- c('#d95f02', '#7570b3','#1b9e77')
 ```{r}
 results <- readRDS(here("output","results-models.rds"))
 plotting <- results %>% 
-  filter(!is.na(randomseed)) %>% 
   select(-data, -model) %>% 
   unnest(preds) %>% 
+  filter(is.na(locality)) %>% 
   left_join(types, by = "nin") %>% 
-  mutate(hgtclassname = if_else(hgtclass == 1, '30 cm \u2264 height < 100 cm',
-                                '100 cm \u2264 height'))
+  mutate(hgtclassname = if_else(is.na(hgtclass), 'height \u2265 30 cm',
+                                'height \u2265 100 cm'))
 
-d <- filter(plotting, species == "P.sitchensis-lutzii", randomseed == 2) %>% 
+d <- filter(plotting, species == "P.sitchensis-lutzii", randomseed == 2 | is.na(randomseed)) %>% 
   arrange(desc(hgtclass)) %>% 
   mutate(name = fct_reorder(name, fit, first))
 g1 <- ggplot(d, aes(x = fit, y = name)) + 
@@ -260,7 +260,7 @@ g1 <- ggplot(d, aes(x = fit, y = name)) +
   facet_grid(cols = vars(hgtclassname)) +
   toptheme
 
-d <- filter(plotting, species == "P.abies", randomseed == 2) %>% 
+d <- filter(plotting, species == "P.abies", randomseed == 2 | is.na(randomseed)) %>% 
   arrange(desc(hgtclass)) %>% 
   mutate(name = fct_reorder(name, fit, first))
 g2 <- ggplot(d, aes(x = fit, y = name)) + 
@@ -273,7 +273,7 @@ g2 <- ggplot(d, aes(x = fit, y = name)) +
   facet_grid(cols = vars(hgtclassname)) +
   middletheme
 
-d <- filter(plotting, species == "Larix", randomseed == 2) %>% 
+d <- filter(plotting, species == "Larix", randomseed == 2 | is.na(randomseed)) %>% 
   arrange(desc(hgtclass)) %>% 
   mutate(name = fct_reorder(name, fit, first))
 g3 <- ggplot(d, aes(x = fit, y = name)) + 
@@ -305,7 +305,7 @@ ggsave(g123, filename= 'ggplot.svg',
 ## sensitivity to random height assignment
 
 ```{r}
-d <- filter(plotting, species == "P.sitchensis-lutzii") %>% 
+d <- filter(plotting, species == "P.sitchensis-lutzii", !is.na(hgtclass)) %>% 
   arrange(match(randomseed, c(2, 1, 3)), desc(hgtclass)) %>% 
   mutate(name = fct_reorder(name, fit, first))
 g1 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
@@ -319,7 +319,7 @@ g1 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) +
   facet_grid(cols = vars(hgtclassname)) +
   toptheme
 
-d <- filter(plotting, species == "P.abies") %>% 
+d <- filter(plotting, species == "P.abies", !is.na(hgtclass)) %>% 
   arrange(match(randomseed, c(2, 1, 3)), desc(hgtclass)) %>%
   mutate(name = fct_reorder(name, fit, first))
 g2 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
@@ -333,7 +333,7 @@ g2 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) +
   facet_grid(cols = vars(hgtclassname)) +
   middletheme
 
-d <- filter(plotting, species == "Larix") %>% 
+d <- filter(plotting, species == "Larix", !is.na(hgtclass)) %>% 
   arrange(match(randomseed, c(2, 1, 3)), desc(hgtclass)) %>% 
   mutate(name = fct_reorder(name, fit, first))
 g3 <- ggplot(d, aes(x = fit, y = name, group = randomseed)) + 
