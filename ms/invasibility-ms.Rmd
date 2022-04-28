@@ -56,14 +56,28 @@ library(kableExtra)
 # Abstract {-}
 
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades.
-To reduce the burden plantations impose on native ecosystems, land managers need to know, for a given species, which ecosystems are most and least susceptible to establishment of "wildling" offspring.
-The spatial distribution of wildlings around plantations is an early indicator of ecosystem susceptibility to wildling establishment, but various contingencies --- where plantations were planted, for example --- complicate direct comparisons between ecosystems.
-2. We compared across ecosystems how frequently wildlings establish and grow to a given height, studying three groups of alien conifer species in Norway. We used data from detailed surveys around 76 plantation stands to model the effect of ecosystem type on wildling abundance, adjusting for other influences on wildling abundance at a given location, especially seed rain.
-3. We found that, for all species, relative establishment likelihood spanned at least three orders of magnitude between the most and least susceptible ecosystems. 
-For all species, wildling abundance increased by about three orders of magnitude between the least to the most susceptible ecosystems, all else being equal. 
-We found that agricultural ecosystems were consistently among the ecosystems that suppressed wildling establishment and growth most. 
-Agricultural ecosystems were consistently among the least susceptible to wildling establishment and growth (as represented by the abundance of tall wildlings), although they were relatively less resistant to establishment alone (as represented by the abundance of short wildlings). 
-4. *Synthesis and applications* Management of alien conifer species should be informed by differences in ecosystem susceptibility to wildling establishment and growth observed in the introduced range. In case of ongoing planting, plantation stands should be sited where their surroundings are relatively insusceptible to wildlings. In Norway, stands hemmed in by agriculture are likely to spawn wildlings at rates orders of magnitude lower than stands surrounded by more susceptible ecosystems. In case of ongoing naturalization, managers should be aware that early patterns of wildling colonization may be a poor indicator of long-term susceptibility.
+To minimize spillover effects on native ecosystems, land managers need to know which ecosystems are most and least susceptible to establishment of "wildling" offspring of a given species.
+The spatial distribution of wildlings around plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildling establishment, but various contingencies --- where plantations were sited, for example --- complicate direct comparisons between ecosystems.
+2. We used data from detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species.
+We modeled the spatial distribution of wildling abundance as a function of the spatial distribution of ecosystems, adjusting for other influences on wildling abundance at surveyed locations, especially the amount of seed rain from plantation stands.
+~~We modeled the spatial distribution of wildlings that have reached a specified height as a function of the spatial distribution of ecosystems, adjusting for other influences on wildling abundance at surveyed locations, especially the amount of seed rain from the plantation.~~
+~~We compared across ecosystems how many wildlings have established and grown to a specified height, adjusting for other influences on wildling abundance at a particular location, especially the amount of seed rain from the plantation.~~
+3. For all three conifer species groups, we found that ecosystem identity was responsible for differences in wildling abundance of up to three orders of magnitude.
+These differences were partly dampened by factors like seed rain, and therefore less apparent in the observed spatial distribution of wildling abundance.
+~~For all species groups, wildling abundance increased by about three orders of magnitude from the least to the most susceptible ecosystems, all else being equal.~~
+~~We found that, for all species groups, relative establishment likelihood spanned at least three orders of magnitude between the most and least susceptible ecosystems.~~
+4. Agricultural ecosystems were consistently among the ecosystems least susceptible to wildling establishment. 
+5. *Synthesis and applications* 
+The spatial distribution of wildling abundance around plantations is a valuable indicator of ecosystem susceptibility to wildling establishment at the critical early stages of alien conifer naturalization.
+We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers.
+For example, any new plantation should be sited where its surroundings are relatively less susceptible to wildlings.
+Conversely, any control efforts should be especially mindful of places with more susceptible ecosystems.
+~~At the critical early stages of alien conifer naturalization, the spatial distribution of wildling abundance around plantations is a valuable indicator of ecosystem susceptibility to wildling establishment.~~
+~~Ecosystem susceptibility to wildling establishment can be inferred from the spatial distribution of wildling abundance around plantations and, in turn, inform management of alien conifer spread.~~
+~~Ecosystem susceptibility to wildling establishment, inferred from the spatial distribution of wildling abundance around plantations, informs management of alien conifer spread at the critical early stages of naturalization.~~
+~~Management of alien conifer spread can be informed by differences in ecosystem susceptibility to wildling establishment, observed in the introduced range.~~
+~~Management of alien conifer spread is informed by differences in ecosystem susceptibility to wildling establishment, which can be inferred from the spatial distribution of wildling abundance around plantations.~~
+~~Management of alien conifer species should be informed by how susceptible different ecosystems in the introduced range are to wildling establishment.~~
 
 # Keywords {-}
 
