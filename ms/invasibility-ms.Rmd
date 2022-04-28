@@ -77,10 +77,9 @@ alien species, conifer, establishment likelihood, disturbance, invasibility, pla
 
 # Introduction
 
-Plantations of alien conifers are widespread globally, and offspring from these plantations frequently establish in surrounding areas [@richardsonConifersInvasiveAliens2004].
-In many instances these naturalized offspring, or wildlings, harm biodiversity and other values, so controlling their spread is prudent.
-In particular, plantations that contribute to the presence of alien conifers in protected areas may generate substantial control costs [@mcconnachieEstimatingEffectPlantations2015].
-Controlling wildlings protects plantation surroundings and prevents secondary, potentially invasive spread.
+Plantations of alien conifers are widespread globally, and offspring from these plantations frequently establish in surrounding areas [@nunezEcologyManagementInvasive2017].
+In many instances these naturalized offspring, or wildlings, harm biodiversity and other values, so curbing their spread is prudent.
+Preventing escape from plantations protects plantation surroundings and prevents secondary, potentially invasive spread.
 Accordingly, guidelines for sustainable use of alien trees emphasize that restricting trees to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduGlobalGuidelinesSustainable2020].
 
 The number of wildlings and their distance from the nearest plantation stand varies a lot from site to site, even among conspecific stands of similar age [@fernandesWhatDrivesEucalyptus2018; @nygaardSpreadIntroducedSitka2017], which makes it hard to predict and manage their spread.
@@ -109,14 +108,13 @@ We examine plantations of alien conifers in Norway to investigate the following 
 
 1. How much does wildling establishment likelihood differ from surveyed wildling density across ecosystems?
 2. In which ecosystems are wildlings of alien conifers most and least likely to establish?
-3. Can overarching characteristics of ecosystems be used to generalize patterns of wildling establishment?
 
 # Materials and methods
 
 ## Field data
 
 We registered wildlings and ecosystems around 82 reproductive plantation stands across Norway, comprising four groups of alien conifers (hereafter: "species"; fig. \@ref(fig:sites-map)).
-The sample contained (1) forty-two sites with Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) nineteen with Norway spruce (*Picea abies*), (3) fifteen with larch species (*Larix* spp.), and (4) six with lodgepole pine (*Pinus contorta*).
+The sample contained (1) forty-two sites with Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*Picea* x *lutzii*), (2) nineteen with Norway spruce (*Picea abies*), and (3) fifteen with larch species (*Larix* spp.).
 Note that Norway spruce is native to Norway, but the plantations included in this study were located in parts of the country where its natural distribution is highly restricted.
 We selected stands using aerial imagery, aiming for those isolated from conspecific stands.
 We collected field data for each stand in one of six field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019; @sandvenKartleggingAvKortdistansespredning2019].
