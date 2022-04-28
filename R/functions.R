@@ -116,6 +116,10 @@ add_relative_elevation <- function(grid, sourcepoly, dtm) {
 
 # Note: grid must not contain column "ID"
 add_wildlings <- function(grid, pts) {
+  if(nrow(pts) == 0) {
+    out <- grid %>% 
+      mutate(wildlings = 0, .before = locality)
+  } else {
   idx <- st_geometry(grid) %>% 
     st_intersection(st_geometry(pts)) %>% 
     attr(., "idx")
@@ -129,6 +133,7 @@ add_wildlings <- function(grid, pts) {
     rows_update(tally, by = "Var1") %>%
     select(-Var1) %>% 
     st_as_sf()
+  }
   return(out)
 }
 
