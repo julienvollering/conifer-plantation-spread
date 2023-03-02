@@ -1,5 +1,5 @@
 ---
-title: 'Agricultural ecosystems are least susceptible to alien conifer spread in Norway'
+title: 'Agricultural ecosystems help contain alien conifer spread from forest plantations in Norway'
 author:
 - Julien Vollering^1,2^*
 - Siri Lie Olsen^3,4^
@@ -56,45 +56,66 @@ library(kableExtra)
 # Abstract {-}
 
 1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades.
-To minimize spillover effects on native ecosystems, land managers need to know which ecosystems are most and least susceptible to establishment of "wildling" offspring of a given species.
-The spatial distribution of wildlings around plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildling establishment, but various contingencies --- where plantations were sited, for example --- complicate direct comparisons between ecosystems.
+To minimize spillover from plantations into native ecosystems, land managers need to know which ecosystems are most and least susceptible to establishment of "wildling" offspring of a given species.
+The spatial distribution of wildlings near plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildling establishment, but it is also shaped by the spatial distribution of seed rain, among other factors.
 2. We used data from detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species.
-We modeled the spatial distribution of wildling abundance as a function of the spatial distribution of ecosystems, adjusting for other influences on wildling abundance at surveyed locations, especially the amount of seed rain from plantation stands.
+We created a spatially explicit model of wildling abundance as a function of ecosystem identity, exposure to seed rain, climate, and plantation stand characteristics.
 3. For all three conifer species groups, we found that ecosystem identity was responsible for differences in wildling abundance of up to three orders of magnitude.
-These differences were partly dampened by factors like seed rain, and therefore less apparent in the observed spatial distribution of wildling abundance.
-4. Agricultural ecosystems were consistently among the ecosystems least susceptible to wildling establishment. 
+Stratifying wildlings by height, we also found evidence that some ecosystems may be more conducive to establishment than growth, and vice versa.
+4. Various kinds of agricultural ecosystems were among the ecosystems least susceptible to wildling establishment of all three groups of conifer species. 
 5. *Synthesis and applications* 
 The spatial distribution of wildling abundance around plantations is a valuable indicator of ecosystem susceptibility to wildling establishment at the critical early stages of alien conifer naturalization.
 We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers.
-For example, any new plantation should be sited where its surroundings are relatively less susceptible to wildlings.
-Conversely, any control efforts should be especially mindful of places with more susceptible ecosystems.
+New plantations should be sited where surrounding ecosystems are less susceptible to wildlings, and efforts to control wildlings should pay close attention to susceptible ecosystems---irrespective of how exposed they are in the early stages of naturalization.
+In Norway, situating plantations within a landscape matrix of agricultural ecosystems is an effective way to reduce alien conifer spread.
+
+~~The distribution of wildlings near plantations is an early and therefore valuable indicator of how likely wildlings are to establish and grow in different ecosystems, but it is also strongly shaped by the spatial distribution of seed rain, among other factors.~~
+~~The rank susceptibility of ecosystems deviated strongly from the distribution of wildlings across ecosystems, owing to influences like exposure to seed rain.~~
 
 # Keywords {-}
 
-alien species, conifer, establishment likelihood, disturbance, invasibility, plantation, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
+alien species, conifer, establishment likelihood, invasibility, plantation, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
 
 \newpage
 
 # Introduction
 
+*Alien conifer plantations are a big deal*
+While there is a long history of using alien conifers in forestry, alien conifer plantations are not a thing of the past.
+In many parts of the world, commercial forestry relies on alien conifer species [@ref].
+Afforestation is widely proposed for climate change mitigation and other benefits, and afforestation programs may include planting alien species [@brightEvaluatingTerrestrialCarbon2020, @teururakaunewzealandforestserviceOneBillionTrees2018].
+
+*We want to prevent wildlings from plantations*
 Plantations of alien conifers are widespread globally, and offspring from these plantations frequently establish in surrounding areas [@nunezEcologyManagementInvasive2017].
 In many instances these naturalized offspring, or wildlings, harm biodiversity and other values, so curbing their spread is prudent.
-Preventing escape from plantations protects plantation surroundings and prevents secondary, potentially invasive spread.
+For example, pine invasions in protected areas in South Africa generate substantial control costs, and most can be directly attributed to nearby plantations [@mcconnachieEstimatingEffectPlantations2015]. 
+Preventing escape from plantations safeguards plantation surroundings and also blocks secondary, potentially invasive spread.
 Accordingly, guidelines for sustainable use of alien trees emphasize that restricting trees to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduGlobalGuidelinesSustainable2020].
 
-The number of wildlings and their distance from the nearest plantation stand varies a lot from site to site, even among conspecific stands of similar age [@fernandesWhatDrivesEucalyptus2018; @nygaardSpreadIntroducedSitka2017], which makes it hard to predict and manage their spread.
-To better understand this variation, we need to consider both dispersal and establishment, which jointly generate patterns of wildling abundance in space.
-Dispersal at a given site is affected by conditions related to the species' dispersal syndrome --- for instance wind exposure and topography, in the case of a wind-dispersed species.
+*Wildlings establish in some ecosystems more readily than others*
+Naturally, wildlings establish in some ecosystems more readily than others. 
+More or less favorable conditions depending on the autecology of the conifer species.
+Assessing which ecosystems are most susceptible is an urgent priority.
+
+The spatial distribution of wildlings around a plantation varies a lot from site to site, even among conspecific stands of similar age [@fernandesWhatDrivesEucalyptus2018; @nygaardSpreadIntroducedSitka2017], which suggests that surrounding ecosystems are not equally invasible.
+To better understand this variation, we need to consider the processes of dispersal establishment (germination and growth), which jointly generate patterns of wildling abundance in space.
+Plantation conifers generally have wind-vectored seed dispersal, which has received significant research attention and can be reconstructed with relative confidence [@nathanDispersalKernels2012].
 Establishment is affected by biotic and abiotic conditions where seeds arrive.
 
-Wildling spread may be reduced by inhibiting either dispersal or establishment, but inhibiting establishment is of particular interest because it directly suppresses wildling abundance. 
-The conditions affecting establishment are also generally easier to manipulate than those affecting dispersal, either directly through intervention or indirectly through site selection.
-The question, then, is: how can we identify establishment-inhibiting conditions in a manner applicable to plantation management?
+*Context dependence: specific stage of specific alien into specific ecosystem*
+define establishment as reaching a certain height
+You'll only know once its there --- difficulty of generalizing invasibility patterns.
 
+*Relative abundance != relative susceptibility*
+define vulnerable vs susceptible
+
+The susceptibility of plantation surroundings may be manipulated retrospectively through interventions around existing plantations or prospectively through plantation site selection.
+
+*Assess establishment across what?*
+Using a standardized (national or international) ecosystem classification system makes it easy for managers to transfer findings about ecosystem susceptibility directly to management decisions.
 In Norway, the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
 It aims for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
 As a result, its ecosystem types (hereafter: "ecosystems") encapsulate much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, etc. [@richardsonNaturalizationIntroducedPlants2012].
-It also identifies broad similarities between ecosystems, which might be used to tease out generic trends in establishment likelihood.
 
 Naively, the density of wildlings in a given ecosystem would seem to indicate how likely they are to establish there.
 But to estimate ecosystem establishment likelihoods based on wildling abundance around plantation stands, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
@@ -102,11 +123,16 @@ For example, low establishment likelihood in an ecosystem frequently located clo
 Likewise, an ecosystem may appear to promote establishment if it tends to co-occur with climatic conditions that support germination.
 Once estimated, unconfounded establishment likelihoods may be used to predict how susceptible the surroundings of an unobserved plantation are, based on ecosystem composition.
 
+*Conifer plantations as invasion science experiments*
 Determining which ecosystems are most susceptible so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-Stands of wind-dispersed, alien conifers present a unique opportunity to assess ecosystem invasibility (to these species), because we can estimate ecosystem exposure (seed rain) directly, rather than by proxy [@catfordQuantifyingLevelsBiological2012]. 
+Studying ecosystem invasibility is tractable with plantations of alien conifers because their seeds are wind-dispersed, 
+Alien conifer plantations are a system in which it is tractable to study ecosystem invasibility (to these species), because we can estimate ecosystem exposure to wind-dispersed seeds from plantations with some confidence [@catfordQuantifyingLevelsBiological2012]. 
+
 We examine plantations of alien conifers in Norway to investigate the following questions:
 
-1. How much does wildling establishment likelihood differ from surveyed wildling density across ecosystems?
+What is the relative susceptibility of ecosystems neighboring alien conifer wildlings in Norway? 
+How susceptible to wildling establishment are the ecosystems that neighbor alien conifer plantations in Norway?
+1. How much do ecosystems vary in their susceptibility to alien conifer wildlings, and
 2. In which ecosystems are wildlings of alien conifers most and least likely to establish?
 
 # Materials and methods
@@ -136,7 +162,7 @@ We estimated or measured (by clinometer) the heights of the 82 central stands.
 We also estimated their ages at the time of the field campaign, either by contacting land owners and municipal officials, or by counting growth rings.
 Details of all 82 stands are provided in the Appendix (table \@ref(tab:sites-table)).
 
-## Seed dispersal
+## Seed rain estimates
 
 To account for the influence of seed dispersal on wildling abundance, we needed estimates of the spatial distribution of seed rain within the 500x500 m plots.
 We considered all conspecific stands within a 1 km radius of the plot center to be potential seed sources, and used two models of seed dispersal to derive different estimates of relative seed rain in space. 
