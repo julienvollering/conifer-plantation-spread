@@ -53,26 +53,26 @@ library(kableExtra)
 
 *Corresponding author: <julienvollering@gmail.com>
 
-# Abstract {-}
+# Abstract
 
-1. Plantations of alien conifer species are common worldwide, and set to become even more prevalent in coming decades.
-To minimize spillover from plantations into native ecosystems, land managers need to know which ecosystems are most and least susceptible to establishment of "wildling" offspring of a given species.
-The spatial distribution of wildlings near plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildling establishment, but it is also shaped by the spatial distribution of seed rain, among other factors.
-2. We used data from detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species.
-We created a spatially explicit model of wildling abundance as a function of ecosystem identity, exposure to seed rain, climate, and plantation stand characteristics.
-3. For all three conifer species groups, we found that ecosystem identity was responsible for differences in wildling abundance of up to three orders of magnitude.
-Stratifying wildlings by height, we also found evidence that some ecosystems may be more conducive to establishment than growth, and vice versa.
-4. Various kinds of agricultural ecosystems were among the ecosystems least susceptible to wildling establishment of all three groups of conifer species. 
-5. *Synthesis and applications* 
-The spatial distribution of wildling abundance around plantations is a valuable indicator of ecosystem susceptibility to wildling establishment at the critical early stages of alien conifer naturalization.
-We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers.
+1. Plantations of alien conifer species are common in many countries and may become even more prevalent in coming decades, as a way to sequester carbon.
+To minimize spillover from plantations into native ecosystems, land managers need to know which ecosystems are most and least susceptible to establishment and growth of self-sown individuals ("wildlings") of a given species.
+The spatial distribution of wildlings close to plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildlings, but it is also shaped by the pattern of seed rain from the plantations, among other factors.
+2. We used data from detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis*/*P.* $\times$ *lutzii*, *P. abies*, and *Larix* spp.
+We created spatially explicit models of wildling abundance as a function of ecosystem identity, exposure to seed rain, climate, and plantation stand characteristics.
+3. In total, across...(ha of surveyed ecosystems) we found...(areal density of wildlings per species).
+For all three conifer species groups, we found that ecosystem identity was responsible for differences in wildling abundance of up to three orders of magnitude.
+When we stratified wildling abundance by height class (≥ 30 cm and $≥ 100 cm), we also found evidence that some ecosystems are more conducive to establishment (reaching 30 cm) than growth (reaching 100 cm), and vice versa.
+4. Agricultural ecosystems of various kinds were among the ecosystems least susceptible to wildling establishment of all three groups of conifer species.
+5. *Synthesis and applications* The spatial distribution of wildling abundance around plantations is a valuable indicator of ecosystem susceptibility to wildling establishment at the critical early stages of alien conifer naturalization. 
+We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers. 
 New plantations should be sited where surrounding ecosystems are less susceptible to wildlings, and efforts to control wildlings should pay close attention to susceptible ecosystems---irrespective of how exposed they are in the early stages of naturalization.
 In Norway, situating plantations within a landscape matrix of agricultural ecosystems is an effective way to reduce alien conifer spread.
 
-~~The distribution of wildlings near plantations is an early and therefore valuable indicator of how likely wildlings are to establish and grow in different ecosystems, but it is also strongly shaped by the spatial distribution of seed rain, among other factors.~~
-~~The rank susceptibility of ecosystems deviated strongly from the distribution of wildlings across ecosystems, owing to influences like exposure to seed rain.~~
+~~We also found that relative ecosystem susceptibility changed depending on which height class of wildlings we counted (≥ 30 cm or $≥ 100 cm), suggesting that some ecosystems are relatively more conducive to establishment than growth, and vice versa.~~
+~~We also found that relative ecosystem susceptibility changed depending on which height class of wildlings we counted (≥ 30 cm or $≥ 100 cm), showing which ecosystems are more conducive to establishment than growth and vice versa.~~
 
-# Keywords {-}
+# Keywords
 
 alien species, conifer, establishment likelihood, invasibility, plantation, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
 
@@ -88,12 +88,12 @@ Afforestation is widely proposed for climate change mitigation and other benefit
 *We want to prevent wildlings from plantations*
 Plantations of alien conifers are widespread globally, and offspring from these plantations frequently establish in surrounding areas [@nunezEcologyManagementInvasive2017].
 In many instances these naturalized offspring, or wildlings, harm biodiversity and other values, so curbing their spread is prudent.
-For example, pine invasions in protected areas in South Africa generate substantial control costs, and most can be directly attributed to nearby plantations [@mcconnachieEstimatingEffectPlantations2015]. 
+For example, pine invasions in protected areas in South Africa generate substantial control costs, and most can be directly attributed to nearby plantations [@mcconnachieEstimatingEffectPlantations2015].
 Preventing escape from plantations safeguards plantation surroundings and also blocks secondary, potentially invasive spread.
 Accordingly, guidelines for sustainable use of alien trees emphasize that restricting trees to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduGlobalGuidelinesSustainable2020].
 
-*Wildlings establish in some ecosystems more readily than others*
-Naturally, wildlings establish in some ecosystems more readily than others. 
+*Wildlings establish in some ecosystems more readily than others* 
+Naturally, wildlings establish in some ecosystems more readily than others.
 More or less favorable conditions depending on the autecology of the conifer species.
 Assessing which ecosystems are most susceptible is an urgent priority.
 
@@ -125,15 +125,14 @@ Once estimated, unconfounded establishment likelihoods may be used to predict ho
 
 *Conifer plantations as invasion science experiments*
 Determining which ecosystems are most susceptible so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-Studying ecosystem invasibility is tractable with plantations of alien conifers because their seeds are wind-dispersed, 
-Alien conifer plantations are a system in which it is tractable to study ecosystem invasibility (to these species), because we can estimate ecosystem exposure to wind-dispersed seeds from plantations with some confidence [@catfordQuantifyingLevelsBiological2012]. 
+Studying ecosystem invasibility is tractable with plantations of alien conifers because their seeds are wind-dispersed, so we can estimate ecosystem exposure to seed rain from plantations with some confidence [@catfordQuantifyingLevelsBiological2012].
 
 We examine plantations of alien conifers in Norway to investigate the following questions:
 
-What is the relative susceptibility of ecosystems neighboring alien conifer wildlings in Norway? 
-How susceptible to wildling establishment are the ecosystems that neighbor alien conifer plantations in Norway?
-1. How much do ecosystems vary in their susceptibility to alien conifer wildlings, and
-2. In which ecosystems are wildlings of alien conifers most and least likely to establish?
+- What is the relative susceptibility of ecosystems neighboring alien conifer wildlings in Norway?
+- How susceptible to wildling establishment are the ecosystems that neighbor alien conifer plantations in Norway?
+- How much do ecosystems vary in their susceptibility to alien conifer wildlings?
+- In which ecosystems are wildlings of alien conifers most and least likely to establish?
 
 # Materials and methods
 
@@ -400,21 +399,23 @@ We found that accounting for seed rain and other confounders of the relationship
 
 Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and will probably worsen with recent pushes to increase tree planting worldwide [@brunduGlobalGuidelinesSustainable2020]. 
 Meanwhile, remotely sensed and surveyed data are increasing the availability of detailed and accurate maps of ecosystems across large areas, which presents opportunities to manage wildling spread more efficiently.
-Specifically, differences in ecosystem susceptibility may be leveraged to 
-reduce the rate of wildling establishment through deliberate site selection for new stands or targeted interventions around existing stands.
+Specifically, differences in ecosystem susceptibility may be leveraged to reduce the rate of wildling establishment through deliberate site selection for new stands or targeted interventions around existing stands.
 However, managers should not judge ecosystem susceptibility based on wildling density alone, nor on generalizations across ecosystems.
 
 # Authors' contributions
 
-JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analyzed the data and led the writing. All authors contributed to drafts and gave approval for publication.
+JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analyzed the data and led the writing.
+All authors contributed to drafts and gave approval for publication.
 
 # Acknowledgments
 
-We thank Ola Westby Aamodt, Matteo De Stefano, Vigdis Frivoll, Honorata Gajda, Miene-Marie Gastinger, Jon Hagelin, Craig Jackson, Roy Mangersnes, Heidi Elin Myklebost, Bjarne Homnes Oddane, Sina Thu Randulff, Anders Ringstad, Monica Ruano, Knut Børge Strøm, Rune Søyland, Solbjørg Engen Torvik, and Toralf Tysse for their help in collecting and/or collating the field data. Field work was financed by the Norwegian Environment Agency (contracts 15040036, 17070025, 17070031, 19087470, 19087471).
+We thank Ola Westby Aamodt, Matteo De Stefano, Vigdis Frivoll, Honorata Gajda, Miene-Marie Gastinger, Jon Hagelin, Craig Jackson, Roy Mangersnes, Heidi Elin Myklebost, Bjarne Homnes Oddane, Sina Thu Randulff, Anders Ringstad, Monica Ruano, Knut Børge Strøm, Rune Søyland, Solbjørg Engen Torvik, and Toralf Tysse for their help in collecting and/or collating the field data.
+Field work was financed by the Norwegian Environment Agency (contracts 15040036, 17070025, 17070031, 19087470, 19087471).
 
 # Data availability statement
 
-Data will be made available via the Dryad Digital Repository. Code is available at <https://github.com/julienvollering/conifer-plantation-spread>.
+Data will be made available via the Dryad Digital Repository.
+Code is available at <https://github.com/julienvollering/conifer-plantation-spread>.
 
 \newpage
 # Appendix
@@ -433,12 +434,13 @@ The WALD model [@katulMechanisticAnalyticalModels2005] takes the form of an inve
 \end{equation}
 
 where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter.
-We set $H$ to the height of the central stand, estimated $U$ from a computed vertical wind profile, obtained $F$ from literature, and calculated $\sigma$ from an equation for turbulent flow as a function of vegetation height [eq. A4 in @skarpaasDispersalPatternsDispersal2007].
-We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional).
-In each sector we estimated mean vegetation height based on the composition of mapped ecosystem types (Appendix, table \@ref(tab:types-table)).
-Simultaneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season.
-The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season).
-The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional2020]. We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
+We set $H$ to the height of the central stand, estimated $U$ from a computed vertical wind profile, obtained $F$ from literature, and calculated $\sigma$ from an equation for turbulent flow as a function of vegetation height [eq. A4 in @skarpaasDispersalPatternsDispersal2007]. 
+We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional). 
+In each sector we estimated mean vegetation height based on the composition of mapped ecosystem types (Appendix, table \@ref(tab:types-table)). 
+Simultaneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season. 
+The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season). 
+The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional2020].
+We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
 
 \newpage
 ```{r recreate traits-table, include=FALSE}
