@@ -55,22 +55,19 @@ library(kableExtra)
 
 # Abstract
 
-1. Plantations of alien conifer species are common in many countries and may become even more prevalent in coming decades, as a way to sequester carbon.
+1. Plantations of alien conifer species are common in many countries and may become more prevalent in coming decades, as a way to sequester carbon.
 To minimize spillover from plantations into native ecosystems, land managers need to know which ecosystems are most and least susceptible to establishment and growth of self-sown individuals ("wildlings") of a given species.
 The spatial distribution of wildlings close to plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildlings, but it is also shaped by the pattern of seed rain from the plantations, among other factors.
-2. We used data from detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis*/*P.* $\times$ *lutzii*, *P. abies*, and *Larix* spp.
-We created spatially explicit models of wildling abundance as a function of ecosystem identity, exposure to seed rain, climate, and plantation stand characteristics.
+2. We used detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis*/*P.* $\times$ *lutzii*, *P. abies*, and *Larix* spp.
+We created spatially explicit models of wildling abundance as a function of ecosystem type, exposure to seed rain, climate, and plantation stand characteristics.
 3. In total, across...(ha of surveyed ecosystems) we found...(areal density of wildlings per species).
-For all three conifer species groups, we found that ecosystem identity was responsible for differences in wildling abundance of up to three orders of magnitude.
+For all three conifer species groups, we found that ecosystem type was responsible for differences in wildling abundance of up to three orders of magnitude.
 When we stratified wildling abundance by height class (≥ 30 cm and $≥ 100 cm), we also found evidence that some ecosystems are more conducive to establishment (reaching 30 cm) than growth (reaching 100 cm), and vice versa.
 4. Agricultural ecosystems of various kinds were among the ecosystems least susceptible to wildling establishment of all three groups of conifer species.
-5. *Synthesis and applications* The spatial distribution of wildling abundance around plantations is a valuable indicator of ecosystem susceptibility to wildling establishment at the critical early stages of alien conifer naturalization. 
+5. *Synthesis and applications* The spatial distribution of self-sown alien conifers around plantations is a valuable indicator of ecosystem susceptibility to establishment and growth at the critical early stages of naturalization. 
 We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers. 
-New plantations should be sited where surrounding ecosystems are less susceptible to wildlings, and efforts to control wildlings should pay close attention to susceptible ecosystems---irrespective of how exposed they are in the early stages of naturalization.
+New plantations should be sited where surrounding ecosystems are less susceptible to wildlings, and efforts to control wildlings should pay close attention to susceptible ecosystems---even if these are not exposed to high levels of seed rain directly from plantations.
 In Norway, situating plantations within a landscape matrix of agricultural ecosystems is an effective way to reduce alien conifer spread.
-
-~~We also found that relative ecosystem susceptibility changed depending on which height class of wildlings we counted (≥ 30 cm or $≥ 100 cm), suggesting that some ecosystems are relatively more conducive to establishment than growth, and vice versa.~~
-~~We also found that relative ecosystem susceptibility changed depending on which height class of wildlings we counted (≥ 30 cm or $≥ 100 cm), showing which ecosystems are more conducive to establishment than growth and vice versa.~~
 
 # Keywords
 
