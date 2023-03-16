@@ -71,7 +71,7 @@ In Norway, situating plantations within a landscape matrix of agricultural ecosy
 
 # Keywords
 
-alien species, conifer, establishment likelihood, invasibility, plantation, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
+alien species, conifer, establishment likelihood, exposure, invasibility, plantation, seed dispersal, Wald Analytical Long-distance Dispersal (WALD)
 
 \newpage
 
@@ -80,14 +80,22 @@ alien species, conifer, establishment likelihood, invasibility, plantation, seed
 *Alien conifer plantations are a big deal*
 While there is a long history of using alien conifers in forestry, alien conifer plantations are not a thing of the past.
 In many parts of the world, commercial forestry relies on alien conifer species [@ref].
-Afforestation is widely proposed for climate change mitigation and other benefits, and afforestation programs may include planting alien species [@brightEvaluatingTerrestrialCarbon2020, @teururakaunewzealandforestserviceOneBillionTrees2018].
+Afforestation programs proposed for climate change mitigation and other benefits may also include alien species [@brightEvaluatingTerrestrialCarbon2020, @teururakaunewzealandforestserviceOneBillionTrees2018].
+Therefore, it is likely that alien conifers will continue to be planted across large areas in coming decades, sometimes in regions where a given species has not previously occurred.
 
 *We want to prevent wildlings from plantations*
-Plantations of alien conifers are widespread globally, and offspring from these plantations frequently establish in surrounding areas [@nunezEcologyManagementInvasive2017].
-In many instances these naturalized offspring, or wildlings, harm biodiversity and other values, so curbing their spread is prudent.
-For example, pine invasions in protected areas in South Africa generate substantial control costs, and most can be directly attributed to nearby plantations [@mcconnachieEstimatingEffectPlantations2015].
+Responsible forestry practice requires that alien species be kept within plantation boundaries [@brunduGlobalGuidelinesSustainable2020]. 
+Alien conifer invasions have proven damaging and costly in many parts of the world, and it is prudent to prevent the initial spread from plantations --- both to protect the integrity of surrounding ecosystems and to block secondary, potentially invasive spread [@nunezEcologyManagementInvasive2017].
+For example, most pine invasions into protected areas in South Africa can be attributed directly to nearby plantations [@mcconnachieEstimatingEffectPlantations2015].
+
+It is prudent to prevent the spread of self-sown individuals --- or "wildlings" --- because they threaten the integrity of existing ecosystems.
+Where alien conifers species are planted, their spread into surroundings should be prevented.
+It is prudent to prevent the spread of self-sown individuals, or wildlings, from plantations, as these often harm biodiversity and other values.
+In many instances these self-sown individuals, or wildlings, harm biodiversity and other values.
 Preventing escape from plantations safeguards plantation surroundings and also blocks secondary, potentially invasive spread.
-Accordingly, guidelines for sustainable use of alien trees emphasize that restricting trees to the areas set aside for their cultivation is fundamental to good forestry practice [@brunduGlobalGuidelinesSustainable2020].
+
+Offspring from alien conifer plantations frequently establish outside the boundaries of the plantation [@nunezEcologyManagementInvasive2017].
+Alien conifer plantations generally produce self-sown individuals outside plantation boundaries, and these often threaten the integrity of existing ecosystems. 
 
 *Wildlings establish in some ecosystems more readily than others* 
 Naturally, wildlings establish in some ecosystems more readily than others.
@@ -100,7 +108,7 @@ Plantation conifers generally have wind-vectored seed dispersal, which has recei
 Establishment is affected by biotic and abiotic conditions where seeds arrive.
 
 *Context dependence: specific stage of specific alien into specific ecosystem*
-define establishment as reaching a certain height
+define establishment as reaching a certain height?
 You'll only know once its there --- difficulty of generalizing invasibility patterns.
 
 *Relative abundance != relative susceptibility*
@@ -108,21 +116,23 @@ define vulnerable vs susceptible
 
 The susceptibility of plantation surroundings may be manipulated retrospectively through interventions around existing plantations or prospectively through plantation site selection.
 
-*Assess establishment across what?*
-Using a standardized (national or international) ecosystem classification system makes it easy for managers to transfer findings about ecosystem susceptibility directly to management decisions.
-In Norway, the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
-It aims for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
-As a result, its ecosystem types (hereafter: "ecosystems") encapsulate much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, etc. [@richardsonNaturalizationIntroducedPlants2012].
-
 Naively, the density of wildlings in a given ecosystem would seem to indicate how likely they are to establish there.
 But to estimate ecosystem establishment likelihoods based on wildling abundance around plantation stands, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
 For example, low establishment likelihood in an ecosystem frequently located close to plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
 Likewise, an ecosystem may appear to promote establishment if it tends to co-occur with climatic conditions that support germination.
 Once estimated, unconfounded establishment likelihoods may be used to predict how susceptible the surroundings of an unobserved plantation are, based on ecosystem composition.
 
+*Assess establishment across what?*
+Using a standardized (national or international) ecosystem classification system makes it easy for managers to transfer findings about ecosystem susceptibility directly to management decisions.
+In Norway, the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
+It aims for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
+As a result, its ecosystem types (hereafter: "ecosystems") encapsulate much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, etc. [@richardsonNaturalizationIntroducedPlants2012].
+
 *Conifer plantations as invasion science experiments*
 Determining which ecosystems are most susceptible so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
 Studying ecosystem invasibility is tractable with plantations of alien conifers because their seeds are wind-dispersed, so we can estimate ecosystem exposure to seed rain from plantations with some confidence [@catfordQuantifyingLevelsBiological2012].
+
+It is clear from extensive experience with alien conifer invasions in several parts of the world that control interventions need to be focused on the early stages of invasion [@nunezEcologyManagementInvasive2017].
 
 We examine plantations of alien conifers in Norway to investigate the following questions:
 
@@ -401,7 +411,7 @@ However, managers should not judge ecosystem susceptibility based on wildling de
 
 # Authors' contributions
 
-JV, SLO, and OSk conceived the ideas and designed methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analyzed the data and led the writing.
+JV, SLO, and OSk conceived the study and designed the methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analyzed the data and led the writing.
 All authors contributed to drafts and gave approval for publication.
 
 # Acknowledgments
