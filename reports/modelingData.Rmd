@@ -60,6 +60,20 @@ DV %>%
   group_by(species) %>% 
   summarize(per.are = mean(wildlings)) %>% 
   mutate(per.hectare = per.are * 100) # overall wildlings per hectare
+
+DV %>% 
+  filter(randomseed == 1) %>% 
+  group_split(species) %>% 
+  map2(group_split(IV, species), ~ add_wildlings(.y,.x)) %>% 
+  map(\(x) mutate(x, area = st_area(x)) %>% 
+        st_drop_geometry()) %>% 
+  map(\(x) select(x, species, wildlings, area)) %>% 
+  map(\(x) summarize(x, species = first(species),
+                     wildlings = sum(wildlings), 
+                     area = sum(area))) %>% 
+  list_rbind() %>% 
+  mutate(area = units::set_units(area, "hectare")) %>% 
+  mutate(density = wildlings/area)
 ```
 
 ```{r}
@@ -69,6 +83,11 @@ IV <- IV %>%
                across(c(age,bio01,bio19,relelev), ~ as.vector(scale(.))),
                across(c(seeds.ExP,seeds.WALD), ~ as.vector(scale(log(.), scale = FALSE))))) %>% 
   bind_rows()
+length(names(IV)[!names(IV) %in% nottypes]) #number of ecosystems surveyed
+st_union(IV) %>% #to avoid double-counting area that is surveyed for two or more species
+  st_area() %>% 
+  sum() %>% 
+  units::set_units("hectare") #total area surveyed
 ```
 
 # P.sitchensis-lutzii

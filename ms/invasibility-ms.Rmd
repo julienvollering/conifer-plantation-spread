@@ -60,13 +60,12 @@ To minimize spillover from plantations into native ecosystems, land managers nee
 The spatial distribution of wildlings close to plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildlings, but it is also shaped by the pattern of seed rain from the plantations, among other factors.
 2. We used detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis*/*P.* $\times$ *lutzii*, *P. abies*, and *Larix* spp.
 We created spatially explicit models of wildling abundance as a function of ecosystem type, exposure to seed rain, climate, and plantation stand characteristics.
-3. In total, across...(ha of surveyed ecosystems) we found...(areal density of wildlings per species).
+3. Our survey of plantation surroundings registered 28 wildlings per hectare of *Picea sitchensis*/*P.* $\times$ *lutzii* (24013/873 ha), 6 wildlings/hectare of *P. abies* (2277/403 ha), and 13 wildlings/hectare of *Larix* spp. (4287/324 ha).
 For all three conifer species groups, we found that ecosystem type was responsible for differences in wildling abundance of up to three orders of magnitude.
 When we stratified wildling abundance by height class (≥ 30 cm and $≥ 100 cm), we also found evidence that some ecosystems are more conducive to establishment (reaching 30 cm) than growth (reaching 100 cm), and vice versa.
 4. Agricultural ecosystems of various kinds were among the ecosystems least susceptible to wildling establishment of all three groups of conifer species.
-5. *Synthesis and applications* The spatial distribution of self-sown alien conifers around plantations is a valuable indicator of ecosystem susceptibility to establishment and growth at the critical early stages of naturalization. 
-We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers. 
-New plantations should be sited where surrounding ecosystems are less susceptible to wildlings, and efforts to control wildlings should pay close attention to susceptible ecosystems---even if these are not exposed to high levels of seed rain directly from plantations.
+5. *Synthesis and applications* We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers. 
+New plantations should be sited among ecosystems with low susceptibility, and efforts to control wildlings should play close attention to susceptible ecosystems---even if these are not (yet) exposed to high levels of seed rain.
 In Norway, situating plantations within a landscape matrix of agricultural ecosystems is an effective way to reduce alien conifer spread.
 
 # Keywords
