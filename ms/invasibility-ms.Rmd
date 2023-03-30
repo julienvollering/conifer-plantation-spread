@@ -121,8 +121,9 @@ Once estimated, unconfounded establishment likelihoods may be used to predict ho
 
 ## Part 3: the key knowledge gaps and why they matter
 
-- Ecosystem susceptibility in Norway
 - How much susceptibility deviates from vulnerability
+- How much of wildling abundance is controlled by ecosystem identity---how consistent susceptibility is.
+- Ecosystem susceptibility in Norway (conifer-poor, like southern hemisphere)
 
 ### Context dependence: specific stage of specific alien into specific ecosystem
 define establishment as reaching a certain height?
@@ -130,11 +131,6 @@ You'll only know once its there --- difficulty of generalizing invasibility patt
 ### Assess early
 It is clear from extensive experience with alien conifer invasions in several parts of the world that control interventions need to be focused on the early stages of invasion [@nunezEcologyManagementInvasive2017].
 The early stages are also those are most strongly shaped by contingencies of exposure: few plantations = unrepresentative sample of ecosystems, before secondary spread.
-### Assess establishment across management units
-Using a standardized (national or international) ecosystem classification system makes it easy for managers to transfer findings about ecosystem susceptibility directly to management decisions.
-In Norway, the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
-It aims for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
-As a result, its ecosystem types (hereafter: "ecosystems") encapsulate much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, etc. [@richardsonNaturalizationIntroducedPlants2012].
 
 Determining which ecosystems are most susceptible so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
 
@@ -143,6 +139,12 @@ Determining which ecosystems are most susceptible so that interventions can be p
 ### Wind dispersal makes early exposure tractable
 Plantation conifers generally have wind-vectored seed dispersal, which can be estimated with relative confidence [@nathanDispersalKernels2012].
 Studying ecosystem invasibility is tractable with plantations of alien conifers because their seeds are wind-dispersed, so we can estimate ecosystem exposure to seed rain from plantations with some confidence [@catfordQuantifyingLevelsBiological2012].
+
+### Assess establishment across management units
+Using a standardized (national or international) ecosystem classification system makes it easy for managers to transfer findings about ecosystem susceptibility directly to management decisions.
+In Norway, the national land mapping classification system sorts variation in local ecological conditions [@halvorsenSystematicsEcodiversityEcoSyst2020].
+It aims for reproducible and value-neutral classification of ecosystems by rule-based discretization of species turnover along important environmental gradients [@halvorsenSystematicsEcodiversityEcoSyst2020].
+As a result, its ecosystem types (hereafter: "ecosystems") encapsulate much of the variation likely to regulate wildling establishment --- in competition, nutrient availability, disturbance, etc. [@richardsonNaturalizationIntroducedPlants2012].
 
 We examine plantations of alien conifers in Norway to investigate the following questions:
 
