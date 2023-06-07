@@ -95,36 +95,36 @@ Therefore, it is likely that alien conifers will continue to be planted across l
 ### We want to prevent initial spread from plantations
 Responsible forestry practice requires that alien species be kept within plantation boundaries [@brunduGlobalGuidelinesSustainable2020], but alien conifer plantations generally produce self-sown individuals beyond the plantation ("wildlings").
 It is prudent to prevent wildlings both to protect the integrity of surrounding ecosystems and to block secondary, potentially invasive spread [@nunezEcologyManagementInvasive2017].
-Alien conifer invasions usually stem from plantations --- like the pines in South Africa, to name just one example [@mcconnachieEstimatingEffectPlantations2015] --- and conifer invasions have proven damaging and costly in various places on several continents.
-Combined with the expectation of future plantations, invasions highlight the importance of preventing wildlings.
+Alien conifer invasions usually stem from plantations and often incur high costs --- pines in South Africa being one notorious example [@mcconnachieEstimatingEffectPlantations2015].
+Combined with the expectation of future plantations, the potential for invasions underlines the importance of preventing wildlings.
 
 ## Part 2: the state of the science, including the narrower subject, region, community and species-specific context
 
-### The mechanisms that govern wildling appearance, especially local conditions
+### Establishment and growth --- one part of the process that give rise to wildlings --- depends on local conditions. 
 Wildlings appear via a process that starts with seed production, then seed dispersal, followed by seedling establishment and growth.
-If we focus on seedling establishment and growth, the rate at which wildlings accumulate depends on biotic and abiotic conditions where seeds arrive.
-Factors like seed bed availability, soil moisture content, and light availability are likely among the most important determinants of establishment and growth success --- as is the case for natural regeneration native conifers [@ref].
-Foresters have long used natural vegetation composition to forecast the success of different conifer species in particular locations [@savillPlantationSilvicultureEurope1997]
-Wildlings establish and grow more readily in some ecosystems than others, depending on the autecology of the species [@ref].
-Difficulty of generalizing invasibility patterns.
+If we focus on seedling establishment and growth, the rate at which wildlings accumulate in a given location depends on biotic and abiotic conditions there.
+Factors like seed bed characteristics, soil water content, and light availability are likely among the most important determinants of establishment and growth success --- as is generally the case for natural regeneration of conifers [@burnsSilvicsNorthAmerica1990].
+Foresters have long used natural vegetation composition to forecast the success of particular conifer species in particular locations [@savillPlantationSilvicultureEurope1997].
+This practice supports the ideas that: 1) vegetation integrates influences on wildling establishment and growth, and 2) different conifer species have different optima for establishment and growth. 
+In short, wildlings establish and grow more readily in some kinds of ecosystems than others, depending on the autecology of the species.
 
-
-
-### Don't forget about seed production and dispersal! Relative abundance != relative susceptibility
-Use @nygaardOkologiskOgSkogbruksmessig2021 as an example of *vulnerability* being ahead of *susceptibility*.?
-
-define vulnerable vs susceptible.
-
-Naively, the density of wildlings in a given ecosystem would seem to indicate how likely they are to establish there.
-But to estimate ecosystem establishment likelihoods based on wildling abundance around plantation stands, we must account for (1) seed dispersal, and (2) sources of variation in establishment beside ecosystem type.
-For example, low establishment likelihood in an ecosystem frequently located close to plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
-Likewise, an ecosystem may appear to promote establishment if it tends to co-occur with climatic conditions that support germination.
-Once estimated, unconfounded establishment likelihoods may be used to predict how susceptible the surroundings of an unobserved plantation are, based on ecosystem composition.
+### The effect of local conditions on wildling abundance is masked by other contributing factors.
+The rate at which wildlings accumulate in a location is also controlled by the amount of seed rain arriving there, via seed production and dispersal.
+Regardless of how well a particular location supports establishment and growth of a particular species, no more wildlings can appear than seeds arrive.
+Conversely, low establishment and growth in a location close to a plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
+Thus, we distinguish between a location's *susceptibility* (intrinsic favorability for wildling growth and establishment) and its *vulnerability* (susceptibility multiplied by exposure to seed rain).
+In our use of the terms, vulnerability is the specific risk realized in a given location, while susceptibility is the generalizable risk that can be attributed to the conditions at that location. 
+Both quantities may inform how we manage wildlings, but susceptibility is what we can attribute to an ecosystem type and expect to remain constant across contexts.
+For example, we can only use ecosystem composition to assess the relative risk of wildlings among sites if we know ecosystem susceptibilities.
 
 ### Alien conifers in Norway
 Large scale reforestation/afforestation during the second half of the 20th century, especially along the western coastlines [@miljodirektoratetUtredningAvForbud2019]. 
 Conifer-poor
 Coastal heathlands
+Harder line against alien conifers than other countries in northern and western Europe, with policies more similar to places with serious conifer invasions like New Zealand, South Africa, and Patagonia  [@oyenImpactSitkaSpruce2020]
+Use @nygaardOkologiskOgSkogbruksmessig2021 as an example of knowledge on *vulnerability* being ahead of *susceptibility*.
+We are more concerned about some ecosystem types than others.
+Difficulty of generalizing invasibility patterns.
 
 ## Part 3: the key knowledge gaps and why they matter
 
