@@ -111,41 +111,45 @@ In short, wildlings establish and grow more readily in some kinds of ecosystems 
 The rate at which wildlings accumulate in a location is also controlled by the amount of seed rain arriving there, via seed production and dispersal.
 Regardless of how well a particular location supports establishment and growth of a particular species, no more wildlings can appear than seeds arrive.
 Conversely, low establishment and growth in a location close to a plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
-Thus, we distinguish between a location's *susceptibility* (intrinsic favorability for wildling growth and establishment) and its *vulnerability* (susceptibility multiplied by exposure to seed rain).
-In our use of these terms, vulnerability is the level of risk realized in a given location, while susceptibility is the level of risk that may be attributed to the conditions at that location and thereby generalized to new locations.
-Both quantities may inform how we manage wildlings, but susceptibility is what we can characterize for an ecosystem type and expect to remain constant across contexts.
-For example, we can assess the risk of wildlings at a new plantation from the ecosystems present there only if we know ecosystem susceptibilities.
+Thus, we distinguish between a location's *susceptibility* (intrinsic favorability for growth and establishment) and its *vulnerability* [susceptibility multiplied by exposure to seed rain; @chaeVulnerabilityResilienceUse2021].
+The same distinction exists between *invasibility* and *level of invasion*, but these terms refer to invader richness rather than invader abundance [@richardsonPlantInvasionsMerging2006].
+By our definitions, vulnerability is the level of risk realized in a given location, while susceptibility is the level of risk that may be attributed to the conditions at that location.
+Susceptibility is what we can characterize for an ecosystem type and expect to remain constant across contexts.
+For example, we can estimate wildling risk at a new plantation from the ecosystems present there based on ecosystem susceptibilities.
 
-### Wildling abundance varies widely between plantations in Norway
-The number of wildlings around alien conifer plantations in Norway varies significantly --- by species, but also among conspecific plantations [@nygaardSpreadIntroducedSitka2017; @nygaardNaturligSpredningAv1999].
+### Wildling abundance varies in Norway but is related to ecosystem types
+The number of wildlings around alien conifer plantations in Norway varies considerably --- by species, but also among conspecific plantations [@nygaardSpreadIntroducedSitka2017; @nygaardNaturligSpredningAv1999].
 Most of the alien conifer plantations in Norway today were planted between 1950 and 1990, when subsidies encouraged private reforestation/afforestation, especially along western coastlines, where forests were scarce.
 In total, about 80 000 ha were planted with alien conifer species, of which 50 000 ha was Sitka spruce *Picea sitchensis* or its hybrid, Lutz spruce *Picea* $\times$ *lutzii*, and 6 500 ha was larch species *Larix* spp. [@miljodirektoratetUtredningAvForbud2019]. 
 An additional 210 000 ha were planted with Norway spruce *Picea abies*, which is native but was planted mainly outside its historical range [@miljodirektoratetUtredningAvForbud2019]. 
-In recent years, Norway has been more cautious towards alien conifers than other European countries [@potzelsbergerGrowingNonnativeTrees2020], with regulations from 2012 that require forest owners to gain approval for new plantations and implement measures against any wildlings around them.
-This caution stems largely from the damages that alien conifers are found to have done on redlisted ecosystem types, like coastal heathlands and atlantic bogs [@miljodirektoratetUtredningAvForbud2019; @elvenPiceaSitchensisVurdering2018].  
+Current policy in Norway is wary of alien conifers, compared to other European countries [@potzelsbergerGrowingNonnativeTrees2020].
+Regulations from 2012 require forest owners to gain approval for new plantations and implement reasonable measures against wildlings from them [@ForskriftOmUtsetting2012].
+This wariness stems largely from the degradation that wildlings are found to cause redlisted ecosystem types --- especially coastal heathlands, but also  atlantic bogs, semi-natural grasslands, and others [@artsdatabankenFremmedartslista20182018; @miljodirektoratetUtredningAvForbud2019]. 
 
-Use @nygaardOkologiskOgSkogbruksmessig2021 as an example of knowledge on *vulnerability* being ahead of *susceptibility*.
-Difficulty of generalizing invasibility patterns.
 
 ## Part 3: the key knowledge gaps and why they matter
 
-### How much susceptibility deviates from vulnerability 
-Is the observed distribution of wildlings representative of what we can expect for new plantations in new places, or are we missing important contingencies?
-Assess early: it is clear from extensive experience with alien conifer invasions in several parts of the world that control interventions need to be focused on the early stages of invasion [@nunezEcologyManagementInvasive2017].
-The early stages are also those are most strongly shaped by contingencies of exposure: few plantations = unrepresentative sample of ecosystems, before secondary spread.
+### Ecosystem susceptibility in Norway (the estimate)
+To mitigate the negative impacts of alien conifer plantations, it is crucial to know which ecosystems are most susceptible to wildlings [@bindewaldSiteSpecificRisk2021; @potzelsbergerGrowingNonnativeTrees2020].
+In Norway specifically, public authorities need a basis for judging where to allow alien conifer plantations, and land managers need a better understanding of wildling establishment and growth to target control.
+Determining ecosystem susceptibility, so that interventions can be prioritized objectively, is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
+Ecosystem susceptibility to alien conifers is not easily generalized across contexts [@ref], so we need  
+Increased monitoring of alien conifer plantations in Norway has improved the evidence base for which ecosystem types harbor most wildlings today (vulnerability), but we do not yet have an all-else-equal comparison of ecosystem types (susceptibility).
 
-### How much of wildling abundance is controlled by ecosystem identity --- how consistent susceptibility is across management units
-Can we achieve meaningful reductions in wildling abundance by controlling the composition of plantation surroundings? **does this undermine the introduction claim about abiotic/biotic conditions controlling wildlings?**
-
-
-### Ecosystem susceptibility in conifer-poor Norway 
-County governors need a basis for determining where to allow alien conifer plantations
 Context dependence: specific stage of specific alien into specific ecosystem
 (define establishment as reaching a certain height?)
 You'll only know once its there --- difficulty of generalizing invasibility patterns.
 The conditions that govern seedling establishment and growth in plantation surroundings may be manipulated directly, by physical interventions, or indirectly, by site selection.
-[@bindewaldRiskEyeAssessor2020; @potzelsbergerGrowingNonnativeTrees2020]
-Determining which ecosystems are most susceptible so that interventions can be prioritized objectively is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
+
+
+
+### How much of wildling abundance is controlled by ecosystem identity --- how consistent susceptibility is across management units (uncertainty around the estimate)
+Can we achieve meaningful reductions in wildling abundance by controlling the composition of plantation surroundings? **does this undermine the introduction claim about abiotic/biotic conditions controlling wildlings?**
+
+### How much susceptibility deviates from vulnerability (correlation between the two estimates)
+Is the observed distribution of wildlings representative of what we can expect for new plantations in new places, or are we missing important contingencies?
+Assess early: it is clear from extensive experience with alien conifer invasions in several parts of the world that control interventions need to be focused on the early stages of invasion [@nunezEcologyManagementInvasive2017].
+The early stages are also those are most strongly shaped by contingencies of exposure: few plantations = unrepresentative sample of ecosystems, before secondary spread.
 
 ## Part 4: an outline of how this paper will meet the knowledge gaps, why this is novel, and the aims and hypotheses it will test.
 
