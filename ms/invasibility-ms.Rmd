@@ -56,17 +56,21 @@ library(kableExtra)
 # Abstract
 
 1. Plantations of alien conifer species are common in many countries and may become more prevalent in coming decades, as a way to sequester carbon.
-To minimize spillover from plantations into native ecosystems, land managers need to know which ecosystems are most and least susceptible to establishment and growth of self-sown individuals ("wildlings") of a given species.
-The spatial distribution of wildlings close to plantations is an early and therefore valuable indicator of ecosystem susceptibility to wildlings, but it is also shaped by the pattern of seed rain from the plantations, among other factors.
-2. We used detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis*/*Picea* $\times$ *lutzii*, *Picea abies*, and *Larix* spp.
-We created spatially explicit models of wildling abundance as a function of ecosystem type, exposure to seed rain, climate, and plantation stand characteristics.
-3. Our survey of plantation surroundings registered 28 wildlings per hectare of *P. sitchensis*/*P.* $\times$ *lutzii* (24013/873 ha), 6 wildlings/hectare of *P. abies* (2277/403 ha), and 13 wildlings/hectare of *Larix* spp. (4287/324 ha).
-For all three conifer species groups, we found that ecosystem type was responsible for differences in wildling abundance of up to three orders of magnitude.
-When we stratified wildling abundance by height class (≥ 30 cm and $≥ 100 cm), we also found evidence that some ecosystems are more conducive to establishment (reaching 30 cm) than growth (reaching 100 cm), and vice versa.
+    To minimize spillover from plantations into native ecosystems, land managers need to know which ecosystems are most susceptible to establishment and growth of self-sown individuals ("wildlings") of a given species.
+    The spatial distribution of the first generation of wildlings close to a plantation is an early and therefore valuable indicator of ecosystem susceptibility to wildlings, but it is also shaped by the pattern of seed rain from the plantations, among other factors.
+
+2. We used detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis* / *Picea* $\times$ *lutzii*, *Picea abies*, and *Larix* spp.
+    We created spatially explicit models of wildling abundance as a function of ecosystem type, exposure to seed rain, climate, and plantation stand characteristics.
+
+3. Our surveys registered 28 wildlings per hectare for *P. sitchensis* / *P.* $\times$ *lutzii* ($\frac{24013}{873}$ ha^-1^), 6 ha^-1^ for *P. abies* ($\frac{2277}{403}$ ha^-1^), and 13 ha^-1^ for *Larix* spp. ($\frac{4287}{324}$ ha^-1^).
+    For all three species groups, we found that ecosystem type was responsible for up to three orders of magnitude of difference in wildling abundance.
+    When we stratified wildling abundance by height class (≥ 30 cm and ≥ 100 cm), we also found evidence that some ecosystems are more conducive to establishment (reaching 30 cm) than growth (reaching 100 cm), and vice versa.
+
 4. Agricultural ecosystems of various kinds were among the ecosystems least susceptible to wildling establishment of all three groups of conifer species.
+
 5. *Synthesis and applications* We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers. 
-New plantations should be sited among ecosystems with low susceptibility, and efforts to control wildlings should play close attention to susceptible ecosystems --- even if these are not (yet) exposed to high levels of seed rain.
-In Norway, situating plantations within a landscape matrix of agricultural ecosystems is an effective way to reduce alien conifer spread.
+    New plantations should be sited among ecosystems with low susceptibility only, and efforts to control wildlings should play close attention to susceptible ecosystems — even where these are not exposed to much seed rain.
+    In Norway, situating plantations within a landscape matrix of agricultural ecosystems is an effective way to reduce alien conifer spread.
 
 # Keywords
 
@@ -87,7 +91,7 @@ alien species, conifer, ecosystem type, establishment, exposure, forestry, invas
 ## Part 1: why the topic is important in the broadest sense, which for an applied study should highlight the societal importance
 
 ### Alien conifer plantations are a big deal
-While there is a long history of using alien conifers in forestry, planting conifers at scale in places where they are not native is hardly a thing of the past.
+While there is a long history of using alien conifers in forestry, the practice of planting conifers at scale in places where they are not native is hardly a thing of the past.
 Commercial forestry relies on alien conifer species in many parts of the world, with 44 % of plantation forests globally composed mainly of introduced species [@faoGlobalForestResources2020].
 Alien conifer species may also be included in some of the many large afforestation programs proposed to mitigate climate change [@brightEvaluatingTerrestrialCarbon2020, @teururakaunewzealandforestserviceOneBillionTrees2018].
 Therefore, it is likely that alien conifers will continue to be planted across large areas in coming decades, sometimes in regions where a given species has not previously occurred.
@@ -103,8 +107,8 @@ Combined with the expectation of future planting, the potential for invasions un
 ### Establishment and growth --- one part of the process that give rise to wildlings --- depends on local conditions. 
 Wildlings appear via a process that starts with seed production in the plantation, then seed dispersal, followed by seedling establishment and growth.
 If we focus on seedling establishment and growth, the rate at which wildlings accumulate in a given location depends on biotic and abiotic conditions there.
-Factors like seed bed characteristics, soil moisture, and light availability are likely among the most important determinants of establishment and early growth success --- as is generally the case for natural regeneration of conifers [@burnsSilvicsNorthAmerica1990].
-Foresters have long used natural vegetation composition to forecast the success of particular conifer species in particular locations [@savillPlantationSilvicultureEurope1997], which supports the expectation that: 1) vegetation integrates influences on wildling establishment and growth, and 2) different conifer species have different optima for establishment and growth. 
+Factors like seed bed characteristics, soil moisture, and light availability are likely among the most important determinants of establishment and early growth success — as they are for natural regeneration of conifers [@burnsSilvicsNorthAmerica1990].
+Silviculturalists have long used natural vegetation composition to forecast the regeneration success of particular conifer species in particular locations [@savillPlantationSilvicultureEurope1997], which supports the expectations that: 1) vegetation integrates influences on wildling establishment and growth, and 2) different conifer species have different optima for establishment and growth. 
 In short, wildlings establish and grow more readily in some kinds of ecosystems than others, depending on the autecology of the species.
 
 ### The effect of local conditions on wildling abundance is masked by other contributing factors.
@@ -113,35 +117,34 @@ Regardless of how well a particular location supports establishment and growth o
 Conversely, low establishment and growth in a location close to a plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
 Thus, we distinguish between a location's *susceptibility* (intrinsic favorability for growth and establishment) and its *vulnerability* [susceptibility multiplied by exposure to seed rain; @chaeVulnerabilityResilienceUse2021].
 The same distinction exists between *invasibility* and *level of invasion*, but these terms refer to invader richness rather than invader abundance [@richardsonPlantInvasionsMerging2006].
-By our definitions, vulnerability is the level of risk realized in a given location, while susceptibility is the level of risk that may be attributed to the conditions at that location.
-Susceptibility is what we can characterize for an ecosystem type and expect to remain constant across contexts.
-For example, we can estimate wildling risk at a new plantation from the ecosystems present there based on ecosystem susceptibilities.
+By our definitions, vulnerability is the level of risk realized at a specific location, while susceptibility is the level of risk that may be attributed to the conditions at that location.
+Susceptibility is what we can characterize for an ecosystem type and expect to remain constant across spatial contexts.
+For example, at locations where the nearest seed source is unknown, we may assess the relative risk of wildlings based on ecosystem susceptibilities.
 
 ### Wildling abundance varies in Norway but is related to ecosystem types
-The number of wildlings around alien conifer plantations in Norway varies considerably --- by species, but also among conspecific plantations [@nygaardSpreadIntroducedSitka2017; @nygaardNaturligSpredningAv1999].
+
+In Norway, wildling abundance around alien conifer plantations varies considerably — by species, but also among conspecific plantations [@nygaardSpreadIntroducedSitka2017; @nygaardNaturligSpredningAv1999].
 Most of the alien conifer plantations in Norway today were planted between 1950 and 1990, when subsidies encouraged private reforestation/afforestation, especially along western coastlines, where forests were scarce.
 In total, about 80 000 ha were planted with alien conifer species, of which 50 000 ha was Sitka spruce *Picea sitchensis* or its hybrid, Lutz spruce *Picea* $\times$ *lutzii*, and 6 500 ha was larch species *Larix* spp. [@miljodirektoratetUtredningAvForbud2019]. 
 An additional 210 000 ha were planted with Norway spruce *Picea abies*, which is native but was planted mainly outside its historical range [@miljodirektoratetUtredningAvForbud2019]. 
-Current policy in Norway is wary of alien conifers, compared to other European countries [@potzelsbergerGrowingNonnativeTrees2020].
-Regulations from 2012 require forest owners to gain approval for new plantations and implement reasonable measures against wildlings from them [@ForskriftOmUtsetting2012].
-This wariness stems largely from the degradation that wildlings are found to cause redlisted ecosystem types --- especially coastal heathlands, but also  atlantic bogs, semi-natural grasslands, and others [@artsdatabankenFremmedartslista20182018; @miljodirektoratetUtredningAvForbud2019]. 
-
+Today, silvicultural policy in Norway is more restrictive of alien conifers than in other European countries [@potzelsbergerGrowingNonnativeTrees2020].
+Regulations from 2012 require forest owners to gain approval for new plantations and implement measures against resulting wildlings. [@ForskriftOmUtsetting2012].
+These policies aim to prevent wildlings from further deteriorating red-listed ecosystem types — coastal heathlands especially, but also Atlantic bogs, semi-natural grasslands, and others [@artsdatabankenFremmedartslista20182018; @miljodirektoratetUtredningAvForbud2019].
 
 ## Part 3: the key knowledge gaps and why they matter
 
 ### Ecosystem susceptibility in Norway (the estimate)
-To mitigate the negative impacts of alien conifer plantations, it is crucial to know which ecosystems are most susceptible to wildlings [@bindewaldSiteSpecificRisk2021; @potzelsbergerGrowingNonnativeTrees2020].
-In Norway specifically, public authorities need a basis for judging where to allow alien conifer plantations, and land managers need a better understanding of wildling establishment and growth to target control.
 Determining ecosystem susceptibility, so that interventions can be prioritized objectively, is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-Ecosystem susceptibility to alien conifers is not easily generalized across contexts [@ref], so we need  
-Increased monitoring of alien conifer plantations in Norway has improved the evidence base for which ecosystem types harbor most wildlings today (vulnerability), but we do not yet have an all-else-equal comparison of ecosystem types (susceptibility).
+To mitigate the negative impacts of alien conifer plantations, we need to know which ecosystems are most susceptible to wildlings [@bindewaldSiteSpecificRisk2021; @potzelsbergerGrowingNonnativeTrees2020].
+In the Norwegian context, public authorities need a basis for judging where to allow new alien conifer plantations, and land managers need a basis for efficient monitoring and control.
+However, ecosystem susceptibility to alien conifers is not easily generalized [@higginsPineInvasionsSouthern1998] — not across similar ecosystems nor across similar species.
+Therefore, we must quantify ecosystem susceptibility in a granular way, by asking: *how likely is establishment and growth of a particular species, in a particular ecosystem type?*
+It is these values of ecosystem susceptibility that can be expected to remain constant as seed sources change and species spread, and therefore provide a basis for long-term management of alien conifers. 
 
 Context dependence: specific stage of specific alien into specific ecosystem
 (define establishment as reaching a certain height?)
 You'll only know once its there --- difficulty of generalizing invasibility patterns.
 The conditions that govern seedling establishment and growth in plantation surroundings may be manipulated directly, by physical interventions, or indirectly, by site selection.
-
-
 
 ### How much of wildling abundance is controlled by ecosystem identity --- how consistent susceptibility is across management units (uncertainty around the estimate)
 Can we achieve meaningful reductions in wildling abundance by controlling the composition of plantation surroundings? **does this undermine the introduction claim about abiotic/biotic conditions controlling wildlings?**
@@ -150,6 +153,7 @@ Can we achieve meaningful reductions in wildling abundance by controlling the co
 Is the observed distribution of wildlings representative of what we can expect for new plantations in new places, or are we missing important contingencies?
 Assess early: it is clear from extensive experience with alien conifer invasions in several parts of the world that control interventions need to be focused on the early stages of invasion [@nunezEcologyManagementInvasive2017].
 The early stages are also those are most strongly shaped by contingencies of exposure: few plantations = unrepresentative sample of ecosystems, before secondary spread.
+Make the most of available data
 
 ## Part 4: an outline of how this paper will meet the knowledge gaps, why this is novel, and the aims and hypotheses it will test.
 
@@ -357,10 +361,12 @@ knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.pdf'))
 # Discussion
 
 ```{r include = FALSE}
+# Monitoring of alien conifer plantations in Norway has revealed which ecosystem types currently harbor most wildlings (vulnerability), but we still lacked an all-else-equal comparison of ecosystem types to assess which ecosystem types inherently favor wildling establishment and growth (susceptibility).
 # Our results support earlier suggestions that agricultural areas with more intensive cultivation practices (e.g. cereal fields) are less sensitive to invasion than more extensively-managed agricultural area [@dodetWhenShouldExotic2012]. 
 # We found a larger effect of local conditions on wildling abundance (relative to propagule pressure) than @pauchardPineInvasionsTreeless2016. Why? First and foremost: their 3 ha of surveyed plots span much less variation in conditions than our range of ecosystem types. Secondly, they tested individual species as covariates, which may not integrate overall effects of the community?
 # Sitka spruce is the most common alien conifer in Europe, and Larch species are also among the most common [@brusExtentDistributionOrigin2019]. Bindewald et al. [-@bindewaldSiteSpecificRisk2021] highlight that European forestry urgently needs knowledge on site-specific establishment potentials of common alien conifers.
 # Like the countries in the southern hemisphere where most alien conifer invasions have taken place, Norway has few native conifer species [@richardsonConifersInvasiveAliens2004; @esslSelectionCommercialForestry2010].
+# *How likely is a wildling of a particular species **to reach a particular height class** in a particular ecosystem type?*
 ```
 
 ## How does wildling density relate to ecosystem susceptibility?
