@@ -80,8 +80,6 @@ alien species, conifer, ecosystem type, establishment, exposure, forestry, invas
 
 # Introduction
 
-## Part 1: why the topic is important in the broadest sense, which for an applied study should highlight the societal importance
-
 While there is a long history of using alien conifers in forestry, the practice of planting conifers at scale in places where they are not native is hardly a thing of the past.
 Commercial forestry relies on alien conifer species in many parts of the world, with 44 % of plantation forests globally composed mainly of introduced species [@faoGlobalForestResources2020].
 Alien conifer species may also be included in some of the vast afforestation programs against climate change [@brightEvaluatingTerrestrialCarbon2020, @teururakaunewzealandforestserviceOneBillionTrees2018].
@@ -91,8 +89,6 @@ Responsible forestry practice requires that alien species be kept within plantat
 It is prudent to prevent wildlings both to protect the integrity of surrounding ecosystems and to block secondary, potentially invasive spread [@nunezEcologyManagementInvasive2017].
 Costly conifer invasions --- like pines in South Africa, to name one example --- usually stem from forestry plantations [@esslSelectionCommercialForestry2010; @mcconnachieEstimatingEffectPlantations2015].
 Combined with the expectation of future planting, the potential for invasions underlines the importance of preventing wildlings from plantations.
-
-## Part 2: the state of the science, including the narrower subject, region, community and species-specific context
 
 Wildlings come about via a process that starts with seed production in the plantation, then seed dispersal, followed by seedling establishment and growth.
 If we focus on seedling establishment and growth, the rate at which wildlings accumulate in a given location depends on biotic and abiotic conditions there.
@@ -117,8 +113,6 @@ Today, silvicultural policy in Norway is more restrictive of alien conifers than
 Regulations from 2012 require forest owners to gain approval for new plantations and implement measures against resulting wildlings. [@ForskriftOmUtsetting2012].
 These policies aim to prevent wildlings from further deteriorating red-listed ecosystem types — coastal heathlands especially, but also Atlantic bogs, semi-natural grasslands, and others [@artsdatabankenFremmedartslista20182018; @miljodirektoratetUtredningAvForbud2019].
 
-## Part 3: the key knowledge gaps and why they matter
-
 Determining ecosystem susceptibility, so that interventions can be prioritized objectively and with maximum effect, is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
 To mitigate the negative impacts of alien conifer plantations, we need to know which ecosystems are most susceptible to wildlings [@bindewaldSiteSpecificRisk2021; @potzelsbergerGrowingNonnativeTrees2020].
 In the Norwegian context specifically, public authorities need a basis for judging where to allow new alien conifer plantations, and land managers need a basis for efficient monitoring and control.
@@ -131,8 +125,6 @@ We know that that interventions against alien conifer invasions need to focus on
 Therefore, we want to know whether or not initial vulnerability — i.e., first-generation wildling abundance per ecosystem — provides a good approximation of ecosystem susceptibility.
 A good approximation would suggest that it is generally safe to estimate long-term ecosystem susceptibility directly from surveys of plantation surroundings.
 Conversely, a poor approximation would highlight the importance of differentiating between vulnerability and susceptibility — in Norway and elsewhere— to avoid highly susceptible ecosystems being overlooked.
-
-## Part 4: an outline of how this paper will meet the knowledge gaps, why this is novel, and the aims and hypotheses it will test.
 
 This paper addresses the two knowledge gaps described above (ecosystem susceptibility, correspondence between susceptibility and vulnerability), for three groups of common alien conifers in Norway.
 Four aspects of our methodology deserve highlighting.
