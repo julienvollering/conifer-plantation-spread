@@ -82,13 +82,11 @@ alien species, conifer, ecosystem type, establishment, exposure, forestry, invas
 
 ## Part 1: why the topic is important in the broadest sense, which for an applied study should highlight the societal importance
 
-### Alien conifer plantations are a big deal
 While there is a long history of using alien conifers in forestry, the practice of planting conifers at scale in places where they are not native is hardly a thing of the past.
 Commercial forestry relies on alien conifer species in many parts of the world, with 44 % of plantation forests globally composed mainly of introduced species [@faoGlobalForestResources2020].
 Alien conifer species may also be included in some of the vast afforestation programs against climate change [@brightEvaluatingTerrestrialCarbon2020, @teururakaunewzealandforestserviceOneBillionTrees2018].
 Therefore, it is likely that alien conifers will continue to be planted across large areas in coming decades, sometimes in regions where a given species has not previously occurred.
 
-### We want to prevent initial spread from plantations
 Responsible forestry practice requires that alien species be kept within plantation boundaries [@brunduGlobalGuidelinesSustainable2020], but alien conifer plantations generally produce self-sown individuals beyond the plantation ("wildlings").
 It is prudent to prevent wildlings both to protect the integrity of surrounding ecosystems and to block secondary, potentially invasive spread [@nunezEcologyManagementInvasive2017].
 Costly conifer invasions --- like pines in South Africa, to name one example --- usually stem from forestry plantations [@esslSelectionCommercialForestry2010; @mcconnachieEstimatingEffectPlantations2015].
@@ -96,14 +94,12 @@ Combined with the expectation of future planting, the potential for invasions un
 
 ## Part 2: the state of the science, including the narrower subject, region, community and species-specific context
 
-### Establishment and growth --- one part of the process that give rise to wildlings --- depends on local conditions. 
 Wildlings come about via a process that starts with seed production in the plantation, then seed dispersal, followed by seedling establishment and growth.
 If we focus on seedling establishment and growth, the rate at which wildlings accumulate in a given location depends on biotic and abiotic conditions there.
 Factors like seed bed characteristics, soil moisture, and light availability are likely among the most important determinants of establishment and early growth success — as they are for natural regeneration of conifers [@burnsSilvicsNorthAmerica1990].
 Silviculturalists have long used natural vegetation composition to forecast the regeneration success of particular conifer species in particular locations [@savillPlantationSilvicultureEurope1997], which supports the expectations that: 1) vegetation integrates influences on wildling establishment and growth, and 2) different conifer species have different optima for establishment and growth. 
 In short, wildlings establish and grow more readily in some kinds of ecosystems than others, depending on the autecology of the species.
 
-### The effect of local conditions on wildling abundance is masked by other contributing factors.
 The rate at which wildlings accumulate in a location is also controlled by the amount of seed rain arriving there, via seed production and dispersal.
 Regardless of how well a particular location supports establishment and growth of a particular species, no more wildlings can appear than seeds arrive.
 Conversely, low establishment and growth in a location close to a plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
@@ -112,8 +108,6 @@ The same distinction exists between *invasibility* and *level of invasion*, but 
 By our definitions, vulnerability is the level of risk realized at a specific location, while susceptibility is the level of risk that may be attributed to the conditions at that location.
 Susceptibility is what we can characterize for an ecosystem type and expect to remain constant across spatial contexts.
 For example, at locations where the nearest seed source is unknown, we may assess the relative risk of wildlings based on ecosystem susceptibility.
-
-### Wildling abundance varies in Norway but is related to ecosystem types
 
 In Norway, wildling abundance around alien conifer plantations varies considerably — by species, but also among conspecific plantations [@nygaardSpreadIntroducedSitka2017; @nygaardNaturligSpredningAv1999].
 Most of the alien conifer plantations in Norway today were planted between 1950 and 1990, when subsidies encouraged private reforestation/afforestation, especially along western coastlines, where forests were scarce.
@@ -125,7 +119,6 @@ These policies aim to prevent wildlings from further deteriorating red-listed ec
 
 ## Part 3: the key knowledge gaps and why they matter
 
-### Ecosystem susceptibility in Norway (the estimate)
 Determining ecosystem susceptibility, so that interventions can be prioritized objectively and with maximum effect, is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
 To mitigate the negative impacts of alien conifer plantations, we need to know which ecosystems are most susceptible to wildlings [@bindewaldSiteSpecificRisk2021; @potzelsbergerGrowingNonnativeTrees2020].
 In the Norwegian context specifically, public authorities need a basis for judging where to allow new alien conifer plantations, and land managers need a basis for efficient monitoring and control.
@@ -133,7 +126,6 @@ However, ecosystem susceptibility to alien conifers is not easily generalized [@
 Therefore, we must quantify ecosystem susceptibility in a granular way, by asking: *how likely is establishment and growth of a particular species, in a particular ecosystem type?*
 These values of ecosystem susceptibility provide a basis for long-term management of alien conifers, because they can be expected to remain constant as seed sources change and species spread. 
 
-### How much susceptibility deviates from vulnerability (correlation between the two estimates)
 Another key knowledge gap is how much ecosystem vulnerability deviates from ecosystem susceptibility, as a result of differential exposure to seed rain.
 We know that that interventions against alien conifer invasions need to focus on early stages of invasion [@nunezEcologyManagementInvasive2017], but these early stages probably produce highly uneven exposure to seed rain, concentrated in ecosystems that border plantations.
 Therefore, we want to know whether or not initial vulnerability — i.e., first-generation wildling abundance per ecosystem — provides a good approximation of ecosystem susceptibility.
@@ -142,7 +134,6 @@ Conversely, a poor approximation would highlight the importance of differentiati
 
 ## Part 4: an outline of how this paper will meet the knowledge gaps, why this is novel, and the aims and hypotheses it will test.
 
-### How this paper will meet the knowledge gaps
 This paper addresses the two knowledge gaps described above (ecosystem susceptibility, correspondence between susceptibility and vulnerability), for three groups of common alien conifers in Norway.
 Four aspects of our methodology deserve highlighting.
 First, we fully map the wildlings and ecosystem types around a given plantation, rather than sampling these. 
@@ -154,7 +145,6 @@ Seeds from plantation conifers are generally dispersed by wind alone, and wind-v
 Fourth, we specify our statistical model of the wildling–ecosystem relationship based on domain knowledge, with explicitly stated causal assumptions. This approach prioritizes understanding of ecological processes and promotes constructive discourse around alternative model specifications.
 
 In summary, we examine plantations of alien conifers in Norway to investigate the following questions:
-
 - Which ecosystems are most and least susceptible to wildlings of various alien conifer species, and by how much do they differ in their susceptibility?
 - Are differences in susceptibility among ecosystems masked in the realized distribution of wildlings, by differences in exposure to seed rain?
 
