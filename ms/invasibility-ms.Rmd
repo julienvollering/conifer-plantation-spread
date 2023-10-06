@@ -62,7 +62,7 @@ library(kableExtra)
 2. We used detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis* / *Picea* $\times$ *lutzii*, *Picea abies*, and *Larix* spp.
     We created spatially explicit models of wildling abundance as a function of ecosystem type, exposure to seed rain, climate, and plantation stand characteristics.
 
-3. Our surveys registered 28 wildlings per hectare for *P. sitchensis* / *P.* $\times$ *lutzii* ($\frac{24013}{873}$ ha^-1^), 6 ha^-1^ for *P. abies* ($\frac{2277}{403}$ ha^-1^), and 13 ha^-1^ for *Larix* spp. ($\frac{4287}{324}$ ha^-1^).
+3. Our surveys registered 28 wildlings per hectare for *P. sitchensis* / *P.* $\times$ *lutzii* ($\frac{24013}{860}$ ha^-1^), 6 ha^-1^ for *P. abies* ($\frac{2277}{396}$ ha^-1^), and 13 ha^-1^ for *Larix* spp. ($\frac{4287}{318}$ ha^-1^).
     For all three species groups, we found that ecosystem type was responsible for up to three orders of magnitude of difference in wildling abundance.
     When we stratified wildling abundance by height class (≥ 30 cm and ≥ 100 cm), we also found evidence that some ecosystems are more conducive to establishment (reaching 30 cm) than growth (reaching 100 cm), and vice versa.
 
