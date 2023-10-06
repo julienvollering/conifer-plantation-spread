@@ -16,7 +16,7 @@ library(sf)
 
 ```{r, windstation coords}
 windstations <- read_delim(here("data", "raw", "eKlima", "NOwindstationsEklima.txt"), 
-                     delim = ";", na=c("-9999"), col_types = cols())
+                     delim = ";", na=c("-9999"), col_types = "dcccdddccc??")
 windstations <- filter(windstations, !grepl("\\*", Name))
 files <- list.files(here("data", "raw", "eKlima"), 
                     pattern = "metastations", full.names = TRUE)
@@ -26,7 +26,7 @@ stationsmeta <- lapply(files, read_delim, delim = ";", col_types = cols()) %>%
   distinct(Stnr, .keep_all = TRUE)
   
 windstations <- left_join(windstations, stationsmeta, by = "Stnr") %>% 
-  drop_na()
+  drop_na(Name.y)
 ```
 
 Stations for which wind data on eKlima were not available or poor quality:
@@ -309,7 +309,7 @@ chelsa <- list.files(here("data","raw","CHELSA"), pattern = ".tif",
 bb <- sp::spTransform(df, raster::crs(chelsa)) %>% sp::bbox()
 chelsa <- raster::crop(chelsa, bb)
 df <- raster::extract(chelsa, df, sp = TRUE)
-df <- as_tibble(df) %>% select(-x, -y)
+df <- as_tibble(df) %>% select(-coords.x1, -coords.x2)
 correl <- cor(df, use = "complete")[-(1:2),1:2]
 correl[order(correl[,1]), 1, drop=FALSE]
 correl[order(correl[,2]), 2, drop=FALSE]

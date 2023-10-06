@@ -39,7 +39,7 @@ theme_dotplot <- theme_bw(14) +
         axis.title.x = element_text(size = rel(.75)),
         axis.title.y = element_blank(),
         panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(size = 0.5),
+        panel.grid.major.y = element_line(linewidth = 0.5),
         panel.grid.minor.x = element_blank())
 ```
 
