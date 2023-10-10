@@ -184,6 +184,7 @@ Ps_dispersalcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE,
 ```{r}
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 plot(simulationOutput)
+testOutliers(simulationOutput, type = "bootstrap")
 testZeroInflation(simulationOutput)
 ```
 
@@ -346,6 +347,7 @@ Pa_dispersalcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisNULL, base = TRUE,
 ```{r}
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 plot(simulationOutput)
+testOutliers(simulationOutput, type = "bootstrap")
 testZeroInflation(simulationOutput)
 ```
 
@@ -508,6 +510,7 @@ L_dispersalcomp <- bbmle::ICtab(m.genpoisWALD, m.genpoisExP, base = TRUE,
 ```{r}
 simulationOutput <- simulateResiduals(fittedModel = m.genpoisWALD)
 plot(simulationOutput)
+testOutliers(simulationOutput, type = "bootstrap")
 testZeroInflation(simulationOutput)
 ```
 

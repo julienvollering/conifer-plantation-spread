@@ -260,8 +260,8 @@ For each species, wildling-free ecosystems were dropped as predictors (to avoid 
 The values of Bio1, Bio19, elevation relative to the stand, and stand age were standardized, and the natural log of relative seed rain was centered.
 We fitted three parallel models for each species: (1) with relative seed rain derived from the static dispersal kernel, (2) with relative seed rain derived from the WALD dispersal model, and (3) without relative seed rain.
 From these three we selected that with the best AIC. 
-X models (Sitka/Lutz spruce with static dispersal kernel; larches without seed rain) did not converge and were excluded from selection.
-To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.3.3, @hartigDHARMaResidualDiagnostics2020].
+Three models (Sitka/Lutz spruce and Norway spruce with static dispersal kernel; larches without seed rain) did not converge and were excluded from selection.
+To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.4.6, @hartigDHARMaResidualDiagnostics2020].
 We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
 Relative establishment likelihoods among ecosystems were calculated as predictions from the conditional count part of the model (holding covariates at their mean values).
 
