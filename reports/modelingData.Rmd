@@ -30,7 +30,6 @@ nottypes <- c('species', 'locality','wildlings','age','bio01','bio19',
               'seeds.ExP','seeds.WALD','relelev','geometry','are')
 ```
 
-
 ```{r}
 IV <- readRDS(here("output","independentVars.rds")) %>% 
   st_as_sf()
@@ -49,7 +48,9 @@ filter(IV, T4 > 0.5) %>%
 DV <- readRDS(here("output","dependentVar.rds"))
 nrseeds <- length(unique(DV$randomseed))
 nrhgtclasses <- length(unique(DV$hgtclass))
+```
 
+```{r}
 op <- options(pillar.sigfig = 4)
 DV %>% 
   filter(randomseed == 1) %>% 
@@ -62,11 +63,11 @@ DV %>%
             wildlings = sum(wildlings)) %>% 
   mutate(per.hectare = wildlings/hectares) # overall wildlings per hectare
 options(op)
-
-IV <- select(IV, -are)
 ```
 
 ```{r}
+IV <- select(IV, -are)
+
 IV <- IV %>% 
   group_split(species) %>% 
   map(~ mutate(., 
@@ -74,6 +75,9 @@ IV <- IV %>%
                across(c(seeds.ExP,seeds.WALD), ~ as.vector(scale(log(.), scale = FALSE))))) %>% 
   bind_rows()
 length(names(IV)[!names(IV) %in% nottypes]) #number of ecosystems surveyed
+```
+
+```{r}
 st_union(IV) %>% #to avoid double-counting area that is surveyed for two or more species
   st_area() %>% 
   sum() %>% 
@@ -93,28 +97,46 @@ DVi <- filter(DV, species == "P.sitchensis-lutzii")
 
 ## Wildling densities
 
-Disregards height classes.
+Height-blind: >= 30cm
 
 ```{r}
 dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
   st_drop_geometry()
 
-Ps_densities <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(nin) %>% 
-  summarize(daa = sum(are)/10, # units from are to decare
-            n = sum(wildlings*are), .groups = "drop_last") %>% 
-  mutate(density = n/daa) %>%
-  arrange(desc(density), desc(n), daa)
-scaler <- filter(Ps_densities, nin == contrasttype) %>% 
-  pull(density)
-Ps_densities <- mutate(Ps_densities, fit = density/scaler)
+Ps_density <- calculate_wildlings_per_nin(dat, typenames, contrasttype)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(Ps_densities, digits = 1)
+Ps_density %>%   
+  arrange(desc(density), desc(n), daa) %>% 
+  knitr::kable(digits = 1)
 ```
 
-## Height-blind model
+Height-class 2 >=100cm
+
+```{r}
+stratified <- DVi %>% 
+  filter(hgtclass == 2) %>%
+  select(species, randomseed, hgtclass) %>% 
+  nest(dv = geometry) %>% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
+  mutate(data = map(data, st_drop_geometry)) %>% 
+  select(-dv)
+
+Ps_density_stratified <- stratified %>% 
+  mutate(density = map(data, ~ calculate_wildlings_per_nin(., typenames, contrasttype))) %>% 
+  select(-data)
+```
+
+```{r, include=FALSE}
+Ps_density_stratified %>% 
+  filter(randomseed == 2) %>%
+  select(density) %>% 
+  unnest(density) %>% 
+  arrange(desc(density), desc(n), daa)
+```
+
+## Height-blind model: >= 30cm
 
 Disregards height classes.
 
@@ -213,7 +235,7 @@ m.typesonly <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
 summary(m.typesonly)
 ```
 
-## Height-stratified models
+## Height-class 2 models: >=100 cm
 
 ```{r}
 stratified <- DVi %>% 
@@ -256,28 +278,46 @@ DVi <- filter(DV, species == "P.abies")
 
 ## Wildling densities
 
-Disregards height classes.
+Height-blind: >= 30cm
 
 ```{r}
 dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
   st_drop_geometry()
 
-Pa_densities <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(nin) %>% 
-  summarize(daa = sum(are)/10, # units from are to decare
-            n = sum(wildlings*are), .groups = "drop_last") %>% 
-  mutate(density = n/daa) %>%
-  arrange(desc(density), desc(n), daa)
-scaler <- filter(Pa_densities, nin == contrasttype) %>% 
-  pull(density)
-Pa_densities <- mutate(Pa_densities, fit = density/scaler)
+Pa_density <- calculate_wildlings_per_nin(dat, typenames, contrasttype)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(Pa_densities, digits = 1)
+Pa_density %>%   
+  arrange(desc(density), desc(n), daa) %>% 
+  knitr::kable(digits = 1)
 ```
 
-## Height-blind model
+Height-class 2 >=100cm
+
+```{r}
+stratified <- DVi %>% 
+  filter(hgtclass == 2) %>%
+  select(species, randomseed, hgtclass) %>% 
+  nest(dv = geometry) %>% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
+  mutate(data = map(data, st_drop_geometry)) %>% 
+  select(-dv)
+
+Pa_density_stratified <- stratified %>% 
+  mutate(density = map(data, ~ calculate_wildlings_per_nin(., typenames, contrasttype))) %>%
+  select(-data)
+```
+
+```{r, include=FALSE}
+Pa_density_stratified %>% 
+  filter(randomseed == 2) %>%
+  select(density) %>% 
+  unnest(density) %>% 
+  arrange(desc(density), desc(n), daa)
+```
+
+## Height-blind model: >= 30cm
 
 Disregards height classes.
 
@@ -376,7 +416,7 @@ m.typesonly <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
 summary(m.typesonly)
 ```
 
-## Height-stratified models
+## Height-class 2 models: >=100 cm
 
 ```{r}
 stratified <- DVi %>% 
@@ -419,28 +459,46 @@ DVi <- filter(DV, species == "Larix")
 
 ## Wildling densities
 
-Disregards height classes.
+Height-blind: >= 30cm
 
 ```{r}
 dat <- add_wildlings(IVi, filter(DVi, randomseed == 1)) %>% 
   st_drop_geometry()
 
-L_densities <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
-  group_by(nin) %>% 
-  summarize(daa = sum(are)/10, # units from are to decare
-            n = sum(wildlings*are), .groups = "drop_last") %>% 
-  mutate(density = n/daa) %>%
-  arrange(desc(density), desc(n), daa)
-scaler <- filter(L_densities, nin == contrasttype) %>% 
-  pull(density)
-L_densities <- mutate(L_densities, fit = density/scaler)
+L_density <- calculate_wildlings_per_nin(dat, typenames, contrasttype)
 ```
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(L_densities, digits = 1)
+L_density %>%   
+  arrange(desc(density), desc(n), daa) %>% 
+  knitr::kable(digits = 1)
 ```
 
-## Height-blind model
+Height-class 2 >=100cm
+
+```{r}
+stratified <- DVi %>% 
+  filter(hgtclass == 2) %>%
+  select(species, randomseed, hgtclass) %>% 
+  nest(dv = geometry) %>% 
+  mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
+  mutate(data = map(data, st_drop_geometry)) %>% 
+  select(-dv)
+
+L_density_stratified <- stratified %>% 
+  mutate(density = map(data, ~ calculate_wildlings_per_nin(., typenames, contrasttype))) %>%
+  select(-data)
+```
+
+```{r, include=FALSE}
+L_density_stratified %>% 
+  filter(randomseed == 2) %>%
+  select(density) %>% 
+  unnest(density) %>% 
+  arrange(desc(density), desc(n), daa)
+```
+
+## Height-blind model: >= 30cm
 
 Disregards height classes.
 
@@ -539,7 +597,7 @@ m.typesonly <- glmmTMB(mf, dat, offset = NULL, family = "genpois",
 summary(m.typesonly)
 ```
 
-## Height-stratified models
+## Height-class 2 models: >=100 cm
 
 ```{r}
 stratified <- DVi %>% 
@@ -574,9 +632,11 @@ rm(m.poissonWALD, m.nbinom2WALD, m.genpoisWALD, m.genpoisExP, m.genpoisNULL,
 ```{r}
 species <- c("P.sitchensis-lutzii", "P.abies", "Larix")
 
-list(Ps_densities, Pa_densities, L_densities) %>% 
+list(Ps_density, Pa_density, L_density) %>% 
   set_names(species) %>% 
   bind_rows(.id = "species") %>% 
+  nest(density = c(nin, daa, n, density, fit)) %>% 
+  bind_rows(Ps_density_stratified, Pa_density_stratified, L_density_stratified) %>%
   saveRDS(here("output","results-densities.rds"))
 
 list(Ps_dispersalcomp, Pa_dispersalcomp, L_dispersalcomp) %>% 

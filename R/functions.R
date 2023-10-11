@@ -173,4 +173,14 @@ fit_genpoisWALDmodel <- function(dat, typenames, contrasttype) {
   return(mod)
 }
 
-
+calculate_wildlings_per_nin <- function(dat, typenames, contrasttype) {
+  dens <- pivot_longer(dat, one_of(typenames), names_to = "nin", values_to = "are") %>%
+    group_by(nin) %>% 
+    summarize(daa = sum(are)/10, # units from are to decare
+              n = sum(wildlings*are), .groups = "drop_last") %>% 
+    mutate(density = n/daa)
+  scaler <- filter(dens, nin == contrasttype) %>% 
+    pull(density)
+  dens <- mutate(dens, fit = density/scaler)
+  return(dens)
+}
