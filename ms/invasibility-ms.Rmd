@@ -10,6 +10,10 @@ author:
 - Jakob Sandven^7^
 - Odd Stabbetorp^3^
 - Øyvind Sørhuus^7^ 
+editor_options:
+  markdown:
+    wrap: 80
+    canonical: true
 bibliography: invasibility-ms.bib
 link-citations: true
 output:
@@ -37,13 +41,16 @@ library(knitr)
 library(kableExtra)
 ```
 
-^1^ Department of Environmental Sciences, Western Norway University of Applied Sciences, Sogndal, Norway
+^1^ Department of Environmental Sciences, Western Norway University of Applied
+Sciences, Sogndal, Norway
 
-^2^ Department of Research and Collections, Natural History Museum, University of Oslo, Oslo, Norway
+^2^ Department of Research and Collections, Natural History Museum, University
+of Oslo, Oslo, Norway
 
 ^3^ Norwegian Institute for Nature Research, Oslo, Norway
 
-^4^ Institute of Urbanism and Landscape, The Oslo School of Architecture and Design, Oslo, Norway
+^4^ Institute of Urbanism and Landscape, The Oslo School of Architecture and
+Design, Oslo, Norway
 
 ^5^ Ecofact AS, Sandnes, Norway
 
@@ -51,113 +58,232 @@ library(kableExtra)
 
 ^7^ NORSKOG, Oslo, Norway
 
-*Corresponding author: <julienvollering@gmail.com>
+\*Corresponding author:
+[julienvollering\@gmail.com](mailto:julienvollering@gmail.com){.email}
 
 # Abstract
 
-1. Plantations of alien conifer species are common in many countries and may become more prevalent in coming decades, as a way to sequester carbon.
-    To minimize spillover from plantations into native ecosystems, land managers need to know which ecosystems are most susceptible to establishment and growth of self-sown individuals ("wildlings") of a given species.
-    The spatial distribution of the first generation of wildlings close to a plantation is an early and therefore valuable indicator of ecosystem susceptibility to wildlings, but it is also shaped by the pattern of seed rain from the plantations, among other factors.
+1.  Plantations of alien conifer species are common in many countries and may
+    become more prevalent in coming decades, as a way to sequester carbon. To
+    minimize spillover from plantations into native ecosystems, land managers
+    need to know which ecosystems are most susceptible to establishment and
+    growth of self-sown individuals ("wildlings") of a given species. The
+    spatial distribution of the first generation of wildlings close to a
+    plantation is an early and therefore valuable indicator of ecosystem
+    susceptibility to wildlings, but it is also shaped by the pattern of seed
+    rain from the plantations, among other factors.
 
-2. We used detailed surveys around 76 plantation stands in Norway to estimate ecosystem susceptibility to three groups of commonly planted conifer species: *Picea sitchensis* / *Picea* $\times$ *lutzii*, *Picea abies*, and *Larix* spp.
-    We created spatially explicit models of wildling abundance as a function of ecosystem type, exposure to seed rain, climate, and plantation stand characteristics.
+2.  We used detailed surveys around 76 plantation stands in Norway to estimate
+    ecosystem susceptibility to three groups of commonly planted conifer
+    species: *Picea sitchensis* / *Picea* $\times$ *lutzii*, *Picea abies*, and
+    *Larix* spp. We created spatially explicit models of wildling abundance as a
+    function of ecosystem type, exposure to seed rain, climate, and plantation
+    stand characteristics.
 
-3. Our surveys registered 28 wildlings per hectare for *P. sitchensis* / *P.* $\times$ *lutzii* ($\frac{24013}{860}$ ha^-1^), 6 ha^-1^ for *P. abies* ($\frac{2277}{396}$ ha^-1^), and 13 ha^-1^ for *Larix* spp. ($\frac{4287}{318}$ ha^-1^).
-    For all three species groups, we found that ecosystem type was responsible for up to three orders of magnitude of difference in wildling abundance.
-    When we stratified wildling abundance by height class (≥ 30 cm and ≥ 100 cm), we also found evidence that some ecosystems are more conducive to establishment (reaching 30 cm) than growth (reaching 100 cm), and vice versa.
+3.  Our surveys registered 28 wildlings per hectare for *P. sitchensis* / *P.*
+    $\times$ *lutzii* ($\frac{24013}{860}$ ha^-1^), 6 ha^-1^ for *P. abies*
+    ($\frac{2277}{396}$ ha^-1^), and 13 ha^-1^ for *Larix*
+    spp.($\frac{4287}{318}$ ha^-1^). For all three species groups, we found that
+    ecosystem type was responsible for up to three orders of magnitude of
+    difference in wildling abundance. When we stratified wildling abundance by
+    height class (≥ 30 cm and ≥ 100 cm), we also found evidence that some
+    ecosystems are more conducive to establishment (reaching 30 cm) than growth
+    (reaching 100 cm), and vice versa.
 
-4. Agricultural ecosystems of various kinds were among the ecosystems least susceptible to wildling establishment of all three groups of conifer species.
+4.  Agricultural ecosystems of various kinds were among the ecosystems least
+    susceptible to wildlings of all three groups of conifer species.
 
-5. *Synthesis and applications* We encourage managers to exploit the large differences in susceptibility between ecosystems to reduce the spread of alien conifers. 
-    New plantations should be sited among ecosystems with low susceptibility only, and efforts to control wildlings should play close attention to susceptible ecosystems — even where these are not exposed to much seed rain.
-    In Norway, situating plantations within a landscape matrix of agricultural ecosystems is an effective way to reduce alien conifer spread.
+5.  *Synthesis and applications* We encourage managers to exploit the large
+    differences in susceptibility between ecosystems to reduce the spread of
+    alien conifers. New plantations should be sited among ecosystems with low
+    susceptibility only, and efforts to control wildlings should play close
+    attention to susceptible ecosystems --- even where these are not exposed to
+    much seed rain. In Norway, situating plantations within a landscape matrix
+    of agricultural ecosystems is an effective way to reduce alien conifer
+    spread.
 
 # Keywords
 
-alien species, conifer, ecosystem type, establishment, exposure, forestry, invasibility, plantation, seed dispersal, susceptibility, vulnerability, Wald Analytical Long-distance Dispersal (WALD)
+alien species, conifer, ecosystem type, establishment, exposure, forestry,
+invasibility, plantation, seed dispersal, susceptibility, vulnerability, Wald
+Analytical Long-distance Dispersal (WALD)
 
 \newpage
 
 # Introduction
 
-While there is a long history of using alien conifers in forestry, the practice of planting conifers at scale in places where they are not native is hardly a thing of the past.
-Commercial forestry relies on alien conifer species in many parts of the world, with 44 % of plantation forests globally composed mainly of introduced species [@faoGlobalForestResources2020].
-Alien conifer species may also be included in some of the vast afforestation programs against climate change [@brightEvaluatingTerrestrialCarbon2020, @teururakaunewzealandforestserviceOneBillionTrees2018].
-Therefore, it is likely that alien conifers will continue to be planted across large areas in coming decades, sometimes in regions where a given species has not previously occurred.
+While there is a long history of using alien conifers in forestry, the practice
+of planting conifers at scale in places where they are not native is hardly a
+thing of the past. Commercial forestry relies on alien conifer species in many
+parts of the world, with 44 % of plantation forests globally composed mainly of
+introduced species [@faoGlobalForestResources2020]. Alien conifer species may
+also be included in some of the vast afforestation programs against climate
+change [@brightEvaluatingTerrestrialCarbon2020,
+@teururakaunewzealandforestserviceOneBillionTrees2018]. Therefore, it is likely
+that alien conifers will continue to be planted across large areas in coming
+decades, sometimes in regions where a given species has not previously occurred.
 
-Responsible forestry practice requires that alien species be kept within plantation boundaries [@brunduGlobalGuidelinesSustainable2020], but alien conifer plantations generally produce self-sown individuals beyond the plantation ("wildlings").
-It is prudent to prevent wildlings both to protect the integrity of surrounding ecosystems and to block secondary, potentially invasive spread [@nunezEcologyManagementInvasive2017].
-Costly conifer invasions --- like pines in South Africa, to name one example --- usually stem from forestry plantations [@esslSelectionCommercialForestry2010; @mcconnachieEstimatingEffectPlantations2015].
-Combined with the expectation of future planting, the potential for invasions underlines the importance of preventing wildlings from plantations.
+Responsible forestry practice requires that alien species be kept within
+plantation boundaries [@brunduGlobalGuidelinesSustainable2020], but alien
+conifer plantations generally produce self-sown individuals beyond the
+plantation ("wildlings"). It is prudent to prevent wildlings both to protect the
+integrity of surrounding ecosystems and to block secondary, potentially invasive
+spread [@nunezEcologyManagementInvasive2017]. Costly conifer invasions --- like
+pines in South Africa, to name one example --- usually stem from forestry
+plantations [@esslSelectionCommercialForestry2010;
+@mcconnachieEstimatingEffectPlantations2015]. Combined with the expectation of
+future planting, the potential for invasions underlines the importance of
+preventing wildlings from plantations.
 
-Wildlings come about via a process that starts with seed production in the plantation, then seed dispersal, followed by seedling establishment and growth.
-If we focus on seedling establishment and growth, the rate at which wildlings accumulate in a given location depends on biotic and abiotic conditions there.
-Factors like seed bed characteristics, soil moisture, and light availability are likely among the most important determinants of establishment and early growth success — as they are for natural regeneration of conifers [@burnsSilvicsNorthAmerica1990].
-Silviculturalists have long used natural vegetation composition to forecast the regeneration success of particular conifer species in particular locations [@savillPlantationSilvicultureEurope1997], which supports the expectations that: 1) vegetation integrates influences on wildling establishment and growth, and 2) different conifer species have different optima for establishment and growth. 
-In short, wildlings establish and grow more readily in some kinds of ecosystems than others, depending on the autecology of the species.
+Wildlings come about via a process that starts with seed production in the
+plantation, then seed dispersal, followed by seedling establishment and growth.
+If we focus on seedling establishment and growth, the rate at which wildlings
+accumulate in a given location depends on biotic and abiotic conditions there.
+Factors like seed bed characteristics, soil moisture, and light availability are
+likely among the most important determinants of establishment and early growth
+success --- as they are for natural regeneration of conifers
+[@burnsSilvicsNorthAmerica1990]. Silviculturalists have long used natural
+vegetation composition to forecast the regeneration success of particular
+conifer species in particular locations
+[@savillPlantationSilvicultureEurope1997], which supports the expectations that:
+1) vegetation integrates influences on wildling establishment and growth, and 2)
+different conifer species have different optima for establishment and growth. In
+short, wildlings establish and grow more readily in some kinds of ecosystems
+than others, depending on the autecology of the species.
 
-The rate at which wildlings accumulate in a location is also controlled by the amount of seed rain arriving there, via seed production and dispersal.
-Regardless of how well a particular location supports establishment and growth of a particular species, no more wildlings can appear than seeds arrive.
-Conversely, low establishment and growth in a location close to a plantations may be masked by copious seed rain [@rougetInferringProcessPattern2003].
-Thus, we distinguish between a location's *susceptibility* (intrinsic favorability for growth and establishment) and its *vulnerability* [susceptibility multiplied by exposure to seed rain; @chaeVulnerabilityResilienceUse2021].
-The same distinction exists between *invasibility* and *level of invasion*, but these terms refer to invader richness rather than invader abundance [@richardsonPlantInvasionsMerging2006].
-By our definitions, vulnerability is the level of risk realized at a specific location, while susceptibility is the level of risk that may be attributed to the conditions at that location.
-Susceptibility is what we can characterize for an ecosystem type and expect to remain constant across spatial contexts.
-For example, at locations where the nearest seed source is unknown, we may assess the relative risk of wildlings based on ecosystem susceptibility.
+The rate at which wildlings accumulate in a location is also controlled by the
+amount of seed rain arriving there, via seed production and dispersal.
+Regardless of how well a particular location supports establishment and growth
+of a particular species, no more wildlings can appear than seeds arrive.
+Conversely, low establishment and growth in a location close to a plantations
+may be masked by copious seed rain [@rougetInferringProcessPattern2003]. Thus,
+we distinguish between a location's *susceptibility* (intrinsic favorability for
+establishment and growth) and its *vulnerability* [susceptibility multiplied by
+exposure to seed rain and other extrinsic factors;
+@chaeVulnerabilityResilienceUse2021]. The same distinction exists between
+*invasibility* and *level of invasion*, but these terms refer to invader
+richness rather than invader abundance [@richardsonPlantInvasionsMerging2006].
+By our definitions, vulnerability is the level of risk realized at a specific
+location, while susceptibility is the level of risk that may be attributed to
+the conditions at that location. Susceptibility is what we can characterize for
+an ecosystem type and expect to remain constant across spatial contexts. For
+example, at locations where the nearest seed source is unknown, we may assess
+the relative risk of wildlings based on ecosystem susceptibility.
 
-In Norway, wildling abundance around alien conifer plantations varies considerably — by species, but also among conspecific plantations [@nygaardSpreadIntroducedSitka2017; @nygaardNaturligSpredningAv1999].
-Most of the alien conifer plantations in Norway today were planted between 1950 and 1990, when subsidies encouraged private reforestation/afforestation, especially along western coastlines, where forests were scarce.
-In total, about 80 000 ha were planted with alien conifer species, of which 50 000 ha was Sitka spruce *Picea sitchensis* or its hybrid, Lutz spruce *Picea* $\times$ *lutzii*, and 6 500 ha was larch species *Larix* spp. [@miljodirektoratetUtredningAvForbud2019]. 
-An additional 210 000 ha were planted with Norway spruce *Picea abies*, which is native but was planted mainly outside its historical range [@miljodirektoratetUtredningAvForbud2019]. 
-Today, silvicultural policy in Norway is more restrictive of alien conifers than in other European countries [@potzelsbergerGrowingNonnativeTrees2020].
-Regulations from 2012 require forest owners to gain approval for new plantations and implement measures against resulting wildlings. [@ForskriftOmUtsetting2012].
-These policies aim to prevent wildlings from further deteriorating red-listed ecosystem types — coastal heathlands especially, but also Atlantic bogs, semi-natural grasslands, and others [@artsdatabankenFremmedartslista20182018; @miljodirektoratetUtredningAvForbud2019].
+In Norway, wildling abundance around alien conifer plantations varies
+considerably --- by species, but also among conspecific plantations
+[@nygaardSpreadIntroducedSitka2017; @nygaardNaturligSpredningAv1999]. Most of
+the alien conifer plantations in Norway today were planted between 1950 and
+1990, when subsidies encouraged private reforestation/afforestation, especially
+along western coastlines, where forests were scarce. In total, about 80 000 ha
+were planted with alien conifer species, of which 50 000 ha was Sitka spruce
+*Picea sitchensis* or its hybrid, Lutz spruce *Picea* $\times$ *lutzii*, and
+6 500 ha was larch species *Larix* spp.
+[@miljodirektoratetUtredningAvForbud2019]. An additional 210 000 ha were planted
+with Norway spruce *Picea abies*, which is native but was planted mainly outside
+its historical range [@miljodirektoratetUtredningAvForbud2019]. Today,
+silvicultural policy in Norway is more restrictive of alien conifers than in
+other European countries [@potzelsbergerGrowingNonnativeTrees2020]. Regulations
+from 2012 require forest owners to gain approval for new plantations and
+implement measures against resulting wildlings. [@ForskriftOmUtsetting2012].
+These policies aim to prevent wildlings from further deteriorating red-listed
+ecosystem types --- coastal heathlands especially, but also Atlantic bogs,
+semi-natural grasslands, and others [@artsdatabankenFremmedartslista20182018;
+@miljodirektoratetUtredningAvForbud2019].
 
-Determining ecosystem susceptibility, so that interventions can be prioritized objectively and with maximum effect, is among the most urgent objectives for invasion science [@pysekScientistsWarningInvasive2020].
-To mitigate the negative impacts of alien conifer plantations, we need to know which ecosystems are most susceptible to wildlings [@bindewaldSiteSpecificRisk2021; @potzelsbergerGrowingNonnativeTrees2020].
-In the Norwegian context specifically, public authorities need a basis for judging where to allow new alien conifer plantations, and land managers need a basis for efficient monitoring and control.
-However, ecosystem susceptibility to alien conifers is not easily generalized [@higginsPineInvasionsSouthern1998] — not across ecosystems nor across species.
-Therefore, we must quantify ecosystem susceptibility in a granular way, by asking: *how likely is establishment and growth of a particular species, in a particular ecosystem type?*
-These values of ecosystem susceptibility provide a basis for long-term management of alien conifers, because they can be expected to remain constant as seed sources change and species spread. 
+Determining ecosystem susceptibility, so that interventions can be prioritized
+objectively and with maximum effect, is among the most urgent objectives for
+invasion science [@pysekScientistsWarningInvasive2020]. To mitigate the negative
+impacts of alien conifer plantations, we need to know which ecosystems are most
+susceptible to wildlings [@bindewaldSiteSpecificRisk2021;
+@potzelsbergerGrowingNonnativeTrees2020]. In the Norwegian context specifically,
+public authorities need a basis for judging where to allow new alien conifer
+plantations, and land managers need a basis for efficient monitoring and
+control. However, ecosystem susceptibility to alien conifers is not easily
+generalized [@higginsPineInvasionsSouthern1998] --- not across ecosystems nor
+across species. Therefore, we must quantify ecosystem susceptibility in a
+granular way, by asking: *how likely is establishment and growth of a particular
+species, in a particular ecosystem type*? These values of ecosystem
+susceptibility provide a basis for long-term management of alien conifers,
+because they can be expected to remain constant as seed sources change and
+species spread.
 
-Another key knowledge gap is how much ecosystem vulnerability deviates from ecosystem susceptibility, as a result of differential exposure to seed rain.
-We know that that interventions against alien conifer invasions need to focus on early stages of invasion [@nunezEcologyManagementInvasive2017], but these early stages probably produce highly uneven exposure to seed rain, concentrated in ecosystems that border plantations.
-Therefore, we want to know whether or not initial vulnerability — i.e., first-generation wildling abundance per ecosystem — provides a good approximation of ecosystem susceptibility.
-A good approximation would suggest that it is generally safe to estimate long-term ecosystem susceptibility directly from surveys of plantation surroundings.
-Conversely, a poor approximation would highlight the importance of differentiating between vulnerability and susceptibility — in Norway and elsewhere— to avoid highly susceptible ecosystems being overlooked.
+Another key knowledge gap is how much ecosystem vulnerability deviates from
+ecosystem susceptibility, as a result of differential exposure to seed rain. We
+know that that interventions against alien conifer invasions need to focus on
+early stages of invasion [@nunezEcologyManagementInvasive2017], but these early
+stages probably produce highly uneven exposure to seed rain, concentrated in
+ecosystems that border plantations. Therefore, we want to know whether or not
+initial vulnerability --- i.e., first-generation wildling abundance per
+ecosystem --- provides a good approximation of ecosystem susceptibility. A good
+approximation would suggest that it is generally safe to estimate long-term
+ecosystem susceptibility directly from surveys of plantation surroundings.
+Conversely, a poor approximation would highlight the importance of
+differentiating between vulnerability and susceptibility --- in Norway and
+elsewhere --- to avoid highly susceptible ecosystems being overlooked.
 
-This paper addresses the two knowledge gaps described above (ecosystem susceptibility, correspondence between susceptibility and vulnerability), for three groups of common alien conifers in Norway.
-Four aspects of our methodology deserve highlighting.
-First, we fully map the wildlings and ecosystem types around a given plantation, rather than sampling these. 
-The detailed mapping allows a fine-scaled, spatially-explicit assessment of the relationship between wildlings and ecosystems.
-Second, our delineation of ecosystems follows a typology that is nationally-adopted for land management in Norway.
-Our estimates of susceptibility are therefore directly applicable without additional uncertainty from imperfect correspondence between ecosystem types.
-Third, we estimate exposure by reconstructing the spatial distribution of seed rain from plantations, testing both mechanistic and phenomenological models of seed dispersal. 
-Seeds from plantation conifers are generally dispersed by wind alone, and wind-vectored seed dispersal can be estimated with relative confidence [@nathanDispersalKernels2012].
-Fourth, we specify our statistical model of the wildling–ecosystem relationship based on domain knowledge, with explicitly stated causal assumptions. This approach prioritizes understanding of ecological processes and promotes constructive discourse around alternative model specifications.
+This paper addresses the two knowledge gaps described above (ecosystem
+susceptibility, correspondence between susceptibility and vulnerability), for
+three groups of common alien conifers in Norway. Four aspects of our methodology
+deserve highlighting. First, we fully map the wildlings and ecosystem types
+around a given plantation, rather than sampling these. The detailed mapping
+allows a fine-scaled, spatially-explicit assessment of the relationship between
+wildlings and ecosystems. Second, our delineation of ecosystems follows a
+typology that is nationally-adopted for land management in Norway. Our estimates
+of susceptibility are therefore directly applicable without additional
+uncertainty from imperfect correspondence between ecosystem types. Third, we
+estimate exposure by reconstructing the spatial distribution of seed rain from
+plantations, testing both mechanistic and phenomenological models of seed
+dispersal. Seeds from plantation conifers are generally dispersed by wind alone,
+and wind-vectored seed dispersal can be estimated with relative confidence
+[@nathanDispersalKernels2012]. Fourth, we specify our statistical model of the
+wildling--ecosystem relationship based on domain knowledge, with explicitly
+stated causal assumptions. This approach prioritizes understanding of ecological
+processes and promotes constructive discourse around alternative model
+specifications.
 
-In summary, we examine plantations of alien conifers in Norway to investigate the following questions:
-- Which ecosystems are most and least susceptible to wildlings of various alien conifer species, and by how much do they differ in their susceptibility?
-- Are differences in susceptibility among ecosystems masked in the realized distribution of wildlings, by differences in exposure to seed rain?
+In summary, we examine plantations of alien conifers in Norway to investigate
+the following questions:
+
+-   Which ecosystems are most and least susceptible to wildlings of various
+    alien conifer species, and by how much do they differ in their
+    susceptibility?
+-   Are differences in susceptibility among ecosystems masked in the realized
+    distribution of wildlings, by differences in exposure to seed rain?
 
 # Materials and methods
 
 ## Field data
 
-We registered wildlings and ecosystems around 76 reproductive plantation stands across Norway, comprising three groups of alien conifers (hereafter: "species"; fig. \@ref(fig:sites-map)).
-The sample contained (1) forty-two sites with Sitka spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*P.* $\times$ *lutzii*), (2) nineteen with Norway spruce (*Picea abies*), and (3) fifteen with larch species (*Larix* spp.).
-Note that Norway spruce is native to Norway, but the plantations included in this study were located in parts of the country where its natural distribution is highly restricted.
-We selected stands using aerial imagery, aiming for those isolated from conspecific stands.
-We collected field data for each stand in one of six field campaigns during the period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016; @appelgrenKartleggingAvKortdistansespredning2017; @kyrkjeeideKartleggingAvKortdistansespredning2017; @appelgrenKartleggingAvKortdistansespredning2018; @olsenKartleggingAvKortdistansespredning2019; @sandvenKartleggingAvKortdistansespredning2019].
+We registered wildlings and ecosystems around 76 reproductive plantation stands
+across Norway, comprising three groups of alien conifers (hereafter: "species";
+fig. \@ref(fig:sites-map)). The sample contained (1) forty-two sites with Sitka
+spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*P.* $\times$
+*lutzii*), (2) nineteen with Norway spruce (*Picea abies*), and (3) fifteen with
+larch species (*Larix* spp.). Note that Norway spruce is native to Norway, but
+the plantations included in this study were located in parts of the country
+where its natural distribution is highly restricted. We selected stands using
+aerial imagery, aiming for those isolated from conspecific stands. We collected
+field data for each stand in one of six field campaigns during the period
+2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016;
+@appelgrenKartleggingAvKortdistansespredning2017;
+@kyrkjeeideKartleggingAvKortdistansespredning2017;
+@appelgrenKartleggingAvKortdistansespredning2018;
+@olsenKartleggingAvKortdistansespredning2019;
+@sandvenKartleggingAvKortdistansespredning2019].
 
 ```{r sites-map, out.width='100%', fig.cap='Locations of the 76 plantation stands in the sample.'}
 knitr::include_graphics('figures/sites-map.pdf')
 ```
 
-Within a 2x2 km plot centered on the stand of interest, we mapped all conspecific stands (except in the 2016 field campaign).
-Within the central 500x500 m of that plot, we mapped wildlings and ecosystems.
-We used GPS to register the point-positions of all wildlings over 30 cm in height, recording a single position for groups of wildlings occurring with less than 5 m between them.
-A few exceptionally dense groups of wildlings were mapped by registering polygons instead of points and estimating the number of individuals by transect counts.
+Within a 2x2 km plot centered on the stand of interest, we mapped all
+conspecific stands (except in the 2016 field campaign). Within the central
+500x500 m of that plot, we mapped wildlings and ecosystems. We used GPS to
+register the point-positions of all wildlings over 30 cm in height, recording a
+single position for groups of wildlings occurring with less than 5 m between
+them. A few exceptionally dense groups of wildlings were mapped by registering
+polygons instead of points and estimating the number of individuals by transect
+counts.
 
 ```{r include = FALSE}
 # Using a standardized (national or international) ecosystem classification system makes it easy for managers to transfer findings about ecosystem susceptibility directly to management decisions.
@@ -167,33 +293,60 @@ A few exceptionally dense groups of wildlings were mapped by registering polygon
 # Furthermore, the system's full areal coverage means that we can investigate susceptibility across all types of land cover, many of which have unknown regeneration potential because they are not generally considered by silviculturalists (e.g. agriculturally improved grassland).
 ```
 
-Concurrently, we registered polygons for all terrestrial and wetland ecosystems, following the Nature in Norway classification system [version 2.0 or 2.1, @halvorsenNaturNorgeNiN2015; based on the principles summarized in Halvorsen et al., @halvorsenSystematicsEcodiversityEcoSyst2020].
-This system is the national standard for land cover mapping and provides full spatial coverage (i.e. any location is assignable to an ecosystem).
-We mapped ecosystems at a scale of 1:5000, which means that any polygon over 250 m^2^ was registered [@brynVeilederKartleggingAv2015].
-Regularly patterned occurrence of more than one ecosystem in polygons smaller than the minimum size were registered as so-called mosaic polygons.
+Concurrently, we registered polygons for all terrestrial and wetland ecosystems,
+following the Nature in Norway classification system [version 2.0 or 2.1,
+@halvorsenNaturNorgeNiN2015; based on the principles summarized in Halvorsen et
+al., @halvorsenSystematicsEcodiversityEcoSyst2020]. This system is the national
+standard for land cover mapping and provides full spatial coverage (i.e. any
+location is assignable to an ecosystem). We mapped ecosystems at a scale of
+1:5000, which means that any polygon over 250 m^2^ was registered
+[@brynVeilederKartleggingAv2015]. Regularly patterned occurrence of more than
+one ecosystem in polygons smaller than the minimum size were registered as
+so-called mosaic polygons.
 
 We estimated or measured (by clinometer) the heights of the 76 central stands.
-We also estimated their ages at the time of the field campaign, either by contacting land owners and municipal officials, or by counting growth rings.
-Details of all 76 stands are provided in the Appendix (table \@ref(tab:sites-table)).
+We also estimated their ages at the time of the field campaign, either by
+contacting land owners and municipal officials, or by counting growth rings.
+Details of all 76 stands are provided in the Appendix
+(table \@ref(tab:sites-table)).
 
 ## Seed rain estimates
 
-To account for the influence of seed dispersal on wildling abundance, we needed estimates of the spatial distribution of seed rain within the 500x500 m plots.
-We considered all conspecific stands within a 1 km radius of the plot center to be potential seed sources, and used two models of seed dispersal to derive different estimates of relative seed rain in space. 
-Acknowledging the uncertainty involved in estimating seed dispersal, we explored one empirically-parameterized, isotropic model and one mechanistically-derived, anisotropic model. 
+To account for the influence of seed dispersal on wildling abundance, we needed
+estimates of the spatial distribution of seed rain within the 500x500 m plots.
+We considered all conspecific stands within a 1 km radius of the plot center to
+be potential seed sources, and used two models of seed dispersal to derive
+different estimates of relative seed rain in space. Acknowledging the
+uncertainty involved in estimating seed dispersal, we explored one
+empirically-parameterized, isotropic model and one mechanistically-derived,
+anisotropic model.
 
-The first model was a static seed dispersal kernel with parameter estimates generalized from multiple data sets.
-Specifically, we selected from Bullock et al. [-@bullockSynthesisEmpiricalPlant2017] the kernel that performed best for wind-adapted seeds from 5-15 m tall trees (an Exponential Power function).
-Sixty-six of the 76 stands in our data set matched this height range better than a taller range with a different empirical kernel.
+The first model was a static seed dispersal kernel with parameter estimates
+generalized from multiple data sets. Specifically, we selected from Bullock et
+al. [-@bullockSynthesisEmpiricalPlant2017] the kernel that performed best for
+wind-adapted seeds from 5-15 m tall trees (an Exponential Power function).
+Sixty-six of the 76 stands in our data set matched this height range better than
+a taller range with a different empirical kernel.
 
-The second model was an anisotropic implementation of the Wald Analytical Long-distance Dispersal model [WALD, @katulMechanisticAnalyticalModels2005], following Skarpaas & Shea [-@skarpaasDispersalPatternsDispersal2007].
-We parameterized the model with: site- and season-specific wind vectors retrieved from meteorological data sets [MET Norway; @reistadHighresolutionHindcastWind2011; @haakenstad15yearHighResolution2017], wind turbulence estimated from local ecosystem composition, seed release height based on stand height, and species-specific seed terminal velocities from literature.
+The second model was an anisotropic implementation of the Wald Analytical
+Long-distance Dispersal model [WALD, @katulMechanisticAnalyticalModels2005],
+following Skarpaas & Shea [-@skarpaasDispersalPatternsDispersal2007]. We
+parameterized the model with: site- and season-specific wind vectors retrieved
+from meteorological data sets [MET Norway;
+@reistadHighresolutionHindcastWind2011; @haakenstad15yearHighResolution2017],
+wind turbulence estimated from local ecosystem composition, seed release height
+based on stand height, and species-specific seed terminal velocities from
+literature.
 
-We transformed field-mapped polygons of potential seed sources into hexagonally gridded point sources, with a density of 0.1 m^-2^ for the first model and 0.01 m^-2^ for the second model (to reduce computation time). 
-Then we applied our two dispersal models to estimate the distribution of relative seed rain from all point sources in a grid of 10 m cells.
-We chose this cell size to be similar to the smallest allowed ecosystem polygon.
+We transformed field-mapped polygons of potential seed sources into hexagonally
+gridded point sources, with a density of 0.1 m^-2^ for the first model and
+0.01 m^-2^ for the second model (to reduce computation time). Then we applied
+our two dispersal models to estimate the distribution of relative seed rain from
+all point sources in a grid of 10 m cells. We chose this cell size to be similar
+to the smallest allowed ecosystem polygon.
 
-A full description of our implementation of the WALD model and additional details about seed source polygons are given in the [Appendix].
+A full description of our implementation of the WALD model and additional
+details about seed source polygons are given in the [Appendix].
 
 ## Establishment likelihood
 
@@ -201,47 +354,85 @@ A full description of our implementation of the WALD model and additional detail
 # define establishment as reaching 30 cm, and growth as reaching 100 cm
 ```
 
-For our analysis of establishment likelihood, wildling occurrences and ecosystems were rasterized to the same 10 m grid as the seed dispersal models (fig. \@ref(fig:site-example)). 
-Rather than assigning a single ecosystem to each grid cell, we assigned ecosystems in proportion to their areal coverage of the cell (i.e. each ecosystem was rendered as a separate raster variable with a [0,1] range).
-This allowed us to capture ecotones in the model and avoid overreliance on the spatial precision of ecosystem boundaries.
-Area covered by mosaic polygons was divided evenly among the constituent ecosystem types.
-Cells with > 0.5 "tree plantation" were excluded from our analyses because some of the field campaigns did not register wildlings when they occurred in this ecosystem.
-The resulting data set was used to calculate wildling densities (abundance/area) and to model relative establishment likelihoods.
-For the density calculation, wildling abundance was tallied in proportion to the ecosystem composition of its grid cell. 
-For example, a cell occupied by three wildlings and half-covered by a given ecosystem would tally 1.5 wildlings for that ecosystem.
+For our analysis of establishment likelihood, wildling occurrences and
+ecosystems were rasterized to the same 10 m grid as the seed dispersal models
+(fig. \@ref(fig:site-example)). Rather than assigning a single ecosystem to each
+grid cell, we assigned ecosystems in proportion to their areal coverage of the
+cell (i.e. each ecosystem was rendered as a separate raster variable with a
+[0,1] range). This allowed us to capture ecotones in the model and avoid
+overreliance on the spatial precision of ecosystem boundaries. Area covered by
+mosaic polygons was divided evenly among the constituent ecosystem types. Cells
+with \> 0.5 "tree plantation" were excluded from our analyses because some of
+the field campaigns did not register wildlings when they occurred in this
+ecosystem. The resulting data set was used to calculate wildling densities
+(abundance/area) and to model relative establishment likelihoods. For the
+density calculation, wildling abundance was tallied in proportion to the
+ecosystem composition of its grid cell. For example, a cell occupied by three
+wildlings and half-covered by a given ecosystem would tally 1.5 wildlings for
+that ecosystem.
 
 ```{r site-example, out.width='90%', fig.cap='An illustration of one of the 76 plantations: Meaasen. The background map shows the surroundings of the plantation, and the 500x500 m plot is overlaid with an aerial photograph. The middle row of panels shows data as registered in the field. The top and bottom rows of panels show selected variables for the 500x500 m plot, as used in the regression model (with a spatial grain of 10 m). Grid cells without data are either seed sources or "tree plantations" of other species.'}
 knitr::include_graphics('figures/site-example/site-example.pdf')
 ```
 
-We used a directed acyclic graph (DAG) to diagram causal relationships among the factors we expected to influence wildling abundance per cell (fig. \@ref(fig:DAG)).
-In the DAG, the unmeasured, proximate causes of wildling abundance --- total seed rain over the lifetime of the stand and establishment likelihood --- are descendants of variables that we could observe or model.
-We included an effect of elevation relative to the stand on seed rain because neither of our models of seed dispersal account for uneven terrain.
+We used a directed acyclic graph (DAG) to diagram causal relationships among the
+factors we expected to influence wildling abundance per cell
+(fig. \@ref(fig:DAG)). In the DAG, the unmeasured, proximate causes of wildling
+abundance --- total seed rain over the lifetime of the stand and establishment
+likelihood --- are descendants of variables that we could observe or model. We
+included an effect of elevation relative to the stand on seed rain because
+neither of our models of seed dispersal account for uneven terrain.
 
 ```{r DAG, out.width='90%', fig.cap="A directed acyclic graph showing the assumed causal relationships motivating our statistical model of ecosystems' effects on wildling abundance. Red variables causally affect both the ecosystem type and wildling abundance, blue variables causally affect only wildling abundance, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
 knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
 ```
 
-For all species, wildling abundance showed a high frequency of zeros that was underestimated by the best fitting negative binomial distribution.
-Accordingly, we applied zero-inflated generalized linear models, fitted with the glmmTMB package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6, @rcoreteamLanguageEnvironmentStatistical2020].
-These zero-inflated models regard zeros as the mixed product of a binomial process as well as a (conditional) count process that can take different error distributions [@zuurMixedEffectsModels2009].
-Preliminary models fitted with a negative binomial error distribution in the count process (ZINB) sometimes showed residual underdispersion, so we switched to a generalized Poisson error distribution (ZIGP), which can accommodate both over- and underdispersion [@brooksStatisticalModelingPatterns2019]. 
+For all species, wildling abundance showed a high frequency of zeros that was
+underestimated by the best fitting negative binomial distribution. Accordingly,
+we applied zero-inflated generalized linear models, fitted with the glmmTMB
+package [version 1.0, @brooksGlmmTMBBalancesSpeed2017] in R [version 3.6,
+@rcoreteamLanguageEnvironmentStatistical2020]. These zero-inflated models regard
+zeros as the mixed product of a binomial process as well as a (conditional)
+count process that can take different error distributions
+[@zuurMixedEffectsModels2009]. Preliminary models fitted with a negative
+binomial error distribution in the count process (ZINB) sometimes showed
+residual underdispersion, so we switched to a generalized Poisson error
+distribution (ZIGP), which can accommodate both over- and underdispersion
+[@brooksStatisticalModelingPatterns2019].
 
-We modeled the binomial process as dependent on stand age and site, with site as a random variable. 
-We expected that younger stands would exhibit more wildling-free cells than predicted under a constant establishment rate from age zero, because of their infertile juvenile period.
-We also expected the frequency of zeros to vary with site, because our field work documented that some land owners had occasionally made efforts to remove wildlings.
-Excess zeros that arose in these ways would therefore not bias our estimates of establishment likelihood [@blasco-morenoWhatDoesZero2019].
+We modeled the binomial process as dependent on stand age and site, with site as
+a random variable. We expected that younger stands would exhibit more
+wildling-free cells than predicted under a constant establishment rate from age
+zero, because of their infertile juvenile period. We also expected the frequency
+of zeros to vary with site, because our field work documented that some land
+owners had occasionally made efforts to remove wildlings. Excess zeros that
+arose in these ways would therefore not bias our estimates of establishment
+likelihood [@blasco-morenoWhatDoesZero2019].
 
-To estimate the causal influence of ecosystems on wildling abundance in accordance with the DAG [@textorRobustCausalInference2016; @mcelreathHauntedDAGCausal2020], we modeled the count process as dependent on ecosystem, site, climate, elevation relative to the stand, and relative seed rain.
-We also included stand age in the count process model because it reduced the unexplained variance associated with the random effect of site, and because we could interpret its coefficient as an unconfounded total effect on wildling abundance [@westreichTableFallacyPresenting2013].
-Climate was represented as mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19), at 30 arcsecond resolution, from CHELSA data [@kargerClimatologiesHighResolution2017].
-We chose these variables because they showed the strongest correlations with Norwegian vegetation zones and sections, respectively [@bakkestuenSteplessModelsRegional2008].
-Elevation relative to the stand was taken with respect to the highest point of the central stand, from digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
-Relative seed rain directly represents relative exposure in the count process, so we entered the natural log of this variable as an offset term [coefficient fixed at 1; @zuurMixedEffectsModels2009].
-We expect, for example, that a doubling in seed rain would result in a doubling in wildling abundance, all else being equal.
+To estimate the causal influence of ecosystems on wildling abundance in
+accordance with the DAG [@textorRobustCausalInference2016;
+@mcelreathHauntedDAGCausal2020], we modeled the count process as dependent on
+ecosystem, site, climate, elevation relative to the stand, and relative seed
+rain. We also included stand age in the count process model because it reduced
+the unexplained variance associated with the random effect of site, and because
+we could interpret its coefficient as an unconfounded total effect on wildling
+abundance [@westreichTableFallacyPresenting2013]. Climate was represented as
+mean annual temperature (Bio1) and precipitation of the coldest quarter (Bio19),
+at 30 arcsecond resolution, from CHELSA data
+[@kargerClimatologiesHighResolution2017]. We chose these variables because they
+showed the strongest correlations with Norwegian vegetation zones and sections,
+respectively [@bakkestuenSteplessModelsRegional2008]. Elevation relative to the
+stand was taken with respect to the highest point of the central stand, from
+digital elevation models at 1 or 10 m resolution (Norwegian Mapping Authority).
+Relative seed rain directly represents relative exposure in the count process,
+so we entered the natural log of this variable as an offset term [coefficient
+fixed at 1; @zuurMixedEffectsModels2009]. We expect, for example, that a
+doubling in seed rain would result in a doubling in wildling abundance, all else
+being equal.
 
 To summarize, for each species we modeled:
 
+```{=tex}
 \begin{equation}
 \begin{aligned}
 wildlings_{ij} &\sim ZIGP(\pi_{i}, \mu_{ij}, \phi) \\
@@ -252,27 +443,50 @@ log(\mu_{ij}) &= \sum\limits_{k=1}^K EcosystemType_{ijk} + Site_{i} + Bio1_{i} +
 Site_{i} &\sim Normal(0, \sigma^2) \\
 \end{aligned}
 \end{equation}
+```
+where $\pi$ is the probability of a zero from the binomial process, while $\mu$
+and $\phi$ are the mean and dispersion of the generalized Poisson distribution,
+respectively [@brooksStatisticalModelingPatterns2019]. Subscripts $i$, $j$, and
+$k$ index sites, cells, and ecosystems.
 
-where $\pi$ is the probability of a zero from the binomial process, while $\mu$ and $\phi$ are the mean and dispersion of the generalized Poisson distribution, respectively [@brooksStatisticalModelingPatterns2019]. 
-Subscripts $i$, $j$, and $k$ index sites, cells, and ecosystems.
+For each species, wildling-free ecosystems were dropped as predictors (to avoid
+model convergence issues stemming from complete separation), along with the
+cells that were comprised mostly (\> 0.5) of one of these ecosystems. The values
+of Bio1, Bio19, elevation relative to the stand, and stand age were
+standardized, and the natural log of relative seed rain was centered. We fitted
+three parallel models for each species: (1) with relative seed rain derived from
+the static dispersal kernel, (2) with relative seed rain derived from the WALD
+dispersal model, and (3) without relative seed rain. From these three we
+selected that with the best AIC. Three models (Sitka/Lutz spruce and Norway
+spruce with static dispersal kernel; larches without seed rain) did not converge
+and were excluded from selection. To catch problems with our model
+specification, we looked for deviation from uniformity in quantile-scaled,
+simulated residuals, using the DHARMa package [version 0.4.6,
+@hartigDHARMaResidualDiagnostics2020]. We also ran DHARMa's tests for residual
+over/underdispersion and zero-inflation. Relative establishment likelihoods
+among ecosystems were calculated as predictions from the conditional count part
+of the model (holding covariates at their mean values).
 
-For each species, wildling-free ecosystems were dropped as predictors (to avoid model convergence issues stemming from complete separation), along with the cells that were comprised mostly (> 0.5) of one of these ecosystems.
-The values of Bio1, Bio19, elevation relative to the stand, and stand age were standardized, and the natural log of relative seed rain was centered.
-We fitted three parallel models for each species: (1) with relative seed rain derived from the static dispersal kernel, (2) with relative seed rain derived from the WALD dispersal model, and (3) without relative seed rain.
-From these three we selected that with the best AIC. 
-Three models (Sitka/Lutz spruce and Norway spruce with static dispersal kernel; larches without seed rain) did not converge and were excluded from selection.
-To catch problems with our model specification, we looked for deviation from uniformity in quantile-scaled, simulated residuals, using the DHARMa package [version 0.4.6, @hartigDHARMaResidualDiagnostics2020].
-We also ran DHARMa's tests for residual over/underdispersion and zero-inflation.
-Relative establishment likelihoods among ecosystems were calculated as predictions from the conditional count part of the model (holding covariates at their mean values).
-
-To test whether higher-level characteristics of ecosystems can be used to generalize patterns of susceptibility, we aggregated ecosystems by their category (terrestrial or wetland) and structuring process (none, environmental stress, regulating disturbance, destabilizing disturbance, moderate anthropogenic disturbance, or strong anthropogenic disturbance), as defined in the Nature in Norway system (Appendix, table \@ref(tab:types-table)).
-We then refitted our selected models with these eight strata replacing ecosystems, and obtained estimates of relative establishment likelihood for each category and structuring process.
+To test whether higher-level characteristics of ecosystems can be used to
+generalize patterns of susceptibility, we aggregated ecosystems by their
+category (terrestrial or wetland) and structuring process (none, environmental
+stress, regulating disturbance, destabilizing disturbance, moderate
+anthropogenic disturbance, or strong anthropogenic disturbance), as defined in
+the Nature in Norway system (Appendix, table \@ref(tab:types-table)). We then
+refitted our selected models with these eight strata replacing ecosystems, and
+obtained estimates of relative establishment likelihood for each category and
+structuring process.
 
 # Results
 
-Wildling densities across ecosystems ranged 0-211/ha for Sitka/Lutz spruce (unstratified mean: 28), 0-49/ha for Norway spruce (unstratified mean: 6), and 0-1045/ha for larches (unstratified mean: 13).
-Relative establishment likelihoods differed considerably from relative wildling densities, except in larches (table \@ref(tab:estimate-correlation-table)).
-For instance, our model estimated that Sitka/Lutz spruce is three times more likely to establish in "boreal heath" than in "artificial substrate", despite wildling density being three times lower in "boreal heath" (fig. \@ref(fig:establishment)).
+Wildling densities across ecosystems ranged 0-211/ha for Sitka/Lutz spruce
+(unstratified mean: 28), 0-49/ha for Norway spruce (unstratified mean: 6), and
+0-1045/ha for larches (unstratified mean: 13). Relative establishment
+likelihoods differed considerably from relative wildling densities, except in
+larches (table \@ref(tab:estimate-correlation-table)). For instance, our model
+estimated that Sitka/Lutz spruce is three times more likely to establish in
+"boreal heath" than in "artificial substrate", despite wildling density being
+three times lower in "boreal heath" (fig. \@ref(fig:establishment)).
 
 ```{r estimate-correlation-table}
 cortab <- read.csv(here('ms', 'tables', 'corr-between-estimates.csv'), check.names = FALSE)
@@ -282,25 +496,40 @@ kbl(cortab, booktabs = TRUE,
   column_spec(1, italic = TRUE)
 ```
 
-For all species, models using relative seed rain estimates from the WALD dispersal model predicted wildling abundance best (Appendix, table \@ref(tab:model-comparison-table)).
-Site had a strong influence on wildling abundance for Sitka/Lutz spruce, such that site variation swamped much of the variation between ecosystems for this species.
-The direct effects of climate on establishment likelihood varied by species and was strongest for larches (Appendix, tables \@ref(tab:Ps)-\@ref(tab:L)). 
-The direct effects of elevation relative to the stand on wildling abundance were comparatively modest and acted in different directions for different species.
-Stand age did not significantly affect wildling abundance in any species, except that older stands of Sitka/Lutz spruce had fewer wildling-free cells (structural zeros) than younger stands.
+For all species, models using relative seed rain estimates from the WALD
+dispersal model predicted wildling abundance best (Appendix,
+table \@ref(tab:model-comparison-table)). Site had a strong influence on
+wildling abundance for Sitka/Lutz spruce, such that site variation swamped much
+of the variation between ecosystems for this species. The direct effects of
+climate on establishment likelihood varied by species and was strongest for
+larches (Appendix, tables \@ref(tab:Ps)-\@ref(tab:L)). The direct effects of
+elevation relative to the stand on wildling abundance were comparatively modest
+and acted in different directions for different species. Stand age did not
+significantly affect wildling abundance in any species, except that older stands
+of Sitka/Lutz spruce had fewer wildling-free cells (structural zeros) than
+younger stands.
 
+```{=tex}
 \newpage
 \blandscape
+```
 ```{r establishment, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups across ecosystem types, using 'forest' as the reference ecosystem. Zero density is plotted at the lower limit of the x-axis. Relative establishment likelihoods are shown with 95 % confidence intervals. Grey points depict relative establishment likelihoods for individual sites in our data set. The order of ecosystem types along the y-axis is determined by a confidence-weighted mean of their percentile-ranked establishment likelihoods within species, such that types with consistently high establishment likelihood across species are at the top. Photos licensed CC BY 4.0 Rune Halvorsen."}
 knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.pdf'))
 ```
 
+```{=tex}
 \elandscape
 \newpage
-
-Among ecosystems with at least one wildling, estimated establishment likelihoods varied by 3--5 orders of magnitude for the different species.
-Patterns of relative establishment likelihood were modestly similar between species, with positive rank correlations in four of six species pairs (table \@ref(tab:species-correlation-table)).
-"Arable fields" showed some of the lowest establishment likelihoods of any ecosystem for all species where it appeared.
-Meanwhile, ecosystems with high establishment likelihoods tended to be rarer types (e.g. "open active landslides") but also included "boreal heath" and "coastal heath". 
+```
+Among ecosystems with at least one wildling, estimated establishment likelihoods
+varied by 3--5 orders of magnitude for the different species. Patterns of
+relative establishment likelihood were modestly similar between species, with
+positive rank correlations in four of six species pairs
+(table \@ref(tab:species-correlation-table)). "Arable fields" showed some of the
+lowest establishment likelihoods of any ecosystem for all species where it
+appeared. Meanwhile, ecosystems with high establishment likelihoods tended to be
+rarer types (e.g. "open active landslides") but also included "boreal heath" and
+"coastal heath".
 
 ```{r species-correlation-table}
 cortab <- read.csv(here('ms', 'tables', 'corr-between-species.csv'), 
@@ -314,24 +543,30 @@ kbl(cortab, booktabs = TRUE,
   column_spec(1, italic = TRUE)
 ```
 
-Variation in establishment likelihoods shrank when ecosystems were aggregated by category or structuring process, to 0--3 orders of magnitude (fig. \@ref(fig:establishment-hypotheses)).
-None of the species showed large differences in establishment likelihood between terrestrial and wetland ecosystems.
-At most, larches were three times less likely to establish in wetlands.
-Ecosystems structured by destabilizing disturbance tended to show high establishment likelihoods.
-However, the association between structuring process and establishment likelihood was heterogeneous across species.
+Variation in establishment likelihoods shrank when ecosystems were aggregated by
+category or structuring process, to 0--3 orders of magnitude
+(fig. \@ref(fig:establishment-hypotheses)). None of the species showed large
+differences in establishment likelihood between terrestrial and wetland
+ecosystems. At most, larches were three times less likely to establish in
+wetlands. Ecosystems structured by destabilizing disturbance tended to show high
+establishment likelihoods. However, the association between structuring process
+and establishment likelihood was heterogeneous across species.
 
+```{=tex}
 \newpage
 \blandscape
+```
 ```{r establishment-hypotheses, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of three alien conifer species groups among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom). Relative establishment likelihoods are shown with 95 % confidence intervals. The horizontal dotted lines indicate the reference strata."}
 knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.pdf'))
 ```
 
+```{=tex}
 \elandscape
 \newpage
-
+```
 # Discussion
 
-```{r include = FALSE}
+```{r, include = FALSE}
 # Monitoring of alien conifer plantations in Norway has revealed which ecosystem types currently harbor most wildlings (vulnerability), but we still lacked an all-else-equal comparison of ecosystem types to assess which ecosystem types inherently favor wildling establishment and growth (susceptibility).
 # Our results support earlier suggestions that agricultural areas with more intensive cultivation practices (e.g. cereal fields) are less sensitive to invasion than more extensively-managed agricultural area [@dodetWhenShouldExotic2012]. 
 # We found a larger effect of local conditions on wildling abundance (relative to propagule pressure) than @pauchardPineInvasionsTreeless2016. Why? First and foremost: their 3 ha of surveyed plots span much less variation in conditions than our range of ecosystem types. Secondly, they tested individual species as covariates, which may not integrate overall effects of the community?
@@ -344,131 +579,261 @@ knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.pdf'))
 
 ## How does wildling density relate to ecosystem susceptibility?
 
-Confounders of the relationship between ecosystem type and wildling density caused density to mischaracterize differences in establishment likelihood between ecosystems.
-For example, the density of Sitka/Lutz spruce wildlings was about equal in "bare talus slopes" and "arable fields", but we estimate that establishment likelihood is actually about 1000 times higher in the former.
-The nonzero effects of hypothesized confounders (like seed rain, climate, and site) imply that our modeled estimates of establishment likelihood are less biased measures of ecosystem susceptibility. 
-Furthermore, variation in establishment likelihood was no smaller than variation in wildling densities, as might have been the case if confounding variables had amplified differences in ecosystem establishment.
+Confounders of the relationship between ecosystem type and wildling density
+caused density to mischaracterize differences in establishment likelihood
+between ecosystems. For example, the density of Sitka/Lutz spruce wildlings was
+about equal in "bare talus slopes" and "arable fields", but we estimate that
+establishment likelihood is actually about 1000 times higher in the former. The
+nonzero effects of hypothesized confounders (like seed rain, climate, and site)
+imply that our modeled estimates of establishment likelihood are less biased
+measures of ecosystem susceptibility. Furthermore, variation in establishment
+likelihood was no smaller than variation in wildling densities, as might have
+been the case if confounding variables had amplified differences in ecosystem
+establishment.
 
-Because wildling abundance is the product of seed rain and establishment likelihood, we needed to estimate seed rain independently of our wildling data to model establishment likelihood properly.
-By including relative seed rain as an offset in the model, we ensured that seed rain and establishment likelihood were not conflated, at the cost of assuming that our relative seed rain estimates were accurate.
-Exploring the alternative, we found that if we included relative seed rain as a covariate rather than an offset that its coefficient was estimated near one, and that estimated relative establishment likelihoods remained mostly unchanged (Appendix, fig. \@ref(fig:establishment-sensitivity)).
-Although wildlings cannot rigorously validate seed dispersal models (due to survivorship bias), the superior fits of models with WALD-derived seed rain offsets compared to models with statically-derived seed rain offsets supports the WALD model estimates.
-The mechanistic nature of the WALD model also makes us more confident in its estimates across species and sites than we would be in a purely phenomenological model [@bullockAllDispersalFunctions2018]. 
-Nevertheless, that seed rain was modeled and not measured is a limitation of our method, and it makes the establishment likelihoods we estimate less certain.
-For example, changes in the distribution of seed rain as a stand matures were not accounted for, nor was secondary seed dispersal from the few reproductive wildlings we observed. 
+Because wildling abundance is the product of seed rain and establishment
+likelihood, we needed to estimate seed rain independently of our wildling data
+to model establishment likelihood properly. By including relative seed rain as
+an offset in the model, we ensured that seed rain and establishment likelihood
+were not conflated, at the cost of assuming that our relative seed rain
+estimates were accurate. Exploring the alternative, we found that if we included
+relative seed rain as a covariate rather than an offset that its coefficient was
+estimated near one, and that estimated relative establishment likelihoods
+remained mostly unchanged (Appendix, fig. \@ref(fig:establishment-sensitivity)).
+Although wildlings cannot rigorously validate seed dispersal models (due to
+survivorship bias), the superior fits of models with WALD-derived seed rain
+offsets compared to models with statically-derived seed rain offsets supports
+the WALD model estimates. The mechanistic nature of the WALD model also makes us
+more confident in its estimates across species and sites than we would be in a
+purely phenomenological model [@bullockAllDispersalFunctions2018]. Nevertheless,
+that seed rain was modeled and not measured is a limitation of our method, and
+it makes the establishment likelihoods we estimate less certain. For example,
+changes in the distribution of seed rain as a stand matures were not accounted
+for, nor was secondary seed dispersal from the few reproductive wildlings we
+observed.
 
-The inconsistent effects of relative elevation on wildling abundance indicate that there is no rule of thumb for management about wildlings moving up or down slopes. 
-However, since we defined elevation relative to the central stand, it is possible that seed sources above or below the central stand partly masked slope effects.
-On the other hand, our results were consistent with the idea that prevailing winds during the dispersal season affect the direction of wildling spread, since the WALD model provided the best fit.
-Meanwhile, the weak and uncertain effects of stand age on wildling abundance suggests that other site characteristics tend to outweigh the magnitude of wildling accumulation over time.
+The inconsistent effects of relative elevation on wildling abundance indicate
+that there is no rule of thumb for management about wildlings moving up or down
+slopes. However, since we defined elevation relative to the central stand, it is
+possible that seed sources above or below the central stand partly masked slope
+effects. On the other hand, our results were consistent with the idea that
+prevailing winds during the dispersal season affect the direction of wildling
+spread, since the WALD model provided the best fit. Meanwhile, the weak and
+uncertain effects of stand age on wildling abundance suggests that other site
+characteristics tend to outweigh the magnitude of wildling accumulation over
+time.
 
-Our models do not estimate climate's total causal effect on wildling abundance, because they set aside its influence on ecosystems [@westreichTableFallacyPresenting2013].
-Therefore, we interpret the estimated climatic effects with respect to physiological constraints within a given ecosystem.
-The negligible effect of precipitation and weakly positive effect of mean annual temperature on Sitka/Lutz spruce wildling abundance is consistent with Sitka spruce's wide climatic tolerance relative to climatic variation in Norway and its oceanic affinity [@petersonEcologyManagementSitka1997].
-For Norway spruce, our results support a previous finding that seedling recruitment increases towards the wetter end of Norwegian climate [@tingstadTemperaturePrecipitationBiotic2015], although most of our sites circumscribed a narrow part of that range.
-Warm and wet conditions seem to suppress larch establishment in Norway, which may be taken into consideration when managing these plantations. 
+Our models do not estimate climate's total causal effect on wildling abundance,
+because they set aside its influence on ecosystems
+[@westreichTableFallacyPresenting2013]. Therefore, we interpret the estimated
+climatic effects with respect to physiological constraints within a given
+ecosystem. The negligible effect of precipitation and weakly positive effect of
+mean annual temperature on Sitka/Lutz spruce wildling abundance is consistent
+with Sitka spruce's wide climatic tolerance relative to climatic variation in
+Norway and its oceanic affinity [@petersonEcologyManagementSitka1997]. For
+Norway spruce, our results support a previous finding that seedling recruitment
+increases towards the wetter end of Norwegian climate
+[@tingstadTemperaturePrecipitationBiotic2015], although most of our sites
+circumscribed a narrow part of that range. Warm and wet conditions seem to
+suppress larch establishment in Norway, which may be taken into consideration
+when managing these plantations.
 
-A curious feature of our results that needs more research is the large amount of unexplained variation in Sitka/Lutz spruce wildling abundance between sites.
-This means that our ability to predict the spread of this species at a specific site, relative to others, is limited. 
-Nevertheless, ecosystem comparisons can and should still guide management.
-Bianchi et al. [-@bianchiMethodsPredictingSitka2019] struggled to predict regeneration density within Sitka spruce plantations from stand density (among other predictors), which suggests that the unexplained site-level variation in our models was not caused by our assumption of constant seed source density.
-Alternative sources of heterogeneity may include: (1) disturbance legacies not captured in the delineation of ecosystem types [especially in grazing pressure; @millerHowDisturbanceHistory2021], (2) demographic characteristics of plantations, potentially related to provenance [especially in cone production; @taylorDriversPlantInvasion2016], (3) wildling control by property owners, or (4) ecological differences between Sitka and Lutz spruce.
+A curious feature of our results that needs more research is the large amount of
+unexplained variation in Sitka/Lutz spruce wildling abundance between sites.
+This means that our ability to predict the spread of this species at a specific
+site, relative to others, is limited. Nevertheless, ecosystem comparisons can
+and should still guide management. Bianchi et al.
+[-@bianchiMethodsPredictingSitka2019] struggled to predict regeneration density
+within Sitka spruce plantations from stand density (among other predictors),
+which suggests that the unexplained site-level variation in our models was not
+caused by our assumption of constant seed source density. Alternative sources of
+heterogeneity may include: (1) disturbance legacies not captured in the
+delineation of ecosystem types [especially in grazing pressure;
+@millerHowDisturbanceHistory2021], (2) demographic characteristics of
+plantations, potentially related to provenance [especially in cone production;
+@taylorDriversPlantInvasion2016], (3) wildling control by property owners, or
+(4) ecological differences between Sitka and Lutz spruce.
 
 ## Which ecosystems are susceptible?
 
-In a large database of vegetation plots across Europe, Chytrý et al.[-@chytryHabitatInvasionsAlien2008] found that alien plants as a group are consistently found at low rates in mires and heaths, and high rates in arable, man-made, and coastal ecosystems.
-The conifer species we examined do not conform closely to these broader trends in ecosystem invasibility, showing relatively high rates of establishment in heaths and very low rates of establishment in arable ecosystems.
-To the extent that there are similarities across these four species, they appear to establish more easily in ecosystems infrequently hit by intense disturbances (e.g. rock fall in "bare talus slope") than in ecosystems frequently experiencing less intense disturbances (e.g. flooding in "semi-natural wet meadow").
+In a large database of vegetation plots across Europe, Chytrý et
+al.[-@chytryHabitatInvasionsAlien2008] found that alien plants as a group are
+consistently found at low rates in mires and heaths, and high rates in arable,
+man-made, and coastal ecosystems. The conifer species we examined do not conform
+closely to these broader trends in ecosystem invasibility, showing relatively
+high rates of establishment in heaths and very low rates of establishment in
+arable ecosystems. To the extent that there are similarities across these four
+species, they appear to establish more easily in ecosystems infrequently hit by
+intense disturbances (e.g. rock fall in "bare talus slope") than in ecosystems
+frequently experiencing less intense disturbances (e.g. flooding in
+"semi-natural wet meadow").
 
-It is difficult to evaluate our results against the recruitment patterns that have been described for the three species.
-For instance, Sitka spruce grows poorly under moisture stress and tolerates flooding well [@petersonEcologyManagementSitka1997], which might account for why it was equally likely to establish in wetland and terrestrial ecosystems.
-Yet it also established well in "open shallow-soil ground", despite this ecosystem's characteristically dry soil. 
-This illustrates the trouble with deriving predictions from generalized statements about species autecology.
-Furthermore, ecosystems that would seem inhospitable based on their overall characteristics may actually contain many localized opportunities for establishment, because seedling mortality is strongly regulated by microsites [@macekLifeDeathPicea2017].
-From this perspective, our estimates of establishment likelihood measure the density of suitable microsites in a given ecosystem.
+It is difficult to evaluate our results against the recruitment patterns that
+have been described for the three species. For instance, Sitka spruce grows
+poorly under moisture stress and tolerates flooding well
+[@petersonEcologyManagementSitka1997], which might account for why it was
+equally likely to establish in wetland and terrestrial ecosystems. Yet it also
+established well in "open shallow-soil ground", despite this ecosystem's
+characteristically dry soil. This illustrates the trouble with deriving
+predictions from generalized statements about species autecology. Furthermore,
+ecosystems that would seem inhospitable based on their overall characteristics
+may actually contain many localized opportunities for establishment, because
+seedling mortality is strongly regulated by microsites
+[@macekLifeDeathPicea2017]. From this perspective, our estimates of
+establishment likelihood measure the density of suitable microsites in a given
+ecosystem.
 
-The breadth in establishment likelihood suggests that differences between ecosystems deserve careful consideration when managing wildling spread.
-This knowledge may be applied in at least two ways.
-First, as a preventative measure, we recommend siting new stands where surrounded by high proportions of ecosystems with low establishment likelihood.
-In particular, "arable fields" repress wildling establishment for all species and are common near existing stands, so picking sites hemmed in by this kind of agricultural land should be both effective and feasible.
-This would probably reduce the rate of wildling establishment by orders of magnitude, even if long distance dispersal might preclude complete containment [@albertLanduseChangeSubalpine2008]. 
-In some cases it may also be desirable to transform ecosystems adjacent to existing stands to prevent (further) spread, for example by intensifying mowing regimes.
-Second, as a reactive measure, we advise using relative ecosystem susceptibility as a starting point for allocating monitoring and control resources in proportion to risk.
-Prioritizing ecosystems that are highly susceptible and also rare (e.g. "open active landslide") is especially likely to be cost-efficient. 
+The breadth in establishment likelihood suggests that differences between
+ecosystems deserve careful consideration when managing wildling spread. This
+knowledge may be applied in at least two ways. First, as a preventative measure,
+we recommend siting new stands where surrounded by high proportions of
+ecosystems with low establishment likelihood. In particular, "arable fields"
+repress wildling establishment for all species and are common near existing
+stands, so picking sites hemmed in by this kind of agricultural land should be
+both effective and feasible. This would probably reduce the rate of wildling
+establishment by orders of magnitude, even if long distance dispersal might
+preclude complete containment [@albertLanduseChangeSubalpine2008]. In some cases
+it may also be desirable to transform ecosystems adjacent to existing stands to
+prevent (further) spread, for example by intensifying mowing regimes. Second, as
+a reactive measure, we advise using relative ecosystem susceptibility as a
+starting point for allocating monitoring and control resources in proportion to
+risk. Prioritizing ecosystems that are highly susceptible and also rare (e.g.
+"open active landslide") is especially likely to be cost-efficient.
 
-The establishment patterns we quantify probably hold, more or less, outside Norway [@chytryHabitatInvasionsAlien2008].
-From a manager's perspective, we expect that the ecosystems we report may translate well to equivalent types in similar classification systems, because the Nature in Norway classification is rule-based and aims for observer neutrality. 
-At the same time, we urge caution in extending our establishment estimates to ecosystems that are only broadly similar, because similar types frequently showed markedly different susceptibility (e.g. Norway spruce in "agriculturally improved grassland with semi-natural character" vs. "agriculturally improved grassland").
+The establishment patterns we quantify probably hold, more or less, outside
+Norway [@chytryHabitatInvasionsAlien2008]. From a manager's perspective, we
+expect that the ecosystems we report may translate well to equivalent types in
+similar classification systems, because the Nature in Norway classification is
+rule-based and aims for observer neutrality. At the same time, we urge caution
+in extending our establishment estimates to ecosystems that are only broadly
+similar, because similar types frequently showed markedly different
+susceptibility (e.g. Norway spruce in "agriculturally improved grassland with
+semi-natural character" vs. "agriculturally improved grassland").
 
-An observational study like ours informs management of long-lived, naturalized species more directly than experimental studies, because longer time frames are examined.
-It measures long-term survival under a wide range of natural conditions experienced by the wildlings.
-In contrast, seeding experiments generally observe only the youngest life stages, and the factors controlling individual success differ at later life stages [@dovciakSeedRainEnvironmental2008].
-On the other hand, experiments might be more useful when the observed wildling spread is not broadly representative (e.g. for species expanding from a single, recent introduction).
+An observational study like ours informs management of long-lived, naturalized
+species more directly than experimental studies, because longer time frames are
+examined. It measures long-term survival under a wide range of natural
+conditions experienced by the wildlings. In contrast, seeding experiments
+generally observe only the youngest life stages, and the factors controlling
+individual success differ at later life stages
+[@dovciakSeedRainEnvironmental2008]. On the other hand, experiments might be
+more useful when the observed wildling spread is not broadly representative
+(e.g. for species expanding from a single, recent introduction).
 
 ## What do susceptible ecosystems have in common?
 
-The overarching characteristics that we used to aggregate ecosystems did not generalize differences in susceptibility well, especially not across species, so these classifications have limited utility for management.
-Note that different sets of ecosystems comprised the strata for each species, depending on their presence in the data, and these differences in ecosystem composition help explain why the patterns of aggregated establishment likelihood varied between species. 
-This constraint hinders species comparisons but underlines our main takeaway from these results --- that the susceptibility of an individual ecosystem frequently diverges from those of related ecosystems.
+The overarching characteristics that we used to aggregate ecosystems did not
+generalize differences in susceptibility well, especially not across species, so
+these classifications have limited utility for management. Note that different
+sets of ecosystems comprised the strata for each species, depending on their
+presence in the data, and these differences in ecosystem composition help
+explain why the patterns of aggregated establishment likelihood varied between
+species. This constraint hinders species comparisons but underlines our main
+takeaway from these results --- that the susceptibility of an individual
+ecosystem frequently diverges from those of related ecosystems.
 
-Within species, we urge careful interpretation of the comparisons among ecosystem categories and structuring processes.
-Many areas where conifer establishment is nearly impossible, like paved surfaces and annually plowed fields, count as terrestrial and strongly anthropogenically disturbed, which lowers the relative establishment likelihood of these two strata.
-Our results do not imply, for example, that a strong anthropogenic disturbance event will decrease establishment likelihood of Sitka/Lutz spruce relative to an ecosystem's prior state.
-Rather, we find that ecosystems structured by strong anthropogenic disturbance, on the whole, are less susceptible to Sitka/Lutz spruce wildlings than other ecosystems.
+Within species, we urge careful interpretation of the comparisons among
+ecosystem categories and structuring processes. Many areas where conifer
+establishment is nearly impossible, like paved surfaces and annually plowed
+fields, count as terrestrial and strongly anthropogenically disturbed, which
+lowers the relative establishment likelihood of these two strata. Our results do
+not imply, for example, that a strong anthropogenic disturbance event will
+decrease establishment likelihood of Sitka/Lutz spruce relative to an
+ecosystem's prior state. Rather, we find that ecosystems structured by strong
+anthropogenic disturbance, on the whole, are less susceptible to Sitka/Lutz
+spruce wildlings than other ecosystems.
 
 # Conclusions
 
-One of the main novelties of this study is that we inferred susceptibility/invasibility using mechanistically reconstructed, spatial estimates of seed rain.
-Scientists studying invasibility at national and continental scales have already recognized the importance of normalizing observed levels of invasion by a spatially explicit estimate of exposure [i.e. propagule pressure; @colauttiPropagulePressureNull2006; @chytrySeparatingHabitatInvasibility2008]. 
-However, many studies quantifying ecosystem invasibility have not been able to adjust for propagule pressure, typically because it is impossible to reconstruct the underlying dispersal history [@catfordQuantifyingLevelsBiological2012].
-We found that accounting for seed rain and other confounders of the relationship between ecosystems and wildling abundance reshuffles estimates of ecosystem invasibility considerably.
+One of the main novelties of this study is that we inferred
+susceptibility/invasibility using mechanistically reconstructed, spatial
+estimates of seed rain. Scientists studying invasibility at national and
+continental scales have already recognized the importance of normalizing
+observed levels of invasion by a spatially explicit estimate of exposure [i.e.
+propagule pressure; @colauttiPropagulePressureNull2006;
+@chytrySeparatingHabitatInvasibility2008]. However, many studies quantifying
+ecosystem invasibility have not been able to adjust for propagule pressure,
+typically because it is impossible to reconstruct the underlying dispersal
+history [@catfordQuantifyingLevelsBiological2012]. We found that accounting for
+seed rain and other confounders of the relationship between ecosystems and
+wildling abundance reshuffles estimates of ecosystem invasibility considerably.
 
-Wildling spread from plantations is a growing problem [@richardsonConifersInvasiveAliens2004] and will probably worsen with recent pushes to increase tree planting worldwide [@brunduGlobalGuidelinesSustainable2020]. 
-Meanwhile, remotely sensed and surveyed data are increasing the availability of detailed and accurate maps of ecosystems across large areas, which presents opportunities to manage wildling spread more efficiently.
-Specifically, differences in ecosystem susceptibility may be leveraged to reduce the rate of wildling establishment through deliberate site selection for new stands or targeted interventions around existing stands.
-However, managers should not judge ecosystem susceptibility based on wildling density alone, nor on generalizations across ecosystems.
+Wildling spread from plantations is a growing problem
+[@richardsonConifersInvasiveAliens2004] and will probably worsen with recent
+pushes to increase tree planting worldwide
+[@brunduGlobalGuidelinesSustainable2020]. Meanwhile, remotely sensed and
+surveyed data are increasing the availability of detailed and accurate maps of
+ecosystems across large areas, which presents opportunities to manage wildling
+spread more efficiently. Specifically, differences in ecosystem susceptibility
+may be leveraged to reduce the rate of wildling establishment through deliberate
+site selection for new stands or targeted interventions around existing stands.
+However, managers should not judge ecosystem susceptibility based on wildling
+density alone, nor on generalizations across ecosystems.
 
 # Authors' contributions
 
-JV, SLO, and OSk conceived the study and designed the methodology; SLO, LA, MOK, AO, JS, OSt, and ØS collected the data; JV analyzed the data and led the writing.
-All authors contributed to drafts and gave approval for publication.
+JV, SLO, and OSk conceived the study and designed the methodology; SLO, LA, MOK,
+AO, JS, OSt, and ØS collected the data; JV analyzed the data and led the
+writing. All authors contributed to drafts and gave approval for publication.
 
 # Acknowledgments
 
-We thank Ola Westby Aamodt, Matteo De Stefano, Vigdis Frivoll, Honorata Gajda, Miene-Marie Gastinger, Jon Hagelin, Craig Jackson, Roy Mangersnes, Heidi Elin Myklebost, Bjarne Homnes Oddane, Sina Thu Randulff, Anders Ringstad, Monica Ruano, Knut Børge Strøm, Rune Søyland, Solbjørg Engen Torvik, and Toralf Tysse for their help in collecting and/or collating the field data.
-Field work was financed by the Norwegian Environment Agency (contracts 15040036, 17070025, 17070031, 19087470, 19087471).
+We thank Ola Westby Aamodt, Matteo De Stefano, Vigdis Frivoll, Honorata Gajda,
+Miene-Marie Gastinger, Jon Hagelin, Craig Jackson, Roy Mangersnes, Heidi Elin
+Myklebost, Bjarne Homnes Oddane, Sina Thu Randulff, Anders Ringstad, Monica
+Ruano, Knut Børge Strøm, Rune Søyland, Solbjørg Engen Torvik, and Toralf Tysse
+for their help in collecting and/or collating the field data. Field work was
+financed by the Norwegian Environment Agency (contracts 15040036, 17070025,
+17070031, 19087470, 19087471).
 
 # Data availability statement
 
-Data will be made available via the Dryad Digital Repository.
-Code is available at <https://github.com/julienvollering/conifer-plantation-spread>.
+Data will be made available via the Dryad Digital Repository. Code is available
+at <https://github.com/julienvollering/conifer-plantation-spread>.
 
 \newpage
+
 # Appendix
 
 ```{r table-setup, include = FALSE}
 options(knitr.table.format = "latex")
 ```
 
-The WALD model [@katulMechanisticAnalyticalModels2005] takes the form of an inverse Gaussian distribution whose mean ($\mu$) and shape ($\lambda$) parameters are calculated from physical characteristics of the dispersal system:
+The WALD model [@katulMechanisticAnalyticalModels2005] takes the form of an
+inverse Gaussian distribution whose mean ($\mu$) and shape ($\lambda$)
+parameters are calculated from physical characteristics of the dispersal system:
 
+```{=tex}
 \begin{equation}
 \mu = \frac{HU}{F}
-\end{equation}
-\begin{equation}
+\end{equation} \begin{equation}
 \lambda = \left(\frac{H}{\sigma}\right)^2
 \end{equation}
-
-where $H$ is the seed release height, $U$ is the mean horizontal wind velocity between $H$ and the ground, $F$ is the terminal velocity of the seed, and $\sigma$ is a wind turbulence parameter.
-We set $H$ to the height of the central stand, estimated $U$ from a computed vertical wind profile, obtained $F$ from literature, and calculated $\sigma$ from an equation for turbulent flow as a function of vegetation height [eq. A4 in @skarpaasDispersalPatternsDispersal2007]. 
-We parameterized separate WALD models for 20º sectors around each seed source, to make seed dispersal anisotropic (directional). 
-In each sector we estimated mean vegetation height based on the composition of mapped ecosystem types (Appendix, table \@ref(tab:types-table)). 
-Simultaneously, we randomly sampled 100 wind velocities in the direction of the sector during the species' dispersal season. 
-The 100 resulting WALD kernels produced the seed probability density in the sector, and individual sectors were weighed by the frequency of corresponding wind directions (again, during the species' dispersal season). 
-The wind data were obtained either from the nearest weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011; @haakenstadNORA10EIRevisedRegional2020].
-We used weather station data if the station was less than 2.5 or 10 km away (depending on hindcast coverage), or else the highest resolution hindcast.
+```
+where $H$ is the seed release height, $U$ is the mean horizontal wind velocity
+between $H$ and the ground, $F$ is the terminal velocity of the seed, and
+$\sigma$ is a wind turbulence parameter. We set $H$ to the height of the central
+stand, estimated $U$ from a computed vertical wind profile, obtained $F$ from
+literature, and calculated $\sigma$ from an equation for turbulent flow as a
+function of vegetation height [eq. A4 in
+@skarpaasDispersalPatternsDispersal2007]. We parameterized separate WALD models
+for 20º sectors around each seed source, to make seed dispersal anisotropic
+(directional). In each sector we estimated mean vegetation height based on the
+composition of mapped ecosystem types (Appendix, table \@ref(tab:types-table)).
+Simultaneously, we randomly sampled 100 wind velocities in the direction of the
+sector during the species' dispersal season. The 100 resulting WALD kernels
+produced the seed probability density in the sector, and individual sectors were
+weighed by the frequency of corresponding wind directions (again, during the
+species' dispersal season). The wind data were obtained either from the nearest
+weather station (MET Norway), a 2.5 km resolution interpolated hindcast covering
+southern Norway [@haakenstad15yearHighResolution2017], or a 10 km resolution
+hindcast covering all of Norway [@reistadHighresolutionHindcastWind2011;
+@haakenstadNORA10EIRevisedRegional2020]. We used weather station data if the
+station was less than 2.5 or 10 km away (depending on hindcast coverage), or
+else the highest resolution hindcast.
 
 \newpage
+
 ```{r recreate traits-table, include=FALSE}
 traits <- tribble(
   ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
@@ -489,11 +854,18 @@ kable(traits, longtable = TRUE, booktabs = TRUE, escape = FALSE,
            threeparttable = TRUE)
 ```
 
-Some of the seed source polygons we registered in the field had distinctive features that we accounted for as follows.
-Seed source polygons for which the species of interest only made up a fraction of the stand composition [e.g. in @olsenKartleggingAvKortdistansespredning2019] were used with their point source density adjusted accordingly.
-For example, a stand identified as composed of Sitka spruce and Norway spruce was assigned a seed source point density half that of a Sitka spruce monoculture.
-Likewise, 'mixed forest' stands [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were assigned 0.1 times the seed source point density of a monoculture.
-Seed source polygons identified as logged [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were included as seed sources only if we could confirm that they were logged no earlier the decade prior to mapping, using time series of aerial photos.
+Some of the seed source polygons we registered in the field had distinctive
+features that we accounted for as follows. Seed source polygons for which the
+species of interest only made up a fraction of the stand composition [e.g. in
+@olsenKartleggingAvKortdistansespredning2019] were used with their point source
+density adjusted accordingly. For example, a stand identified as composed of
+Sitka spruce and Norway spruce was assigned a seed source point density half
+that of a Sitka spruce monoculture. Likewise, 'mixed forest' stands [e.g. in
+@appelgrenKartleggingAvKortdistansespredning2018] were assigned 0.1 times the
+seed source point density of a monoculture. Seed source polygons identified as
+logged [e.g. in @appelgrenKartleggingAvKortdistansespredning2018] were included
+as seed sources only if we could confirm that they were logged no earlier the
+decade prior to mapping, using time series of aerial photos.
 
 ```{r load sites-table, include=FALSE}
 locs <- read_csv(here('output', 'localities-modified.csv')) # see 'wildlings-NiN.Rmd'
@@ -604,15 +976,18 @@ kable(msumms$`L-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = '
                       "Zero-inflation model" = sum(msumms$`L-modelsummary`[,1]=="Zero-inflation model")))
 ```
 
+```{=tex}
 \newpage
 \blandscape
+```
 ```{r establishment-sensitivity, fig.cap="Shifts in estimated relative establishment likelihoods when relative seed rain (from the WALD dispersal model) is included in the model as a covariate rather than an offset. Arrows point from the models with offsets to the models with covariates."}
 knitr::include_graphics(here('ms', 'figures', 'establishment-sensitivity.pdf'))
 ```
 
+```{=tex}
 \elandscape
 \newpage
-
+```
 # References
 
 ```{r sessionInfo}
