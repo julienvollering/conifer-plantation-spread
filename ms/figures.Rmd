@@ -276,10 +276,12 @@ surveyedarea <- plotting %>%
   group_by(nin) %>% 
   summarise(total.ha = sum(daa)/10) %>% 
   arrange(desc(total.ha)) %>% 
-  mutate(hgtclass = NA_real_)
+  left_join(types) %>%
+  mutate(name = paste0(name, ', ', round(total.ha), ' ha'))
 plotting <- plotting %>% 
   left_join(perspecies, by = join_by(species, hgtclass)) %>% 
-  left_join(surveyedarea, by = join_by(nin, hgtclass))
+  select(-name) %>% 
+  left_join(surveyedarea, by = join_by(nin))
 ```
 
 ```{r}
@@ -287,19 +289,18 @@ d <- plotting %>%
   arrange(desc(total.ha)) %>% 
   mutate(name = fct_reorder(name, total.ha, first, .na_rm = TRUE))
 
-ggplot(d, aes(x = density.per.ha, y = name, fill = species)) + 
+ggplot(d, aes(x = density.per.ha, y = name, fill = species)) +
   geom_blank() +
-  geom_vline(aes(xintercept = species.per.ha, color = species), linewidth = 1) +
-  geom_linerange(aes(xmin=species.per.ha, xmax=density.per.ha, color = species), 
-                 position = position_dodge(width = 0.5), 
-                 linetype = 5, alpha = 0.5) +
+  geom_vline(aes(xintercept = species.per.ha, color = species), linewidth = 1,
+             alpha = 0.5, linetype = 1) +
+  geom_linerange(aes(xmin=species.per.ha, xmax=density.per.ha, color = species),
+                 position = position_dodge(width = 0.5),
+                 linetype = '11', alpha = 0.5) +
   geom_point(aes(color = species), size = csize, shape = 21,
              position = position_dodge(width = 0.5)) +
-  geom_text(aes(x = 110, label = ifelse(is.na(total.ha), "", paste(round(total.ha), "ha"))),
-            hjust = "right") +
   scale_x_log10(breaks = c(1, 10, 100),
                 labels = c('1', '10', '100')) +
-  coord_cartesian(xlim = c(1, 100)) + 
+  coord_cartesian(xlim = c(1, 100)) +
   scale_color_manual(values = c("P.sitchensis-lutzii" = CBdark2.3class[1],
                                 "P.abies" = CBdark2.3class[2],
                                 "Larix" = CBdark2.3class[3])) +
