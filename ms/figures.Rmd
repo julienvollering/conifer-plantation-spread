@@ -216,7 +216,8 @@ types <- read_csv(here('data', 'types.csv')) %>%
   select(-vegheight, -category, -structuring)
 
 topbottomtheme <- theme_light() + 
-  theme(plot.title = element_markdown(), 
+  theme(plot.title = element_markdown(),
+        axis.title.x = element_markdown(),
         axis.text.y = element_markdown(),
         axis.title.y = element_blank(),
         axis.ticks = element_blank(),
@@ -254,6 +255,68 @@ CBdark2.3class <- c('#d95f02', '#7570b3','#1b9e77')
 ```
 
 ## absolute abundance across species
+
+Only randomseed=2 is plotted
+
+```{r}
+plotting <- results.densities %>% 
+  filter(is.na(hgtclass) | (hgtclass == 2 & randomseed == 2)) %>% 
+  unnest(density) %>% 
+  mutate(density.per.ha = density*10) %>% 
+  left_join(types, by = 'nin') %>% 
+  mutate(hgtclassname = if_else(is.na(hgtclass), 
+                                'height \u2265 30 cm',
+                                'height \u2265 100 cm'))
+perspecies <- plotting %>% 
+  group_by(hgtclass, species) %>% 
+  summarise(daa = sum(daa), n = sum(n)) %>% 
+  mutate(species.per.ha = n*10/daa, .keep = "unused")
+surveyedarea <- plotting %>% 
+  filter(is.na(hgtclass)) %>% 
+  group_by(nin) %>% 
+  summarise(total.ha = sum(daa)/10) %>% 
+  arrange(desc(total.ha)) %>% 
+  mutate(hgtclass = NA_real_)
+plotting <- plotting %>% 
+  left_join(perspecies, by = join_by(species, hgtclass)) %>% 
+  left_join(surveyedarea, by = join_by(nin, hgtclass))
+```
+
+```{r}
+d <- plotting %>% 
+  arrange(desc(total.ha)) %>% 
+  mutate(name = fct_reorder(name, total.ha, first, .na_rm = TRUE))
+
+ggplot(d, aes(x = density.per.ha, y = name, fill = species)) + 
+  geom_blank() +
+  geom_vline(aes(xintercept = species.per.ha, color = species), linewidth = 1) +
+  geom_linerange(aes(xmin=species.per.ha, xmax=density.per.ha, color = species), 
+                 position = position_dodge(width = 0.5), 
+                 linetype = 5, alpha = 0.5) +
+  geom_point(aes(color = species), size = csize, shape = 21,
+             position = position_dodge(width = 0.5)) +
+  geom_text(aes(x = 110, label = ifelse(is.na(total.ha), "", paste(round(total.ha), "ha"))),
+            hjust = "right") +
+  scale_x_log10(breaks = c(1, 10, 100),
+                labels = c('1', '10', '100')) +
+  coord_cartesian(xlim = c(1, 100)) + 
+  scale_color_manual(values = c("P.sitchensis-lutzii" = CBdark2.3class[1],
+                                "P.abies" = CBdark2.3class[2],
+                                "Larix" = CBdark2.3class[3])) +
+  scale_fill_manual(values = alpha(c("P.sitchensis-lutzii" = CBdark2.3class[1],
+                                     "P.abies" = CBdark2.3class[2],
+                                     "Larix" = CBdark2.3class[3]), 1)) +
+  facet_grid(cols = vars(hgtclassname)) +
+  labs(title = "<span style = 'color:#d95f02;'>*Picea sitchensis* / *Picea* \u00D7 *lutzii*</span>, <span style = 'color:#7570b3;'>*Picea abies*</span>, <span style = 'color:#1b9e77;'>*Larix* spp.</span>",
+       x = "surveyed wildling abundance (ha<sup>-1</sup>)") +
+  guides(shape = guide_legend(ncol = 2, title = element_blank(), reverse = TRUE)) +
+  topbottomtheme +
+  theme(legend.position="none")
+
+ggsave(filename= 'abundance.svg', 
+       path = here('ms', 'figures'),
+       scale = 1.4, width = 210, height = 297/2, units = 'mm', dpi = 300)
+```
 
 ## sensitivity to random height assignment seed
 

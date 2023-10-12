@@ -80,10 +80,10 @@ Design, Oslo, Norway
     function of ecosystem type, exposure to seed rain, climate, and plantation
     stand characteristics.
 
-3.  Our surveys registered 28 wildlings per hectare for *P. sitchensis* / *P.*
-    $\times$ *lutzii* ($\frac{24013}{860}$ ha^-1^), 6 ha^-1^ for *P. abies*
-    ($\frac{2277}{396}$ ha^-1^), and 13 ha^-1^ for *Larix*
-    spp.($\frac{4287}{318}$ ha^-1^). For all three species groups, we found that
+3.  Our surveys registered 27 wildlings per hectare for *P. sitchensis* / *P.*
+    $\times$ *lutzii* ($\frac{22356}{860}$ ha^-1^), 6 ha^-1^ for *P. abies*
+    ($\frac{2245}{396}$ ha^-1^), and 13 ha^-1^ for *Larix*
+    spp.($\frac{4213}{319}$ ha^-1^). For all three species groups, we found that
     ecosystem type was responsible for up to three orders of magnitude of
     difference in wildling abundance. When we stratified wildling abundance by
     height class (≥ 30 cm and ≥ 100 cm), we also found evidence that some
@@ -240,7 +240,7 @@ and wind-vectored seed dispersal can be estimated with relative confidence
 wildling--ecosystem relationship based on domain knowledge, with explicitly
 stated causal assumptions. This approach prioritizes understanding of ecological
 processes and promotes constructive discourse around alternative model
-specifications.
+specifications [@arifApplyingStructuralCausal2023].
 
 In summary, we examine plantations of alien conifers in Norway to investigate
 the following questions:

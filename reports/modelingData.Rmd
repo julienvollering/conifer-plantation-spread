@@ -51,7 +51,7 @@ nrhgtclasses <- length(unique(DV$hgtclass))
 ```
 
 ```{r}
-op <- options(pillar.sigfig = 4)
+op <- options(pillar.sigfig = 6)
 DV %>% 
   filter(randomseed == 1) %>% 
   group_split(species) %>% 
@@ -60,7 +60,7 @@ DV %>%
   st_drop_geometry() %>% 
   group_by(species) %>% 
   summarize(hectares = sum(are)/100,
-            wildlings = sum(wildlings)) %>% 
+            wildlings = sum(wildlings*are)) %>% 
   mutate(per.hectare = wildlings/hectares) # overall wildlings per hectare
 options(op)
 ```
