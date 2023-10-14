@@ -146,16 +146,7 @@ Comparing:
 2. dispersal predictor (seeds.WALD vs. seeds.ExP vs null)
 
 ```{r}
-modeltypes <- typenames[!(typenames %in% c(contrasttype, identify_completeseparation(dat, typenames)))]
-modellocalities <- c(NA, unique(pull(dat, locality)))
-newdat <- rbind(0, diag(length(modeltypes))) %>% 
-  as_tibble(.name_repair = "minimal") %>% 
-  set_names(modeltypes) %>% 
-  mutate(nin = c(contrasttype, modeltypes), .before = 1) %>% 
-  slice(rep(1:n(), each = length(modellocalities))) %>% 
-  mutate(locality = rep(modellocalities, length(c(contrasttype, modeltypes))),
-         age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
-         .before = 1)
+newdat <- make_newdat(dat, typenames, contrasttype)
 ```
 
 ### distribution family
@@ -244,6 +235,8 @@ stratified <- DVi %>%
   nest(dv = geometry) %>% 
   mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
   mutate(data = map(data, st_drop_geometry)) %>% 
+  mutate(newdat = map(data, \(x) make_newdat(x, typenames, contrasttype))) %>% 
+  mutate(newdat = map(newdat, \(x) filter(x, is.na(locality)))) %>% 
   select(-dv)
 
 possibly_fit <- possibly(fit_genpoisWALDmodel, otherwise = NA)
@@ -251,11 +244,12 @@ plan(multisession, workers = availableCores()-1)
 stratified <- stratified %>% 
   mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
 
-newdat <- filter(newdat, is.na(locality))
 stratified <- stratified %>% 
   filter(!is.na(model)) %>% 
-  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = "link"))) %>% 
-  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
+  mutate(preds = future_map2(model, newdat, 
+                             \(x, y) predict(x, y, se.fit = TRUE, type = "link"))) %>% 
+  mutate(preds = map2(preds, newdat, 
+                      \(x, y) bind_cols(x, select(y, locality, nin))))
 
 Ps_stratified <- stratified
 ```
@@ -327,16 +321,7 @@ Comparing:
 2. dispersal predictor (seeds.WALD vs. seeds.ExP vs null)
 
 ```{r}
-modeltypes <- typenames[!(typenames %in% c(contrasttype, identify_completeseparation(dat, typenames)))]
-modellocalities <- c(NA, unique(pull(dat, locality)))
-newdat <- rbind(0, diag(length(modeltypes))) %>% 
-  as_tibble(.name_repair = "minimal") %>% 
-  set_names(modeltypes) %>% 
-  mutate(nin = c(contrasttype, modeltypes), .before = 1) %>% 
-  slice(rep(1:n(), each = length(modellocalities))) %>% 
-  mutate(locality = rep(modellocalities, length(c(contrasttype, modeltypes))),
-         age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
-         .before = 1)
+newdat <- make_newdat(dat, typenames, contrasttype)
 ```
 
 ### distribution family
@@ -425,6 +410,8 @@ stratified <- DVi %>%
   nest(dv = geometry) %>% 
   mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
   mutate(data = map(data, st_drop_geometry)) %>% 
+  mutate(newdat = map(data, \(x) make_newdat(x, typenames, contrasttype))) %>% 
+  mutate(newdat = map(newdat, \(x) filter(x, is.na(locality)))) %>% 
   select(-dv)
 
 possibly_fit <- possibly(fit_genpoisWALDmodel, otherwise = NA)
@@ -432,11 +419,12 @@ plan(multisession, workers = availableCores()-1)
 stratified <- stratified %>% 
   mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
 
-newdat <- filter(newdat, is.na(locality))
 stratified <- stratified %>% 
   filter(!is.na(model)) %>% 
-  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = "link"))) %>% 
-  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
+  mutate(preds = future_map2(model, newdat, 
+                             \(x, y) predict(x, y, se.fit = TRUE, type = "link"))) %>% 
+  mutate(preds = map2(preds, newdat, 
+                      \(x, y) bind_cols(x, select(y, locality, nin))))
 
 Pa_stratified <- stratified
 ```
@@ -508,16 +496,7 @@ Comparing:
 2. dispersal predictor (seeds.WALD vs. seeds.ExP vs null)
 
 ```{r}
-modeltypes <- typenames[!(typenames %in% c(contrasttype, identify_completeseparation(dat, typenames)))]
-modellocalities <- c(NA, unique(pull(dat, locality)))
-newdat <- rbind(0, diag(length(modeltypes))) %>% 
-  as_tibble(.name_repair = "minimal") %>% 
-  set_names(modeltypes) %>% 
-  mutate(nin = c(contrasttype, modeltypes), .before = 1) %>% 
-  slice(rep(1:n(), each = length(modellocalities))) %>% 
-  mutate(locality = rep(modellocalities, length(c(contrasttype, modeltypes))),
-         age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
-         .before = 1)
+newdat <- make_newdat(dat, typenames, contrasttype)
 ```
 
 ### distribution family
@@ -606,6 +585,8 @@ stratified <- DVi %>%
   nest(dv = geometry) %>% 
   mutate(data = map(dv, ~ add_wildlings(IVi, .))) %>%
   mutate(data = map(data, st_drop_geometry)) %>% 
+  mutate(newdat = map(data, \(x) make_newdat(x, typenames, contrasttype))) %>% 
+  mutate(newdat = map(newdat, \(x) filter(x, is.na(locality)))) %>% 
   select(-dv)
 
 possibly_fit <- possibly(fit_genpoisWALDmodel, otherwise = NA)
@@ -613,11 +594,12 @@ plan(multisession, workers = availableCores()-1)
 stratified <- stratified %>% 
   mutate(model = future_map(data, ~ possibly_fit(., typenames, contrasttype)))
 
-newdat <- filter(newdat, is.na(locality))
 stratified <- stratified %>% 
   filter(!is.na(model)) %>% 
-  mutate(preds = future_map(model, ~ predict(., newdat, se.fit = TRUE, type = "link"))) %>% 
-  mutate(preds = map(preds, ~ bind_cols(., select(newdat, locality, nin))))
+  mutate(preds = future_map2(model, newdat, 
+                             \(x, y) predict(x, y, se.fit = TRUE, type = "link"))) %>% 
+  mutate(preds = map2(preds, newdat, 
+                      \(x, y) bind_cols(x, select(y, locality, nin))))
 
 L_stratified <- stratified
 ```
