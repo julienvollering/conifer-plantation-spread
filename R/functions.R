@@ -157,6 +157,20 @@ identify_completeseparation <- function(dat, typenames) {
     pull(nin)
 }
 
+make_newdat <- function(dat, typenames, contrasttype) {
+  modeltypes <- typenames[!(typenames %in% c(contrasttype, identify_completeseparation(dat, typenames)))]
+  modellocalities <- c(NA, unique(pull(dat, locality)))
+  newdat <- rbind(0, diag(length(modeltypes))) %>% 
+    as_tibble(.name_repair = "minimal") %>% 
+    set_names(modeltypes) %>% 
+    mutate(nin = c(contrasttype, modeltypes), .before = 1) %>% 
+    slice(rep(1:n(), each = length(modellocalities))) %>% 
+    mutate(locality = rep(modellocalities, length(c(contrasttype, modeltypes))),
+           age = 0, bio01 = 0, bio19 = 0, seeds.ExP = 0, seeds.WALD = 0, relelev = 0,
+           .before = 1)
+  return(newdat)
+}
+
 paste_modelformula <- function(dat, typenames, contrasttype) {
   cs <- identify_completeseparation(dat, typenames)
   mtypes <- typenames[!(typenames %in% c(cs, contrasttype))]

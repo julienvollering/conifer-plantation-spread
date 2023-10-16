@@ -353,7 +353,8 @@ plotting <- bind_rows(plotting.dens, plotting.mod) %>%
   mutate(hgtclassname = if_else(is.na(hgtclass), 'height \u2265 30 cm',
                                 'height \u2265 100 cm'),
          pointshape = if_else(modeled, 'susceptibility (modelled)', 
-                              'vulnerability (surveyed)'))
+                              'vulnerability (surveyed)')) %>% 
+  mutate(hgtclassname = fct(hgtclassname, levels = c('height \u2265 30 cm', 'height \u2265 100 cm')))
 
 layoutheights <- distinct(plotting, species, name) %>% 
   group_by(species) %>% 
@@ -366,7 +367,7 @@ layoutheights <- distinct(plotting, species, name) %>%
 
 ```{r}
 d <- filter(plotting, species == "P.sitchensis-lutzii", randomseed == 2 | is.na(randomseed)) %>% 
-  arrange(desc(hgtclass), desc(modeled)) %>% 
+  arrange(hgtclassname, desc(modeled)) %>% 
   mutate(name.br = fct_reorder(name.br, fit, first))
 g <- ggplot(d, aes(x = fit, y = name.br, shape = pointshape)) + 
   geom_blank() +
@@ -393,7 +394,7 @@ ggsave(g, filename= 'Ps.svg',
 
 ```{r}
 d <- filter(plotting, species == "P.abies", randomseed == 2 | is.na(randomseed)) %>% 
-  arrange(desc(hgtclass), desc(modeled)) %>% 
+  arrange(hgtclassname, desc(modeled)) %>% 
   mutate(name.br = fct_reorder(name.br, fit, first))
 g <- ggplot(d, aes(x = fit, y = name.br, shape = pointshape)) + 
   geom_blank() +
@@ -420,7 +421,7 @@ ggsave(g, filename= 'Pa.svg',
 
 ```{r}
 d <- filter(plotting, species == "Larix", randomseed == 2 | is.na(randomseed)) %>% 
-  arrange(desc(hgtclass), desc(modeled)) %>% 
+  arrange(hgtclassname, desc(modeled)) %>% 
   mutate(name.br = fct_reorder(name.br, fit, first))
 g <- ggplot(d, aes(x = fit, y = name.br, shape = pointshape)) + 
   geom_blank() +
