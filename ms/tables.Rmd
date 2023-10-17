@@ -9,40 +9,93 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
-results <- readRDS(here("output","results.rds"))
 ```
 
-# Correlations between density and establishment likelihood
+# Correlations between surveyed and modelled abundance
 
 ```{r}
-data <- transpose(results[c("arithmetic", "model.preds")])
-table <- map(data, function(x) {
-  joined <- left_join(x$arithmetic, x$model.preds, by = "nin") %>% 
-    filter(is.na(locality)) 
-  vct <- c(cor(joined$fit.x, joined$fit.y, use = "complete.obs", method = c("pearson")),
-           cor(joined$fit.x, joined$fit.y, use = "complete.obs", method = c("spearman")))
-  return(round(vct, 2))
-})
-table <- transpose(table) %>% 
-  map(unlist) %>%
-  set_names(c("Pearson", "Spearman")) %>% 
-  as_tibble() %>% 
-  add_column(`species group` = c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta"), .before = 1) 
-write_csv(table, here('ms', 'tables', 'corr-between-estimates.csv'))
+results.models <- readRDS(here("output","results-models.rds"))
+results.densities <- readRDS(here("output","results-densities.rds"))
+
+mod <- results.models %>% 
+  filter(is.na(hgtclass) | (hgtclass == 2 & randomseed == 2)) %>% 
+  select(-data, -model) %>% 
+  unnest(preds) %>% 
+  filter(is.na(locality)) %>% 
+  select(species, nin, fit, hgtclass) %>% 
+  mutate(modeled = TRUE)
+dens <- results.densities %>% 
+  filter(is.na(hgtclass) | (hgtclass == 2 & randomseed == 2)) %>% 
+  unnest(density) %>% 
+  filter(!(n == 0)) %>% 
+  select(species, nin, fit, hgtclass) %>% 
+  mutate(modeled = FALSE)
+tabling <- bind_rows(dens, mod)
+```
+
+```{r}
+op <- par(mfrow = c(2,3))
+tabling %>% 
+  pivot_wider(names_from = modeled, values_from = fit, names_prefix = 'modeled') %>% 
+  group_by(species, hgtclass) %>%
+  group_split() %>% 
+  walk(\(x) plot(x$modeledFALSE, x$modeledTRUE))
+par <- op   
+out <- tabling %>% 
+  pivot_wider(names_from = modeled, values_from = fit, names_prefix = 'modeled') %>% 
+  group_by(species, hgtclass) %>%
+  summarise(pearson = cor(modeledTRUE, modeledFALSE),
+            spearman = cor(modeledTRUE, modeledFALSE, method = "spearman"),
+            .groups = "drop")
+out
+write_csv(out, here('ms', 'tables', 'corr-between-estimates.csv'))
+```
+
+```{r, include = FALSE}
+#Reference type doesn't matter:
+a <- c(1,3,5)
+b <- c(1,7,9)
+cor(a, b, method="pearson") == cor(a/3, b/7, method="pearson")
 ```
 
 # Correlations between species in establishment
 
 ```{r}
-fit <- map2(results$model.preds, names(results$model.preds),  
-           ~ filter(.data = .x, is.na(locality)) %>% 
-             select(nin, !!.y := fit))
-fitdf <- reduce(fit, full_join, by = "nin") %>% 
-  select(-nin)
-colnames(fitdf) <- c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta")
-table <- cor(fitdf, use= "pairwise.complete.obs", method = "spearman") %>% 
-  round(digits = 2)
-write.csv(table, here('ms', 'tables', 'corr-between-species.csv'), row.names = TRUE)
+d <- tabling %>% 
+  filter(modeled) %>% 
+  select(-modeled) %>% 
+  pivot_wider(names_from = species, values_from = fit) %>% 
+  group_by(hgtclass) %>%
+  group_split() %>% 
+  set_names(nm = c('2', 'NA'))
+
+walk2(d, names(d), \(x, y) select(x, -nin, -hgtclass) %>% 
+        pairs(main = paste("hgtclass", y)))
+walk2(d, names(d), \(x, y) select(x, P.abies, Larix) %>% 
+        na.omit() %>% 
+        pairs(main = paste("hgtclass", y)))
+
+pearson <- d %>% 
+  map(\(x) select(x, `P.sitchensis-lutzii`, P.abies, Larix) %>% 
+        cor(use = "pairwise.complete.obs", method = c("pearson")) %>% 
+        as_tibble(rownames = 'species1') %>% 
+        pivot_longer(cols = !species1, names_to = 'species2', values_to = 'pearson')) %>% 
+  bind_rows(.id = 'hgtclass')
+spearman <- d %>% 
+  map(\(x) select(x, `P.sitchensis-lutzii`, P.abies, Larix) %>% 
+        cor(use = "pairwise.complete.obs", method = c("spearman")) %>% 
+        as_tibble(rownames = 'species1') %>% 
+        pivot_longer(cols = !species1, names_to = 'species2', values_to = 'spearman')) %>% 
+  bind_rows(.id = 'hgtclass')
+out <- full_join(pearson, spearman)
+
+out %>% 
+  filter(species1 != species2) %>% 
+  mutate(combo = paste(pmax(species1, species2), pmin(species1, species2))) %>% 
+  distinct(hgtclass, combo, .keep_all = TRUE) %>% 
+  select(-combo)
+
+write.csv(out, here('ms', 'tables', 'corr-between-species.csv'), row.names = TRUE)
 ```
 
 # Model comparisons

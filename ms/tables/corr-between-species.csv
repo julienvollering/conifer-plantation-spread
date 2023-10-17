@@ -1,5 +1,19 @@
-"","Picea sitchensis / lutzii","Picea abies","Larix spp.","Pinus contorta"
-"Picea sitchensis / lutzii",1,0.37,0.5,0.12
-"Picea abies",0.37,1,0.18,-0.1
-"Larix spp.",0.5,0.18,1,-0.1
-"Pinus contorta",0.12,-0.1,-0.1,1
+"","hgtclass","species1","species2","pearson","spearman"
+"1","2","P.sitchensis-lutzii","P.sitchensis-lutzii",1,1
+"2","2","P.sitchensis-lutzii","P.abies",-0.153958313665152,0.510489510489511
+"3","2","P.sitchensis-lutzii","Larix",0.636092464293289,0.559440559440559
+"4","2","P.abies","P.sitchensis-lutzii",-0.153958313665152,0.510489510489511
+"5","2","P.abies","P.abies",1,1
+"6","2","P.abies","Larix",-0.104704071228622,0.283333333333333
+"7","2","Larix","P.sitchensis-lutzii",0.636092464293289,0.559440559440559
+"8","2","Larix","P.abies",-0.104704071228622,0.283333333333333
+"9","2","Larix","Larix",1,1
+"10","NA","P.sitchensis-lutzii","P.sitchensis-lutzii",1,1
+"11","NA","P.sitchensis-lutzii","P.abies",0.0380191584168762,0.317647058823529
+"12","NA","P.sitchensis-lutzii","Larix",0.859376807202343,0.566433566433566
+"13","NA","P.abies","P.sitchensis-lutzii",0.0380191584168762,0.317647058823529
+"14","NA","P.abies","P.abies",1,1
+"15","NA","P.abies","Larix",-0.112463648594339,0.175757575757576
+"16","NA","Larix","P.sitchensis-lutzii",0.859376807202343,0.566433566433566
+"17","NA","Larix","P.abies",-0.112463648594339,0.175757575757576
+"18","NA","Larix","Larix",1,1
