@@ -204,7 +204,10 @@ testZeroInflation(simulationOutput)
 ```{r}
 Ps_link <- newdat %>% 
   bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link")) %>% 
-  select(locality, fit, se.fit, nin)
+  select(locality, fit, se.fit, nin) %>% 
+  mutate(species = 'P.sitchensis-lutzii') %>% 
+  nest(preds = c(locality, nin, fit, se.fit)) %>% 
+  mutate(model = list(m.genpoisWALD))
 ```
 
 ```{r, include=FALSE}
@@ -379,7 +382,10 @@ testZeroInflation(simulationOutput)
 ```{r}
 Pa_link <- newdat %>% 
   bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link")) %>% 
-  select(locality, fit, se.fit, nin)
+  select(locality, fit, se.fit, nin) %>% 
+  mutate(species = 'P.abies') %>% 
+  nest(preds = c(locality, nin, fit, se.fit)) %>% 
+  mutate(model = list(m.genpoisWALD))
 ```
 
 ```{r, include=FALSE}
@@ -554,7 +560,10 @@ testZeroInflation(simulationOutput)
 ```{r}
 L_link <- newdat %>% 
   bind_cols(predict(m.genpoisWALD, newdat, se.fit = TRUE, type = "link")) %>% 
-  select(locality, fit, se.fit, nin)
+  select(locality, fit, se.fit, nin) %>% 
+  mutate(species = 'Larix') %>% 
+  nest(preds = c(locality, nin, fit, se.fit)) %>% 
+  mutate(model = list(m.genpoisWALD))
 ```
 
 ```{r, include=FALSE}
@@ -625,10 +634,7 @@ list(Ps_dispersalcomp, Pa_dispersalcomp, L_dispersalcomp) %>%
   set_names(species) %>% 
   saveRDS(here("output","results-dispersalcomparison.rds"))
 
-list(Ps_link, Pa_link, L_link) %>% 
-  set_names(species) %>% 
-  bind_rows(.id = "species") %>% 
-  nest(preds = c(locality, nin, fit, se.fit)) %>% 
+bind_rows(Ps_link, Pa_link, L_link) %>% 
   bind_rows(Ps_stratified, Pa_stratified, L_stratified) %>%
   mutate(preds = map(preds, function(x) {
     x <- mutate(x, ci.l = fit - 1.96*se.fit, ci.u = fit + 1.96*se.fit) %>% 

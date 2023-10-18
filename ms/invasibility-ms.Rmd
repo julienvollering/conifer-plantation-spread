@@ -945,35 +945,26 @@ kbl(mcomptab, booktabs = TRUE, digits = 0,
   collapse_rows(columns = 1, latex_hline = "major", valign = "middle")
 ```
 
-```{r load model summaries, message=FALSE}
-msumms <- list.files(here('ms', 'tables'), pattern = "summary", full.names = TRUE) %>% 
-  set_names(~ tools::file_path_sans_ext(basename(.))) %>% 
-  map(read_csv) %>% 
-  map(~ mutate(., Term = if_else(Term == "locality", "site", Term))) %>% 
-  map(~ mutate(., Term = if_else(Term == "(Intercept)", "Intercept", Term)))
-```
-
 ```{r summaries-tables}
-options(knitr.kable.NA = '')
+options(knitr.kable.NA = '', knitr.table.format = 'html')
 
-kable(msumms$`Ps-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
-      caption = "\\label{tab:Ps}Model summary for Picea sitchensis / lutzii. The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 7.745472") %>%
-  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  pack_rows(index = c("Conditional model" = sum(msumms$`Ps-modelsummary`[,1]=="Conditional Model"),
-                      "Zero-inflation model" = sum(msumms$`Ps-modelsummary`[,1]=="Zero-inflation model")))
+msumms <- readRDS(here('ms', 'tables', 'modelsummaries.rds'))
+msumms <- msumms %>% 
+  filter(is.na(hgtclass) | (hgtclass == 2 & randomseed == 2))
 
-
-kable(msumms$`Pa-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
-      caption = "\\label{tab:Pa}Model summary for Picea abies. The conditional model is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 2.495544") %>%
-  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  pack_rows(index = c("Conditional model" = sum(msumms$`Pa-modelsummary`[,1]=="Conditional Model"),
-                      "Zero-inflation model" = sum(msumms$`Pa-modelsummary`[,1]=="Zero-inflation model")))
-
-kable(msumms$`L-modelsummary`[,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
-      caption = "\\label{tab:L}Model summary for Larix spp. The conditional model is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter phi² = 6.713045") %>%
-  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-  pack_rows(index = c("Conditional model" = sum(msumms$`L-modelsummary`[,1]=="Conditional Model"),
-                      "Zero-inflation model" = sum(msumms$`L-modelsummary`[,1]=="Zero-inflation model")))
+for (i in nrow(msumms)) {
+  kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+        caption = paste0(
+          '\\label{tab:',
+          paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
+          '}Model summary for ',
+          paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
+          ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
+          msumms$sigma[[i]])) %>%
+    add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
+    pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
+                        "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
+}
 ```
 
 ```{=tex}

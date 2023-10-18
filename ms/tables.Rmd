@@ -113,85 +113,45 @@ write.csv(modelcomp, here('ms', 'tables', 'modelcomp.csv'), row.names = FALSE)
 # Model summaries
 
 ```{r}
-Psmod <- results$models$`P.sitchensis-lutzii`
-Nre <- Psmod$modelInfo$reStruc$condReStruc$`1 | locality`$blockReps
-Ps.tidy <- broom.mixed::tidy(Psmod)
-Ps <- Ps.tidy %>% 
-  arrange(component) %>% 
-  mutate(component = if_else(component == 'cond', 
-                             'Conditional Model', 
-                             'Zero-inflation model')) %>% 
-  mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
-  mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
-                            paste0(ci.l, ', ', ci.u))) %>% 
-  mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
-         estimate = if_else(effect == 'fixed', estimate, NA_real_),
-         N = if_else(effect == 'fixed', NA_real_, Nre),
-         term = if_else(effect == 'fixed', term, 'locality')) %>% 
-  select(`Mixture component` = component, Term = term, Estimate = estimate, 
-         `95% CI`, `SD (Intercept)`, N)
-write_csv(Ps, here('ms', 'tables', 'Ps-modelsummary.csv'))
+results.models <- readRDS(here("output","results-models.rds"))
 
-Pamod <- results$models$P.abies
-Nre <- Pamod$modelInfo$reStruc$condReStruc$`1 | locality`$blockReps
-Pa.tidy <- broom.mixed::tidy(Pamod)
-Pa <- Pa.tidy %>% 
-  arrange(component) %>% 
-  mutate(component = if_else(component == 'cond', 
-                             'Conditional Model', 
-                             'Zero-inflation model')) %>% 
-  mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
-  mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
-                            paste0(ci.l, ', ', ci.u))) %>% 
-  mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
-         estimate = if_else(effect == 'fixed', estimate, NA_real_),
-         N = if_else(effect == 'fixed', NA_real_, Nre),
-         term = if_else(effect == 'fixed', term, 'locality')) %>% 
-  select(`Mixture component` = component, Term = term, Estimate = estimate, 
-         `95% CI`, `SD (Intercept)`, N)
-write_csv(Pa, here('ms', 'tables', 'Pa-modelsummary.csv'))
+broom_glmmTMB <- function(model) {
+  Nre <- model$modelInfo$reStruc$condReStruc$`1 | locality`$blockReps
+  tidy <- model %>% 
+    broom.mixed::tidy() %>% 
+    arrange(component) %>% 
+    mutate(component = if_else(component == 'cond', 
+                               'Conditional Model', 
+                               'Zero-inflation model')) %>% 
+    mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
+    mutate_if(is.double, ~ round(., digits = 2)) %>% 
+    mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
+                              paste0(ci.l, ', ', ci.u))) %>% 
+    mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
+           estimate = if_else(effect == 'fixed', estimate, NA_real_),
+           N = if_else(effect == 'fixed', NA_real_, Nre),
+           term = if_else(effect == 'fixed', term, 'locality')) %>% 
+    mutate(term = if_else(term == "locality", "site", term)) %>% 
+    mutate(term = if_else(term == "(Intercept)", "Intercept", term)) %>% 
+    select(`Mixture component` = component, Term = term, Estimate = estimate, 
+           `95% CI`, `SD (Intercept)`, N)
+  return(tidy)
+}
 
-Lmod <- results$models$Larix
-Nre <- Lmod$modelInfo$reStruc$condReStruc$`1 | locality`$blockReps
-L.tidy <- broom.mixed::tidy(Lmod)
-L <- L.tidy %>% 
-  arrange(component) %>% 
-  mutate(component = if_else(component == 'cond', 
-                             'Conditional Model', 
-                             'Zero-inflation model')) %>% 
-  mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
-  mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
-                            paste0(ci.l, ', ', ci.u))) %>% 
-  mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
-         estimate = if_else(effect == 'fixed', estimate, NA_real_),
-         N = if_else(effect == 'fixed', NA_real_, Nre),
-         term = if_else(effect == 'fixed', term, 'locality')) %>% 
-  select(`Mixture component` = component, Term = term, Estimate = estimate, 
-         `95% CI`, `SD (Intercept)`, N)
-write_csv(L, here('ms', 'tables', 'L-modelsummary.csv'))
-
-Pcmod <- results$models$P.contorta
-Nre <- Pcmod$modelInfo$reStruc$condReStruc$`1 | locality`$blockReps
-Pc.tidy <- broom.mixed::tidy(Pcmod)
-Pc <- Pc.tidy %>% 
-  arrange(component) %>% 
-  mutate(component = if_else(component == 'cond', 
-                             'Conditional Model', 
-                             'Zero-inflation model')) %>% 
-  mutate(ci.l = estimate - 1.96*std.error, ci.u = estimate + 1.96*std.error) %>% 
-  mutate_if(is.double, ~ round(., digits = 2)) %>% 
-  mutate(`95% CI` = if_else(is.na(std.error), NA_character_, 
-                            paste0(ci.l, ', ', ci.u))) %>% 
-  mutate(`SD (Intercept)` = if_else(effect == 'fixed', NA_real_, estimate),
-         estimate = if_else(effect == 'fixed', estimate, NA_real_),
-         N = if_else(effect == 'fixed', NA_real_, Nre),
-         term = if_else(effect == 'fixed', term, 'locality')) %>% 
-  select(`Mixture component` = component, Term = term, Estimate = estimate, 
-         `95% CI`, `SD (Intercept)`, N)
-write_csv(Pc, here('ms', 'tables', 'Pc-modelsummary.csv'))
+tidied <- results.models %>% 
+  mutate(sigma = map_dbl(model, \(x) glmmTMB::sigma(x))) %>% 
+  mutate(tidymodel = map(model, broom_glmmTMB)) %>% 
+  mutate(speciesname = case_when(
+    species == 'P.sitchensis-lutzii' ~ 'Picea sitchensis / Picea \times lutzii',
+    species == 'P.abies' ~ 'Picea abies',
+    species == 'Larix' ~ 'Larix spp.'
+  )) %>% 
+  mutate(hgtclassname = if_else(is.na(hgtclass), 
+                                'height \u2265 30 cm',
+                                'height \u2265 100 cm')) %>% 
+  select(species, speciesname, randomseed, hgtclass, hgtclassname, sigma, tidymodel)
+  
+saveRDS(tidied, here('ms', 'tables', 'modelsummaries.rds'))
 ```
 
 # Types by report
