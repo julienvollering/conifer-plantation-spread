@@ -98,16 +98,20 @@ out %>%
 write.csv(out, here('ms', 'tables', 'corr-between-species.csv'), row.names = TRUE)
 ```
 
-# Model comparisons
+# Dispersal model comparisons
 
 ```{r}
-modelcomp <- results$model.comp %>% 
-  set_names(c("Picea sitchensis / lutzii", "Picea abies", "Larix spp.", "Pinus contorta")) %>% 
+results.dispersalcomparison <- readRDS(here("output","results-dispersalcomparison.rds"))
+
+modelcomp <- results.dispersalcomparison %>% 
+  set_names(c("Picea sitchensis / Picea \\times lutzii", 
+              "Picea abies", 
+              "Larix spp.")) %>% 
   bind_rows(.id = "species group") %>% 
   mutate(`seed dispersal estimate` = ifelse(`seed dispersal estimate` == "ExP",
                                             "Exponential Power",
                                             `seed dispersal estimate`))
-write.csv(modelcomp, here('ms', 'tables', 'modelcomp.csv'), row.names = FALSE)
+write.csv(modelcomp, here('ms', 'tables', 'dispmodelcomp.csv'), row.names = FALSE)
 ```
 
 # Model summaries
@@ -142,7 +146,7 @@ tidied <- results.models %>%
   mutate(sigma = map_dbl(model, \(x) glmmTMB::sigma(x))) %>% 
   mutate(tidymodel = map(model, broom_glmmTMB)) %>% 
   mutate(speciesname = case_when(
-    species == 'P.sitchensis-lutzii' ~ 'Picea sitchensis / Picea \times lutzii',
+    species == 'P.sitchensis-lutzii' ~ 'Picea sitchensis / Picea \\times lutzii',
     species == 'P.abies' ~ 'Picea abies',
     species == 'Larix' ~ 'Larix spp.'
   )) %>% 
