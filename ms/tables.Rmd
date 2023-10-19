@@ -104,10 +104,10 @@ write.csv(out, here('ms', 'tables', 'corr-between-species.csv'), row.names = TRU
 results.dispersalcomparison <- readRDS(here("output","results-dispersalcomparison.rds"))
 
 modelcomp <- results.dispersalcomparison %>% 
-  set_names(c("Picea sitchensis / Picea \\times lutzii", 
-              "Picea abies", 
-              "Larix spp.")) %>% 
-  bind_rows(.id = "species group") %>% 
+  set_names(c("Ps", 
+              "Pa", 
+              "L")) %>% 
+  bind_rows(.id = "species") %>% 
   mutate(`seed dispersal estimate` = ifelse(`seed dispersal estimate` == "ExP",
                                             "Exponential Power",
                                             `seed dispersal estimate`))
@@ -145,14 +145,19 @@ broom_glmmTMB <- function(model) {
 tidied <- results.models %>% 
   mutate(sigma = map_dbl(model, \(x) glmmTMB::sigma(x))) %>% 
   mutate(tidymodel = map(model, broom_glmmTMB)) %>% 
+  mutate(species = case_when(
+    species == 'P.sitchensis-lutzii' ~ 'Ps',
+    species == 'P.abies' ~ 'Pa',
+    species == 'Larix' ~ 'L'
+  )) %>% 
   mutate(speciesname = case_when(
-    species == 'P.sitchensis-lutzii' ~ 'Picea sitchensis / Picea \\times lutzii',
-    species == 'P.abies' ~ 'Picea abies',
-    species == 'Larix' ~ 'Larix spp.'
+    species == 'Ps' ~ 'Picea sitchensis / Picea \\times lutzii',
+    species == 'Pa' ~ 'Picea abies',
+    species == 'L' ~ 'Larix spp.'
   )) %>% 
   mutate(hgtclassname = if_else(is.na(hgtclass), 
-                                'height \u2265 30 cm',
-                                'height \u2265 100 cm')) %>% 
+                                'height $\\geq$ 30 cm',
+                                'height $\\geq$ 100 cm')) %>% 
   select(species, speciesname, randomseed, hgtclass, hgtclassname, sigma, tidymodel)
   
 saveRDS(tidied, here('ms', 'tables', 'modelsummaries.rds'))
@@ -160,7 +165,7 @@ saveRDS(tidied, here('ms', 'tables', 'modelsummaries.rds'))
 
 # Types by report
 
-```{r}
+```{r, eval=FALSE}
 locs <- read_csv(here('data', 'localities.csv')) # see 'wildlings-NiN.Rmd'
 locs <- select(locs, reference, locality, species) %>% 
   mutate(locality = tolower(locality))

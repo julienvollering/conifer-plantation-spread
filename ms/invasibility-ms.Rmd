@@ -18,6 +18,7 @@ bibliography: invasibility-ms.bib
 link-citations: true
 output:
   bookdown::pdf_document2:
+    latex_engine: xelatex
     toc: false
     keep_tex: true
 documentclass: article
@@ -34,7 +35,7 @@ header-includes:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=60))
-options(knitr.graphics.auto_pdf = TRUE)
+# options(knitr.graphics.auto_pdf = TRUE)
 library(tidyverse)
 library(here)
 library(knitr)
@@ -75,20 +76,20 @@ Design, Oslo, Norway
 
 2.  We used detailed surveys around 76 plantation stands in Norway to estimate
     ecosystem susceptibility to three groups of commonly planted conifer
-    species: *Picea sitchensis* / *Picea* $\times$ *lutzii*, *Picea abies*, and
+    species: *Picea sitchensis* / *Picea* $\times$*lutzii*, *Picea abies*, and
     *Larix* spp. We created spatially explicit models of wildling abundance as a
     function of ecosystem type, exposure to seed rain, climate, and plantation
     stand characteristics.
 
 3.  Our surveys registered 27 wildlings per hectare for *P. sitchensis* / *P.*
-    $\times$ *lutzii* ($\frac{22356}{860}$ ha^-1^), 6 ha^-1^ for *P. abies*
+    $\times$*lutzii* ($\frac{22356}{860}$ ha^-1^), 6 ha^-1^ for *P. abies*
     ($\frac{2245}{396}$ ha^-1^), and 13 ha^-1^ for *Larix*
     spp.($\frac{4213}{319}$ ha^-1^). For all three species groups, we found that
     ecosystem type was responsible for up to three orders of magnitude of
     difference in wildling abundance. When we stratified wildling abundance by
-    height class (≥ 30 cm and ≥ 100 cm), we also found evidence that some
-    ecosystems are more conducive to establishment (reaching 30 cm) than growth
-    (reaching 100 cm), and vice versa.
+    height class ($\geq$ 30 cm and $\geq$ 100 cm), we also found evidence that
+    some ecosystems are more conducive to establishment (reaching 30 cm) than
+    growth (reaching 100 cm), and vice versa.
 
 4.  Agricultural ecosystems of various kinds were among the ecosystems least
     susceptible to wildlings of all three groups of conifer species.
@@ -177,7 +178,7 @@ the alien conifer plantations in Norway today were planted between 1950 and
 1990, when subsidies encouraged private reforestation/afforestation, especially
 along western coastlines, where forests were scarce. In total, about 80 000 ha
 were planted with alien conifer species, of which 50 000 ha was Sitka spruce
-*Picea sitchensis* or its hybrid, Lutz spruce *Picea* $\times$ *lutzii*, and
+*Picea sitchensis* or its hybrid, Lutz spruce *Picea* $\times$*lutzii*, and
 6 500 ha was larch species *Larix* spp.
 [@miljodirektoratetUtredningAvForbud2019]. An additional 210 000 ha were planted
 with Norway spruce *Picea abies*, which is native but was planted mainly outside
@@ -258,14 +259,14 @@ the following questions:
 We registered wildlings and ecosystems around 76 reproductive plantation stands
 across Norway, comprising three groups of alien conifers (hereafter: "species";
 fig. \@ref(fig:sites-map)). The sample contained (1) forty-two sites with Sitka
-spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*P.* $\times$
-*lutzii*), (2) nineteen with Norway spruce (*Picea abies*), and (3) fifteen with
-larch species (*Larix* spp.). Note that Norway spruce is native to Norway, but
-the plantations included in this study were located in parts of the country
-where its natural distribution is highly restricted. We selected stands using
-aerial imagery, aiming for those isolated from conspecific stands. We collected
-field data for each stand in one of six field campaigns during the period
-2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016;
+spruce (*Picea sitchensis*) or its fertile hybrid, Lutz spruce (*P.*
+$\times$*lutzii*), (2) nineteen with Norway spruce (*Picea abies*), and (3)
+fifteen with larch species (*Larix* spp.). Note that Norway spruce is native to
+Norway, but the plantations included in this study were located in parts of the
+country where its natural distribution is highly restricted. We selected stands
+using aerial imagery, aiming for those isolated from conspecific stands. We
+collected field data for each stand in one of six field campaigns during the
+period 2016-2019 [reported in @olsenKartleggingAvKortdistansespredning2016;
 @appelgrenKartleggingAvKortdistansespredning2017;
 @kyrkjeeideKartleggingAvKortdistansespredning2017;
 @appelgrenKartleggingAvKortdistansespredning2018;
@@ -384,7 +385,7 @@ included an effect of elevation relative to the stand on seed rain because
 neither of our models of seed dispersal account for uneven terrain.
 
 ```{r DAG, out.width='90%', fig.cap="A directed acyclic graph showing the assumed causal relationships motivating our statistical model of ecosystems' effects on wildling abundance. Red variables causally affect both the ecosystem type and wildling abundance, blue variables causally affect only wildling abundance, and grey variables are unobserved. Green arrows show the causal pathway of interest."}
-knitr::include_graphics(here('ms', 'figures', 'dagitty-model.pdf'))
+knitr::include_graphics('figures/dagitty-model.svg')
 ```
 
 For all species, wildling abundance showed a high frequency of zeros that was
@@ -483,44 +484,44 @@ Wildling densities across ecosystems ranged 0-211/ha for Sitka/Lutz spruce
 (unstratified mean: 28), 0-49/ha for Norway spruce (unstratified mean: 6), and
 0-1045/ha for larches (unstratified mean: 13). Relative establishment
 likelihoods differed considerably from relative wildling densities, except in
-larches (table \@ref(tab:estimate-correlation-table)). For instance, our model
-estimated that Sitka/Lutz spruce is three times more likely to establish in
-"boreal heath" than in "artificial substrate", despite wildling density being
-three times lower in "boreal heath" (fig. \@ref(fig:establishment)).
+larches (table \@ref(tab:vul-sus-cor-table)). For instance, our model estimated
+that Sitka/Lutz spruce is three times more likely to establish in "boreal heath"
+than in "artificial substrate", despite wildling density being three times lower
+in "boreal heath" (fig. \@ref(fig:susceptibility-Ps)).
 
-```{r estimate-correlation-table}
+```{r vul-sus-cor-table}
 cortab <- read.csv(here('ms', 'tables', 'corr-between-estimates.csv'), check.names = FALSE)
 kbl(cortab, booktabs = TRUE,
-    caption = "Correlations between wildling densities and relative establishment likelihoods across ecosystem types, for each species group.") %>%
+    caption = "Correlations between vulnerability (surveyed) and susceptibility (modelled) across ecosystem types, for each species group and wildling class.") %>%
   kable_styling(full_width = F) %>% 
   column_spec(1, italic = TRUE)
 ```
 
 For all species, models using relative seed rain estimates from the WALD
 dispersal model predicted wildling abundance best (Appendix,
-table \@ref(tab:model-comparison-table)). Site had a strong influence on
-wildling abundance for Sitka/Lutz spruce, such that site variation swamped much
-of the variation between ecosystems for this species. The direct effects of
+table \@ref(tab:dispersal-model-comparison-table)). Site had a strong influence
+on wildling abundance for Sitka/Lutz spruce, such that site variation swamped
+much of the variation between ecosystems for this species. The direct effects of
 climate on establishment likelihood varied by species and was strongest for
-larches (Appendix, tables \@ref(tab:Ps)-\@ref(tab:L)). The direct effects of
+larches (Appendix, tables \@ref(tab:PsNA)--\@ref(tab:L2)). The direct effects of
 elevation relative to the stand on wildling abundance were comparatively modest
 and acted in different directions for different species. Stand age did not
 significantly affect wildling abundance in any species, except that older stands
 of Sitka/Lutz spruce had fewer wildling-free cells (structural zeros) than
 younger stands.
 
-```{=tex}
-\newpage
-\blandscape
-```
-```{r establishment, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of four alien conifer species groups across ecosystem types, using 'forest' as the reference ecosystem. Zero density is plotted at the lower limit of the x-axis. Relative establishment likelihoods are shown with 95 % confidence intervals. Grey points depict relative establishment likelihoods for individual sites in our data set. The order of ecosystem types along the y-axis is determined by a confidence-weighted mean of their percentile-ranked establishment likelihoods within species, such that types with consistently high establishment likelihood across species are at the top. Photos licensed CC BY 4.0 Rune Halvorsen."}
-knitr::include_graphics(here('ms', 'figures', 'establishment', 'establishment.pdf'))
+```{r susceptibility-Ps, fig.cap="Relative vulnerability (unfilled points) and susceptibility (filled points) of Picea sitchensis / Picea \\times lutzii across ecosystem types, using 'forest' as the reference ecosystem. Zero density is plotted at the lower limit of the x-axis. Relative establishment likelihoods are shown with 95 % confidence intervals. The order of ecosystem types along the y-axis is by susceptibility to wildlings with height $\\geq$ 30 cm."}
+knitr::include_graphics('figures/susceptibility/Ps.pdf')
 ```
 
-```{=tex}
-\elandscape
-\newpage
+```{r susceptibility-Pa, fig.cap="Relative vulnerability (unfilled points) and susceptibility (filled points) of Picea abies across ecosystem types, using 'forest' as the reference ecosystem. Zero density is plotted at the lower limit of the x-axis. Relative establishment likelihoods are shown with 95 % confidence intervals. The order of ecosystem types along the y-axis is by susceptibility to wildlings with height $\\geq$ 30 cm."}
+knitr::include_graphics('figures/susceptibility/Pa.pdf')
 ```
+
+```{r susceptibility-L, fig.cap="Relative vulnerability (unfilled points) and susceptibility (filled points) of Larix spp. across ecosystem types, using 'forest' as the reference ecosystem. Zero density is plotted at the lower limit of the x-axis. Relative establishment likelihoods are shown with 95 % confidence intervals. The order of ecosystem types along the y-axis is by susceptibility to wildlings with height $\\geq$ 30 cm."}
+knitr::include_graphics('figures/susceptibility/L.pdf')
+```
+
 Among ecosystems with at least one wildling, estimated establishment likelihoods
 varied by 3--5 orders of magnitude for the different species. Patterns of
 relative establishment likelihood were modestly similar between species, with
@@ -532,38 +533,28 @@ rarer types (e.g. "open active landslides") but also included "boreal heath" and
 "coastal heath".
 
 ```{r species-correlation-table}
-cortab <- read.csv(here('ms', 'tables', 'corr-between-species.csv'), 
+sppcor <- read.csv(here('ms', 'tables', 'corr-between-species.csv'), 
                    row.names = 1, check.names = FALSE)
-cortab[lower.tri(cortab, diag = TRUE)] <- ""
-cortab <- cortab[-4,-1]
-kbl(cortab, booktabs = TRUE,
-    caption = "Spearman correlations of relative establishment likelihoods in ecosystem types, between pairs of species groups.") %>%
+sppcor <- sppcor %>% filter(species1 != species2) %>% 
+  mutate(combo = paste(pmax(species1, species2), pmin(species1, species2))) %>% 
+  distinct(hgtclass, combo, .keep_all = TRUE) %>% 
+  select(-combo) 
+
+kbl(sppcor, booktabs = TRUE,
+    caption = "Correlations in susceptibility of ecosystem types between pairs of species groups, separately for each wildling class.") %>%
   kable_styling(full_width = F) %>% 
-  row_spec(0, italic = TRUE) %>%
-  column_spec(1, italic = TRUE)
+  row_spec(0, italic = TRUE)
 ```
 
 Variation in establishment likelihoods shrank when ecosystems were aggregated by
-category or structuring process, to 0--3 orders of magnitude
-(fig. \@ref(fig:establishment-hypotheses)). None of the species showed large
-differences in establishment likelihood between terrestrial and wetland
-ecosystems. At most, larches were three times less likely to establish in
-wetlands. Ecosystems structured by destabilizing disturbance tended to show high
-establishment likelihoods. However, the association between structuring process
-and establishment likelihood was heterogeneous across species.
+category or structuring process, to 0--3 orders of magnitude. None of the
+species showed large differences in establishment likelihood between terrestrial
+and wetland ecosystems. At most, larches were three times less likely to
+establish in wetlands. Ecosystems structured by destabilizing disturbance tended
+to show high establishment likelihoods. However, the association between
+structuring process and establishment likelihood was heterogeneous across
+species.
 
-```{=tex}
-\newpage
-\blandscape
-```
-```{r establishment-hypotheses, fig.cap="Relative densities (unfilled points) and relative establishment likelihoods (filled points) of three alien conifer species groups among categories of ecosystem types (top) or structuring processes in ecosystem types (bottom). Relative establishment likelihoods are shown with 95 % confidence intervals. The horizontal dotted lines indicate the reference strata."}
-knitr::include_graphics(here('ms', 'figures', 'establishment-hypotheses.pdf'))
-```
-
-```{=tex}
-\elandscape
-\newpage
-```
 # Discussion
 
 ```{r, include = FALSE}
@@ -599,7 +590,7 @@ were not conflated, at the cost of assuming that our relative seed rain
 estimates were accurate. Exploring the alternative, we found that if we included
 relative seed rain as a covariate rather than an offset that its coefficient was
 estimated near one, and that estimated relative establishment likelihoods
-remained mostly unchanged (Appendix, fig. \@ref(fig:establishment-sensitivity)).
+remained mostly unchanged (Appendix, fig. \@ref(fig:sensitivity-offset)).
 Although wildlings cannot rigorously validate seed dispersal models (due to
 survivorship bias), the superior fits of models with WALD-derived seed rain
 offsets compared to models with statically-derived seed rain offsets supports
@@ -837,9 +828,9 @@ else the highest resolution hindcast.
 ```{r recreate traits-table, include=FALSE}
 traits <- tribble(
   ~`species group`, ~`seed terminal velocity`, ~`dispersal season`, ~references,
-  "Larix spp.", "1.0 m/s", "Dec - May", "2, 4",
-  "Picea abies", "0.58 m/s", "Nov - May", "3, 4",
-  "Picea sitchensis / lutzii", "0.94 m/s", "Oct - Feb", "1, 4")
+  "Picea sitchensis / Picea \\times lutzii", "0.94 m/s", "Oct - Feb", "1, 4",
+  "Picea abies", "0.58 m/s", "Nov - May", "2, 4",
+  "Larix spp.", "1.0 m/s", "Dec - May", "3, 4")
 ```
 
 ```{r traits-table}
@@ -847,8 +838,8 @@ kable(traits, longtable = TRUE, booktabs = TRUE, escape = FALSE,
       caption = "Dispersal traits") %>% 
   column_spec(1, italic = TRUE) %>%
   footnote(general = c("1. Harris, A. S. Sitka spruce. in Silvics of North America: 1. Conifers (eds. Burns, R. M. & Honkala, B. H.) vol. 2 513–529 (U.S. Department of Agriculture, Forest Service, 1990).",
-                       "2. Sullivan, J. Larix decidua. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/lardec/all.html (1994).",
-                       "3. Sullivan, J. Picea abies. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.fed.us/database/feis/plants/tree/picabi/all.html (1994)."), 
+                       "2. Sullivan, J. Picea abies. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.usda.gov/database/feis/plants/tree/picabi/all.html (1994)."), 
+                       "3. Sullivan, J. Larix decidua. Fire Effects Information System, U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station,  Fire Sciences Laboratory https://www.fs.usda.gov/database/feis/plants/tree/lardec/all.html (1994).",
                        "4. Sandvik, H. Kunnskapsstatus for spredning og effekter av fremmede bartrær på biologisk mangfold. (2012).",
            general_title = "References: ",
            threeparttable = TRUE)
@@ -868,18 +859,18 @@ as seed sources only if we could confirm that they were logged no earlier the
 decade prior to mapping, using time series of aerial photos.
 
 ```{r load sites-table, include=FALSE}
-locs <- read_csv(here('output', 'localities-modified.csv')) # see 'wildlings-NiN.Rmd'
+locs <- read_csv(here('output', 'localities-modified.csv'))
 locs <- locs %>% 
   select(year.registered, reference, species, 
          locality, utm33.easting, utm33.northing,
-         height.source, age, bio01, bio19,
+         height.source, age.at.registration, bio01, bio19,
          height.interpolated, age.interpolated) %>% 
   arrange(year.registered, reference, species) %>% 
   select(-year.registered)
 # Formatting
 locs <- locs %>% 
   mutate(species = case_when(
-    species == "P.sitchensis-lutzii" ~ "Picea sitchensis / lutzii",
+    species == "P.sitchensis-lutzii" ~ "Picea sitchensis / P. \\times lutzii",
     species == "P.abies" ~ "Picea abies",
     species == "Larix" ~ "Larix spp.")) %>% 
   mutate(locality = paste(toupper(substring(locality, 1, 1)), 
@@ -888,7 +879,7 @@ locs <- locs %>%
   mutate_at(c("utm33.easting","utm33.northing"), round) %>% 
   mutate_at(c("bio01","bio19"), ~ round(./10, digits = 2)) %>% 
   rename(`species group` = species, site = locality, easting = utm33.easting, 
-         northing = utm33.northing, height = height.source)
+         northing = utm33.northing, height = height.source, age = age.at.registration)
 # Footnotes
 names(locs)[8] <- paste0(names(locs)[8], footnote_marker_alphabet(1))
 names(locs)[9] <- paste0(names(locs)[9], footnote_marker_alphabet(2))
@@ -907,7 +898,6 @@ locs <- locs %>%
 kbl(locs, longtable = TRUE, align = "l", booktabs = TRUE, escape = FALSE, 
     caption = "\\label{tab:sites-table}Plantation stands") %>% 
   kable_styling(latex_options =c("repeat_header")) %>% 
-  column_spec(2, italic = TRUE) %>%
   footnote(general = "Easting and Northing are given for UTM zone 33N. Height is given in meters and age in years.",
            alphabet = c("mean annual temperature (°C)",
                         "precipitation in coldest quarter (cm)"),
@@ -921,64 +911,126 @@ pairing <- read_csv(here('data','codetype-pairing.csv'))
 types <- read_csv(here('data', 'types.csv'))
 typestab <- inner_join(types, pairing) %>%
   filter(!grepl(pattern = '.', x = .data$code, fixed = TRUE)) %>% 
-  select(type = name, code, category, structuring, `vegetation height` = vegheight)
+  select(type = name, code, `vegetation height` = vegheight)
 # Footnotes
-names(typestab)[5] <- paste0(names(typestab)[5], footnote_marker_alphabet(1))
+names(typestab)[3] <- paste0(names(typestab)[3], footnote_marker_alphabet(1))
 ```
 
 ```{r types-table}
 options(knitr.kable.NA = '')
 kbl(typestab, longtable = TRUE, booktabs = TRUE, escape = FALSE, 
-    caption = "\\label{tab:types-table}Ecosystem types") %>% 
-  kable_styling(latex_options =c("repeat_header")) %>% 
-  footnote(alphabet = "approximate vegetation heights (meters) are used only to estimate wind turbulence") %>% 
-  landscape()
+    caption = "\\label{tab:types-table}Ecosystem types, as defined by major types in the Nature in Norway system (codes). Approximate vegetation height (meters) is used only to parameterize wind turbulence for the WALD seed rain estimates.") %>% 
+  kable_styling(latex_options =c("repeat_header"))
 ```
 
-```{r model-comparison-table}
+```{r dispersal-model-comparison-table}
 options(knitr.kable.NA = 'NA')
-mcomptab <- read.csv(here('ms', 'tables', 'modelcomp.csv'), check.names = FALSE)
-kbl(mcomptab, booktabs = TRUE, digits = 0,
+mcomptab <- read.csv(here('ms', 'tables', 'dispmodelcomp.csv'), check.names = FALSE) %>% 
+  mutate(`species group` = case_when(
+    species == "Ps" ~ "Picea sitchensis / P. \\times lutzii",
+    species == "Pa" ~ "Picea abies",
+    species == "L" ~ "Larix spp."), .before = 1) %>% 
+  select(-species)
+kbl(mcomptab, booktabs = TRUE,  escape = FALSE, digits = 0,
     caption = "Comparison of models with different seed dispersal estimates") %>%
   kable_styling(full_width = F) %>% 
-  column_spec(1, italic = TRUE) %>%
   collapse_rows(columns = 1, latex_hline = "major", valign = "middle")
 ```
 
 ```{r summaries-tables}
-options(knitr.kable.NA = '', knitr.table.format = 'html')
+options(knitr.kable.NA = '')
 
 msumms <- readRDS(here('ms', 'tables', 'modelsummaries.rds'))
 msumms <- msumms %>% 
   filter(is.na(hgtclass) | (hgtclass == 2 & randomseed == 2))
 
-for (i in nrow(msumms)) {
-  kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
-        caption = paste0(
-          '\\label{tab:',
-          paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
-          '}Model summary for ',
-          paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
-          ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
-          msumms$sigma[[i]])) %>%
-    add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>% 
-    pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
-                        "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
-}
+i <- 1
+kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = paste0(
+        '\\label{tab:',
+        paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
+        '}Model summary for ',
+        paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
+        ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
+        round(msumms$sigma[[i]], digits = 3))) %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>%
+  pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
+
+i <- 2
+kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = paste0(
+        '\\label{tab:',
+        paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
+        '}Model summary for ',
+        paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
+        ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
+        round(msumms$sigma[[i]], digits = 3))) %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>%
+  pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
+
+i <- 3
+kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = paste0(
+        '\\label{tab:',
+        paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
+        '}Model summary for ',
+        paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
+        ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
+        round(msumms$sigma[[i]], digits = 3))) %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>%
+  pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
+
+i <- 4
+kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = paste0(
+        '\\label{tab:',
+        paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
+        '}Model summary for ',
+        paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
+        ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
+        round(msumms$sigma[[i]], digits = 3))) %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>%
+  pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
+
+i <- 5
+kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = paste0(
+        '\\label{tab:',
+        paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
+        '}Model summary for ',
+        paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
+        ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
+        round(msumms$sigma[[i]], digits = 3))) %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>%
+  pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
+
+i <- 6
+kable(msumms$tidymodel[[i]][,-1], longtable = TRUE, booktabs = TRUE, align = 'lrrrr', 
+      caption = paste0(
+        '\\label{tab:',
+        paste0(msumms$species[[i]],msumms$hgtclass[[i]]),
+        '}Model summary for ',
+        paste(msumms$speciesname[[i]], msumms$hgtclassname[[i]], sep = ', '), 
+        ". The conditional submodel is glmmTMB's genpois (Generalized Poisson) family with dispersion parameter $\\phi^{2}$ = ",
+        round(msumms$sigma[[i]], digits = 3))) %>%
+  add_header_above(c(" " = 1, "Fixed effects" = 2, "Random effects" = 2)) %>%
+  pack_rows(index = c("Conditional model" = sum(msumms$tidymodel[[i]][,1]=="Conditional Model"),
+                      "Zero-inflation model" = sum(msumms$tidymodel[[i]][,1]=="Zero-inflation model")))
 ```
 
-```{=tex}
-\newpage
-\blandscape
-```
-```{r establishment-sensitivity, fig.cap="Shifts in estimated relative establishment likelihoods when relative seed rain (from the WALD dispersal model) is included in the model as a covariate rather than an offset. Arrows point from the models with offsets to the models with covariates."}
-knitr::include_graphics(here('ms', 'figures', 'establishment-sensitivity.pdf'))
+```{r sensitivity-offset, fig.cap="Shifts in estimated susceptibility when relative seed rain (from the WALD dispersal model) is included in the model as a covariate rather than an offset. Arrows point from the models with offsets to the models with covariates."}
+knitr::include_graphics('figures/susceptibility-sensitivity-offset.pdf')
 ```
 
-```{=tex}
-\elandscape
-\newpage
+```{r sensitivity-seed, fig.cap="Variation in estimated susceptibility to wildlings with height $\\geq$ 100 cm as a function of height assignment to unmeasured individuals. The three estimates for each ecosystem type represent three random seeds used during height assignment."}
+knitr::include_graphics('figures/susceptibility-sensitivity-randomseed.pdf')
 ```
+
 # References
 
 ```{r sessionInfo}
