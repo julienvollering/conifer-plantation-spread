@@ -120,9 +120,10 @@ parts of the world, with 44 % of plantation forests globally composed mainly of
 introduced species [@faoGlobalForestResources2020]. Alien conifer species may
 also be included in some of the vast afforestation programs against climate
 change [@brightEvaluatingTerrestrialCarbon2020,
-@teururakaunewzealandforestserviceOneBillionTrees2018]. Therefore, it is likely
-that alien conifers will continue to be planted across large areas in coming
-decades, sometimes in regions where a given species has not previously occurred.
+@teururakaunewzealandforestserviceOneBillionTrees2021;
+@schubertAdvancesShortfallsApplying]. Therefore, it is likely that alien
+conifers will continue to be planted across large areas in coming decades,
+sometimes in regions where a given species has not previously occurred.
 
 Responsible forestry practice requires that alien species be kept within
 plantation boundaries [@brunduGlobalGuidelinesSustainable2020], but alien
